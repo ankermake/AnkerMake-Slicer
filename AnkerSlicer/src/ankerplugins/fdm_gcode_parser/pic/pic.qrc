@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/pic/ui">
+        <file>fdm_filament_icon_u.png</file>
+        <file>fdm_time_icon_u.png</file>
+        <file>fdm_ai_icon_n.png</file>
+        <file>fdm_ai_icon_s.png</file>
+        <file>fdm_back_icon_n.png</file>
+        <file>fdm_back_icon_s.png</file>
+        <file>fdm_full_icon_n.png</file>
+        <file>fdm_full_icon_s.png</file>
+        <file>fdm_is_icon_n.png</file>
+        <file>fdm_is_icon_s.png</file>
+        <file>fdm_left_icon_n.png</file>
+        <file>fdm_left_icon_s.png</file>
+        <file>fdm_on_icon_n.png</file>
+        <file>fdm_on_icon_s.png</file>
+        <file>fdm_right_icon_n.png</file>
+        <file>fdm_right_icon_s.png</file>
+        <file>fdm_under_icon_n.png</file>
+        <file>fdm_under_icon_s.png</file>
+        <file>fdm_play_icon_n.png</file>
+        <file>fdm_suspended_icon_n.png</file>
+        <file>default.qss</file>
+        <file>logo_ankerslicer.ico</file>
+    </qresource>
+    <qresource prefix="/"/>
+</RCC>

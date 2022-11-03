@@ -1,0 +1,23 @@
+#include <QVector3D>
+#include <QVariant>
+
+
+class fdmRpc
+{
+    SIGNAL(msgFromFdmGcodePaser(const QString &msg));
+    SIGNAL(sendGCodePrint(const QString &msg));
+    SIGNAL(processDlgValueChange(int pDlgValue));
+    SIGNAL(cheeckoutPreview(bool isC));
+    //SIGNAL(previewClose(int id));
+    SLOT(msgFromGcodepreview(int id));
+    SLOT(checkoutPreviewEvent(bool kk));
+    SLOT(sendGCodePrintSignal(const QString &msg));
+    SIGNAL(progress(int id));
+
+    //SLOT(previewCloseSlot(int id));
+    PROP(QVariant  passParams);
+    PROP(QVariant wid);
+    PROP(int linkNum);
+    PROP(QString oStlName);
+    PROP(bool isAiMode = true);
+}

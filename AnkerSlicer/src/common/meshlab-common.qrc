@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/dummy.png</file>
+        <file>img/fdm_nav_del_icon.png</file>
+    </qresource>
+</RCC>

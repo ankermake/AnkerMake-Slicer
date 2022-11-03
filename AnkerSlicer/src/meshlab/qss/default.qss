@@ -1,0 +1,801 @@
+
+
+QPushButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#3A3B3F;
+    color:#FFFFFF;
+    font-size:16px
+}
+
+QToolButton#titleCloseButton{
+    background-color:#404249;
+    color:#FFFFFF;
+}
+QToolButton#titleCloseButton:hover{
+    background-color:#4E5058;
+    color:#FFFFFF;
+}
+QPushButton:hover{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton:pressed {
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+QPushButton#checkButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#323437;
+    color: #FFFFFF;
+    font-size:12px
+}
+
+QPushButton#checkButton:hover{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton#checkButton:pressed {
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
+QPushButton#hightButton,#m_signIn,#m_printBtn, #PrintButton{
+    background-color:#61D37D;
+    color:#FFFFFF;
+}
+QPushButton#hightButton:hover, #m_signIn:hover, #m_printBtn:hover, #PrintButton:hover{
+    background-color:#71D78A;
+     color:#FFFFFF;
+}
+
+QPushButton#hightButton:pressed, #m_signIn:pressed, #m_printBtn:pressed, #PrintButton:pressed{
+    background-color:#61D37D;
+     color:#FFFFFF;
+}
+QPushButton#hightButton:disabled,#m_signIn:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
+
+QPushButton#deleteButton, #generateButton, #scaleToFitButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#3A3B3F;
+    color:#FFFFFF;
+    font-size:12px;
+}
+
+QPushButton#deleteButton:hover, #generateButton:hover, #scaleToFitButton:hover{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton#deleteButton:pressed,#generateButton:pressed, #scaleToFitButton:pressed{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+QLabel {
+    background-color:transparent;
+    color:#FFFFFF;
+}
+
+QLabel#m_pTitleContent {
+    height:19px;
+    font-size:16px;
+}
+
+QListView {
+    outline: 0px solid gray;
+    border:none;
+    background-color:#323437 ;
+    color:#FFFFFF;
+}
+
+QListView::item {
+    border: 0px ;
+    height:30px;
+}
+
+QListView::item:selected {
+     background-color:#61D37D;
+     color: #FFFFFF;
+}
+QHeaderView
+{
+    background-color:transparent;
+}
+
+QHeaderView::section
+{
+    font-size:14px;
+    font-family:"Microsoft YaHei";
+    color:#FFFFFF;
+    background-color:transparent;
+    border:none;
+
+}
+
+QTableWidget {
+    color: #FFFFFF;                                       /*表格内文字颜色*/
+    background-color: rgba(0, 0, 0, 12%);               /*表格内背景色*/
+    border:none;
+}
+/****************************************MessageDialog end******************************************************************/
+QLineEdit#m_edit {
+    border: 1px solid #4F5259;
+    margin:3px 1px 3px 1px;
+    border-radius: 4px;
+    background-color:transparent;
+    color:#FFFFFF;
+}
+
+QPushButton#m_leftButton,#m_middleButton,#m_rightButton,#m_cancelButton{
+    background-color:rgba(255, 255, 255, 20%);
+}
+
+
+/****************************************MessageDialog  end******************************************************************/
+
+QLabel#m_warning {
+    color:#E32525
+}
+
+QCheckBox {
+    color: #FFFFFF;
+    border:none;
+    background-color: transparent;
+}
+/*选择框尺寸*/
+QCheckBox::indicator{
+    border: 1px inset #BEC1CE;
+    border-radius:2px;
+    height:16px;
+    width:16px;
+    color: #FFFFFF
+}
+
+QCheckBox::indicator::hover{
+     border: 1px inset #61D37D;
+}
+
+QCheckBox::indicator::checked{
+    image: url(:/images/icon/checkUpdate_icon_s.png);
+      border: none;
+}
+QCheckBox::indicator::unchecked{
+    border: 1px inset #BEC1CE;
+    border-radius:2px;
+}
+
+QMenuBar {
+    background-color: #343539;
+    color:#FFFFFF;
+}
+
+QMenuBar#mainMenuBar {
+    font-size:14px;
+}
+
+QMenuBar::item:selected {
+    background-color: #61D37D;
+}
+
+QMenu {
+    background-color: #3A3B3F;
+    color:#FFFFFF;
+    padding: 0px 0px 0px 0px;
+
+    border: 0px solid #4C4F56;
+    border-radius: 4px;
+}
+
+QMenu::item{
+    background-color: #3A3B3F;
+    padding:8px 30px 8px 30px;
+    font: normal normal 14px "Microsoft YaHei";
+    width:188px;
+    color:#FFFFFF ;
+}
+
+QMenu::item:selected{
+    background-color: #61D37D;
+}
+
+QMenu::item:disabled{
+    background-color: #3A3B3F;
+    color:#999999;
+}
+QMenu::icon{
+    position:absolute;
+    left:12px;
+
+}
+QMenu::right-arrow{
+     image:url(:/images/icon/fdm_rightArrow_icon.png);
+     padding:0px 16px 0px 0px
+}
+
+QComboBox {
+    border:1px solid ;
+    border-color:#51545F ;
+    border-radius:4px;
+    padding:3px 3px 3px 12px ;
+    background: #292A2D;
+    color:#FFFFFF
+}
+QComboBox QAbstractItemView{
+    outline: 0px solid gray;
+    border: 1px solid #3A3B3F;
+    border-radius:4px;
+    padding:0px 0px 0px 0px;
+    selection-background-color:#61D37D;
+    selection-color:#FFFFFF;
+    background:#4C4F56;
+    color:#FFFFFF;
+}
+QComboBox QAbstractItemView::item{
+    height: 30px;
+}
+QComboBox::down-arrow{
+    width:15px;
+    padding: 0px 0px 0px 0px;
+    image:url(:/images/icon/fdm_an_icon_n.png);
+}
+QComboBox::drop-down{border:0px;}
+
+QComboBox::drop-down {
+    width: 15px;
+    padding:0px 10px 0px 0px;
+    background-color:transparent
+}
+QLineEdit {
+    border: 1px solid #51545F;
+    border-radius:4px;
+    background-color:transparent;
+}
+
+QLabel#m_despction{
+    color:#999999
+}
+QToolButton {
+    border: none;
+    border-radius:4px;
+    background-color: transparent;
+    color:#FFFFFF
+}
+QToolButton:hover {
+    background:#37393F;
+    border:none;
+}
+QToolButton:checked  {
+    background:#354138;
+    border:none;
+}
+/****************************************Transform******************************************************************/
+QLabel#xLabel{
+	color:#E32525;
+}
+QLabel#yLabel{
+	color:#62D361;
+}
+QLabel#zLabel{
+	color:#0167FF;
+}
+
+QLabel#resetLabel{
+    border: none;
+    background: transparent;
+}
+
+QDoubleSpinBox{
+    border: 1px solid #51545F;
+    border-radius:4px;
+    color:#FFFFFF;
+    background-color:transparent
+}
+
+QLabel#keepLabel{
+	width: 116px;
+	height: 14px;
+	top: 529px;
+	left: 109px;
+	font: roboto;
+	font-size: 12px;
+}
+
+QLabel#uniformScaleLabel{
+	font: Arial;
+	width: 86px;
+	height: 14px;
+	top: 475px;
+	left: 109px;
+	color: #FFFFFF;
+}
+
+QLabel#m_gloabalLabel{
+        font-size: 12px;
+        color: #999999;
+}
+
+QFrame#frame {
+    background-color:#151619;
+    border:none;
+    border-radius:0px;
+}
+
+/****************************************PreferencesDialog******************************************************************/
+QListView#preferenceListView::item {
+    border: 0px ;
+    height: 50px ;
+}
+QListView#preferenceListView::item:selected {
+     background-color:#404249;
+     color: #FFFFFF;
+}
+
+/****************************************BaseTabWidget******************************************************************/
+QListWidget#m_baseListWidget {
+    outline: 0px solid gray;
+    font-size:14px;
+    border:none;
+    background-color:#343539;
+    color:#FFFFFF;
+
+}
+QListWidget#m_baseListWidget::item {
+    border: 0px ;
+    width :136px;
+    background-color:transparent;
+    text-align:center;
+}
+QListWidget#m_baseListWidget::item:selected {
+     background-color:#5C5E66;
+     color: #FFFFFF;
+}
+
+QLabel#itemTextLabel {
+     font-size: 14px;
+     color:#FFFFFF;
+}
+
+QWidget#previewWraper {
+    background-color:#5C5E66;
+
+}
+
+QWidget#deviceWraper {
+    background-color:#5C5E66;
+}
+
+customTitle  {
+    background-color: #343539;
+}
+
+/**********************************network*********************************************************************/
+
+QWidget#netWorkMainWidget {
+    background-color:#292A2D;
+    border:0px;
+}
+
+QLineEdit {
+        border: none; /* 边框宽度为1px，颜色为#A0A0A0 */
+        border-radius: 4px; /* 边框圆角 */
+        padding-left: 5px; /* 文本距离左边界有5px */
+        background-color: #3A3B3F; /* 背景颜色 */
+        color: #FFFFFF; /* 文本颜色 */
+        selection-background-color: #A0A0A0; /* 选中文本的背景颜色 */
+        selection-color: #F2F2F2; /* 选中文本的颜色 */
+}
+
+QLineEdit:hover { /* 鼠标悬浮在QLineEdit时的状态 */
+        border: 1px solid #61D37D;
+        border-radius: 4px;
+        background-color: #3A3B3F;
+        color: #FFFFFF;
+        selection-background-color: #298DFF;
+        selection-color: #F2F2F2;
+}
+
+QLineEdit:read-only { /* QLineEdit在只读时的状态 */
+        background-color: #CDCDCD;
+        color: #F2F2F2;
+}
+
+
+
+QListView#m_regionListWidget {
+    border:none;
+    background-color:#24252B;
+    border-radius: 4px;
+    color:#FFFFFF;
+}
+QListView#m_regionListWidget::item:hover {
+     color: #FFFFFF;
+     border: none;
+}
+
+QListView#m_regionListWidget::item:selected {
+     background-color: #313236;
+     border: none;
+}
+QListWidget#m_printerListWidget {
+    border:none;
+    background-color:#292A2D ;
+    border-radius: 4px;
+    color:#FFFFFF;
+}
+
+QListWidget#m_printerListWidget::item {
+    border: none;
+    height:128 ;
+    width:120 ;
+    color:#FFFFFF;
+}
+QListWidget#m_printerListWidget::item:selected {
+     background-color: #343539;
+     color: #FFFFFF;
+     border: none;
+}
+QLabel#m_warning {
+    color:#E32525
+}
+
+QCheckBox {
+    color: #FFFFFF;
+    background: #292A2D
+}
+/*选择框尺寸*/
+QCheckBox::indicator{
+    border: 1px solid #E7E7E9;
+    width: 14px;
+    height: 14px;
+    color: #FFFFFF
+}
+
+QCheckBox::indicator::hover{
+     border: 1px solid #61D37D;
+}
+
+QCheckBox::indicator::checked{
+    image: url(:/images/icon/checkUpdate_icon_s.png)
+}
+
+QToolButton {
+    border: none;
+    border-radius:4px;
+    background-color: transparent;
+}
+QToolButton:hover {
+    background:#37393F;
+    border:none;
+}
+QToolButton:checked  {
+    background:#354138;
+    border:none;
+}
+QMenu::item{
+    background-color: #3A3B3F;
+    color:#FFFFFF
+}
+
+QMenu::item:selected{
+    background-color: #61D37D;
+}
+
+QComboBox {
+border:1px solid ;
+border-color:#51545F ;
+border-radius:4px;
+padding:6px 3px 6px 3px  ;
+background: #292A2D;
+color:#FFFFFF
+}
+QComboBox QAbstractItemView{border: 1px solid ; border-color:#292A2D ; border-radius:4px; padding:0px 0px 0px 0px; selection-background-color: #FFFFFF; selection-color:
+#333333; background: #292A2D; color:#FFFFFF}
+QComboBox::down-arrow{width:15px; padding: 0px 0px 0px 0px; image:url(:/images/icon/fdm_an_icon_n.png);}
+QComboBox::drop-down{border:0px;}
+
+QComboBox QAbstractItemView::item{height: 40px}
+
+QProgressBar{
+        font:12px;
+        border-radius:5px;
+        text-align:center;
+        border: 0px;
+        background-color: rgba(217, 217, 217, 30%);
+        color:#FFFFFF
+}
+QProgressBar:chunk{
+        border-radius:5px;
+        background-color:#61D37D;
+}
+
+
+/*==========================LogWidget begin==========================*/
+QFrame#passwordFrame {
+    border:none;
+    background-color:#3A3B3F;
+    border-radius:4px
+}
+
+QFrame#passwordFrame:hover {
+    border:1px solid #61D37D;
+}
+
+QPushButton#m_pushTurkey {
+    border: 0px;
+    border-radius:4;
+    background-color:#2D2E33;
+    color:#FFFFFF;
+}
+
+QPushButton#m_pushTurkey:hover {
+    font : 16px;
+    border: 0px;
+    border-radius:4;
+    background-color:rgba(255, 255, 255, 10%);
+    color:#FFFFFF;
+}
+
+QLineEdit#m_userName {
+    border:none;
+    background-color:#3A3B3F;
+}
+
+QLineEdit#m_userName:hover { /* 鼠标悬浮在QLineEdit时的状态 */
+        border: 1px solid #61D37D;
+        border-radius: 4px;
+        background-color: #3A3B3F;
+        color: #FFFFFF;
+        selection-background-color: #298DFF;
+        selection-color: #F2F2F2;
+}
+
+QLineEdit#m_password {
+    border:none;
+}
+
+QLabel#m_errorLabel {
+    font: 12px;
+    color:#FF4B4B;
+}
+
+QLabel#createAcount,#emailLabel,#serverLabel,#regionLabel  {
+    color:rgba(255, 255, 255, 60%);
+}
+
+QLabel#m_acountName {
+     font: normal normal 30px "Microsoft YaHei";
+}
+QLabel#m_reginTitle {
+     font: normal normal 20px "Microsoft YaHei";
+}
+
+QLabel#regionName {
+     font: normal normal 14px "Microsoft YaHei";
+}
+
+/*==========================LogWidget end==========================*/
+
+
+/*==========================ChooseDevice begin==========================*/
+QPushButton#cancelButton{
+    border: 0px;
+    border-radius:4;
+    background-color:rgba(255, 255, 255, 20%);
+    color:#FFFFFF;
+}
+QPushButton#cancelButton:hover{
+    color:#71D78A;
+    border: 1px solid #71D78A;
+}
+
+QPushButton#cancelButton:pressed {
+    color:#57BE71;
+    border: 1px solid #71D78A;
+}
+
+
+QListView::item:selected {
+    color:#FFFFFF;
+    background-color:#4E5058 ;
+    border: none;
+}
+
+QListWidget#m_deviceListWidget {
+    border:none;
+    background-color:#404249 ;
+    color:#FFFFFF;
+}
+
+QListWidget#m_deviceListWidget::item:hover {
+     color:#FFFFFF;
+     background-color:#4E5058 ;
+     border: none;
+}
+
+QListWidget#m_deviceListWidget::item:selected {
+     background-color: #4E5058;
+     color: #FFFFFF;
+     border: none;
+}
+
+/*==========================ChooseDevice end==========================*/
+
+
+/*==========================TitleWidget begin==========================*/
+QLabel#m_title {
+    font: normal normal 16px "Microsoft YaHei";
+    color:#FFFFFF;
+}
+
+QLabel#descriptionLabel {
+    font: normal normal 14px "Microsoft YaHei";
+    color:#FFFFFF;
+}
+/*==========================TitleWidget end==========================*/
+
+/*==========================UpdateWidget begin==========================*/
+
+QLabel#labelTip2 {
+    font: normal normal 12px "Microsoft YaHei";
+    color:rgba(255,255,255,60%);
+}
+QLabel#m_progressValue {
+    font: normal normal 12px "Microsoft YaHei";
+}
+
+QLabel#labelTip1,#m_labelVersion {
+    font: normal normal 14px "Microsoft YaHei";
+}
+/*==========================PrintControlPage begin==========================*/
+QLabel#addDeviceTitleLabel,#titleChooseFile {
+     font: normal normal 40px "Microsoft YaHei";
+}
+
+QLabel#textLabelLoad,#textLabelAddPrinter,#descriptionChooseFile,#timeLabel {
+     font: normal normal 14px "Microsoft YaHei";
+     color:rgba(255,255,255,60%);
+}
+QWidget#m_chooseFilePage,#m_networkOutPage,#m_addDevicePage,#VaildGcodeWidget{
+        border: 1px solid rgba(255,255,255,10%);
+}
+/*==========================OnlinePathWidgt begin==========================*/
+QPushButton#localButton{
+    font: 16px;
+    border: 0px;
+    background-color:#404249;
+    color:#FFFFFF;
+}
+
+QPushButton#localButton:checked{
+    border: 0px;
+    background-color: #4E5058;
+}
+
+QPushButton#localButton:unchecked{
+    border: 0px;
+    background-color: #404249;
+}
+
+QPushButton#usbButton{
+    font: 16px;
+    border: 0px;
+    background-color:#404249;
+    color:#FFFFFF;
+}
+
+QPushButton#usbButton:checked{
+    border: 0px;
+    background-color: #4E5058;
+}
+
+QPushButton#usbButton:unchecked{
+    border: 0px;
+    background-color: #404249;
+}
+
+QListWidget#m_localFileListWidget,#m_usbFileListWidget {
+    outline: 0px solid gray;
+    border:none;
+    background-color:#404249;
+    color:#FFFFFF;
+}
+
+QListWidget#m_localFileListWidget::item,#m_usbFileListWidget::item {
+    height:52px;
+}
+
+QListWidget#m_localFileListWidget::item:selected,#m_usbFileListWidget::item:selected {
+    background-color:#4E5058 ;
+}
+QLabel#pathLabel {
+    font: normal normal 16px "Microsoft YaHei";
+    color:#FFFFFF;
+}
+/*==========================DeviceInfoWidget begin==========================*/
+
+QSpinBox{
+    border: none; /* 边框宽度为1px，颜色为#A0A0A0 */
+    border-radius: 4px; /* 边框圆角 */
+    padding-left: 5px; /* 文本距离左边界有5px */
+    background-color: #1F2022; /* 背景颜色 */
+    color: #FFFFFF; /* 文本颜色 */
+    selection-background-color: #A0A0A0; /* 选中文本的背景颜色 */
+    selection-color: #F2F2F2; /* 选中文本的颜色 */
+}
+
+QSpinBox::up-button, QSpinBox::down-button{
+    width:0px;
+}
+
+QPushButton#m_aboutBtn {
+    background-color:transparent;
+
+}
+
+QLabel#m_usrNameLabel {
+      font: normal normal 24px "Microsoft YaHei";
+}
+
+
+QLabel#m_printMissionLabel, #m_timeAboutLabel, #m_speedLabel, #m_tempLabel, #m_filamentLabel  {
+      font: normal normal 14px "Microsoft YaHei";
+      color: rgba(255,255,255,30%);
+}
+
+QLabel#m_printDisplayLabel, #m_timeDisplayLabel,  #m_speedDisplayLabel, #m_tempNozzleValueLabel ,#m_tempHeatBedValueLabel,#m_filamentDisplayLabel {
+      font: normal normal 20px "Microsoft YaHei";
+}
+
+QScrollArea {
+    border: 0px;
+    background-color:transparent;
+}
+QWidget#topWidget {
+    background-color:transparent;
+}
+QPushButton#m_cancelBtn, #m_stopBtn{
+    font: 16px;
+    border: 0px;
+    border-radius:4;
+    background-color:#404040;
+    color:#FFFFFF;
+    height:40px;
+}
+QPushButton#m_buttonRefresh{
+    font: 16px;
+    border: 0;
+    border-radius:9px;
+    background-color:#404040;
+    color:#71D78A;
+    height:36px;
+}
+QPushButton#m_cancelBtn:hover,#m_stopBtn:hover, #m_buttonRefresh:hover{
+    color:#71D78A;
+    border:1px solid #71D78A;
+    background-color:#3A3B3F;
+}
+
+QPushButton#m_cancelBtn:pressed, #m_stopBtn:pressed, ##m_buttonRefresh:pressed {
+    color:#71D78A;
+    border:1px solid #71D78A;
+    background-color:#3A3B3F;
+}
+
+/*==========================viewWidget begin==========================*/
+QLabel#linetypelabel,#ConsumedLabelabel {
+    font: normal bold 16px "Microsoft YaHei";
+}
+QLabel#filamentLabel,#timelabel {
+    font: normal normal 16px "Microsoft YaHei";
+}

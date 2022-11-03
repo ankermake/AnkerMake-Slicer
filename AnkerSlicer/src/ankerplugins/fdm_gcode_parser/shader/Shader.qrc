@@ -1,0 +1,26 @@
+<RCC>
+    <qresource prefix="/shaders">
+        <file>gouraud_light.fs</file>
+        <file>gouraud_light.vs</file>
+        <file>options_110.fs</file>
+        <file>options_110.vs</file>
+        <file>options_120.fs</file>
+        <file>options_120.vs</file>
+        <file>gouraud.fs</file>
+        <file>gouraud.vs</file>
+        <file>printbed.fs</file>
+        <file>printbed.vs</file>
+        <file>toolpaths_lines.fs</file>
+        <file>toolpaths_lines.vs</file>
+        <file>variable_layer_height.fs</file>
+        <file>variable_layer_height.vs</file>
+        <file>scene_view.frag</file>
+        <file>scene_view.vert</file>
+        <file>gouraud_light_or.fs</file>
+        <file>gouraud_light_or.vs</file>
+		<file>gouraud_light_tr.fs</file>
+        <file>gouraud_light_tr.vs</file>
+		<file>gouraud_light_tr.gs</file>
+        <file>gouraud_light_tr_perfermance.gs</file>
+    </qresource>
+</RCC>

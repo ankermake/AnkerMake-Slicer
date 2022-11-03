@@ -1,0 +1,210 @@
+
+
+QPushButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#3A3B3F;
+    color:#FFFFFF;
+    font-size:16px
+}
+QPushButton:hover{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton:pressed {
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+QPushButton#checkButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#323437;
+    color: #FFFFFF;
+    font-size:12px
+}
+
+QPushButton#checkButton:hover{
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton#checkButton:pressed {
+    color:#71D78A;
+    border: 1px  solid #71D78A;
+}
+
+QPushButton:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
+QPushButton#hightButton{
+    background-color:#61D37D;
+    color:#000000;
+}
+QPushButton#hightButton:hover{
+    background-color:#71D78A;
+}
+
+QPushButton#hightButton:pressed{
+    background-color:#61D37D;
+}
+QPushButton#hightButton:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
+
+QLabel {
+    color:#FFFFFF
+}
+
+QListView {
+    background-color:#323437 ;
+    color:#FFFFFF;
+}
+
+QListView::item {
+    border: 0px ;
+    height:30px;
+}
+
+QListView#preferenceListView::item {
+    border: 0px ;
+    height: 50px ;
+}
+
+QListView::item:selected {
+     background-color:#61D37D;
+     color: #FFFFFF;
+}
+
+/****************************************MessageDialog end******************************************************************/
+QLineEdit#m_edit {
+    border: 1px solid #4F5259;
+    margin:3px 1px 3px 1px;
+    border-radius: 4px;
+    background-color:transparent;
+    color:#FFFFFF;
+}
+
+QPushButton#m_leftButton{
+    background-color:rgba(255, 255, 255, 20%);
+}
+QPushButton#m_middleButton{
+    background-color:rgba(255, 255, 255, 20%);
+}
+QPushButton#m_rightButton{
+    background-color:rgba(255, 255, 255, 20%);
+}
+
+
+/****************************************MessageDialog  end******************************************************************/
+QDialog#m_preferDialog {
+    border: 0px;
+    border-radius:30px;
+    background-color:#292A2D;
+}
+
+QLabel#m_warning {
+    color:#E32525
+}
+
+QCheckBox {
+    color: #FFFFFF;
+    background: #292A2D
+}
+/*选择框尺寸*/
+QCheckBox::indicator{
+    border: 1px solid #E7E7E9;
+    width: 14px;
+    height: 14px;
+    color: #FFFFFF
+}
+
+QCheckBox::indicator::hover{
+     border: 1px solid #61D37D;
+}
+
+QCheckBox::indicator::checked{
+    image: url(:/images/icon/checkUpdate_icon_s.png)
+}
+
+QMenu {
+    background-color: #3A3B3F;
+    color:#FFFFFF;
+    padding: 12px 0px 0px 12px;
+    border-radius: 8px 8px 8px 8px;
+}
+
+QMenu::item{
+    background-color: #3A3B3F;
+    color:#FFFFFF
+}
+
+QMenu::item:selected{
+    background-color: #61D37D;
+}
+
+QComboBox {
+border:1px solid ;
+border-color:#51545F ;
+border-radius:4px;
+padding:6px 3px 6px 3px  ;
+background: #292A2D;
+color:#FFFFFF
+}
+QComboBox QAbstractItemView{border: 1px solid ; border-color:#292A2D ; border-radius:4px; padding:0px 0px 0px 0px; selection-background-color: #FFFFFF; selection-color:
+#333333; background: #292A2D; color:#FFFFFF}
+QComboBox::down-arrow{width:15px; padding: 0px 0px 0px 0px; image:url(:/images/icon/fdm_an_icon_n.png);}
+QComboBox::drop-down{border:0px;}
+
+QComboBox QAbstractItemView::item{height: 40px}
+
+QLineEdit {
+    border: 1px solid #51545F;
+    border-radius:4px;
+    background-color:transparent;
+}
+
+/****************************************Transform******************************************************************/
+QLabel#xLabel{
+	color:#E32525;
+}
+QLabel#yLabel{
+	color:#62D361;
+}
+QLabel#zLabel{
+	color:#0167FF;
+}
+
+QLabel#resetLabel{
+    border: none;
+    background: transparent;
+}
+
+QDoubleSpinBox{
+    border: 1px solid #51545F;
+    border-radius:4px;
+    font-size: 12px;
+    color:#FFFFFF;
+    background-color:transparent
+}
+
+QLabel#keepLabel{
+	width: 116px;
+	height: 14px;
+	top: 529px;
+	left: 109px;
+	font: roboto;
+	font-size: 12px;
+}
+
+QLabel#uniformScaleLabel{
+	font: Arial;
+	width: 86px;
+	height: 14px;
+	top: 475px;
+	left: 109px;
+	color: #FFFFFF;
+}
+

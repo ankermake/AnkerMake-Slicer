@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/BaseControl/BaseComboBox.qml</file>
+        <file>qml/BaseControl/DefaultComboBox.qml</file>
+        <file>qml/BaseControl/BaseRadio.qml</file>
+        <file>qml/BaseControl/SwitchButton.qml</file>
+        <file>qml/FdmParameter/CategoryItem.qml</file>
+        <file>qml/FdmParameter/ParamCheckBox.qml</file>
+        <file>qml/FdmParameter/ParamComboBox.qml</file>
+        <file>qml/FdmParameter/ParamItem.qml</file>
+        <file>qml/FdmParameter/ParamTextField.qml</file>
+        <file>qml/FdmParameter/SettingView.qml</file>
+        <file>qml/FdmParameter/ComboxItem.qml</file>
+        <file>qml/BaseControl/BaseTextInput.qml</file>
+        <file>qml/FdmParameter/RadioButtonItem.qml</file>
+        <file>qml/BaseControl/BaseLine.qml</file>
+        <file>qml/PreferenceSettings/MachineView.qml</file>
+        <file>qml/PreferenceSettings/MaterialView.qml</file>
+        <file>qml/PreferenceSettings/ParametersView.qml</file>
+        <file>qml/PreferenceSettings/TabView.qml</file>
+        <file>qml/PreferenceSettings/FdmCheckLine.qml</file>
+        <file>qml/PreferenceSettings/FdmComboxLine.qml</file>
+        <file>qml/PreferenceSettings/FdmInput.qml</file>
+        <file>qml/PreferenceSettings/PreferencesListView.qml</file>
+        <file>qml/PreferenceSettings/PreferencesTitle.qml</file>
+        <file>qml/PreferenceSettings/CategoryItem.qml</file>
+        <file>qml/PreferenceSettings/ParamItem.qml</file>
+        <file>qml/PreferenceSettings/ParamCheckBox.qml</file>
+        <file>qml/PreferenceSettings/ParamComboBox.qml</file>
+        <file>qml/PreferenceSettings/ParamTextField.qml</file>
+        <file>qml/BaseControl/BaseTextEdit.qml</file>
+    </qresource>
+</RCC>

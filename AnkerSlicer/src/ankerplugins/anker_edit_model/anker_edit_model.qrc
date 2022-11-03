@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/icon_manipulators.png</file>
+        <file>images/fdm_mirror_icon_s.png</file>
+		<file>images/fdm_mirror_icon_n.png</file>
+		<file>images/fdm_mirror_icon_e.png</file>
+        <file>images/fdm_move_icon_s.png</file>
+		<file>images/fdm_move_icon_e.png</file>
+		<file>images/fdm_move_icon_n.png</file>
+        <file>images/fdm_rotate_icon_s.png</file>
+		<file>images/fdm_rotate_icon_e.png</file>
+		<file>images/fdm_rotate_icon_n.png</file>
+        <file>images/fdm_scale_icon_s.png</file>
+		<file>images/fdm_scale_icon_e.png</file>
+		<file>images/fdm_scale_icon_n.png</file>
+        <file>images/fdm_manual_icon_s.png</file>
+		<file>images/fdm_manual_icon_e.png</file>
+		<file>images/fdm_manual_icon_n.png</file>
+		<file>images/fdm_move_x_icon_u.png</file>
+		<file>images/fdm_move_y_icon_u.png</file>
+		<file>images/fdm_move_z_icon_u.png</file>
+		<file>images/fdm_rotate_x_icon_u.png</file>
+		<file>images/fdm_rotate_y_icon_u.png</file>
+		<file>images/fdm_rotate_z_icon_u.png</file>
+		<file>images/fdm_scale_x_icon_u.png</file>
+		<file>images/fdm_scale_y_icon_u.png</file>
+		<file>images/fdm_scale_z_icon_u.png</file>
+		<file>images/fdm_remakes_small_icon_n.png</file>
+		<file>images/fm_scale_round_icon_u.png</file>
+		<file>images/fdm_manual_x_icon_u.png</file>
+		<file>images/fdm_manual_y_icon_u.png</file>
+    </qresource>
+</RCC>
