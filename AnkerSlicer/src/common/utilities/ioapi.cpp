@@ -15,7 +15,7 @@ IoApi::IoApi()
 }
 
 
-bool IoApi::copyDir(QString srcPath,QString destPath, bool coverFileIfExist)
+bool IoApi::copyDir(QString srcPath,QString destPath, bool coverFileIfExist, bool failedContinue)
 {
     QDir srcDir(srcPath);
     QDir dstDir(destPath);
@@ -37,6 +37,10 @@ bool IoApi::copyDir(QString srcPath,QString destPath, bool coverFileIfExist)
             //QDir::filePath  Returns the path name of a file in the directory. Does not check if the file actually exists in the directory;
             if (!copyDir(fInfo.filePath(),destPath, coverFileIfExist))
             {
+                if (failedContinue)
+                {
+                    continue;
+                }
                 return false;
             }
         }
@@ -51,13 +55,55 @@ bool IoApi::copyDir(QString srcPath,QString destPath, bool coverFileIfExist)
             auto destPath =  dstDir.filePath(fInfo.fileName());
             if (!QFile::copy(fInfo.filePath(), destPath))
             {
+                TError("copy " + fInfo.filePath() + " to " + destPath + "failed.");
+                if (failedContinue)
+                {
+                    return true;
+                }
                 return false;
+            }
+            else
+            {
+                TInfo("copy " + fInfo.filePath() + " to " + destPath + "success.");
             }
         }
     }
     return true;
 }
 
+
+
+void IoApi::getPath(QString path, QString folderName, QString& destPath)
+{
+    QDir dir(path);
+    dir.setFilter(QDir::Dirs|QDir::NoDotAndDotDot);
+    dir.setSorting(QDir::Name);
+
+    auto dirList = dir.entryInfoList();
+    foreach(QFileInfo fInfo, dirList)
+    {
+        auto dirName = fInfo.fileName();
+        if (dirName == folderName)
+        {
+            destPath = fInfo.filePath();
+            return;
+        }
+        if (fInfo.isDir())
+        {
+            auto subDir = dir.filePath(fInfo.fileName());
+            getPath(subDir, folderName, destPath);
+            if (!destPath.isEmpty())
+            {
+                return;
+            }
+        }
+    }
+    if (!destPath.isEmpty())
+    {
+        return;
+    }
+    destPath = "";
+}
 
 
 QFileInfoList IoApi::getFiles(QString path,QStringList filters, SearchOption option)
@@ -245,6 +291,7 @@ QString IoApi::subContent(QString fileName, QString startWords,QString endWords,
 
 void IoApi::clearFoldersUnderPath(int second, QString absPath, QSet<QString> excludeSet)
 {
+    AkUtil::TInfo("clear folders under path " + absPath);
     QDir resultDir(absPath);
     if (!resultDir.exists())
     {
@@ -269,6 +316,7 @@ void IoApi::clearFoldersUnderPath(int second, QString absPath, QSet<QString> exc
             {
                 //fInfo.dir().removeRecursively();
                 remove(fInfo.filePath());
+                AkUtil::TInfo("remove folders " + fInfo.filePath());
             }
         }
     }
@@ -327,10 +375,12 @@ void IoApi::remove(QString absPath)
          {
              QDir dir(absPath);
              dir.removeRecursively();
+             AkUtil::TWarning("delete folder" + absPath + "");
          }
          else
          {
              fi.dir().remove(absPath);
+             AkUtil::TWarning("delete file " + absPath + "");
          }
          
          fi= QFileInfo(absPath);
@@ -340,7 +390,7 @@ void IoApi::remove(QString absPath)
 
      if (count == 0)
      {
-         AkUtil::TError("delete file " + absPath + "failed. please check the reason");
+         AkUtil::TError("delete " + absPath + "failed. please check the reason");
      }
      //else if (!fi.exists())
      //{

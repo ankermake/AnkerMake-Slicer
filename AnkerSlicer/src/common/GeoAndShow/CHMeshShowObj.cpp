@@ -122,9 +122,11 @@ void CHMeshShowObj::resetRot()
 }
 void CHMeshShowObj::resetZoom()
 {
+    int value[3] = {1};
     for (int i = 0; i < 3; i++)
     {
-        m_params[i] = m_initParams[i];
+        value[i] = (m_params[i] > 0 ? 1 : -1);
+        m_params[i] = m_initParams[i] * value[i];
     }
 }
 void CHMeshShowObj::resetMirr()
@@ -276,7 +278,7 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
             dir2 = QVector3D::dotProduct(bottomN, refP2) + bottomD;
         }
 
-        if(dir1 < 0 && dir2 < 0)
+        if(dir1 < 0 && dir2 < 0 && fabs(dir1) > 0.000001 && fabs(dir2) > 0.000001)
         {
             
             reverse = -reverse;
@@ -307,7 +309,7 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
                 dir4 = QVector3D::dotProduct(leftN, refP4) + leftD;
             }
 
-            if(dir3 < 0/* && dir4 < 0*/)
+            if(dir3 < 0 && fabs(dir3) > 0.000001)
             {
                 reverse = -reverse;
             }

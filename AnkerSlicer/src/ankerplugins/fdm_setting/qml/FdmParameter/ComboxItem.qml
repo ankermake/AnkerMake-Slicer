@@ -27,7 +27,6 @@ Rectangle {
         anchors.top: parent.top
         font.pixelSize: 16
         color: "#FFFFFF"
-       // font.bold: true
     }
     RowLayout{
         id: printer

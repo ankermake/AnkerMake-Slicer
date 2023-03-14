@@ -13,6 +13,8 @@
 
 
 #include "QVector3D"
+#include <QVector4D>
+#include <QMatrix4x4>
 #include "CHPlane.h"
 
 
@@ -83,6 +85,9 @@ public:
 
 	
 	bool intersectWithPlane(const CHPlanePtr& plane) const;
+
+    
+    CHAABB3D getTransformCHAABB3D(const QMatrix4x4 &trans);
 
 
 	CHAABB3D operator * (float d)const;

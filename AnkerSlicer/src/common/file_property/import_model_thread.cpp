@@ -57,6 +57,14 @@ void ImportModelThread::exitThreadSLot()
     m_exit = true;
 }
 
+void ImportModelThread::usbChanged(int state)
+{
+    if(state == 1) 
+    {
+        successful = false;
+    }
+}
+
 ImportModelWoker::ImportModelWoker(QObject* parent) : m_cm(NULL)
 {
 

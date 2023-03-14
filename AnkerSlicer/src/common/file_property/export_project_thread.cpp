@@ -197,6 +197,6 @@ void ExportProjectWorker::doWork()
             }
         }
     }
-
+    emit compressProject();
     emit exitThreadSignal();
 }

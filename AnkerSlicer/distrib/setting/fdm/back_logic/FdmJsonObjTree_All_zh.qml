@@ -196,10 +196,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "﻿悬垂参数应用到整圈"
                 }
                 FdmQml_Param{ id:wall_overhang_extend_type; objectName: "wall_overhang_extend_type"
-                    fdmLabel: "悬垂区域影响扩展类型"
-                    fdmDescription: "﻿设置悬垂区域影响范围,使得打印时能更加平滑"
+                    fdmLabel: "悬垂降速类型"
+                    fdmDescription: "﻿设置打印悬垂时的降速策略,使得打印时能更加平滑"
                     fdmOptions:{
-                        "none": "无",
+                        "instant": "悬垂直接降速",
                         "gradually_xy": "悬垂逐渐降速",
                         "circle": "﻿悬垂整圈降速"
                     }
@@ -291,6 +291,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 FdmQml_Param{ id:bridge_wall_min_length; objectName: "bridge_wall_min_length"
                     fdmLabel: "最小桥壁长度"
                     fdmDescription: "将使用正常壁设置打印短于此长度且没有支撑的壁。将使用桥壁设置打印长于此长度且没有支撑的壁。"
+                }
+                FdmQml_Param{ id:bridge_split_min_length; objectName: "bridge_split_min_length"
+                    fdmLabel: "桥壁拆分最小长度"
+                    fdmDescription: "桥壁长于此长度时，可以进行拆分使用多段速度打印"
+                }
+                FdmQml_Param{ id:bridge_slow_length; objectName: "bridge_slow_length"
+                    fdmLabel: "桥面降速长度"
+                    fdmDescription: "桥中间的这段长度将降速打印，剩余部分和桥墩同速打印"
                 }
                 FdmQml_Param{ id:bridge_skin_support_threshold; objectName: "bridge_skin_support_threshold"
                     fdmLabel: "连桥表面支撑阈值"
@@ -493,7 +501,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "挤出机组数目。 挤出机组是指进料装置、鲍登管和喷嘴的组合。"
                 fdmDefaultValue: 1
                 fdmMinimumValue: 1
-                fdmMaximumValue: 2
+                fdmMaximumValue: 1
                 fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
                 fdmSettablePerMesh: false
@@ -542,12 +550,9 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "需要生成的 G-code 代码类型"
                 fdmOptions:{
                     "RepRap (Marlin/Sprinter)": "RepRap (Marlin/Sprinter)",
-                    "RepRap (Volumetric)": "Marlin（容积）",
                     "RepRap (RepRap)": "RepRap",
-                    "UltiGCode": "Ultimaker 2",
                     "Griffin": "Griffin",
                     "Makerbot": "Makerbot",
-                    "BFB": "Bits from Bytes"
                 }
             }
             FdmQml_Param{ id:machine_firmware_retract; objectName: "machine_firmware_retract"
@@ -1006,6 +1011,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:skin_outline_count; objectName: "skin_outline_count"
                 fdmLabel: "额外皮肤壁计数"
                 fdmDescription: "用多个同心线代替顶部/底部图案的最外面部分。 使用一条或两条线改善从填充材料开始的顶板。"
+            }
+			FdmQml_Param{ id:top_surface_one_wall; objectName: "top_surface_one_wall"
+                fdmLabel: "顶部使用单层墙"
+                fdmDescription: "顶部使用单层墙，以使顶部留取更多的空间来填充图案"
+            }
+            FdmQml_Param{ id:top_skin_density; objectName: "top_skin_density"
+                fdmLabel: "顶部皮肤层密度"
+                fdmDescription: "可以调整顶部皮肤层密度，最低100"
             }
             FdmQml_Param{ id:ironing_enabled; objectName: "ironing_enabled"
                 fdmLabel: "启用熨平"

@@ -46,7 +46,7 @@ public:
 public:
     void recMsgfromManager(PluginMessageData) override final;
 signals:
-    void sendMsg2Manager(PluginMessageData)override final;
+    void sendMsg2Manager(PluginMessageData) override final;
 
 public:
     void messageProcessing(PluginMessageData msgBody);
@@ -55,6 +55,7 @@ public:
     void openGcodePreviewInnetwork(const QString& file,const QString& m_hostAdress);
     
     bool checkOpenFile(QString gcodePath);
+    void queryLoggingStatus();
 
 //    void exportMessageProcessing(PluginMessageData msgBody);  //no need
 
@@ -77,6 +78,7 @@ private:
     QList<FdmGcodePreviewEntry *> previewNetworkList;
 private slots:
     void setUseTimes(int ut);
+    void loggingStausChange(bool status);
 };
 
 

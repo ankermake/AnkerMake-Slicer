@@ -229,6 +229,7 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
         {
             createLayerParts(meshStorage, slicer);
         }
+        
 
         // Do not add and process support _modifier_ meshes further, and ONLY skip support _modifiers_. They have been
         // processed in AreaSupport::handleSupportModifierMesh(), but other helper meshes such as infill meshes are
@@ -288,6 +289,50 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
     }
     return true;
 }
+void FffPolygonGenerator::processTopSurfacePart(SliceMeshStorage& mesh)
+{
+    const auto total_layers = mesh.layers.size();
+    assert(mesh.layers.size() == total_layers);
+
+#if defined(__GNUC__) && __GNUC__ <= 8 && !defined(__clang__)
+#pragma omp parallel for default(none) shared(mesh) schedule(dynamic)
+#else
+#pragma omp parallel for default(none) shared(mesh, total_layers) schedule(dynamic)
+#endif // defined(__GNUC__) && __GNUC__ <= 8
+    // Use a signed type for the loop counter so MSVC compiles (because it uses OpenMP 2.0, an old version).
+    for (int layer_nr = 0; layer_nr < static_cast<int>(total_layers - 1); layer_nr++)
+    {
+        SliceLayer& layer = mesh.layers[layer_nr];
+        SliceLayer& uplayer = mesh.layers[layer_nr + 1];
+
+        auto& parts = layer.parts;
+        auto uplayer_parts = uplayer.parts;
+        Polygons upoutline;
+        for (auto& upp : uplayer_parts)
+        {
+            upoutline.add(upp.outline);
+        }
+        std::vector<SliceLayerPart> new_parts;
+        for (auto it = parts.begin();it!=parts.end();)
+        {
+            auto surface = it->outline.difference(upoutline);
+            surface.removeSmallAreas(2 * INT2MM(400) * INT2MM(400));
+            if (surface.size() > 0)
+            {
+                new_parts.emplace_back().outline.add(it->outline.difference(surface));
+                it = parts.erase(it);
+                continue;
+            }
+            ++it;
+        }
+        if (new_parts.size() > 0)
+        {
+            layer.parts.insert(layer.parts.end(), new_parts.begin(), new_parts.end());
+        }
+
+    }
+}
+
 
 void FffPolygonGenerator::processAnkerOptimize(SliceDataStorage& storage)
 {
@@ -618,7 +663,14 @@ void FffPolygonGenerator::processPerimeterGaps(SliceDataStorage& storage)
                     line_width = wall_line_width_x;
 
                     Polygons inner = part.insets[inset_idx + 1].offset(line_width / 2);
-                    part.perimeter_gaps.add(outer.difference(inner));
+
+                    Polygons skin;
+                    /// 2022/11/08 top_surface Binary for top surface one wall 
+                    for (const SkinPart& skin_part : part.skin_parts)
+                    {
+                        skin.add(skin_part.outline);
+                    }
+                    part.perimeter_gaps.add(outer.difference(inner).difference(skin));
                 }
 
                 if (filter_out_tiny_gaps) {

@@ -32,6 +32,9 @@ public:
     virtual void getCurNearFarPoint(int x, int y, QVector3D& np, QVector3D& fp) = 0;
     virtual void pixelToWorld(float x, float y, float z, QVector3D& worldCoord) = 0;
     virtual void worldToPixel(QVector3D worldCoord, float& x, float& y, float& z) = 0;
+    virtual bool getCurMouseInWidget(int x, int y) = 0;
+    virtual bool isActivteAppWindow() = 0;
+    virtual void getMechineBoxSize(float &length, float &width, float &height) = 0;
 
     void updateShowObj(CHShowObjPtr showobj);
     void updateDoc();

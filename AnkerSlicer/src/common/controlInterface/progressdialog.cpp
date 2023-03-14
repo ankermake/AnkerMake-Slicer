@@ -118,3 +118,14 @@ void ProgressDialog::paintEvent(QPaintEvent *event)
 
     QWidget::paintEvent(event);
 }
+
+void ProgressDialog::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Escape: /*qDebug() << "Qt::Key_Escape." ;*/ break;
+    default: break;
+    }
+
+
+}

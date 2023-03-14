@@ -8,7 +8,7 @@
 #include <QDesktopServices>
 #include <QStackedLayout>
 #include <QButtonGroup>
-#include "glarea.h"
+//#include "glarea.h"
 #include "controls/controlmanager.h"
 #include "controls/preferencesdialog.h"
 #include "controls/generalwidget.h"
@@ -37,7 +37,7 @@ enum CURRENTPAGE {
 #endif
 
 namespace  control{
-class FdmMainWidget : public QWidget
+class FdmMainWidget : public BubbleWidget
 {
     Q_OBJECT
 public:
@@ -98,6 +98,7 @@ private slots:
 
     void setButtonEnableByPickStatus();
     void setButtonEnableByDocument();
+    void setButtonEnableByVisible(int visbleModelNumber);
 
     
     void viewChanged(bool checked);
@@ -115,6 +116,7 @@ private slots:
 
     void tabCurrentPageChanged(int index);
 
+    void visibleModelCountChanged(int count);
 
 private:
     QMenu* m_recentMenu;

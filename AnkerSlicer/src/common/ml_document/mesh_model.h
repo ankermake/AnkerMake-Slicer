@@ -32,7 +32,7 @@
 #include "cmesh.h"
 #include "../GLLogStream.h"
 #include "../filterscript.h"
-#include "../ml_shared_data_context/ml_plugin_gl_context.h"
+//#include "../ml_shared_data_context/ml_plugin_gl_context.h"
 
 #include <vcg/complex/algorithms/update/bounding.h>
 #include <vcg/complex/algorithms/update/color.h>

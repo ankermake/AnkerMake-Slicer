@@ -43,6 +43,7 @@ void CHScene::updateDoc()
         (*bIt)->calRealAABB();
         (*bIt)->updateToScene();
         (*bIt)->updateSupportMeshes();
+
         bIt++;
     }
     m_doc->modelCheckSceneIn();

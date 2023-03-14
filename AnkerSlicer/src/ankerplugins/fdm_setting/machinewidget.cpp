@@ -101,7 +101,8 @@ void MachineWidget::renameCustomMachine(const QString &oldName)
     if(!m_messageDialog) {
         m_messageDialog = new MessageDialog(tr("Name These Parameters"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&MachineWidget::textValid);
-        QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+       // QRegExp rx("^[^?\  * | "" < > : /]{1,128}$");
+          QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
          m_messageDialog->setAutoClosed(false);

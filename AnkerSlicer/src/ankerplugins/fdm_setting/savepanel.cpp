@@ -156,7 +156,7 @@ void SavePanel::textValid(int flag)
 
     QStringList list = FdmParameterProfileService::instance()->getAllParameterList();
     if(list.contains(newname)) {
-        m_messageDialog->setWarning(tr("The Name Already Exists. Please Try Another Name."));
+        m_messageDialog->setWarning(tr("This name already exists. Try another name."));
         return;
     }
     //emit materialRename(m_oldName,newname);
@@ -174,7 +174,7 @@ void SavePanel::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         if (saveAsBtn != nullptr) {
-            saveAsBtn->setText(tr("Save As Parameters"));
+            saveAsBtn->setText(tr("Save As"));
         }
     }
 }

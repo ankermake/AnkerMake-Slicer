@@ -14,37 +14,14 @@
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSettings>
-
-
 #include "../common/controlInterface/messageDialog.h"
-//class IgnoreEvent :public QObject
-//{
-//public:
-//    IgnoreEvent(QObject* obj)
-//    {
-//        m_obj = obj;
-//        m_obj->installEventFilter(this);
-//    }
-//    ~IgnoreEvent()
-//    {
-//        m_obj->removeEventFilter(this);
-//    }
-//    bool eventFilter(QObject *obj, QEvent *event)
-//    {
-//        event->ignore();
-//        return true;
-//        return QObject::eventFilter(obj, event);
-//    }
-//private:
-//    QObject* m_obj;
-//};
+
 
 FdmGcodeParser::FdmGcodeParser()
 {
     preview  = new FdmGcodePreviewEntry();
     m_host = new QRemoteObjectHost(this);
     m_host->setHostUrl(QUrl("local:fdmRpc"));
-    //m_host->setHostUrl(QUrl("local:networkRpc"));
     m_rpc = new fdmRpcWrapper(this);
     m_host->enableRemoting(m_rpc);
     connect(m_rpc,SIGNAL(linkNumChanged(int)),this,SLOT(setUseTimes(int)));
@@ -70,7 +47,6 @@ FdmGcodeParser::FdmGcodeParser()
          data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
          data.msg = AkConst::Msg::GET_PREVIEW_WID;
          data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, wid);
-         //data.object = this->preview->ww;
          data.object = (QWidget *)wid.toULongLong();
          this->sendMsg2Manager(data);
          m_rpc_inner->setPassParams(wid);
@@ -104,7 +80,6 @@ void FdmGcodeParser::recMsgfromManager(PluginMessageData metaData)
         && (metaData.from == AkConst::Plugin::AK_MAIN_WINDOW | metaData.from == AkConst::Plugin::FDM_SLICER))
     {
         if(metaData.from == AkConst::Plugin::AK_MAIN_WINDOW){
-            //messageProcessing(metaData);
             reOpenGcodePreview(metaData);
             PluginMessageData data;
             data.from = AkConst::Plugin::FDM_GCODE_PARSER;
@@ -123,17 +98,12 @@ void FdmGcodeParser::recMsgfromManager(PluginMessageData metaData)
             data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false); 
             this->sendMsg2Manager(data);
         }
-        //exportMessageProcessing(metaData);
     }
 
     if (metaData.msg == AkConst::Msg::AIMODE_CHANGED
         && metaData.from == AkConst::Plugin::AK_MAIN_WINDOW)
     {
 
-//        if(pInner == nullptr)
-//        {
-//            return ;
-//        }
          bool _isAiMode = metaData.map.value(AkConst::Param::AIMODE_STATE).toBool();
          qDebug() << "aimode --------:" <<_isAiMode ;
          m_rpc_inner->setIsAiMode(_isAiMode);
@@ -161,6 +131,12 @@ void FdmGcodeParser::recMsgfromManager(PluginMessageData metaData)
         this->openGcodePreviewInnetwork(gcodeFile, m_hostAdress);
     }
 
+    if(metaData.msg == AkConst::Msg::GET_LOGGING_STATUS &&
+            metaData.from == AkConst::Plugin::FDM_NETWORK)
+    {
+        bool status = metaData.map.value(AkConst::Param::LOGGING_STATUS).toBool();
+        loggingStausChange(status);
+    }
 
 }
 
@@ -168,6 +144,14 @@ void FdmGcodeParser::setUseTimes(int ut)
 {
     qDebug() << "ut : " << ut;
     useTimes = ut;
+}
+
+
+void FdmGcodeParser::loggingStausChange(bool status)
+{
+    if(this->m_rpc_inner != nullptr){
+        m_rpc_inner->setLoggingStatus(status);
+    }
 }
 
 void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
@@ -230,50 +214,12 @@ void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
         args<<"--ai";
     }
     args<<"-n"<<QString::number(useTimes);
-
-    //FdmGcodePreviewEntry *preview = new FdmGcodePreviewEntry();
-    //FdmGcodePreviewEntry* preview = nullptr;
     preview->createView(args);
-
-//#ifdef __APPLE__
-//    qDebug() << "fdm_gcode_preview.app/Contents/MacOS/fdm_gcode_preview"<<args;
-//    QString curPath = QCoreApplication::applicationDirPath();
-//    curPath = curPath + "/fdm_gcode_preview";
-//    pIn->start(curPath,args);
-
-
-//#else
-//    qDebug() << "fdm_gcode_preview"<<args;
-//    //pIn->start("fdm_gcode_preview",args);
-
-
-//    //std::vector<char*> vc;
-//    //for (int i = 0; i < args.size(); i++)
-//    //{
-//    //    int x = args[i].size();
-//    //    char* pStr = new char[args[i].size() + 1];
-//    //    std::strcpy(pStr, args[i].toStdString().c_str());
-//    //    vc.push_back(pStr);
-//    //}
-//    //preview->createView(vc.size(),vc.data());
-//    preview->createView(args);
-
-//#endif
-
-//    m_pDlg = new ProgressDialog(nullptr);//(QDialog*)this
-//    IgnoreEvent ign(this);
-//    //boolLock orL(offRenderLock);
-//    m_pDlg->setText(tr("load GCode file"));
-//    m_pDlg->setCancelVisible(false);
-//    connect(m_rpc,SIGNAL(progress(int)),m_pDlg,SLOT(setValue(int)));
-//    m_pDlg->exec();
-
 }
 
 #include <QProgressDialog>
 void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
 {
-    qDebug() << "enter FdmGcodeParser::reOpenGcodePreview";
     QString file = msgBody.map.value(AkConst::Param::GCODE_FILE, QString("")).toString();
     bool isSameFile = checkOpenFile(file);
     if(isSameFile){
@@ -291,13 +237,11 @@ void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
     
         m_rpc_inner->pubMsgFromFdmGcodePaser(file);
         m_rpc_inner->setOStlName(originalStlName);
-        qDebug() << "preview->ww windId:" <<preview->ww->winId();
-        //qDebug() << "preview->ww windowHandle:" <<preview->ww->windowHandle();
+        
+        queryLoggingStatus();
         m_pDlg = new ProgressDialog(nullptr);//(QDialog*)this
         connect(m_pDlg, &ProgressDialog::destroyed, this, [&]()->void { m_pDlg = nullptr; });
-        //IgnoreEvent ign(preview->ww);
-        //boolLock orL(offRenderLock);
-        m_pDlg->setText(tr("load GCode file"));
+        m_pDlg->setText(tr("Load G-Code"));
         m_pDlg->setCancelVisible(false);
         connect(preview->ww->getGcodeView(),SIGNAL(setValue(int)),m_pDlg,SLOT(setValue(int)));
         m_pDlg->exec();
@@ -308,28 +252,15 @@ void FdmGcodeParser::openGcodePreviewWithoutFile()
 {
     QSettings settings;
     bool  isAIMode = settings.value("AiMode").toBool();
-//    pInner = new QProcess(nullptr);
     QStringList args;
     args << "noexe";
+    
     args<<"--imode";
     args<<"--host"<<"local:fdmRpcInner";
     if(isAIMode)
     {
         args<<"--ai";
     }
-    //args<<"--pmode";
-    //pInner->start("fdm_gcode_preview",args);
-    
-   
-    //std::vector<char*> vc;
-    //for (int i = 0; i < args.size(); i++)
-    //{
-    //    int x = args[i].size();
-    //    char* pStr = new char[args[i].size() + 1];
-    //    std::strcpy(pStr, args[i].toStdString().c_str());
-    //    vc.push_back(pStr);
-    //}
-    //preview->createView(vc.size(),vc.data());
     preview->createView(args);
     m_rpc_inner->setIsAiMode(isAIMode);
 }
@@ -360,27 +291,21 @@ bool FdmGcodeParser::checkOpenFile(QString gcodePath)
     return false;
 }
 
+void FdmGcodeParser::queryLoggingStatus()
+{
+    PluginMessageData data;
+    data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+    data.dest = AkConst::Plugin::FDM_NETWORK;
+    data.msg = AkConst::Msg::GET_LOGGING_STATUS;
+    this->sendMsg2Manager(data);
+}
+
 FdmGcodeParser::~FdmGcodeParser()
 {
-//    for (auto it = pInList.begin();it != pInList.end();it++)
-//    {
-//        QProcess* t =(*it);
-//        t->terminate();
-//        QCoreApplication::processEvents(QEventLoop::AllEvents);
-//    }
-//    for (auto it = pInList.begin();it != pInList.end();it++)
-//    {
-//        QProcess* t =(*it);
-//        t->waitForFinished();
-//        QCoreApplication::processEvents(QEventLoop::AllEvents);
-//    }
-
-
-//    pInner->deleteLater();
-//    pInner = nullptr;
-
+    AkUtil::TFunction("");
     if (preview != nullptr)
     {
+        AkUtil::TDebug("~inner preview");
         delete preview;
         preview = nullptr;
     }
@@ -396,50 +321,3 @@ FdmGcodeParser::~FdmGcodeParser()
 };
 
 
-//void FdmGcodeParser::exportMessageProcessing(PluginMessageData msgBody)
-//{
-//    AkUtil::TFunction("");
-//    QString savePath = QFileDialog::getSaveFileName(NULL, "save", "", "*.gcode");
-//    if (savePath.isEmpty())
-//    {
-//        return;
-//    }
-//    QSettings settings;
-//    AkUtil::TDebug( QString("FdmSlicer plugins aI mode  = %1").arg(settings.value("AiMode").toBool()));
-
-//    QString gcodeFile = msgBody.map.value(AkConst::Param::GCODE_FILE, QString("")).toString();
-//    AkUtil::TDebug(QString("gcodeFile " )+gcodeFile);
-
-//    this->processor->reset();
-//    this->processor->enable_producers(true);
-//    this->processor->process_file(gcodeFile.toStdString(), false);
-//    std::unique_ptr<GcodeViewer> offerRenderViewr = std::make_unique<GcodeViewer>(nullptr);
-//    offerRenderViewr->setIsTRender(false);
-//    offerRenderViewr->gcode_result = std::move(this->processor->extract_result());
-//    offerRenderViewr->offerContext();
-//    ProgressDialog progressDlg(nullptr);
-//    connect(offerRenderViewr.get(),SIGNAL(setValue(int)),&progressDlg,SLOT(setValue(int)));
-//    progressDlg.setText(tr("gen ai pic"));
-//    progressDlg.setCancelVisible(false);
-//    QTimer::singleShot(100, this, [&,savePath](){
-//               offerRenderViewr->off_render(savePath,settings.value("AiMode").toBool());
-//            });
-////    offerRenderViewr->off_render(savePath);
-
-//    QRegularExpression re(".+(?=.gcode)");
-//    QRegularExpressionMatch match = re.match(savePath);
-//    QString gcodeSave;
-//    if (match.hasMatch())
-//    {
-//        gcodeSave = match.captured(0);
-//        gcodeSave += ".gcode";
-//        bool IsTrue = QFile::exists(gcodeSave);
-//        if(IsTrue)
-//        {
-//            QFile::remove(gcodeSave);
-//        }
-//        QFile::copy(gcodeFile, gcodeSave);
-//    }
-
-//    progressDlg.exec();
-//}

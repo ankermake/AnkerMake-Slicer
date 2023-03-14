@@ -48,29 +48,29 @@ HEADERS += \
         controls/toolBar.h \
         controls/useragreementwidget.h \
         controls/viewwidget.h \
-        mainwindow.h \
-        glarea.h \
-        dialogs/about_dialog.h \
-        dialogs/congrats_dialog.h \
-        dialogs/filter_script_dialog.h \
-        dialogs/options_dialog.h \
-        dialogs/plugin_info_dialog.h \
-        dialogs/save_mesh_attributes_dialog.h \
-        dialogs/save_snapshot_dialog.h \
-        dialogs/setting_dialog.h \
+#        mainwindow.h \
+#        glarea.h \
+#        dialogs/about_dialog.h \
+#        dialogs/congrats_dialog.h \
+#        dialogs/filter_script_dialog.h \
+#        dialogs/options_dialog.h \
+#        dialogs/plugin_info_dialog.h \
+#        dialogs/save_mesh_attributes_dialog.h \
+#        dialogs/save_snapshot_dialog.h \
+#        dialogs/setting_dialog.h \
         message/messageprocessing.h \
-        multiViewer_Container.h \
-        glarea_setting.h \
-        layerDialog.h \
-        ml_std_par_dialog.h \
+#        multiViewer_Container.h \
+#        glarea_setting.h \
+#        layerDialog.h \
+#        ml_std_par_dialog.h \
         additionalgui.h \
         qframelesshelper.h \
         qshadowhelper.h \
         settingmanager.h \
         snapshotsetting.h \
-        ml_render_gui.h \
-        ml_rendering_actions.h \
-        ml_default_decorators.h \
+#        ml_render_gui.h \
+#        ml_rendering_actions.h \
+#        ml_default_decorators.h \
         $$VCGDIR/wrap/gui/trackball.h \
         $$VCGDIR/wrap/gui/trackmode.h \
         $$VCGDIR/wrap/gl/trimesh.h \
@@ -101,29 +101,29 @@ SOURCES += \
         controls/useragreementwidget.cpp \
         controls/viewwidget.cpp \
         main.cpp \
-        mainwindow_Init.cpp \
-        mainwindow_RunTime.cpp \
-        glarea.cpp \
-        dialogs/about_dialog.cpp \
-        dialogs/congrats_dialog.cpp \
-        dialogs/filter_script_dialog.cpp \
-        dialogs/options_dialog.cpp \
-        dialogs/plugin_info_dialog.cpp \
-        dialogs/save_mesh_attributes_dialog.cpp \
-        dialogs/save_snapshot_dialog.cpp \
-        dialogs/setting_dialog.cpp \
+#        mainwindow_Init.cpp \
+#        mainwindow_RunTime.cpp \
+#        glarea.cpp \
+#        dialogs/about_dialog.cpp \
+#        dialogs/congrats_dialog.cpp \
+#        dialogs/filter_script_dialog.cpp \
+#        dialogs/options_dialog.cpp \
+#        dialogs/plugin_info_dialog.cpp \
+#        dialogs/save_mesh_attributes_dialog.cpp \
+#        dialogs/save_snapshot_dialog.cpp \
+#        dialogs/setting_dialog.cpp \
         message/messageprocessing.cpp \
-        multiViewer_Container.cpp \
-        layerDialog.cpp \
-        ml_std_par_dialog.cpp \
+#        multiViewer_Container.cpp \
+#        layerDialog.cpp \
+#        ml_std_par_dialog.cpp \
         additionalgui.cpp \
-        ml_render_gui.cpp \
-        ml_rendering_actions.cpp \
-        ml_default_decorators.cpp \
+#        ml_render_gui.cpp \
+#        ml_rendering_actions.cpp \
+#        ml_default_decorators.cpp \
         $$VCGDIR/wrap/gui/trackball.cpp \
         $$VCGDIR/wrap/gui/trackmode.cpp \
-        $$VCGDIR/wrap/gui/coordinateframe.cpp \
-        glarea_setting.cpp \
+#        $$VCGDIR/wrap/gui/coordinateframe.cpp \
+#        glarea_setting.cpp \
         qframelesshelper.cpp \
         qshadowhelper.cpp \
         rich_parameter_gui/richparameterlistdialog.cpp \
@@ -132,16 +132,16 @@ SOURCES += \
         settingmanager.cpp \
         translator.cpp
 FORMS += \
-  dialogs/about_dialog.ui \
-  dialogs/congrats_dialog.ui \
-        dialogs/filter_script_dialog.ui \
-        dialogs/plugin_info_dialog.ui \
-        dialogs/save_mesh_attributes_dialog.ui \
-        dialogs/save_snapshot_dialog.ui \
-        ui/layerDialog.ui
+#  dialogs/about_dialog.ui \
+#  dialogs/congrats_dialog.ui \
+#        dialogs/filter_script_dialog.ui \
+#        dialogs/plugin_info_dialog.ui \
+#        dialogs/save_mesh_attributes_dialog.ui \
+#        dialogs/save_snapshot_dialog.ui \
+#        ui/layerDialog.ui
 
 RESOURCES += \
-        ankerimages/ankerslicer.qrc \
+        ankerimages/ankermake.qrc \
         meshlab.qrc \
         translator.qrc
 
@@ -150,13 +150,13 @@ win32-msvc2008: RCC_DIR = $(ConfigurationName)
 
 
 # add @2022-01-19 by CL
-TARGET = AnkerSlicer
+TARGET = AnkerMake
 TEMPLATE = app
 
 # to add windows icon
 #win32:RC_FILE = meshlab.rc
-win32:RC_FILE = ankerimages/ankerslicer.rc # exe icon @2022-01-19 by CL
-macx:RC_FILE = ankerimages/ankerslicer.rc
+win32:RC_FILE = ankerimages/ankermake.rc # exe icon @2022-01-19 by CL
+macx:RC_FILE = ankerimages/ankermake.rc
 
 # ## the xml info list
 # ## the next time the app open a new extension
@@ -164,7 +164,7 @@ macx:RC_FILE = ankerimages/ankerslicer.rc
 
 # to add MacOS icon
 #ICON = images/meshlab.icns
-ICON = ankerimages/logo_ankerslicer.png
+ICON = ankerimages/logo_AnkerMake.png
 
 # note that to add the file icons on the mac the following line does not work.
 # You have to copy the file by hand into the meshlab.app/Contents/Resources directory.
@@ -202,17 +202,42 @@ macx:{
 }
 
 macx:{
-QMAKE_POST_LINK += "\
-    rm -rf $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/Plugins; \
-    mkdir -p $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/PlugIns/; \
-    cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/CompilerChain/macx/ $$MESHLAB_DISTRIB_DIRECTORY/../../distrib ;\
-    cp -R $$SLICER_ENGINE_DIR $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine ;\
-    chmod +x $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine/CuraEngine ;\
-    cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/ $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/MacOS/ ;\
-    cp -R $$MESHLAB_DISTRIB_DIRECTORY/plugins/* $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/PlugIns/; \
-    cp -P $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/Frameworks/; \
-    install_name_tool -change libmeshlab-common.1.dylib @rpath/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/MacOS/AnkerSlicer ;\
-    install_name_tool -change /usr/local/opt/libomp/lib/libomp.dylib @rpath/libomp.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/MacOS/AnkerSlicer ;"
+    MAC_M1_BUILD_X86{
+        message("QMAKE_POST_LINK begin .  MAC_M1_BUILD_X86 is set")
+        QMAKE_POST_LINK += "\
+            rm -rf $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Plugins; \
+            mkdir -p $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/PlugIns/; \
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/CompilerChain/macx/ $$MESHLAB_DISTRIB_DIRECTORY/../../distrib ;\
+            cp -R $$SLICER_ENGINE_DIR $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine ;\
+            chmod +x $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine ;\
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/ $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/ ;\
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/plugins/* $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/PlugIns/; \
+            cp -P $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Frameworks/; \
+            install_name_tool -change libmeshlab-common.1.dylib @rpath/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/AnkerMake ;"
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libgomp.1.dylib @executable_path/libgomp.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;\
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libstdc++.6.dylib @executable_path/libstdc++.6.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;\
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.dylib @executable_path/libgcc_s.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;"
+
+    }else{
+      message("QMAKE_POST_LINK begin .  MAC_M1_BUILD_X86 is not set")
+        QMAKE_POST_LINK += "\
+            rm -rf $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Plugins; \
+            mkdir -p $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/PlugIns/; \
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/CompilerChain/macx/ $$MESHLAB_DISTRIB_DIRECTORY/../../distrib ;\
+            #cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/SliceEngine/PlatformApi/macx/ $$MESHLAB_DISTRIB_DIRECTORY/../../distrib ;\
+            cp -R $$SLICER_ENGINE_DIR $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine ;\
+            chmod +x $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/SliceEngine ;\
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/ $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/ ;\
+            cp -R $$MESHLAB_DISTRIB_DIRECTORY/plugins/* $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/PlugIns/; \
+            cp -P $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Frameworks/; \
+            #cp -R $$MESHLAB_DISTRIB_DIRECTORY/fdm_gcode_preview.app/Contents/MacOS/ $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/ ;\
+            install_name_tool -change libmeshlab-common.1.dylib @rpath/libmeshlab-common.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/AnkerMake ;\
+            install_name_tool -change /usr/local/opt/libomp/lib/libomp.dylib @rpath/libomp.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/AnkerMake ;"
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libgomp.1.dylib @executable_path/libgomp.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;\
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libstdc++.6.dylib @executable_path/libstdc++.6.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;\
+#            install_name_tool -change /usr/local/opt/gcc/lib/gcc/11/libgcc_s.1.dylib @executable_path/libgcc_s.1.dylib $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/SliceEngine/CuraEngine ;"
+
+    }
 }
 
 
@@ -232,28 +257,6 @@ win32:{
         win32-g++: target_CompilerChain = $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/CompilerChain/mingw_x64/*.*
     }
 	
-	 
-	
-    target1 = $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/Network/Network_gcc_x64/*.*
-    contains(QT_VERSION, 5.15.1){
-        target2 = $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/Network/Network_gcc_x64/Mqtt/*.*
-        target2 = $$replace(target2, /, \\)
-    }
-    target3 = $$MESHLAB_DISTRIB_DIRECTORY/../../3rd/Network/Network_gcc_x64/plugins/*.*
-    target_out1 = $$OUT_PWD/../distrib/Network/
-    target_out2 = $$OUT_PWD/../distrib/
-    target_out3 = $$OUT_PWD/../distrib/plugins/
-	 
-    target1 = $$replace(target1, /, \\)
-    target3 = $$replace(target3, /, \\)
-    target_out1 = $$replace(target_out1, /, \\)
-    target_out2 = $$replace(target_out2, /, \\)
-    target_out3 = $$replace(target_out3, /, \\)
-
-message("target3: " $$target3)
-message("target_out3: " $$target_out3)
-
-
     output_dir = $$MESHLAB_DISTRIB_DIRECTORY/SliceEngine/
     output_bindir = $$MESHLAB_DISTRIB_DIRECTORY
     target_engine = $$replace(target_engine, /, \\)
@@ -265,11 +268,6 @@ message("target_out3: " $$target_out3)
      copy /Y $$target_engine $$output_dir  &\
      copy /Y $$target_PlatformApi $$output_bindir  &\
      copy /Y $$target_CompilerChain $$output_bindir &\
-     copy /Y $$target3 $$target_out3 &\
-     copy /Y $$target1 $$target_out1 &\
-     copy /Y $$target1 $$target_out2 &\
-     copy /Y $$target2 $$target_out1 &\
-     copy /Y $$target2 $$target_out2
 }
 
 

@@ -266,6 +266,8 @@ void SVG::writePolygon(ConstPolygonRef poly, ColorObject color, float stroke_wid
     {
         return;
     }
+    
+    
     int size = poly.size();
     Point p0 = poly.back();
     int i = 0;

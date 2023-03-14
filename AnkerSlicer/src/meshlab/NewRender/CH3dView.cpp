@@ -6,9 +6,12 @@
 #include "QCursor"
 #include "common/ml_document/mesh_model.h"
 #include "common/utilities/tlogger.h"
-
+#include <QPainter>
+#include <QPen>
 #define EPSINON 0.000001
 #define OutOfRangeColor QColor(255,0,0)
+
+
 CH3dView::CH3dView(QWidget* parent)
     : QOpenGLWidget(parent), m_viewType(NORMAL_VIEW_TYPE)
 {
@@ -24,14 +27,11 @@ CH3dView::CH3dView(QWidget* parent)
     m_near = 10;
     m_far = 10000;
 
-    //    m_eye = QVector3D(0, -800, 100);
-    //    m_up = QVector3D(0, 0, 1.0);
-    //    m_front = QVector3D(0, 1.0, 0);
-    m_eye = QVector3D(106.066, -938.46, 870.233);
-    m_front = QVector3D(0.00884618, 0.816991, -0.576583);
-    m_up = QVector3D(-0.0115033, 0.57665, 0.81691);
+    m_ViewVec[0].eye = QVector3D(106.066, -938.46, 870.233);
+    m_ViewVec[0].front = QVector3D(0.00884618, 0.816991, -0.576583);
+    m_ViewVec[0].up = QVector3D(-0.0115033, 0.57665, 0.81691);
 
-
+    initView();
     refTranPoint = QVector3D(0, 0, 0);
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
         tan(m_verticalAngle / 360.0 * CH_PI);
@@ -59,6 +59,14 @@ CH3dView::~CH3dView()
     delete texture2;
 
     doneCurrent();
+}
+
+
+void CH3dView::initView()
+{
+    m_eye = m_ViewVec[0].eye;
+    m_front = m_ViewVec[0].front;
+    m_up = m_ViewVec[0].up;
 }
 
 void CH3dView::initializeGL()
@@ -292,7 +300,8 @@ void CH3dView::paintGL()
     painter.setPen(pen);
 
     QFont font;
-
+    font.setPixelSize(15);
+
     font.setLetterSpacing(QFont::AbsoluteSpacing, 0);
     painter.setFont(this->font());
     //QFontMetrics
@@ -498,11 +507,6 @@ void CH3dView::calcSceneParamsFromBox(const CHAABB3D& aabb)
     m_sceneBox = aabb;
     QVector3D center = aabb.getCenterPoint();
 
-    //    m_eye = QVector3D(center.x(), -5 * aabb.getLenY(), center.z());
-    //    m_up = QVector3D(0, 0, 1.0);
-    //    m_front = QVector3D(0, 1.0, 0);
-    //m_eye = QVector3D(106.066, -938.46, 870.233);
-    // Center:  QVector3D(117.5, 117.5, 125)
     m_eye = QVector3D(center.x(), -6 * center.y(), 5 * center.z());
     m_front = QVector3D(0.00884618, 0.816991, -0.576583);
     m_up = QVector3D(-0.0115033, 0.57665, 0.81691);
@@ -782,6 +786,12 @@ void CH3dView::worldToPixel(QVector3D worldCoord, float& x, float& y, float& z)
     z = out.z();
 }
 
+/*
+QVector3D globalEye = QVector3D(106.066, -938.46, 870.233);
+QVector3D globalFront = QVector3D(0.00884618, 0.816991, -0.576583);
+QVector3D globalUp = QVector3D(-0.0115033, 0.57665, 0.81691);
+*/
+
 void CH3dView::setView(const ViewType& _type, const CHAABB3D& aabb)
 {
     //matrix.lookAt(m_eye, m_eye+m_front,m_up);
@@ -790,50 +800,60 @@ void CH3dView::setView(const ViewType& _type, const CHAABB3D& aabb)
     switch (_type)
     {
     case ViewType::JUST_VIEW_TYPE:
-        //        m_front = QVector3D(1.0f, 1.0f, 0.0f);
-        //        m_up = QVector3D(0.0f, 0.0f, 1.0f);
-        //        m_eye = QVector3D(-800 / sqrt(2), -800 / sqrt(2), 100.0);
-        m_front = QVector3D(0.945542, 0.951188, -0.448531);
-        m_up = QVector3D(0.228283, 0.220264, 0.948349);
-        m_eye = QVector3D(-534.188, -537.845, 407.721);
-        /*m_eye = QVector3D(-5 * sqrtf(aabb.getLenY() * aabb.getLenY() + aabb.getLenX() * aabb.getLenX()) / sqrtf(2),
-            -5 * sqrtf(aabb.getLenY() * aabb.getLenY() + aabb.getLenX() * aabb.getLenX()) / sqrtf(2), center.z()); */
+//        m_front = QVector3D(0.945542, 0.951188, -0.448531);
+//        m_up = QVector3D(0.228283, 0.220264, 0.948349);
+//        m_eye = QVector3D(-534.188, -537.845, 407.721);
+        m_front = m_ViewVec[JUST_VIEW_TYPE].front;
+        m_up = m_ViewVec[JUST_VIEW_TYPE].up;
+        m_eye = m_ViewVec[JUST_VIEW_TYPE].eye;
         break;
     case ViewType::FRONT_VIEW_TYPE:
-        m_front = QVector3D(0.0f, 1.0f, 0.0f);
-        m_up = QVector3D(0.0f, 0.0f, 1.0f);
-        m_eye = QVector3D(center.x(), -800, 100.0);
-        //m_eye = QVector3D(center.x(), -5 * aabb.getLenY(), center.z());
+//        m_front = QVector3D(0.0f, 1.0f, 0.0f);
+//        m_up = QVector3D(0.0f, 0.0f, 1.0f);
+//        m_eye = QVector3D(center.x(), -800, 100.0);
+        m_front = m_ViewVec[FRONT_VIEW_TYPE].front;
+        m_up = m_ViewVec[FRONT_VIEW_TYPE].up;
+        m_eye = m_ViewVec[FRONT_VIEW_TYPE].eye;
         break;
     case ViewType::BACK_VIEW_TYPE:
-        m_front = QVector3D(0, -1.0, 0);
-        m_up = QVector3D(0, 0, 1.0);
-        m_eye = QVector3D(center.x(), 800 + aabb.getLenY(), 100.0);
-        //m_eye = QVector3D(center.x(), 5 * aabb.getLenY(), center.z());
+//        m_front = QVector3D(0, -1.0, 0);
+//        m_up = QVector3D(0, 0, 1.0);
+//        m_eye = QVector3D(center.x(), 800 + aabb.getLenY(), 100.0);
+        m_front = m_ViewVec[BACK_VIEW_TYPE].front;
+        m_up = m_ViewVec[BACK_VIEW_TYPE].up;
+        m_eye = m_ViewVec[BACK_VIEW_TYPE].eye;
         break;
     case ViewType::LEFT_VIEW_TYPE:
-        m_front = QVector3D(1.0, 0, 0);
-        m_up = QVector3D(0, 0, 1);
-        m_eye = QVector3D(-800, center.y(), 100);
-        //m_eye = QVector3D(-5 * aabb.getLenX(), center.y(), center.z());
+//        m_front = QVector3D(1.0, 0, 0);
+//        m_up = QVector3D(0, 0, 1);
+//        m_eye = QVector3D(-800, center.y(), 100);
+        m_front = m_ViewVec[LEFT_VIEW_TYPE].front;
+        m_up = m_ViewVec[LEFT_VIEW_TYPE].up;
+        m_eye = m_ViewVec[LEFT_VIEW_TYPE].eye;
         break;
     case ViewType::RIGHT_VIEW_TYPE:
-        m_front = QVector3D(-1.0, 0, 0);
-        m_up = QVector3D(0, 0, 1);
-        m_eye = QVector3D(800 + aabb.getLenX(), center.y(), 100.0);
-        //m_eye = QVector3D(5 * aabb.getLenX(), center.y(), center.z());
+//        m_front = QVector3D(-1.0, 0, 0);
+//        m_up = QVector3D(0, 0, 1);
+//        m_eye = QVector3D(800 + aabb.getLenX(), center.y(), 100.0);
+        m_front = m_ViewVec[RIGHT_VIEW_TYPE].front;
+        m_up = m_ViewVec[RIGHT_VIEW_TYPE].up;
+        m_eye = m_ViewVec[RIGHT_VIEW_TYPE].eye;
         break;
     case ViewType::TOP_VIEW_TYPE:
-        m_front = QVector3D(0, 0, -1);
-        m_up = QVector3D(0, 1, 0);
-        m_eye = QVector3D(center.x(), center.y(), 800 + aabb.getLenZ());
-        //m_eye = QVector3D(center.x(), center.y(), 5 * aabb.getLenZ());
+//        m_front = QVector3D(0, 0, -1);
+//        m_up = QVector3D(0, 1, 0);
+//        m_eye = QVector3D(center.x(), center.y(), 800 + aabb.getLenZ());
+        m_front = m_ViewVec[TOP_VIEW_TYPE].front;
+        m_up = m_ViewVec[TOP_VIEW_TYPE].up;
+        m_eye = m_ViewVec[TOP_VIEW_TYPE].eye;
         break;
     case ViewType::BOTTOM_VIEW_TYPE:
-        m_front = QVector3D(0, 0, 1);
-        m_up = QVector3D(0, -1, 0);
-        m_eye = QVector3D(center.x(), center.y(), -800);
-        //m_eye = QVector3D(center.x(), center.y(), -5 * aabb.getLenZ());
+//        m_front = QVector3D(0, 0, 1);
+//        m_up = QVector3D(0, -1, 0);
+//        m_eye = QVector3D(center.x(), center.y(), -800);
+        m_front = m_ViewVec[BOTTOM_VIEW_TYPE].front;
+        m_up = m_ViewVec[BOTTOM_VIEW_TYPE].up;
+        m_eye = m_ViewVec[BOTTOM_VIEW_TYPE].eye;
         break;
     default:
         break;
@@ -854,12 +874,61 @@ void CH3dView::getBoxPoints(const QVector3D& iMin, const QVector3D& iMax, std::v
     points.push_back(QVector3D(iMax.x(), iMin.y(), iMax.z()));
 }
 
+void CH3dView::machinePlatformSizeChanged(float length, float width, float height)
+{
+    m_length = length;
+    m_width = width;
+    m_height = height;
+
+    m_ViewVec[NORMAL_VIEW_TYPE].eye = QVector3D(length / 2.0, -4 * width, height * 3.5);
+    m_ViewVec[NORMAL_VIEW_TYPE].front = QVector3D(0.00884618, 0.816991, -0.576583);
+    m_ViewVec[NORMAL_VIEW_TYPE].up = QVector3D(-0.0115033, 0.57665, 0.81691);
+
+    m_ViewVec[JUST_VIEW_TYPE].eye = QVector3D(-2.3 * length, -2.3 * width, 1.63 * height);
+    m_ViewVec[JUST_VIEW_TYPE].front = QVector3D(0.945542, 0.951188, -0.448531);
+    m_ViewVec[JUST_VIEW_TYPE].up = QVector3D(0.228283, 0.220264, 0.948349);
+
+    m_ViewVec[FRONT_VIEW_TYPE].eye = QVector3D(length / 2.0, -3.5 * width, height / 2.0);
+    m_ViewVec[FRONT_VIEW_TYPE].front = QVector3D(0.0f, 1.0f, 0.0f);
+    m_ViewVec[FRONT_VIEW_TYPE].up = QVector3D(0.0f, 0.0f, 1.0f);
+
+    m_ViewVec[BACK_VIEW_TYPE].eye = QVector3D(length / 2.0, 3.5 * width + width,  height / 2.0);
+    m_ViewVec[BACK_VIEW_TYPE].front = QVector3D(0, -1.0, 0);
+    m_ViewVec[BACK_VIEW_TYPE].up = QVector3D(0, 0, 1.0);
+
+    m_ViewVec[LEFT_VIEW_TYPE].eye = QVector3D(-length * 3.4, width / 2.0, height / 2.0);
+    m_ViewVec[LEFT_VIEW_TYPE].front = QVector3D(1.0, 0, 0);
+    m_ViewVec[LEFT_VIEW_TYPE].up = QVector3D(0, 0, 1);
+
+    m_ViewVec[RIGHT_VIEW_TYPE].eye = QVector3D(length + 3.4 * length, width / 2.0, height / 2.0);
+    m_ViewVec[RIGHT_VIEW_TYPE].front = QVector3D(-1.0, 0, 0);
+    m_ViewVec[RIGHT_VIEW_TYPE].up = QVector3D(0, 0, 1);
+
+    m_ViewVec[TOP_VIEW_TYPE].eye = QVector3D(length / 2.0, width / 2.0, height * 3.2 + height);
+    m_ViewVec[TOP_VIEW_TYPE].front = QVector3D(0, 0, -1);
+    m_ViewVec[TOP_VIEW_TYPE].up = QVector3D(0, 1, 0);
+
+    m_ViewVec[BOTTOM_VIEW_TYPE].eye = QVector3D(length / 2.0,  width / 2.0, -height * 3.2);
+    m_ViewVec[BOTTOM_VIEW_TYPE].front = QVector3D(0, 0, 1);
+    m_ViewVec[BOTTOM_VIEW_TYPE].up = QVector3D(0, -1, 0);
+
+    initView();
+}
+
+
 void CH3dView::setPerspectiveTransformationRef(QVector3D rotCenter)
 {
     refTranPoint = rotCenter;
 
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
-        tan(m_verticalAngle / 360.0 * 3.1415926);
+            tan(m_verticalAngle / 360.0 * 3.1415926);
+}
+
+void CH3dView::getMechineBoxSize(float &length, float &width, float &height)
+{
+    length = m_length;
+    width = m_width;
+    height = m_height;
 }
 
 void CH3dView::getPointWorldLocationOnFixedProjMatrix(float dx, float dy, QMatrix4x4& invertMatrix, QVector3D& outpt, float js)
@@ -993,7 +1062,6 @@ void CH3dView::paintMeshVbo(QOpenGLShaderProgram& shaderProgram, CHMeshShowObjPt
     {
         //qDebug() << mesh->m_meshPath << ", " << mesh->getTransform();
     }
-
     shaderProgram.setUniformValue("objColor", QVector3D((float)color.red() / 255.0,
         (float)color.green() / 255.0, (float)color.blue() / 255.0));
 
@@ -1007,7 +1075,7 @@ void CH3dView::paintMeshVbo(QOpenGLShaderProgram& shaderProgram, CHMeshShowObjPt
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 
     
-    shaderProgram.setUniformValue("calLight", mesh->getCalLight());
+    //shaderProgram.setUniformValue("calLight", mesh->getCalLight());
     if (mesh->m_showMode == MeshShowFace)
     {
         shaderProgram.setUniformValue("calLight", mesh->getCalLight());

@@ -27,7 +27,6 @@ Rectangle {
     Image {
         id:expandIcon
         anchors.right: parent.right
-//        anchors.rightMargin:16
         anchors.verticalCenter: parent.verticalCenter
         source: model.expand ?  "qrc:/images/images/fdm_pack_icon_n.png" : "qrc:/images/images/fdm_an_icon_n.png"
     }

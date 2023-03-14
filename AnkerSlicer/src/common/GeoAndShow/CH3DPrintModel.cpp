@@ -1,7 +1,7 @@
 #include "CH3DPrintModel.h"
 #include "CHScene.h"
 #include <QApplication>
-#define EPSINON1 0.001
+#define EPSINON1 0.01
 
 CH3DPrintModel::CH3DPrintModel()
 {

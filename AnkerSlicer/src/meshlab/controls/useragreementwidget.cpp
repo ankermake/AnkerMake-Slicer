@@ -8,7 +8,8 @@ UserAgreementWidget::UserAgreementWidget(QWidget *parent) : QDialog(parent)
 void UserAgreementWidget::initUi()
 {
     setWindowTitle(tr("User Agreement"));
-
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    setWindowFlag(Qt::WindowStaysOnTopHint, false);
     QFrame *frame = new QFrame(this);
     frame->setStyleSheet("background-color:#151619;border:none;border-radius:0px;");
     frame->setObjectName("frame");

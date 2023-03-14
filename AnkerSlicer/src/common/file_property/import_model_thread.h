@@ -15,9 +15,11 @@ public:
     //static void open(const QString& formatName, const QString& fileName, CMeshO& cm, vcg::CallBackPos* cb);
     //MeshModelImport_Export::open(extension, fileName, *tmpPrintModelPtr->m_oldMesh, QCallBack_ak);
     void initOpenParam(const QString& formatName, const QString& fileName, CMeshO* cm, vcg::CallBackPos* cb);
-    bool openFileSuccessful() { return successful;};
+    inline bool openFileSuccessful() { return successful;};
+    inline bool getExit() const {   return m_exit; }
 public slots:
     void exitThreadSLot();
+    void usbChanged(int);
 
 signals:
     void resultReady(const QString &s);
@@ -31,7 +33,7 @@ private:
     CMeshO *m_cm;
     vcg::CallBackPos *m_cb;
 
-    bool m_exit;
+    bool m_exit = false;
     bool successful = true;
 };
 

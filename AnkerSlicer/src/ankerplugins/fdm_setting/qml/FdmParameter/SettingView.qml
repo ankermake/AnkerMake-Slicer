@@ -31,14 +31,13 @@ Rectangle {
 
     signal qmlNozzleSizeCurrentIndexChanged(string currentText)
 
-    //ref ak_const.h
     enum EGlobalSupportState
     {
         Unactived = 0,
         Selected ,
         UnSelected
     }
-    //
+
     enum EGlobalSupportTextCode
     {
 
@@ -139,8 +138,6 @@ Rectangle {
         anchors.top: material.bottom
         anchors.topMargin: 20
         anchors.bottomMargin: 0
-       // anchors.bottomMargin: 16
-       // anchors.margins: 0
         color: "#383838"
         height: 1
     }
@@ -189,9 +186,6 @@ Rectangle {
         sourceComponent: parameterCombox.currentIndex == 0 ? simpleMode : expertMode
     }
 
-
-
-
     Component {
         id:simpleMode
         Column {
@@ -221,7 +215,6 @@ Rectangle {
                     onActivated: {
                        // console.log("currnt ==",layerHeightCombox.currentIndex,"index ==")
                         qmlLayerHeightCurrentIndexChanged(layerHeightCombox.currentIndex)
-                       //qmlMaterialNameChanged(materialCombox.currentText)
                     }
                 }
 
@@ -258,11 +251,6 @@ Rectangle {
 
             }
 
-
-            //            Rectangle { color: "red"; width: 50; height: 50 }
-            //            Rectangle { color: "green"; width: 20; height: 50 }
-            //            Rectangle { color: "blue"; width: 50; height: 20 }
-
             Rectangle {
                 id:globalSupport
                 implicitWidth: parent.width
@@ -293,8 +281,6 @@ Rectangle {
 
             Rectangle {
                 id:generateAdhesion
-                // Layout.fillWidth: true
-                //implicitHeight: 60
                 implicitWidth: parent.width
                 height: 20
                 color: "transparent"
@@ -317,20 +303,10 @@ Rectangle {
 
     Component {
         id: expertMode
-        ListView {
+        BaseControl.BaseListView {
             id: listView
             model : paramModel;
-            spacing: 0
-            ScrollBar.vertical:  ScrollBar{
-                policy: ScrollBar.AsNeeded
-                anchors.right: listView.right
-                width: 8
-                active: true
-                contentItem: Rectangle {
-                    radius: width/2
-                    color: '#D6D6D6'
-                }
-            }
+            currentIndex : -1
             delegate: Loader
             {
                 id:viewDelegate

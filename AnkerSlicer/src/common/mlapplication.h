@@ -6,9 +6,12 @@
 #include <QString>
 #include <wrap/gl/gl_mesh_attributes_info.h>
 #include "ml_document/cmesh.h"
+#include <QFileOpenEvent>
+#include "utilities/tlogger.h"
 
 class MeshLabApplication : public QApplication
 {
+    Q_OBJECT
 public:
 	enum HW_ARCHITECTURE {HW_32BIT = 32,HW_64BIT = 64};
 	MeshLabApplication(int &argc, char *argv[]): QApplication(argc,argv){}
@@ -25,7 +28,7 @@ public:
 	
     static const QString shortName() { return appName() + "_" + appVer(); }
 	static const QString completeName(const HW_ARCHITECTURE hw){return appArchitecturalName(hw) + " v" + appVer(); }
-    static const QString organization(){return "AnkerSlicer";} 
+    static const QString organization(){return "AnkerMake";} 
 	static const QString organizationHost() {return tr("http://vcg.isti.cnr.it");}
 	static const QString webSite() {return tr("http://www.meshlab.net/");}
 	static const QString downloadSite() {return tr("http://www.meshlab.net/#download");}
@@ -36,6 +39,26 @@ public:
 	
 	static const QString extraPluginsLocation();
 	static const QString extraShadersLocation();
+
+    bool event(QEvent *event)
+    {
+        
+        if(event->type() == QEvent::FileOpen){
+            QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
+            AkUtil::TDebug("Open File: " + openEvent->file());
+            QString fileName = openEvent->file();
+            if(!fileName.isEmpty())
+            {
+                fileList.append(fileName);
+                emit openFileSignal(fileName);
+            }
+        }
+        return QApplication::event(event);
+    }
+
+    QStringList fileList;
+signals:
+    void openFileSignal(const QString &fileName);
 	
 private:
 	static std::string versionString(int a, int b, int c);

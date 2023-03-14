@@ -34,7 +34,7 @@
 #include "CHModelMoveTransformParamsSetUI.h"
 #include "common/GeoAndShow/CHAssembly.h"
 #include "common/GeoAndShow/CHCone.h"
-
+#include "common/GeoAndShow/CHScene.h"
 
 DEF_PTR(CHAxisWithArrow)
 class CHAxisWithArrow :public CHAssembly
@@ -90,6 +90,8 @@ private:
     void refreshMoveFrame();
 
     void submitToUI();
+
+    void resetSelectedMoveObjsClicked();
 
 
 private:

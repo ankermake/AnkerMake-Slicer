@@ -12,6 +12,7 @@ ToolTip::ToolTip(QWidget *parent) : BubbleWidget(parent)
 
 void ToolTip::setDescription(const QString &title, const QString &text,  const QString &affects, const QString &affectedBy)
 {
+   // qDebug() << "title =  " << title << "text ==" << text;
     m_title->setText(title);
     m_despction->setText(text);
 
@@ -27,6 +28,9 @@ void ToolTip::setDescription(const QString &title, const QString &text,  const Q
     if(!affect.isEmpty()) {
         m_affect->setText(affect);
     }
+    m_despction->adjustSize();
+    m_affect->adjustSize();
+   // qDebug() <<" m_despction size ==" <<m_despction->size() <<" m_affect size =" << m_affect->size();
 }
 
 void ToolTip::setPoint(QPoint point, int maxY)
@@ -43,8 +47,14 @@ void ToolTip::setPoint(QPoint point, int maxY)
 
 void ToolTip::init()
 {
+    this->setBackgroundColor(QColor(57,58,61));
+    this->setArrowType(Qt::RightArrow);
+    this->setTriangleStartX(10);
+    this->setTriangleHeight(10);
+    this->setTriangleWidth(20);
+    this->setRadius(8);
     QVBoxLayout *mainlayout = new QVBoxLayout(this);
-    mainlayout->setSpacing(6);
+    //mainlayout->setSpacing(6);
     mainlayout->setContentsMargins(12,12,12,12);
     m_title = new QLabel(this);
     m_title->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Minimum));
@@ -53,25 +63,21 @@ void ToolTip::init()
 
     m_despction = new QLabel(this);
     m_despction->setObjectName("m_despction");
-    m_despction->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
+    //m_despction->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
+    m_despction->adjustSize();
     m_despction->setWordWrap(true);
     mainlayout->addWidget(m_title);
     mainlayout->addWidget(line);
     mainlayout->addWidget(m_despction);
 
     m_affect = new QLabel(this);
-    m_affect->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
-    //m_affect->adjustSize();
+    //m_affect->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
+    m_affect->adjustSize();
     m_affect->setWordWrap(true);
 
     mainlayout->addWidget(m_affect);
     this->setLayout(mainlayout);
-    this->setBackgroundColor(QColor(57,58,61));
-    this->setArrowType(Qt::RightArrow);
-    this->setTriangleStartX(10);
-    this->setTriangleHeight(10);
-    this->setTriangleWidth(20);
-    this->setRadius(8);
+
 }
 
 void ToolTip::resizeEvent(QResizeEvent *event)

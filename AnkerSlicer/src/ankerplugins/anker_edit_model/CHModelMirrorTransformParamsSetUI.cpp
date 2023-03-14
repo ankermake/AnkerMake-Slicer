@@ -140,7 +140,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     connect(m_xButton, SIGNAL(clicked()), this, SLOT(xBtnClicked()));
     connect(m_yButton, SIGNAL(clicked()), this, SLOT(yBtnClicked()));
     connect(m_zButton, SIGNAL(clicked()), this, SLOT(zBtnClicked()));
-    connect(m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    //connect(m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 }
 
 CHModelMirrorTransformParamsSetUI::~CHModelMirrorTransformParamsSetUI()

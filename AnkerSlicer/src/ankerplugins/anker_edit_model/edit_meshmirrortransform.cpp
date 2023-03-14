@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshmirrortransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -29,6 +29,7 @@
 #include "common/GeoAndShow/TransformPack.h"
 #include "common/GeoAndShow/CHLine3D.h"
 #include "common/GeoAndShow/CHBaseAlg.h"
+#include "common/GeoAndShow/CHScene.h"
 #include "QPalette"
 #include "edit_meshtransform_factory.h"
 #include "common/utilities/tlogger.h"
@@ -65,7 +66,7 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
     m_paramUI = new CHModelMirrorTransformParamsSetUI();
     EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Mirror);
     connect(m_paramUI, SIGNAL(sendWhichButtonClicked(int)), this, SLOT(receiveButtonClicked(int)));
-    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));//??
+    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 
     //disconnect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), this, SLOT(reset()));
@@ -147,6 +148,7 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             (*it)->m_params[index + 6] += 2 * ((m_operationCenter + QVector3D(0, 0, m_operateMoveZ))[index] - t1);
 
             QVector3D curCenter = m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+            qDebug() << "curCenter: " << curCenter;
             QMatrix4x4 tran1, tran2, tran3;
             tran1.translate(-curCenter);
             QVector3D scaleValue(1, 1, 1);
@@ -154,26 +156,19 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             tran2.scale(scaleValue);
             tran3.translate(curCenter);
             QMatrix4x4 newSumMatrix = tran3 * tran2 * tran1 * (*it)->getTransform();
-
-            QMatrix4x4 ttran1, ttran2, ttran3, ttran4;
-            ttran1.translate(-(*it)->m_rotCenter);
-            ttran2.scale((*it)->m_params[0], (*it)->m_params[1], (*it)->m_params[2]);
-            ttran3.translate(QVector3D((*it)->m_params[6], (*it)->m_params[7], (*it)->m_params[8]));
-            ttran4.translate((*it)->m_rotCenter);
-            QMatrix4x4 pureRotMatrix = (ttran4 * ttran3).inverted() * newSumMatrix * (ttran2 * ttran1).inverted();
-
             double angleX, angleY, angleZ;
-            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(pureRotMatrix, angleX, angleY, angleZ);
-
-            (*it)->m_params[3] = angleX / CH_PI * 180.0;
-            (*it)->m_params[4] = angleY / CH_PI * 180.0;
-            (*it)->m_params[5] = angleZ / CH_PI * 180.0;
-            adjustSingleAngle((*it)->m_params[3]);
-            adjustSingleAngle((*it)->m_params[4]);
-            adjustSingleAngle((*it)->m_params[5]);
+            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(newSumMatrix, angleX, angleY, angleZ);
+            float angles[3];
+            angles[0] = angleX / CH_PI * 180.0;
+            angles[1] = angleY / CH_PI * 180.0;
+            angles[2] = angleZ / CH_PI * 180.0;
+            adjustSingleAngle(angles[0]);
+            adjustSingleAngle(angles[1]);
+            adjustSingleAngle(angles[2]);
+            (*it)->setTransform(newSumMatrix);
         }
 
-        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
+        //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
         if(std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
         {
             SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
@@ -300,19 +295,20 @@ void EditMeshMirrorTransformTool::reset()
         }
         if (m_editMeshModels.size() == 1)
         {
-//            for (int i = 0; i < 3; i++)
-//            {
-//                (*it)->m_params[i] = fabs((*it)->m_params[i]);
-//            }
-            (*it)->m_params = m_initValues[0];
+            qDebug() << "reset m_params: " << (*it)->m_params[0] << ", " << (*it)->m_params[1] << ", " << (*it)->m_params[2];
+            for (int i = 0; i < 3; i++)
+            {
+                (*it)->m_params[i] = fabs((*it)->m_params[i]);
+            }
+            //(*it)->m_params = m_initValues[0];
         }
         else
         {
-//            for(int i = 0; i < 3; i++)
-//            {
-//                (*it)->m_params[i] = fabs(m_initValues[p][i]);
-//            }
-            (*it)->m_params = m_initValues[p];
+            for(int i = 0; i < 3; i++)
+            {
+                (*it)->m_params[i] = fabs(m_initValues[p][i]);
+            }
+            //(*it)->m_params = m_initValues[p];
         }
 
         (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));

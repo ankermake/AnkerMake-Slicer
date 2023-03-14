@@ -1,5 +1,5 @@
 #include "messageprocessing.h"
-#include "../mainwindow.h"
+//#include "../mainwindow.h"
 #include "common/GeoAndShow/CHScene.h"
 #include <common/utilities/tlogger.h>
 
@@ -154,14 +154,14 @@ void MessageProcessing::receiveVisibleModelCountChangedFromDoc(int modelCount)
 
 bool MessageProcessing::processingWriteAllMeshModelsToStlFile(PluginMessageData& metadata)
 {
-    auto getMeshDoc = [this]() -> MeshDocument*
-    {
-        MainWindow * maiWindow = qobject_cast<MainWindow *>(parent());
-        if(!maiWindow){return nullptr;}
-        MultiViewer_Container *multiViewer_Container = maiWindow->currentViewContainer();
-        if(!multiViewer_Container){return nullptr;}
-        return &multiViewer_Container->meshDoc;
-    };
+//    auto getMeshDoc = [this]() -> MeshDocument*
+//    {
+//        MainWindow * maiWindow = qobject_cast<MainWindow *>(parent());
+//        if(!maiWindow){return nullptr;}
+//        MultiViewer_Container *multiViewer_Container = maiWindow->currentViewContainer();
+//        if(!multiViewer_Container){return nullptr;}
+//        return &multiViewer_Container->meshDoc;
+//    };
 
 //    auto writeAllMeshModelsToStlFile = [](MeshDocument* meshDocPtr, QString path, bool binary) ->bool
 //    {

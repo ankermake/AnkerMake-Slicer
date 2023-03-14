@@ -2095,23 +2095,23 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 // which is required because when the walls are being generated, the vertices do not fall on the part's outline
                 // but, instead, are 1/2 a line width inset from the outline
 
-                //gcode_layer.setBridgeWallMask(compressed_air.offset(max_air_gap + half_outer_wall_width));
+                gcode_layer.setBridgeWallMask(compressed_air.offset(max_air_gap + half_outer_wall_width));
 
 
-                if(1)   
-                {
-                    Polygons  outlines_below_a   = outlines_below;  // outlines_below.offset(-max_air_gap);
-                    Polygons  part_outline_a     = part.outline;    // part.outline.offset(-max_air_gap);
-                    //Polygons compressed_air
-                    //Polygons  bridge_wall_mask    = compressed_air.offset(max_air_gap + half_outer_wall_width);
-                    Polygons  poly_dunpi = outlines_below_a.difference(outlines_below_a.offset(half_outer_wall_width*2));
 
-                    Polygons  poly_xuan  = part_outline_a.difference(outlines_below_a);
-                    Polygons  poly_xuan3 = poly_xuan.offset(half_outer_wall_width*2*3);
-                    Polygons  bridge_wall_mask = poly_xuan3.intersection(part_outline_a).difference(poly_dunpi);
+//                {
+//                    Polygons  outlines_below_a   = outlines_below;  // outlines_below.offset(-max_air_gap);
+//                    Polygons  part_outline_a     = part.outline;    // part.outline.offset(-max_air_gap);
+//                    //Polygons compressed_air
+//                    //Polygons  bridge_wall_mask    = compressed_air.offset(max_air_gap + half_outer_wall_width);
+//                    Polygons  poly_dunpi = outlines_below_a.difference(outlines_below_a.offset(half_outer_wall_width*2));
 
-                    gcode_layer.setBridgeWallMask(bridge_wall_mask);
-                }
+//                    Polygons  poly_xuan  = part_outline_a.difference(outlines_below_a);
+//                    Polygons  poly_xuan3 = poly_xuan.offset(half_outer_wall_width*2*3);
+//                    Polygons  bridge_wall_mask = poly_xuan3.intersection(part_outline_a).difference(poly_dunpi);
+
+//                    gcode_layer.setBridgeWallMask(bridge_wall_mask);
+//                }
             }
             else
             {
@@ -2306,8 +2306,6 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 {
                     processed_inset_number = part.insets.size() - 1 - inset_number;
                 }
-
-
 
                 // Outer wall is processed
                 if (processed_inset_number == 0)
@@ -2557,7 +2555,7 @@ void FffGcodeWriter::processRoofing(const SliceDataStorage& storage, LayerPlan& 
         roofing_angle = mesh.roofing_angles.at(gcode_layer.getLayerNr() % mesh.roofing_angles.size());
     }
 
-    const Ratio skin_density = 1.0;
+    const Ratio skin_density = mesh.settings.get<Ratio>("top_skin_density");
     const coord_t skin_overlap = 0; // skinfill already expanded over the roofing areas; don't overlap with perimeters
     Polygons* perimeter_gaps_output = (fill_perimeter_gaps) ? &concentric_perimeter_gaps : nullptr;
     const bool monotonic = mesh.settings.get<bool>("roofing_monotonic");
@@ -2593,7 +2591,7 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
     const GCodePathConfig* skin_config = &mesh_config.skin_config;
     const GCodePathConfig* overhang_skin_config = &mesh_config.overhang_skin_config;
     GCodePathConfig skin_config_temp = mesh_config.skin_config;     //  add @2022-05-22 by CL
-    Ratio skin_density = 1.0;
+    Ratio skin_density = mesh.settings.get<Ratio>("top_skin_density");//2022/11/08 top_surface Binary top surface density
     coord_t skin_overlap = mesh.settings.get<coord_t>("skin_overlap_mm");
     const coord_t more_skin_overlap = std::max(skin_overlap, (coord_t)(mesh_config.insetX_config.getLineWidth() / 2)); // force a minimum amount of skin_overlap
     const bool bridge_settings_enabled = mesh.settings.get<bool>("bridge_settings_enabled");

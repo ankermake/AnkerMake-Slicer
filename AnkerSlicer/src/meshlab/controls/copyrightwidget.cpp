@@ -153,10 +153,10 @@ QList<CopyRightInforMation *> CopyRightWidget::initData()
 
     CopyRightInforMation *opensslInformation = new CopyRightInforMation();
     opensslInformation->name = QString("OpenSSL");
-    opensslInformation->nameLink = QString("GitHub - openssl/openssl: TLS/SSL and crypto library");
+    opensslInformation->nameLink = QString("https://github.com/openssl/openssl");
     opensslInformation->isModified = false;
     opensslInformation->licenseType = QString("GPL-3.0");
-    opensslInformation->licenseLink = QString("openssl/LICENSE.txt at master · openssl/openssl");
+    opensslInformation->licenseLink = QString("https://github.com/openssl/openssl/blob/master/LICENSE.txt");
     list.append(opensslInformation);
 
     return list;

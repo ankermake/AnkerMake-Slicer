@@ -137,17 +137,21 @@ void FdmParameterProfileManager::readProfile(QString profile, QList<FdmProfileCa
     categories.append(*newProfile.getAllCategories());
 }
 
-FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machineName, QString materialName)
+FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machineName, QString materialName, double nozzleSize,bool& success)
 {
+    
+    int nozzleSizeInt = 100*nozzleSize;
     
     for (int i = 0; i < defaultProfiles.size(); i++)
     {
         FdmParameterProfile& profile = defaultProfiles[i];
         
         if (machineName == profile.getMachineName() &&
-            materialName == profile.getMaterialName())
+            materialName == profile.getMaterialName() &&
+            nozzleSizeInt ==  int(profile.getNozzleSize()*100))
         {
             //qDebug() << "get " << machineName << "&" << materialName << " parameter package";
+            success = true;
             return &profile;
         }
     }
@@ -157,6 +161,8 @@ FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machin
     auto materialProfile = FdmMaterialProfileManager::Instance().getProfileByName(materialName);
     newProfile->updateMachine(machineProfile);
     newProfile->updateMaterial(materialProfile);
+    
+    newProfile->updateNozzleSize(nozzleSize);
     return newProfile;
 }
 

@@ -468,9 +468,17 @@ public:
             {
               SplitToken(tokens[pi+1], indexVVect[pi],indexNVect[pi],indexTVect[pi], inputMask);
               if(QuadFlag) indexVVect[pi]++; // NOTE THAT THE STUPID QOBJ FORMAT IS ZERO INDEXED!!!!
-              GoodObjIndex(indexVVect[pi],numVertices);
+              bool checkOK = GoodObjIndex(indexVVect[pi],numVertices);
               GoodObjIndex(indexTVect[pi],oi.numTexCoords);
-              polygonVect[0][pi].Import(m.vert[indexVVect[pi]].cP());
+
+              if(checkOK)
+              {
+                polygonVect[0][pi].Import(m.vert[indexVVect[pi]].cP());
+              }
+              else
+              {
+                  throw std::out_of_range("fail to open file: face vertex index > numVertices");
+              }
             }
             if(vertexesPerFace>3)
               oi.mask |= Mask::IOM_BITPOLYGONAL;

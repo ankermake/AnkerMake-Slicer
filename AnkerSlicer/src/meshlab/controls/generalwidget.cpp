@@ -7,6 +7,9 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QDir>
+#ifdef __APPLE__
+#include <unistd.h>
+#endif
 namespace  control{
 GeneralWidget::GeneralWidget(MessageProcessing *messageProcessing, PageWidget *parent)
     : PageWidget(parent),
@@ -15,6 +18,7 @@ GeneralWidget::GeneralWidget(MessageProcessing *messageProcessing, PageWidget *p
 
       //m_translator(nullptr)
 {
+    setObjectName("GeneralWidget");
     m_displayName = tr("    General");
     m_messageProcessing = messageProcessing;
     connect(m_messageProcessing, &MessageProcessing::sendMsg2Update, this, &GeneralWidget::receiveMsgFromNetwork);
@@ -80,7 +84,7 @@ void GeneralWidget::init()
     m_aiLabel->setFont(font);
     aiLayout->addWidget(m_aiLabel);
 
-    m_aiCheckBox = new QCheckBox(tr("Keeping Creat Ai File When Slice"));
+    m_aiCheckBox = new QCheckBox(tr("Create AI file when slicing."));
     m_aiCheckBox->setCheckable(true);
 
     m_aiCheckBox->setChecked(m_settings.getAiMode());
@@ -174,13 +178,13 @@ void GeneralWidget::changeEvent(QEvent *e)
             m_languageLabel->setText(tr("Language"));
         }
         if (m_languageCombox != nullptr) {
-             m_languageCombox->setToolTip(tr("The language change takes effect after the software is restarted"));
+             m_languageCombox->setToolTip(tr("Language will change after software restarts."));
         }
         if (m_aiLabel != nullptr) {
             m_aiLabel->setText(tr("AI Detect"));
         }
         if (m_aiCheckBox != nullptr) {
-            m_aiCheckBox->setText(tr("Keeping Creat Ai File When Slice"));
+            m_aiCheckBox->setText(tr("Create AI file when slicing."));
         }
         if (m_updateCheckBox != nullptr) {
             if (m_updateFlag) {
@@ -193,7 +197,7 @@ void GeneralWidget::changeEvent(QEvent *e)
             m_versionLabel->setText(tr("Version"));
         }
         if (m_updateCheckBox != nullptr) {
-            m_updateCheckBox->setText(tr("Automatically Check For Updates"));
+            m_updateCheckBox->setText(tr("Auto-Check for Updates"));
         }
         m_languageList = m_settings.getLanguageList();
         for (int i = 0; i < m_languageList.size(); i++) {
@@ -310,10 +314,15 @@ void GeneralWidget::update_app(const QString& fileName)
 {
 #ifdef __APPLE__
      //TODO:
+    QString cmdStr = QString("open \"") + fileName + QString("\"");
+    system(cmdStr.toStdString().c_str());
+    qDebug() << "Mac update_app: " << cmdStr;
+    sleep(1);
+    QApplication::exit(0);
 #else
 #ifdef Q_OS_WIN
       //auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-      // update_app_dir = QDir::toNativeSeparators(writableLocation + "/AnkerSlicerNetWork/Setup.exe");
+      // update_app_dir = QDir::toNativeSeparators(writableLocation + "/AnkerMakeNetWork/Setup.exe");
       //QString local_install_dir = QDir::toNativeSeparators(writableLocation + "/../../AnkerMake");
       QString update_dir = QDir::toNativeSeparators(fileName);
       //std::unique_ptr<QProcess> cmd(new QProcess);

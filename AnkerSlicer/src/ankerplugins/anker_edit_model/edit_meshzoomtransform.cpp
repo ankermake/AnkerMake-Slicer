@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshzoomtransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -33,7 +33,7 @@
 //#include <minwindef.h>
 #include "edit_meshtransform_factory.h"
 #include "common/GeoAndShow/support/SupportAssemblyMeshes.h"
-#include "BoxBorder.h"
+//#include "BoxBorder.h"
 #include "common/utilities/tlogger.h"
 
 using namespace vcg;
@@ -75,6 +75,7 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
 
     EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Zoom);
 
+
     connect(this, &EditMeshZoomTransformTool::boxSizeParamsChanged,
             m_paramUI, &CHModelZoomTransformParamsSetUI::boxSizeValuesChanged);
     connect(this, &EditMeshZoomTransformTool::scaleParamsChanged,
@@ -88,6 +89,7 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
             this, &EditMeshZoomTransformTool::scaleToFitClicked);
     connect(m_paramUI, &CHModelZoomTransformParamsSetUI::resetSignal,
             this, &EditMeshZoomTransformTool::resetBtnClicked);
+
 //    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::stateChanged,
 //            this, &EditMeshZoomTransformTool::updateLock);
 
@@ -119,14 +121,7 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     CHAABB3D aabb;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        if (std::dynamic_pointer_cast<SupportAssemblyMeshes>(*it) != nullptr)
-        {
-            aabb.add((*it)->calRealAABB());
-        }
-        else
-        {
-            aabb.add((*it)->calSimilarAABB());
-        }
+        aabb.add((*it)->calRealAABB());
     }
     m_operationCenter = aabb.getCenterPoint();
 
@@ -148,7 +143,6 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
         m_paramUI->initBoxSize(aabb.getLenX(), aabb.getLenY(), aabb.getLenZ());
     }
 
-    qDebug() << "m_initBox: " << m_initBox[0] << ", " << m_initBox[1] << ", " << m_initBox[2];
     emit boxSizeParamsChanged(m_initBox, ZoomChangedType_Init);
 
     
@@ -159,6 +153,7 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     QColor zcolor(0, 0, 125);
     double marksize = 4;
     double adjustsize = 8;
+
     int len = (aabb.getLenX() > aabb.getLenY() ? aabb.getLenX() : aabb.getLenY());
     len = (len > aabb.getLenZ() ? len : aabb.getLenZ()) * 0.5;
     m_adjustAxisX = CHLineSegment3DShowObjPtr(new CHLineSegment3DShowObj);
@@ -420,19 +415,38 @@ void EditMeshZoomTransformTool::updateLock(bool check)
 void EditMeshZoomTransformTool::resetBtnClicked()
 {
     AkUtil::TFunction("");
-    int p = 0;
-    CHAABB3D /*realAABB,*/ baseAABB;
-    for(auto it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    bool lockToPrintPlatform = m_lockToPrintPlatform;
+    if(m_editMeshModels.size() == 1)
     {
-        baseAABB.add((*it)->m_baseAABB);
-        p++;
+        CHAABB3D baseAABB;
+        baseAABB.add((*m_editMeshModels.begin())->m_baseAABB);
+        (*m_editMeshModels.begin())->resetZoom();
+
+        m_lockToPrintPlatform = true;
+        int dir[3] = {1};
+        dir[0] = ((*m_editMeshModels.begin())->m_params[0] > 0 ? 1: -1);
+        dir[1] = ((*m_editMeshModels.begin())->m_params[1] > 0 ? 1: -1);
+        dir[2] = ((*m_editMeshModels.begin())->m_params[2] > 0 ? 1: -1);
+        vector<double> params(3);
+        params[0] = baseAABB.getLenX() * dir[0];
+        params[1] = baseAABB.getLenY() * dir[1];
+        params[2] = baseAABB.getLenZ() * dir[2];
+
+        emit boxSizeParamsChanged(params, ZoomChangedType_Reset);
+        m_lockToPrintPlatform = lockToPrintPlatform;
+    }
+    else if(m_editMeshModels.size() > 1)
+    {
+        m_lockToPrintPlatform = true;
+        resetSelectedScale();
+        submitToUI();
+        refreshScaleFrame();
+        curScene->refresh();
+        emit getDoc()->modelCheckSceneInChanged();
+        emit getDoc()->modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
+        m_lockToPrintPlatform = lockToPrintPlatform;
     }
 
-    vector<double> params(3);
-    params[0] = baseAABB.getLenX();
-    params[1] = baseAABB.getLenY();
-    params[2] = baseAABB.getLenZ();
-    emit boxSizeParamsChanged(params, ZoomChangedType_Reset);
 }
 
 float EditMeshZoomTransformTool::getRadio(const CHAABB3D& aabb, const CHAABB3D& platformAabb)
@@ -570,6 +584,13 @@ void EditMeshZoomTransformTool::mouseMoveEvent(QMouseEvent* event, void*, void*)
     else if (m_stepFlag == 1) 
     {
         event->accept();
+        bool isWidget = curScene->getCurMouseInWidget(event->pos().x(), event->pos().y());
+        if(!isWidget)
+        {
+            m_stepFlag = 0;
+            m_pickedObj = 0;
+            return;
+        }
         QVector3D np, fp;
         curScene->getCurNearFarPoint(event->pos().x(), event->pos().y(), np, fp);
         CHLine3DPtr ray(new CHLine3D);
@@ -735,7 +756,6 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
         return;
     }
 
-    qDebug() << "receive params: (" << params[0] << ", " << params[1] << ", " << params[2] << ")";
     CHAABB3D aabb;
     CHAABB3D baseAabb; 
     int k = 0;
@@ -911,7 +931,6 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
     
     refreshScaleFrame();
     curScene->refresh();
-
 }
 
 void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, ZoomChangedType type)
@@ -922,7 +941,6 @@ void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, Zo
         std::vector<float> values(3);
         if(m_editMeshModels.size() == 1)
         {
-            qDebug() << "viewValuesChanged: " << params[0] << ", " << params[1] << ", " << params[2];
             values[0] = params[0] / m_initValues[0][0];
             values[1] = params[1] / m_initValues[0][1];
             values[2] = params[2] / m_initValues[0][2];
@@ -1064,6 +1082,58 @@ void EditMeshZoomTransformTool::stickOnBottom()
     curScene->refresh();
 }
 
+void EditMeshZoomTransformTool::resetSelectedScale()
+{
+    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        (*it)->resetZoom();
+        
+        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
+
+        if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+        {
+            SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+            supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+        }
+        CH3DPrintModelPtr printModel = std::dynamic_pointer_cast<CH3DPrintModel>((*it));
+        if (printModel != nullptr)
+        {
+            for (int i = 0; i < printModel->m_supportMeshes.size(); i++)
+            {
+                SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(printModel->m_supportMeshes[i]);
+                QVector3D position, scale;
+                QQuaternion orientation;
+                double pitch, yaw, roll;
+                if (supportMesh != nullptr)
+                {
+                    supportMesh->setTransform(printModel->getTransform() * supportMesh->getLocalTransform());
+                    
+                    AkTransformMath::decomposeQMatrix4x4(supportMesh->getTransform(), position, orientation, scale);
+                    QMatrix4x4 tmpRotMat(orientation.toRotationMatrix());
+                    CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(tmpRotMat, pitch, yaw, roll);
+                    
+                    pitch = pitch / CH_PI * 180.0;
+                    yaw = yaw / CH_PI * 180.0;
+                    roll = roll / CH_PI * 180.0;
+                    supportMesh->m_params[0] = scale[0];
+                    supportMesh->m_params[1] = scale[1];
+                    supportMesh->m_params[2] = scale[2];
+                    supportMesh->m_params[3] = pitch;
+                    supportMesh->m_params[4] = yaw;
+                    supportMesh->m_params[5] = roll;
+
+                    QVector3D newCenter = supportMesh->getTransform() * supportMesh->m_rotCenter;
+                    QVector3D offset = newCenter - supportMesh->m_rotCenter;
+                    supportMesh->m_params[6] = offset[0];
+                    supportMesh->m_params[7] = offset[1];
+                    supportMesh->m_params[8] = offset[2];
+                }
+            }
+        }
+        (*it)->calRealAABB();
+    }
+}
+
 void EditMeshZoomTransformTool::refreshScaleFrame()
 {
     if (m_adjustXPoint == nullptr || m_adjustYPoint == nullptr || m_adjustZPoint == nullptr)
@@ -1080,14 +1150,23 @@ void EditMeshZoomTransformTool::refreshScaleFrame()
         float ratioY = realAABB.getLenY() / m_initBox[1];
         float ratioZ = realAABB.getLenZ() / m_initBox[2];
 
-        QVector3D position, scale;
-        QQuaternion orientation;
-        AkTransformMath::decomposeQMatrix4x4(m_firstMesh->getTransform(), position, orientation, scale);
+        float ratio = 1.0;
+        if(ratioX < 1 && ratioY < 1 && ratioZ < 1)
+        {
+            ratio = (ratioX * ratioY * ratioZ) * 3.0;
+        }
+        else
+        {
+            ratio = (ratioX * ratioY * ratioZ) / 3.0;
+        }
+        //QVector3D position, scale;
+        //QQuaternion orientation;
+        //AkTransformMath::decomposeQMatrix4x4(m_firstMesh->getTransform(), position, orientation, scale);
         QVector3D center = realAABB.getCenterPoint();
         QMatrix4x4 tran1, tran2, tran3, tran4, tran5;
         tran1.translate(-center);
-        tran2.scale(ratioX,  ratioY, ratioZ);
-        tran3.rotate(orientation);
+        tran2.scale(ratio, ratio, ratio);
+        //tran3.rotate(orientation);
         tran4.translate(center);
         QMatrix4x4 tmpTransform = tran4 * tran3  * tran2 * tran1;
 

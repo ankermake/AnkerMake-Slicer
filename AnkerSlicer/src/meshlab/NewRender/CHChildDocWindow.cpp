@@ -10,8 +10,8 @@ CHChildDocWindow::CHChildDocWindow(QWidget* parent) : QWidget(parent)
 {
     AkUtil::TFunction("");
     connect(m_doc.get(), &CHDoc::modelObjsStatusChanged, m_pickCommand.get(), &CHPickOperationCommand::doWithDocMeshModelsChanged);
-
     m_view = new CH3dView(this);
+    connect(this, &CHChildDocWindow::machinePlatformSizeSignal, m_view, &CH3dView::machinePlatformSizeChanged);
     m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_view->show();
 
@@ -42,6 +42,22 @@ void CHChildDocWindow::pixelToWorld(float x, float y, float z, QVector3D& worldC
 void CHChildDocWindow::worldToPixel(QVector3D worldCoord, float& x, float& y, float& z)
 {
     m_view->worldToPixel(worldCoord, x, y, z);
+}
+
+bool CHChildDocWindow::getCurMouseInWidget(int x, int y)
+{
+    QRect rect = geometry();
+    return rect.contains(x, y);
+}
+
+bool CHChildDocWindow::isActivteAppWindow()
+{
+    return isActiveWindow();
+}
+
+void CHChildDocWindow::getMechineBoxSize(float &length, float &width, float &height)
+{
+    m_view->getMechineBoxSize(length, width, height);
 }
 
 QOpenGLShaderProgram& CHChildDocWindow::getShaderProgram()

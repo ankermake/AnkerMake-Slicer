@@ -635,7 +635,7 @@ namespace Anker {
             CraftWare,
             ideaMaker,
             KissSlicer,
-            AnkerSlicer
+            AnkerMake
         };
 
         static const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> Producers;

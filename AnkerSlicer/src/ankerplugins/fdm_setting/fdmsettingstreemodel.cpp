@@ -95,7 +95,7 @@ QVariant FdmSettingsTreeModel::data(const QModelIndex &index, int role) const
     auto node = indexToNode(index);
 
    // qDebug() << " data = " <<node->getProperty(roleToString(role));
-    node->dumpParam();
+    //node->dumpParam();
     return  node->getProperty(roleToString(role));
 }
 

@@ -87,10 +87,10 @@ private:
 public slots:
     void setOriginalStlName(const QString& oStlName);
     void setAimode(bool _isAimode);
+    void setLoggingStatus(bool);
     void pauseGcodePlay(int);
 private slots:
     void initForm();
-
     void setSavePicTrue();
     void setExportPic();
     void verticalSliderValueChanged(int, int);
@@ -116,6 +116,8 @@ private slots:
     void unkonwncheckButton();
     void updatePlayViewer();
     void spinBoxUpValueChanged(int);
+    
+    void setLoadingProgress();
 #ifdef USE_EXTRA_UI
     void linetypeComboxChange(int);
 #endif
@@ -161,9 +163,16 @@ public:
     bool printMode = false;
     //inner mode
     bool innerMode = false;
+
+    
+    double timer_value = 0.0;
+    QTimer  *tp_timer = nullptr;
+    double f_size = 0.0;
 private:
     //bool offRenderLock = false;
     bool isHighPerformance = true;
+    bool innerModeInit = true;
+    bool printModeInit = true;
     QString saveTempPath ;
     ProgressDialog *mpDlg;
 #ifdef USE_EXTRA_UI
@@ -377,6 +386,9 @@ private:
     QLabel* allfilamentLabel;
     QLabel* allSizeLabel;
 
+    float allTimeValue;
+    double allFilamentValue;
+
     gcodeLabelEdit* spinBox_2;//up
     gcodeLabelEdit* spinBox;//down
 
@@ -388,6 +400,7 @@ private:
     std::array<int, 3> showAllSize{ 0 };
     SceneParam m_sceneParam;
     bool isAiMode = false;
+    bool loggingStatus = false;
     int runTimesId;
     const qint64 qs_id = QDateTime::currentSecsSinceEpoch();
     ProgressDialog *m_progessDlg;

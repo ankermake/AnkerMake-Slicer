@@ -640,7 +640,7 @@ const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> GCodeProces
     { EProducer::CraftWare,   "CraftWare" },
     { EProducer::ideaMaker,   "ideaMaker" },
     { EProducer::KissSlicer,  "KISSlicer" },
-    { EProducer::AnkerSlicer,  "AnkerSlicer" } //
+    { EProducer::AnkerMake,  "AnkerMake" } //
 };
 
 unsigned int GCodeProcessor::s_result_id = 0;
@@ -1020,7 +1020,7 @@ void GCodeProcessor::process_file(const std::string& filename, bool apply_postpr
         // if the gcode was produced by this slicer,
         // extract the config from it
         try {
-            if (m_producer == EProducer::AnkerSlicer||m_producer == EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
+            if (m_producer == EProducer::AnkerMake||m_producer == EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
                 //TODO:
                 //DynamicPrintConfig config;
                 //config.apply(FullPrintConfig::defaults());
@@ -1473,7 +1473,7 @@ template<typename T>
         case EProducer::CraftWare:   { return process_craftware_tags(comment); }
         case EProducer::ideaMaker:   { return process_ideamaker_tags(comment); }
         case EProducer::KissSlicer:  { return process_kissslicer_tags(comment); }
-        case EProducer::AnkerSlicer: { return process_cura_tags(comment); }
+        case EProducer::AnkerMake: { return process_cura_tags(comment); }
         default:                     { return false; }
         }
     }
@@ -1522,25 +1522,25 @@ template<typename T>
         pos = comment.find(tag);
         if (pos != comment.npos) {
             const std::string_view flavor = comment.substr(pos + tag.length());
-            if (flavor == "BFB")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Mach3")
+            if (flavor == "BFB")             
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Mach3")      
                 m_flavor = Anker::gcfMach3;
-            else if (flavor == "Makerbot")
+            else if (flavor == "Makerbot")    
                 m_flavor = Anker::gcfMakerWare;
-            else if (flavor == "UltiGCode")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Marlin(Volumetric)")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Griffin")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Repetier")
+            else if (flavor == "UltiGCode")   
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Marlin(Volumetric)")  
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Griffin")     
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Repetier")    
                 m_flavor = Anker::gcfRepetier;
-            else if (flavor == "RepRap")
+            else if (flavor == "RepRap")      
                 m_flavor = Anker::gcfRepRap;
-            else if (flavor == "Sprinter")
+            else if (flavor == "Sprinter")    
                 m_flavor = Anker::gcfSprinter;
-            else if (flavor == "Marlin")
+            else if (flavor == "Marlin")      
                 m_flavor = Anker::gcfMarlin;
             else
 

@@ -67,7 +67,7 @@ HEADERS += 	\
     GeoAndShow/CHObject.h \
     GeoAndShow/CHPickOperationCommand.h \
     GeoAndShow/CHPlane.h \
-    GeoAndShow/CHPointShowObj.h \
+    GeoAndShow/CHPointShowOobj.h \
     GeoAndShow/CHPrintMachineBox.h \
     GeoAndShow/CHScene.h \
     GeoAndShow/CHShowObj.h \
@@ -112,18 +112,18 @@ HEADERS += 	\
 	plugins/interfaces/render_plugin.h \
 	plugins/meshlab_plugin_type.h \
 	plugins/plugin_manager.h \
-	ml_document/helpers/mesh_document_state_data.h \
-	ml_document/helpers/mesh_model_state_data.h \
-	ml_document/base_types.h \
-	ml_document/cmesh.h \
-	ml_document/mesh_model.h \
-	ml_document/mesh_model_state.h \
-	ml_document/mesh_document.h \
-	ml_document/raster_model.h \
-	ml_document/render_raster.h \
-	ml_shared_data_context/ml_plugin_gl_context.h \
-	ml_shared_data_context/ml_scene_gl_shared_data_context.h \
-	ml_shared_data_context/ml_shared_data_context.h \
+           ml_document/helpers/mesh_document_state_data.h \
+           ml_document/helpers/mesh_model_state_data.h \
+           ml_document/base_types.h \
+           ml_document/cmesh.h \
+           ml_document/mesh_model.h \
+           ml_document/mesh_model_state.h \
+           ml_document/mesh_document.h \
+           ml_document/raster_model.h \
+           ml_document/render_raster.h \
+#	ml_shared_data_context/ml_plugin_gl_context.h \
+#	ml_shared_data_context/ml_scene_gl_shared_data_context.h \
+#	ml_shared_data_context/ml_shared_data_context.h \
 	parameters/rich_parameter_list.h \
 	parameters/value.h \
 	parameters/rich_parameter.h \
@@ -134,16 +134,17 @@ HEADERS += 	\
     utilities/AkMatrix3i.h \
     utilities/AkPoint3i.h \
     utilities/akUtilSpace.h \
+    utilities/math_utils.h \
 	utilities/eigen_mesh_conversions.h \
 	utilities/file_format.h \
 	utilities/ioapi.h \
-	utilities/load_save.h \
+#	utilities/load_save.h \
 	GLExtensionsManager.h \
 	filterscript.h \
 	GLLogStream.h \
 	mlexception.h \
 	mlapplication.h \
-	ml_selection_buffers.h \
+#	ml_selection_buffers.h \
 	utilities/tlogger.h	\
 	file_property/app_params_property.h	\
 	file_property/document_property.h	\
@@ -194,14 +195,14 @@ SOURCES += \
 	GeoAndShow/TransformPack.cpp \
 	GeoAndShow/coordinate.cpp	\
     GeoAndShow/sphere.cpp \
-        GeoAndShow/support/SupportAssemblyMeshes.cpp \
-        GeoAndShow/support/SupportCone.cpp \
-        GeoAndShow/support/SupportCuboid.cpp \
-        GeoAndShow/support/SupportCylinder.cpp \
-        GeoAndShow/support/SupportMesh.cpp \
-        GeoAndShow/support/SupportSphere.cpp \
-        GeoAndShow/support/SupportTetrahedron.cpp \
-        GeoAndShow/support/SupportTrapezoidBody.cpp \
+	GeoAndShow/support/SupportAssemblyMeshes.cpp \
+	GeoAndShow/support/SupportCone.cpp \
+	GeoAndShow/support/SupportCuboid.cpp \
+	GeoAndShow/support/SupportCylinder.cpp \
+	GeoAndShow/support/SupportMesh.cpp \
+	GeoAndShow/support/SupportSphere.cpp \
+	GeoAndShow/support/SupportTetrahedron.cpp \
+	GeoAndShow/support/SupportTrapezoidBody.cpp \
 	controlInterface/bubbleWidget.cpp \
 	controlInterface/line.cpp \
 	controlInterface/messageDialog.cpp \
@@ -223,16 +224,16 @@ SOURCES += \
 	plugins/interfaces/io_plugin.cpp \
 	plugins/meshlab_plugin_type.cpp \
 	plugins/plugin_manager.cpp \
-	ml_document/helpers/mesh_document_state_data.cpp \
-	ml_document/cmesh.cpp \
-	ml_document/mesh_model.cpp \
-	ml_document/mesh_model_state.cpp \
-	ml_document/mesh_document.cpp \
-	ml_document/raster_model.cpp \
-	ml_document/render_raster.cpp \
-	ml_shared_data_context/ml_plugin_gl_context.cpp \
-	ml_shared_data_context/ml_scene_gl_shared_data_context.cpp \
-	ml_shared_data_context/ml_shared_data_context.cpp \
+           ml_document/helpers/mesh_document_state_data.cpp \
+           ml_document/cmesh.cpp \
+           ml_document/mesh_model.cpp \
+           ml_document/mesh_model_state.cpp \
+           ml_document/mesh_document.cpp \
+           ml_document/raster_model.cpp \
+           ml_document/render_raster.cpp \
+#	ml_shared_data_context/ml_plugin_gl_context.cpp \
+#	ml_shared_data_context/ml_scene_gl_shared_data_context.cpp \
+#	ml_shared_data_context/ml_shared_data_context.cpp \
 	parameters/rich_parameter.cpp \
 	parameters/rich_parameter_list.cpp \
 	parameters/value.cpp \
@@ -244,13 +245,14 @@ SOURCES += \
     utilities/AkPoint3i.cpp \
 	utilities/eigen_mesh_conversions.cpp \
 	utilities/ioapi.cpp \
-	utilities/load_save.cpp \
+#	utilities/load_save.cpp \
+        utilities/math_utils.cpp \
 	GLExtensionsManager.cpp \
 	filterscript.cpp \
 	GLLogStream.cpp \
 	mlapplication.cpp \
 	searcher.cpp \
-	ml_selection_buffers.cpp \
+#	ml_selection_buffers.cpp \
 	$$MESHLAB_EXTERNAL_DIRECTORY/easyexif/exif.cpp \
 	utilities/tlogger.cpp	\
 	file_property/app_params_property.cpp	\
@@ -273,17 +275,17 @@ SOURCES += \
 
 RESOURCES += \
         meshlab-common.qrc
-        #ankerimages/ankerslicer.qrc
+        #ankerimages/ankerMake.qrc
 
 macx:QMAKE_POST_LINK = "\
-        if [ -d  $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/Frameworks/ ]; \
+        if [ -d  $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Frameworks/ ]; \
 	then  \
 		echo "Copying";  \
 	else  \
-                mkdir -p $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/Frameworks;  \
+                mkdir -p $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Frameworks;  \
 	fi;   \
-        cp $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.* $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/Frameworks/ ;\
-        #cp $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/.* $$MESHLAB_DISTRIB_DIRECTORY/AnkerSlicer.app/Contents/MacOS/ ;\
+        cp $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.* $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/Frameworks/ ;\
+        #cp $$MESHLAB_DISTRIB_DIRECTORY/../../distrib/.* $$MESHLAB_DISTRIB_DIRECTORY/AnkerMake.app/Contents/MacOS/ ;\
 #	if [ -d ../external/ ];\
 #	then \
 #		echo "ok external dir exists"; \

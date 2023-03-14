@@ -4,6 +4,7 @@ Rectangle {
     id:root
     width: 41
     height: 20
+    opacity: 1
     radius: 10
     color: isChecked ? (root.enabled ? "#61D37D" :"#306C3F") : "#515151"
 
@@ -20,6 +21,7 @@ Rectangle {
         anchors.margins: 2
         color: root.enabled ? "#DBDBDB" : "#747474"
         visible: isChecked ? false :true
+
     }
     Rectangle {
         id:sliderRight
@@ -36,10 +38,8 @@ Rectangle {
     }
     MouseArea {
         anchors.fill: parent
-        //propagateComposedEvents: true
         onClicked: {
             mouse.accepted = false
-            //isChecked = !isChecked
             checkedStateChanged(isChecked)
         }
     }
@@ -47,6 +47,6 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}
+    D{i:0;formeditorZoom:4}
 }
 ##^##*/

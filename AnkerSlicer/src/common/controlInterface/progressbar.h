@@ -18,6 +18,7 @@ public:
     void setBackgroundColor(QColor color);
     void setProgressCheckedColor(QColor color);
     void setProgressUncheckedColor(QColor color);
+    void setProgressValueTextColor(QColor color);
     void setValuePointSize(int pointSize);
    // void reset();
 
@@ -35,6 +36,7 @@ private:
     QColor m_backgroundColor;
     QColor m_progressCheckedColor;
     QColor m_progressUncheckedColor;
+    QColor m_progressValueTextColor;
     int m_valuePointSize;
 };
 

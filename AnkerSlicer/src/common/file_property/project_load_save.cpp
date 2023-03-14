@@ -15,7 +15,6 @@
 ExportProjectWorker* exportProjectWorker = nullptr;
 ImportProjectWorker* importProjectWorker = nullptr;
 
-//bool myCallBack(const int pos, const char* str);
 
 ProjectLoadSave ProjectLoadSave::_instance;
 
@@ -29,8 +28,6 @@ bool ProjectLoadSave::_QCallBack(const int pos, const char* str)
     static int lastPos = -1;
     if (pos == lastPos) return true;
     lastPos = pos;
-
-//    qDebug() << " pos: " << pos << ", str: " << QString(str);
     return true;
 }
 
@@ -58,7 +55,6 @@ void ProjectLoadSave::setMainWidget(QWidget* parentWidget)
 
 bool ProjectLoadSave::loadProject(const QString& proPath, PluginManager& plugins)
 {
-    //*C:/zip/project.akpro*/
     if (proPath.isEmpty())
         return false;
     int index = proPath.lastIndexOf(QString("/"));
@@ -146,8 +142,39 @@ bool ProjectLoadSave::buildProject(const QString& str, PluginManager& plugins)
     index2 = proDir.lastIndexOf(QString("/")) + 1;
 
     m_file_property.m_docPtr->m_path = proDir.mid(index2, index1 - index2) + QString("/");
-    exportDocumentAllMesh(tmpProDir + proName + QString("/"), m_file_property.m_docPtr);
-    return saveZip(proPath, proName, fileName, layer, tmpProDir);
+    CHDocPtr doc_ptr = m_file_property.m_docPtr;
+    if (doc_ptr == nullptr)
+    {
+        return false;
+    }
+    m_exportProjectProgress = new ProgressDialog((QDialog*)mainWidget);
+    m_exportProjectProgress->setAutoClosed(false);
+    m_exportProjectProgress->setModal(true);
+    m_exportProjectProgress->setWindowModality(Qt::ApplicationModal);
+    m_exportProjectProgress->setCancelVisible(false);
+    exportProjectWorker = new ExportProjectWorker();
+    if(proDir.lastIndexOf("/") != proDir.length() - 1)
+    {
+        proDir += "/";
+    }
+    exportProjectWorker->initExportProjectParams(doc_ptr->m_printObjs, proDir, 1, &_QCallBack);
+    m_exportProjectThread = new QThread();
+    exportProjectWorker->moveToThread(m_exportProjectThread);
+    connect(exportProjectWorker, &ExportProjectWorker::exitThreadSignal, this, &ProjectLoadSave::exportProjectProgressFinished);
+    connect(m_exportProjectThread, &QThread::finished, exportProjectWorker, &QObject::deleteLater);  
+    connect(exportProjectWorker, &ExportProjectWorker::exportModelSignal, this, &ProjectLoadSave::exportProjectProgress);
+    connect(m_exportProjectThread, &QThread::finished, m_exportProjectThread, &QThread::deleteLater);
+    connect(m_exportProjectThread, &QThread::started, exportProjectWorker, &ExportProjectWorker::doWork);
+    connect(exportProjectWorker, &ExportProjectWorker::errorEncountered, this, &ProjectLoadSave::exportProjectError);
+    m_exportProjectThread->start();
+
+    connect(exportProjectWorker, &ExportProjectWorker::compressProject, [this, proPath, proName, fileName, layer, tmpProDir]() {
+        QString tmpLayer = layer;
+        saveZip(proPath, proName, fileName, tmpLayer, tmpProDir);
+    });
+
+    m_exportProjectProgress->exec();
+    return true;
 }
 
 void ProjectLoadSave::setMeshDocumentFromDocumentProperty()
@@ -179,7 +206,7 @@ void ProjectLoadSave::setMeshDocumentFromDocumentProperty()
     }  */
 }
 
-bool ProjectLoadSave::loadZip(QString filePath/*C:/zip/*/, const QString& proName/*eg: project.akpro*/, const QString& outPath, PluginManager& plugins)
+bool ProjectLoadSave::loadZip(QString filePath, const QString& proName, const QString& outPath, PluginManager& plugins)
 {
     bool ret = false;
     QString tmpOutPath = outPath;
@@ -204,7 +231,7 @@ bool ProjectLoadSave::loadZip(QString filePath/*C:/zip/*/, const QString& proNam
         if (index != -1 && _count == 2)
         {
             QString projectDir;
-            if (/*!f.filePath.mid(0, tmpName.length()).compare(tmpName, Qt::CaseInsensitive) && */f.filePath.mid(tmpName.length(), 1) == QString("/"))
+            if (f.filePath.mid(tmpName.length(), 1) == QString("/"))
             {
                 projectDir = f.filePath.mid(tmpName.length() + 1, index - (tmpName.length() + 1));
             }
@@ -233,20 +260,6 @@ bool ProjectLoadSave::loadZip(QString filePath/*C:/zip/*/, const QString& proNam
         else if (f.isFile)
         {
             QString fileName = f.filePath;
-//            int tmpIndex = fileName.lastIndexOf("/");
-//            QDir exportPath(tmpOutPath + fileName.mid(0, tmpIndex));
-//            if (!exportPath.exists())
-//            {
-//                if(tmpProName != tmpName)
-//                {
-//                    exportPath.mkpath(outPath + QString("/") + tmpName + QString("/") + fileName.mid(0, tmpIndex));
-//                }
-//                else
-//                {
-//                    exportPath.mkpath(outPath + QString("/") + fileName.mid(0, tmpIndex));
-//                }
-//                //exportPath.mkpath(tmpOutPath + fileName.mid(0, tmpIndex));
-//            }
             int index = f.filePath.indexOf(QString("/")) + 1;
             if (!f.filePath.mid(0, tmpName.length()).compare(tmpName, Qt::CaseInsensitive) && f.filePath.mid(tmpName.length(), 1) == QString("/"))
             {
@@ -294,7 +307,6 @@ bool ProjectLoadSave::loadZip(QString filePath/*C:/zip/*/, const QString& proNam
     ret = readAllXml(tmpOutPath);
     AkUtil::TDebug("Delete Dir: " + outPath + tmpName);
     ret &= deleteDir(outPath + tmpName);
-    //setMeshDocumentFromDocumentProperty();
     if (curScene)
     {
         curScene->updateDoc();
@@ -304,7 +316,7 @@ bool ProjectLoadSave::loadZip(QString filePath/*C:/zip/*/, const QString& proNam
     return ret;
 }
 
-bool ProjectLoadSave::saveZip(QString filePath/*eg: C:/*/, const QString& folderName/*eg: project*/, QString proName/*eg: project.akpro*/, QString& layer, const QString& outPath)
+bool ProjectLoadSave::saveZip(QString filePath, const QString& folderName, QString proName, QString& layer, const QString& outPath)
 {
     bool result = writeAllXml(outPath + folderName + QString("/"));
     if (!result)
@@ -316,8 +328,6 @@ bool ProjectLoadSave::saveZip(QString filePath/*eg: C:/*/, const QString& folder
     {
         control::MessageDialog messageBox(tr("Warning"), tr("Save Path Not Found"), MessageDialog::OK);
         messageBox.exec();
-        //deleteDir(outPath + folderName + QString("/"));
-        //return false;
         QFileDialog fileDialog;
         filePath = QFileDialog::getSaveFileName(NULL, tr("Save File"), QApplication::applicationDirPath() + QString("/Document/"), QString("Project File(*.akpro)"));
         int index1 = filePath.lastIndexOf("/") + 1;
@@ -386,7 +396,7 @@ bool ProjectLoadSave::QZipWriterEx(QZipWriter* writer, QString dirPath, QString 
     return true;
 }
 
-bool ProjectLoadSave::readAllXml(const QString& proPath/*C:zip:/Project/*/)
+bool ProjectLoadSave::readAllXml(const QString& proPath)
 {
     bool ret = false;
     ret = readXml(proPath + QString("App.xml"), QString("App"), XmlStream::XmlStreamType::XmlStreamType_App);
@@ -411,11 +421,7 @@ bool ProjectLoadSave::readAllXml(const QString& proPath/*C:zip:/Project/*/)
     m_importProjectProgress = new ProgressDialog((QDialog*)mainWidget);
     m_importProjectProgress->setModal(true);
     m_importProjectProgress->setAutoClosed(false);
-    m_importProjectProgress->setCancelVisible(false);        //m_exportProjectThread
-    /*connect(importProjectWorker, &ImportProjectWorker::exitThreadSignal, this, &ProjectLoadSave::importProjectProgressFinished);
-    connect(importProjectWorker, &ImportProjectWorker::exitThreadSignal, importProjectWorker, &QObject::deleteLater);
-    connect(importProjectWorker, &ImportProjectWorker::importModelSignal, this, &ProjectLoadSave::importProjectProgress);*/
-
+    m_importProjectProgress->setCancelVisible(false);
     connect(m_importProjectThread, &QThread::finished, importProjectWorker, &QObject::deleteLater);
     connect(m_importProjectThread, &QThread::finished, m_importProjectThread, &QThread::deleteLater);
     connect(importProjectWorker, &ImportProjectWorker::exitThreadSignal, this, &ProjectLoadSave::importProjectProgressFinished);
@@ -425,39 +431,6 @@ bool ProjectLoadSave::readAllXml(const QString& proPath/*C:zip:/Project/*/)
     connect(m_importProjectThread, &QThread::started, importProjectWorker, &ImportProjectWorker::doWork);
     m_importProjectThread->start();
     m_importProjectProgress->exec();
-
-    //    auto bIt = m_file_property.m_docPtr->m_printObjs.begin();
-    //    auto eIt = m_file_property.m_docPtr->m_printObjs.end();
-    //    while (bIt != eIt)
-    //    {
-    //        QString meshName = (*bIt)->getObjectName();
-    //        if ((*bIt)->m_oldMesh == nullptr)
-    //        {
-    //            (*bIt)->m_oldMesh = new CMeshO;
-    //        }
-    //        MeshModelImport_Export::open(QString("obj"), proPath + meshName + QString("/") + meshName + QString(".obj"), *(*bIt)->m_oldMesh, _QCallBack/*myCallBack*/);
-    //        bool ret = XmlStream::readSupportParamsXml2(*bIt, proPath + meshName + QString("/") + meshName + QString(".xml"));
-    //        for (int i = 0; i < (*bIt)->m_supportMeshes.size(); i++)
-    //        {
-    //            SupportAssemblyMeshesPtr assemblyMeshes = std::dynamic_pointer_cast<SupportAssemblyMeshes>((*bIt)->m_supportMeshes[i]);
-    //            if (assemblyMeshes != nullptr)
-    //            {
-    //                for (int j = 0; j < assemblyMeshes->m_baseShowObjs.size(); j++)
-    //                {
-    //                    QString importPath = proPath + meshName + QString("/") + QString::number(assemblyMeshes->getId()) + QString("/");
-    //                    bool ret = Import_Export_Support::importSupport(importPath, assemblyMeshes->m_baseShowObjs[j]);
-    //                    if (!ret)
-    //                    {
-    //                        break;
-    //                    }
-    //                }
-    //            }
-
-    //        }
-
-    //        bIt++;
-    //    }
-
     ret = readXml(proPath + QString("View.xml"), QString("View"), XmlStream::XmlStreamType::XmlStreamType_View);
     if (!ret)
     {
@@ -466,15 +439,13 @@ bool ProjectLoadSave::readAllXml(const QString& proPath/*C:zip:/Project/*/)
     }
     return ret;
 }
-
-//readXml(tr("Z:/Share/ProjectCmd/App.xml"), tr("App"), XmlStream::XmlStreamType::XmlStreamType_App);
 bool ProjectLoadSave::readXml(const QString& dirPath, const QString& xmlName, const XmlStream::XmlStreamType& xmlType)
 {
     XmlStream rXml(dirPath, &m_file_property, xmlType);
     return rXml.readFile();
 }
 
-bool ProjectLoadSave::writeAllXml(const QString& proPath/*C:zip:/Project/*/)
+bool ProjectLoadSave::writeAllXml(const QString& proPath)
 {
     bool ret = writeXml(proPath + QString("App.xml"), QString("App"), XmlStream::XmlStreamType::XmlStreamType_App);
     if (!ret)
@@ -493,7 +464,7 @@ bool ProjectLoadSave::writeAllXml(const QString& proPath/*C:zip:/Project/*/)
     }
     return ret;
 }
-//writeXml(tr("Z:/Share/ProjectCmd/App1.xml"), tr("App1"), XmlStream::XmlStreamType::XmlStreamType_App);
+
 bool ProjectLoadSave::writeXml(const QString& dirPath, const QString& xmlName, const XmlStream::XmlStreamType& xmlType)
 {
     QFile file(dirPath);
@@ -510,15 +481,6 @@ bool ProjectLoadSave::writeXml(const QString& dirPath, const QString& xmlName, c
     XmlStream wXml(dirPath, &m_file_property, xmlType);
     return wXml.writeFile();
 }
-
-/*bool myCallBack(const int pos, const char* str)
-{
-    int static lastPos = -1;
-    if (pos == lastPos) return true;
-    lastPos = pos;
-    qApp->processEvents();
-    return true;
-} */
 
 
 void ProjectLoadSave::setDocumentPropertyFromMeshDocument(const QString& proDir)
@@ -565,13 +527,6 @@ bool ProjectLoadSave::exportDocumentAllMesh(const QString& proDir, CHDocPtr doc_
     {
         return false;
     }
-    //exportProjectThread = new ExportProjectThread(this);
-    //    exportProjectThread->initExportProjectParams(doc_ptr->m_printObjs, proDir, 1, &_QCallBack);
-    //    connect(exportProjectThread, &ExportProjectThread::finished, this, &ProjectLoadSave::exportProjectProgressFinished);
-    //    connect(exportProjectThread, &ExportProjectThread::finished, exportProjectThread, &QObject::deleteLater);
-    //    connect(exportProjectThread, &ExportProjectThread::exportModelSignal, this, &ProjectLoadSave::exportProjectProgress);
-    //    exportProjectThread->start();
-    //    m_exportProjectProgress->exec();
     m_exportProjectProgress = new ProgressDialog((QDialog*)mainWidget);
     m_exportProjectProgress->setAutoClosed(false);
     m_exportProjectProgress->setModal(true);
@@ -605,7 +560,7 @@ void ProjectLoadSave::setViewPropertyFromViewCK(const ViewProperty& view)
 }
 
 
-bool ProjectLoadSave::exportModel(const QString& dirPath/*?????????*/, const QString& modelName, const CMeshO& _cm)
+bool ProjectLoadSave::exportModel(const QString& dirPath, const QString& modelName, const CMeshO& _cm)
 {
     int index = modelName.lastIndexOf(QString("."));
     QString tmpDir = modelName.mid(0, index);
@@ -623,7 +578,7 @@ bool ProjectLoadSave::deleteDir(const QString& proDir)
     return dir.removeRecursively();
 }
 
-bool ProjectLoadSave::saveModelFolder(const QString& dirPath/*?????????*/, const QString& folderName)
+bool ProjectLoadSave::saveModelFolder(const QString& dirPath, const QString& folderName)
 {
     return true;
 }
@@ -790,7 +745,6 @@ void ProjectLoadSave::mergeModel(const std::vector<CH3DPrintModelPtr>& modelPtrL
         return;
 
     cm.Clear();
-    //int count = 0;
     for (auto it1 = modelPtrList.begin(); it1 != modelPtrList.end(); it1++)
     {
         (*it1)->m_oldMesh->Tr = Matrix44m((*it1)->getTransform().transposed().data());

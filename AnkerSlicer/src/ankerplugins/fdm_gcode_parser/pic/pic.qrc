@@ -21,7 +21,7 @@
         <file>fdm_play_icon_n.png</file>
         <file>fdm_suspended_icon_n.png</file>
         <file>default.qss</file>
-        <file>logo_ankerslicer.ico</file>
+        <file>logo_AnkerMake.ico</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

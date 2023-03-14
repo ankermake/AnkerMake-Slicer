@@ -1,4 +1,5 @@
 #include "meshinfowidget.h"
+#include <QTimer>
 namespace  control{
 
 class LineItem;
@@ -35,7 +36,10 @@ MeshInfoWidget::MeshInfoWidget(QWidget *parent)
     m_listWidget->installEventFilter(this);
     m_listWidget->setFocusPolicy(Qt::NoFocus);
  //   connect(m_listWidget,&QListWidget::clicked,this,&MeshInfoWidget::clickCurrentIndex);
-    connect(m_listWidget,&QListWidget::itemSelectionChanged,this,&MeshInfoWidget::selectedChanged);
+    //connect(m_listWidget,&QListWidget::itemSelectionChanged,this,&MeshInfoWidget::selectedChanged);
+    connect(m_listWidget,&QListWidget::itemSelectionChanged, this, &MeshInfoWidget::selectedChanged);
+    //connect(m_listWidget,&QListWidget::currentItemChanged, this, &MeshInfoWidget::currentItemChanged);
+    connect(m_listWidget,&QListWidget::currentRowChanged, this, &MeshInfoWidget::currentRowChanged);
 
     m_listWidget->setFrameShape(QListWidget::NoFrame);
     QString style = "QScrollBar:vertical { width:4px ; background:#FFFFFF ;margin:0px,0px,3px,0px;padding-top:0px; padding-bottom:0px;}"
@@ -119,9 +123,11 @@ void MeshInfoWidget::addItem(QString name,bool visble,bool selected,int index)
 
 void MeshInfoWidget::init()
 {
+    //qDebug() << "init().";
     CHDocPtr docPtr = getDoc();
     auto  docs = docPtr->m_printObjs;
     for(auto i = 0 ; i <docs.size(); ++i) {
+        //qDebug() << "name: " << docs[i]->getObjectName() << ", status: " << docs[i]->getStatus();
         addItem(docs[i]->getObjectName(), docs[i]->getVisuable(), docs[i]->getStatus() == selected ? true : false, i);
     }
     int height = 0;
@@ -283,6 +289,27 @@ void MeshInfoWidget::updateItem()
     m_listWidget->clear();
 
     init();
+}
+
+void MeshInfoWidget::currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    qDebug() << "currentItemChanged ." << current;
+}
+
+void MeshInfoWidget::currentRowChanged(int currentRow)
+{
+    if(currentRow < 0)
+    {
+        return;
+    }
+    if(flag) {
+        flag = false;
+        return;
+    }
+    
+    if(docPtrStatusChanged(getDoc())) {
+        emit  currentChanged();
+    }
 }
 
 

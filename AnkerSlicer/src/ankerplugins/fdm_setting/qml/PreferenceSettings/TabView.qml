@@ -70,10 +70,11 @@ Item {
         }
     }
 
-    Item {
+    Rectangle {
         id: stack
         width: root.width
-        anchors {top: header.bottom ; bottom: root.bottom}
+        clip: true
+        anchors {top: header.bottom ; bottom: root.bottom ; topMargin: 12}
     }
 }
 

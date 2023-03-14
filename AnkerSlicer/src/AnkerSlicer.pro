@@ -40,9 +40,9 @@ message("DISTRIB_DIRECTORY: "$$MESHLAB_DISTRIB_DIRECTORY)
 SUBDIRS += common
 common.subdir = common
 
-SUBDIRS += AnkerSlicer
-AnkerSlicer.subdir = meshlab
-AnkerSlicer.depends = common anker_edit_model fdm_gcode_parser fdm_setting
+SUBDIRS += AnkerMake
+AnkerMake.subdir = meshlab
+AnkerMake.depends = common anker_edit_model fdm_gcode_parser fdm_setting fdm_slicer
 
 #SUBDIRS += io_base
 #io_base.subdir = ankerplugins/io_base

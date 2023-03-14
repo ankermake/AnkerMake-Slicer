@@ -13,7 +13,7 @@ Item {
     signal showAllChildern(string category)
     signal showTooltip(string description, point p)
     signal hideTooltip()
-    //when item is children node，use tab
+
     Item {
         id: itemSpace
         anchors.left: parent.left
@@ -54,21 +54,15 @@ Item {
         hoverEnabled:true
         onEntered: {
         //   console.log("enterrrrrrrrrrrrrrrrrr", "mouse_X = ", mouseX, "mouse_y = " ,mouseY, "gloabal = " , mapToGlobal(0,0));
-            //showTooltip()
            FdmParamSettingsWidget.showToolTip(model.label, model.description, model.affects, model.affectedBy, mapToGlobal(0,0));
-//            typeLoder.item.int
         }
-        //onPressed: {mouse.accepted = false}
 
         onClicked: {
             mouse.accepted = false
         }
         onExited:  {
-            // mouse.accepted=false
           //  console.log("exited................");
-           // hideTooltip()
             FdmParamSettingsWidget.hideToolTip();
-            //mouse.accepted=false
         }
 
     }

@@ -39,6 +39,8 @@ public:
   
     void processAnkerOptimize(SliceDataStorage& storage);
 
+    //add for addjust top surface
+    void processTopSurfacePart(SliceMeshStorage& mesh);
 private:
     /*!
      * \brief Helper function to get the actual height of the draft shield.

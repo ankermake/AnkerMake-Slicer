@@ -55,15 +55,7 @@ viewWidget::viewWidget(QWidget* parent, const SceneParam& param,bool pmode,QStri
     }
 
     connect(m_rpc.data(),&QRemoteObjectDynamicReplica::initialized,this,&viewWidget::connectedRPC);
-    connect(m_rpc.data(),&QRemoteObjectDynamicReplica::stateChanged,[](QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState) {
-        if(state==QRemoteObjectReplica::Suspect && oldState == QRemoteObjectReplica::Valid){
-            //qApp->quit();
-        }
-        QString dstr;
-        QDebug(&dstr) << "oldState: " <<oldState;
-        QDebug(&dstr) << "state: " <<state;
-        AkUtil::TDebug( "-----stateChanged---"+dstr);
-    });
+//no need check rpc
 
 
     if(printMode)
@@ -74,9 +66,8 @@ viewWidget::viewWidget(QWidget* parent, const SceneParam& param,bool pmode,QStri
     if(!pmode)
     {
     ExitButton->setText(tr("Print"));
-    ExitButton->setVisible(false);
+    ExitButton->setVisible(true);
     }
-    ExitButton->setVisible(false);
 
     colorDlg = new QColorDialog(this);
     colorDlg->setStyleSheet(QString("background-color:#9a9a9a;"));
@@ -139,13 +130,12 @@ void viewWidget::paramChange(QVariant p)
 {
     AkUtil::TDebug("in param change ");
     //emit setValue(42);
-    QString str;
+//    QString str;
     //QDebug(&str) << var_test.toFloat();
     //QDebug(&str) << "p.m_backgroundColor "<<p.value<passSceneParam>();
     ui->openGLWidget->setSceneParams(m_sceneParam);
     this->changeSlider();
-    AkUtil::TDebug( str);
-
+//    AkUtil::TDebug( str);
 }
 
 void viewWidget::onMsgFromFdmGcodePaser(const QString &msg)
@@ -158,19 +148,20 @@ void viewWidget::onMsgFromFdmGcodePaser(const QString &msg)
 void viewWidget::initForm()
 {
     AkUtil::TFunction("");
-    setAttribute(Qt::WA_StyledBackground, true);
-    int tmpR, tmpG, tmpB, tmpA;
-    m_sceneParam.m_backgroundColor.getRgb(&tmpR, &tmpG, &tmpB, &tmpA);
+    
+    //setAttribute(Qt::WA_StyledBackground, true);
+   // int tmpR, tmpG, tmpB, tmpA;
+   // m_sceneParam.m_backgroundColor.getRgb(&tmpR, &tmpG, &tmpB, &tmpA);
     //setStyleSheet("background-color: rgb(234, 234, 234)");
-    setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
+    //setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
     //ui->openGLWidget->setSceneParams(m_sceneParam);
-    ui->openGLWidget->setAttribute(Qt::WA_StyledBackground, true);
+   // ui->openGLWidget->setAttribute(Qt::WA_StyledBackground, true);
     //ui->openGLWidget->setStyleSheet("background-color: rgb(234, 234, 234)");
-    ui->openGLWidget->setStyleSheet(QString("background-color: rgb(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
+    //ui->openGLWidget->setStyleSheet(QString("background-color: rgb(%1, %2, %3, %4)").arg(31).arg(32).arg(34).arg(tmpA));
 
     ui->widget->setStyleSheet(QString("background-color:#292A2D;"));
     setWindowTitle(tr("AnkerMake G-Code Preview"));
-    setWindowIcon(QIcon(":/pic/ui/logo_ankerslicer.ico"));
+    setWindowIcon(QIcon(":/pic/ui/logo_AnkerMake.ico"));
 
     //ui opengl widgt layout
     QVBoxLayout* verticalLayout_in;
@@ -234,7 +225,7 @@ void viewWidget::initForm()
     sizePolicy1.setVerticalStretch(0);
     sizePolicy1.setHeightForWidth(verticalSlider->sizePolicy().hasHeightForWidth());
     verticalSlider->setSizePolicy(sizePolicy1);
-    verticalSlider->setMinimumSize(QSize(30, 400));
+    verticalSlider->setMinimumSize(QSize(30, 350));
     verticalSlider->setMaximumSize(QSize(30, 400));
 
     //verticalSlider->setOrientation(Qt::Vertical);
@@ -1084,7 +1075,7 @@ void viewWidget::initForm()
     unkonwnLayout->addWidget(unkonwnLabelC);
     unkonwnLabel = new QLabel(ui->widget);
     unkonwnLabel->setObjectName(QString::fromUtf8("unknowLabel"));
-    unkonwnLabel->setText(tr("unkonwn"));
+    unkonwnLabel->setText(tr("Unknown"));
     sizePolicy2.setHeightForWidth(unkonwnLabel->sizePolicy().hasHeightForWidth());
     unkonwnLabel->setSizePolicy(sizePolicy2);
     unkonwnLabel->setMinimumSize(QSize(80, 15));
@@ -2106,6 +2097,7 @@ void viewWidget::initForm()
     timeValue->setAlignment(Qt::AlignRight | Qt::AlignTrailing | Qt::AlignVCenter);
     timeLayout->addWidget(timeValue);
     verticalLayout->addLayout(timeLayout);
+
     verticalLayout->addStretch();
 
     QHBoxLayout* ExportLayout;
@@ -2138,6 +2130,12 @@ void viewWidget::initForm()
         "    background-color:#3A3B3F;\n"
         "\n"
         "}\n"
+        "QPushButton:disabled {\n"
+        "    color:#696969;\n"
+        "    background-color:#3A3B3F;\n"
+        "    border: 0px  solid #000000;\n"
+        "}\n"
+        "\n"
         "QPushButton:hover {\n"
         "    color:#71D78A;;\n"
         "    border: 1px  solid #71D78A;\n"
@@ -2148,6 +2146,7 @@ void viewWidget::initForm()
         "     border: 1px  solid #71D78A;\n"
         "}"));
     ExportLayout->addWidget(ExportButton);
+    ExportButton->setEnabled(false);
 //    horizontalSpacer_ExportLayout13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExportLayout->addItem(horizontalSpacer_ExportLayout13);
 //    ExportLayout->setStretch(0, 1);
@@ -2176,6 +2175,12 @@ void viewWidget::initForm()
         "    background-color:#61D37D;\n"
         "\n"
         "}\n"
+        "QPushButton:disabled {\n"
+        "    color:#696969;\n"
+        "    background-color:#3A3B3F;\n"
+        "    border: 0px  solid #000000;\n"
+        "}\n"
+        "\n"
         "QPushButton:hover {\n"
         "    background-color:#71D78A;\n"
         "}\n"
@@ -2185,6 +2190,7 @@ void viewWidget::initForm()
         "    background-color:#61D37D;\n"
         "}"));
     ExitLayout->addWidget(ExitButton);
+    ExitButton->setEnabled(false);
 //    horizontalSpacer_Exit15 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExitLayout->addItem(horizontalSpacer_Exit15);
 //    ExitLayout->setStretch(0, 1);
@@ -2933,7 +2939,11 @@ void viewWidget::setExportPic()
     mpDlg = new ProgressDialog(nullptr);//(QDialog*)this
     IgnoreEvent ign(ui->openGLWidget);
     //boolLock orL(offRenderLock);
-    mpDlg->setText(tr("Generate AI Image"));
+    if(isAiMode){
+        mpDlg->setText(tr("Generate AI Image"));
+    }else{
+        mpDlg->setText(tr("Export Gcode File"));
+    }
     mpDlg->setCancelVisible(false);
     connect( ui->openGLWidget,SIGNAL(setValue(int)),mpDlg,SLOT(setValue(int)));
     connect(mpDlg, &ProgressDialog::destroyed, this, [&]()->void { mpDlg = NULL; });
@@ -2980,6 +2990,19 @@ void viewWidget::setOriginalStlName(const QString& oStlName)
     this->ui->openGLWidget->setOriginalStlName(oStlName);
 }
 
+void viewWidget::setLoadingProgress()
+{
+    timer_value += 895.2 * (1024 / 4.7) / f_size * 0.3;
+    qDebug()<< "timer sum set Value " <<timer_value;
+    if(timer_value < 30.0)
+    {
+        emit this->ui->openGLWidget->setValue((int)timer_value);
+    }else{
+        tp_timer->stop();
+        timer_value = 0.0;
+    }
+}
+
 void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_size)
 {
     
@@ -2988,46 +3011,58 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
     {
         dir.removeRecursively();
     }
-//    std::shared_ptr<Anker::GCodeProcessor> processor;
-//    processor = std::make_shared<Anker::GCodeProcessor>();
+    
+    QFileInfo fi(QString::fromStdString(gcodePath));
+    f_size = fi.size() / 1024; 
+    if(tp_timer == nullptr)
+    {
+       tp_timer = new QTimer(this);
+    }
+    connect(tp_timer, &QTimer::timeout, this, &viewWidget::setLoadingProgress,Qt::UniqueConnection);
+    tp_timer->start(100);
+
     QThreadPool::globalInstance()->start([=](){
-        qDebug()<< "processFile start";
-        qDebug()<<"QThread::currentThread() "<<QThread::currentThread() ;
         processor->reset();
         processor->enable_producers(true);
         processor->process_file(gcodePath, false);
-        qDebug()<< "processFile end";
+        this->ui->openGLWidget->waitForSceneInit();
+        auto poolThread = QThread::currentThread();
+        
+        QMetaObject::invokeMethod(QCoreApplication::instance(), [&] {
+            this->ui->openGLWidget->cnt = new QOpenGLContext();
+            this->ui->openGLWidget->m_offscreenSurface = new QOffscreenSurface();
+            this->ui->openGLWidget->m_offscreenSurface->setFormat(this->ui->openGLWidget->context()->format());
+            this->ui->openGLWidget->m_offscreenSurface->create();
+            this->ui->openGLWidget->doneCurrent();
+            this->ui->openGLWidget->cnt->setFormat(this->ui->openGLWidget->context()->format());
+            this->ui->openGLWidget->cnt->setShareContext(this->ui->openGLWidget->context());
+            this->ui->openGLWidget->cnt->create();
+            this->ui->openGLWidget->cnt->moveToThread(poolThread);
+
+        }, Qt::BlockingQueuedConnection);
+        this->ui->openGLWidget->clearGcodeSource();
+        this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
+        
+        this->tp_timer->stop();
+        this->timer_value = 0.0;
+        this->ui->openGLWidget->loadGcode();
+
+        this->ui->openGLWidget->cnt->moveToThread(QThread::currentThread());
+        this->ui->openGLWidget->cnt->destroyed();
+        this->ui->openGLWidget->cnt = nullptr;
         emit processFile(QString::fromStdString(gcodePath),isAiMode);
     });
-    qDebug()<< "processFile mid";
-    qDebug()<< "QThread::currentThread() main"<<QThread::currentThread() ;
     if(processing){
-        connect(this,&viewWidget::processFile,this,[=](const QString& _gcodePath,bool _isAiMode){
-            qDebug()<< "processFile";
-            qDebug()<<"QThread::currentThread() 1"<<QThread::currentThread() ;
-            this->ui->openGLWidget->clearGcodeSource();
-            this->setToolPath(std::move(processor->extract_result()), _gcodePath.toStdString(), _isAiMode,gcode_size);
-            this->ui->openGLWidget->loadGcode();
+        connect(this,&viewWidget::processFile,this,[&](const QString& _gcodePath,bool _isAiMode){
             changeSlider();
             processing = false;
+            
+            QVariant totleTime = allTimeValue;
+            m_rpc.data()->setProperty("gcodeTotalTime",totleTime);
+            QVariant totleFilament = allFilamentValue;
+            m_rpc.data()->setProperty("gcodeTotalFilament",totleFilament);
         }, Qt::QueuedConnection);
     }
-//    while(true){
-//        if(!processing){
-//            this->ui->openGLWidget->clearGcodeSource();
-//            this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
-//            this->ui->openGLWidget->loadGcode();
-//            changeSlider();
-//            break;
-//        }
-//        qDebug()<< "while loop";
-//        QThread::msleep(10);
-//    }
-
-//    this->ui->openGLWidget->clearGcodeSource();
-//    this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
-//    this->ui->openGLWidget->loadGcode();
-//    changeSlider();
 }
 
 void viewWidget::setDefaultScene()
@@ -3093,6 +3128,7 @@ bool viewWidget::setToolPath(Anker::GCodeProcessor::Result&& gcode_result, std::
 void viewWidget::changeSlider()
 {
     
+
     unsigned int layersize = static_cast<unsigned int>(ui->openGLWidget->m_layers.size());
     if(layersize < 1)
     {
@@ -3101,12 +3137,29 @@ void viewWidget::changeSlider()
         this->spinBox_2->hide();
         this->horizontalSlider->hide();
         this->pushButton_9->hide();//play button
+        
+        if(!printModeInit || !innerModeInit)
+        {
+            control::MessageDialog a("warning",tr("Gcode failed to open, please try again"), control::MessageDialog::BUTTONFLAG::OK);
+            a.exec();
+        }
+        if(printModeInit){
+            printModeInit = false;
+        }else{
+            innerModeInit = false;
+        }
+        this->ExitButton->setEnabled(false);
+        this->ExportButton->setEnabled(false);
+
+        return;
     }else{
         this->verticalSlider->show();
         this->spinBox->show();
         this->spinBox_2->show();
         this->horizontalSlider->show();
         this->pushButton_9->show();//play button
+        this->ExitButton->setEnabled(true);
+        this->ExportButton->setEnabled(true);
     }
 
     this->verticalSlider->setRange(1, layersize);
@@ -3130,6 +3183,7 @@ void viewWidget::changeSlider()
     this->update();
 }
 
+//no need
 void viewWidget::closeEvent(QCloseEvent* event)
 {
     //Q_EMIT closePreviewEvent(runTimesId);
@@ -3205,6 +3259,7 @@ void viewWidget::on_pushButton_quit_clicked()
     
     //this->ui->openGLWidget->off_render_single();
     QString sendStr;
+
     if(!isAiMode)
     {
         sendStr = this->ui->openGLWidget->sendOriginalStlNamedFile(true);
@@ -3231,7 +3286,6 @@ void viewWidget::on_pushButton_quit_clicked()
         m_progessDlg->exec();
     }
     AkUtil::TDebug("sendStr: " + sendStr);
-
     emit printGcode(sendStr);
     //qs->displayDeviceListWidget(id, sendStr);
     return;
@@ -3276,6 +3330,7 @@ void viewWidget::setFilamentStr()
     QString showStr = QString("%1 g").arg(int(showValue * mm_per_g), 6);
     filamentValue->setText(showStr);
     double sum = std::accumulate(std::begin(showLabelCount), std::end(showLabelCount), 0.0);
+    allFilamentValue = sum * mm_per_g;
     this->allfilamentLabel->setText(QString("%1 g").arg(int(sum * mm_per_g), 6));
     this->allfilamentLabel->setStyleSheet("background:transparent");
 }
@@ -3304,6 +3359,11 @@ void viewWidget::setAimode(bool _isAimode)
 {
     AkUtil::TDebug("setAimode  : "+ QString::number(_isAimode));
     this->isAiMode = _isAimode;
+}
+
+void viewWidget::setLoggingStatus(bool status)
+{
+    loggingStatus = status;
 }
 
 void viewWidget::pauseGcodePlay(int index)
@@ -3360,6 +3420,7 @@ void viewWidget::setTimeStr()
     QString showStr = getTimesDhms(showValue);
     timeValue->setText(showStr);
     float sum = std::accumulate(std::begin(showTimeLabelCount), std::end(showTimeLabelCount), 0.0);
+    allTimeValue = sum;
     this->allTimeLabel->setText(getTimesDhms(sum));
     this->allTimeLabel->setStyleSheet("background:transparent");
 }

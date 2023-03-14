@@ -136,28 +136,28 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
 
     
     QVector3D originPoint = QVector3D(0, 0, 0);
-    float trad = 1.5;
-    float theight = 10;
+    //float trad = 1.5;
+    //float theight = 10;
     CoordinateAxisPtr adjustAxisX;
     CoordinateAxisPtr adjustAxisY;
     CoordinateAxisPtr adjustAxisZ;
     CHPointShowObjPtr adjustOrigin;
     adjustAxisX = CoordinateAxisPtr(new CoordinateAxis);
-    adjustAxisX->create(originPoint, QVector3D(1, 0, 0), lenth / 5, trad, theight);
+    adjustAxisX->create(originPoint, QVector3D(1, 0, 0), lenth / 5, lenth/ 100.0, lenth/ 20.0);
     adjustAxisX->setColor(QColor(125, 0, 0));
     adjustAxisX->setVisuable(true);
     adjustAxisX->setCalLight(false);
     adjustAxisX->setWidth(5.0);
     //adjustAxisX->setLightTest(false);
     adjustAxisY = CoordinateAxisPtr(new CoordinateAxis);
-    adjustAxisY->create(originPoint, QVector3D(0, 1, 0), wide / 5, trad, theight);
+    adjustAxisY->create(originPoint, QVector3D(0, 1, 0), wide / 5,  wide / 100.0, wide / 20.0);
     adjustAxisY->setColor(QColor(0, 125, 0));
     adjustAxisY->setVisuable(true);
     adjustAxisY->setCalLight(false);
     adjustAxisY->setWidth(5.0);
     //adjustAxisY->setLightTest(false);
     adjustAxisZ = CoordinateAxisPtr(new CoordinateAxis);
-    adjustAxisZ->create(originPoint, QVector3D(0, 0, 1), height / 5, trad, theight);
+    adjustAxisZ->create(originPoint, QVector3D(0, 0, 1), height / 5, height / 200.0, height / 20.0);
     adjustAxisZ->setColor(QColor(0, 0, 125));
     adjustAxisZ->setVisuable(true);
     adjustAxisZ->setCalLight(false);

@@ -89,6 +89,7 @@ TLogger::TLogger()
     //logPath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("log");
     auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     logPath = QDir(writableLocation).absoluteFilePath("log");
+    qDebug() << "logpath is " << logPath;
 
     QDir logDir = QDir(logPath);// QFileInfo(logPath).absoluteDir();
     if (!logDir.exists())
@@ -108,7 +109,7 @@ TLogger::TLogger()
 
 TLogger *TLogger::instance()
 {
-    static const char TLoggerKey[] = "AnkerSlicer-Logger";
+    static const char TLoggerKey[] = "AnkerMake-Logger";
     static TLogger logger;
     TLogger *ptrLogger = nullptr;
     if (nullptr == qApp)

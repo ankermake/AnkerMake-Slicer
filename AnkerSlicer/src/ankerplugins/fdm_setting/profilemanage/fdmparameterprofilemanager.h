@@ -50,7 +50,7 @@ public:
     
     void readProfile(QString profile, QList<FdmProfileCategory>& categories);
 
-    FdmParameterProfile* getExpertProfile(QString machineName, QString materialName);
+    FdmParameterProfile* getExpertProfile(QString machineName, QString materialName,double nozzleSize,bool &success);
 
     
     //FdmParameterProfile *getCurrentSelectedProfile() override;

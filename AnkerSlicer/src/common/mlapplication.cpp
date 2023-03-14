@@ -43,7 +43,7 @@ bool MeshLabApplication::notify( QObject * rec, QEvent * ev )
 //  change @2022-06-06 by CL
 const QString MeshLabApplication::appVer(bool includeName, bool includeDate)
 {
-    QString ver("V0.7.5");
+    QString ver("V0.8.2");
 #if USE_EXTRA_UI
     ver = ver + ".1";    
 #endif

@@ -141,6 +141,8 @@ paramsStack::paramsStack(GcodeViewer *hdls)
     this->h = hdls->m_scene3d->getH();
     this->v_angle = hdls->m_scene3d->getVerticalAngle();
     this->Extrusion_Role_Colors_saved = hdls->Extrusion_Role_Colors;
+    size_t id = static_cast<size_t>(buffer_id(EMoveType::Travel));
+    this->travelVisable = hdls->m_buffers[id].visible;
 }
 
 paramsStack::~paramsStack()
@@ -156,7 +158,8 @@ paramsStack::~paramsStack()
     this->handls->m_scene3d->resizeWidget(w,h);
     this->handls->m_scene3d->setVerticalAngle(v_angle);
     this->handls->Extrusion_Role_Colors = std::move(Extrusion_Role_Colors_saved);
-
+    size_t id = static_cast<size_t>(buffer_id(EMoveType::Travel));
+    this->handls->m_buffers[id].visible = this->travelVisable ;
 }
 
 boolLock::boolLock(bool &v)
@@ -270,6 +273,7 @@ GcodeViewer::GcodeViewer(QWidget* parent) :QOpenGLWidget(parent), m_scene3d(null
 
 GcodeViewer::~GcodeViewer()
 {
+    AkUtil::TFunction("");
     if(QFile::exists(std::move(QString::fromStdString(this->m_gcode_path))))
     {
         QFile::remove(QString::fromStdString(this->m_gcode_path));
@@ -278,23 +282,20 @@ GcodeViewer::~GcodeViewer()
     {
         QFile::remove(this->akpicSave);
     }
-
-
+    this->resetGpu();
     if(m_offscreenSurface)
     {
-        this->resetGpu();
         m_offscreenSurface->destroy();
         delete m_offscreenSurface;
         m_offscreenSurface = nullptr;
         if(cnt)
         {
-            //            cnt->destroyed();
-            //            delete cnt;
-            //            cnt = nullptr;
+            cnt->destroyed();
+            delete cnt;
+            cnt = nullptr;
         }
     };
     reset();
-    makeCurrent();
     if(m_scene3d)
     {
         delete m_scene3d;
@@ -688,10 +689,11 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
             this->m_boundingBox.isDefine = true;
         }
     };
-//qDebug()<< "test0---";
+
+
+    //--add vertice
     for (size_t i = 0; i < m_moves_count; ++i) {
         const GCodeProcessor::MoveVertex& curr = gcode_result.moves[i];
-        
         if (curr.type == EMoveType::Extrude && curr.width != 0.0f && curr.height != 0.0f)
         {
             getBoundingbox(curr.position);
@@ -741,7 +743,7 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
                 options_zs.emplace_back(curr.position[2]);
         }
     }
-//    qDebug()<< "test1---";
+
     // smooth toolpaths corners for the given TBuffer using triangles
     auto smooth_triangle_toolpaths_corners = [&gcode_result](const TBuffer& t_buffer, MultiVertexBuffer& v_multibuffer) {
         auto extract_position_at = [](const VertexBuffer& vertices, size_t offset) {
@@ -908,22 +910,17 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
     }
 
     int numTasks = m_buffers.size() * 2;
-    //QProgressDialog progress("Gen Ai picture in progress...", "", 0, numTasks,nullptr);
-    //progress.setWindowModality(Qt::WindowModal);
-    //progress.setLabelText("send vertices to GPU ");
-    
     int lastNum = 0;
     for (size_t i = 0; i < m_buffers.size(); ++i) {
         TBuffer& t_buffer = m_buffers[i];
 
         glsafe(glGenVertexArrays(1, &t_buffer.t_vao));
         glsafe(glBindVertexArray(t_buffer.t_vao));
-
-        int showIntNum = i * 100 / numTasks ;
+        
+        int showIntNum = (i * 100 / numTasks) * 0.65 + 30 ;
         if(lastNum != showIntNum)
         {
             emit setValue(showIntNum);
-            //QCoreApplication::processEvents();
             lastNum = showIntNum;
 
         }
@@ -998,7 +995,6 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
         // ensure there is at least one index buffer
         if (i_multibuffer.empty()) {
             i_multibuffer.push_back(IndexBuffer());
-            
             vbo_index_list.push_back(t_buffer.vertices.vbos[curr_vertex_buffer.first]);
         }
 
@@ -1069,14 +1065,12 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
     }
 
     //TODO: send data to meshO
-    //progress.setLabelText("send indices to GPU ");
     for (size_t i = 0; i < m_buffers.size(); ++i) {
         //progress.setValue(2*i);
-        int showIntNum = i * 100 / numTasks + 50;
+        int showIntNum = (i * 100 / numTasks) * 0.65 + 30 + 32.5;
         if(lastNum != showIntNum)
         {
             emit setValue(showIntNum);
-            //QCoreApplication::processEvents();
             lastNum = showIntNum;
         }
         TBuffer& t_buffer = m_buffers[i];
@@ -1110,9 +1104,7 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
 
     }
 
-    //progress.setValue(numTasks);
     // dismiss indices data, no more needed
-    //indices_cpu = std::move(indices);
     std::vector<MultiIndexBuffer>().swap(indices);
 
     // layers zs / roles / extruder ids -> extract from result
@@ -1576,7 +1568,7 @@ void GcodeViewer::SequentialView::Marker::render(QOpenGLShaderProgram & shaderPr
     //glsafe(glDisable(GL_BLEND));
 }
 
-void GcodeViewer::refresh(const GCodeProcessor::Result & gcode_result, const std::vector<std::string>&str_tool_colors)
+void GcodeViewer::refresh(const GCodeProcessor::Result &gcode_result, const std::vector<std::string> &str_tool_colors , bool runInOtherThread)
 {
 #if ENABLE_GCODE_VIEWER_STATISTICS
     auto start_time = std::chrono::high_resolution_clock::now();
@@ -1635,14 +1627,17 @@ void GcodeViewer::refresh(const GCodeProcessor::Result & gcode_result, const std
         }
     }
 
-    emit notify_refresh_render_path(false, false);
-    //refresh_render_paths(false, false);
+    if(runInOtherThread)
+    {
+        refresh_render_paths(false, false);
+    }else{
+        emit notify_refresh_render_path(false, false);
+    }//refresh_render_paths(false, false);
 }
 
 void GcodeViewer::refresh_render_paths(bool keep_sequential_current_first, bool keep_sequential_current_last)
 {
     QString debugStr;
-    AkUtil::TFunction("");
     if (cnt)
     {
         cnt->makeCurrent(this->m_offscreenSurface);
@@ -2619,6 +2614,7 @@ void GcodeViewer::initializeGL()
             QObject::connect(this,SIGNAL(setValue(int)),mPdlg,SLOT(setValue(int)));
             mPdlg->exec();
         }
+
 }
 
 //void GcodeViewer::showProgressDlg()
@@ -2677,19 +2673,19 @@ void GcodeViewer::setTravelColor(unsigned int index,std::array<float, 3> setColo
 
 void GcodeViewer::loadGcode()
 {
-    this->makeCurrent();
+    if (cnt)
+    {
+        cnt->makeCurrent(m_offscreenSurface);
+    }
+    else {
+        this->makeCurrent();
+    }
     this->load_toolpaths(this->gcode_result);
-
     std::vector<std::string> colors;
     colors.push_back("#808080");
-
-    QThreadPool::globalInstance()->start([=](){
-        qDebug()<< "QThread::currentThread() :"<<QThread::currentThread();
-        this->refresh(gcode_result, colors);
-    });
+    this->refresh(gcode_result, colors, true);
     if(!this->printMode)
     {
-        qDebug()<< "mainThread 01234:";
         offImage = this->render_singe_iamge();
         if(m_fbo)
         {
@@ -2698,15 +2694,22 @@ void GcodeViewer::loadGcode()
             m_fbo = nullptr;
         }
         QThreadPool::globalInstance()->start([=](){
-            qDebug()<< "QThread::currentThread()** :"<<QThread::currentThread();
+            
             off_render_single(offImage);
             emit setValue(100);
         });
     }else{
         emit setValue(100);
     }
- //emit setValue(100);
- this->doneCurrent();
+
+    if (cnt)
+    {
+        cnt->doneCurrent();
+    }
+    else {
+        this->doneCurrent();
+    }
+
 }
 
 void GcodeViewer::setSceneParams(const SceneParam & param)
@@ -2720,6 +2723,9 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
     {
         //scene_part
         this->makeCurrent();
+        
+        m_scene3d_init_mutex.lock();
+        AkUtil::TDebug("m_scene3d_init_mutex.lock() in setSceneParams");
         m_scene3d = new Scene3D(this, m_sceneParam);
         m_renderData = RenderDataPtr(new RenderData);
         m_renderData->m_printMachineBoxPtr->create(m_sceneParam.logoMesh,
@@ -2743,30 +2749,14 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
         std::vector<std::string> colors;
         colors.push_back("#808080");
         this->refresh(gcode_result, colors);
-        if(!this->printMode)
-        {
-             QImage res = this->render_singe_iamge();
-             if(m_fbo)
-             {
-                 m_fbo->release();
-                 delete m_fbo;
-                 m_fbo = nullptr;
-             }
-             off_render_single(res);
-//             emit setValue(100);
-//            QThreadPool::globalInstance()->start([=](){
-//                off_render_single();
-//                emit setValue(100);
-//            });
-        }else{
-            emit setValue(100);
-        }
+        //update 20221103: whatever printMode or innerMode ,there is no need to emit the setValue 100 signal
 
-
-        //set_toolpath_move_type_visible(EMoveType::Zlap,true);
+        
+        m_scene3d_inited.wakeAll();
+        AkUtil::TDebug("waked!");
+        m_scene3d_init_mutex.unlock();
+        AkUtil::TDebug("m_scene3d_init_mutex.unlock() in setSceneParams");
         this->doneCurrent();
-
-        //update();
     }
 }
 
@@ -2841,14 +2831,10 @@ void GcodeViewer::writeToGPUBUffer(CHCurveShowObjPtr curvebody, RenderCurvePtr r
     }
 
     QOpenGLVertexArrayObject::Binder vaoBind(&(rendercurve->m_vao));
-    //qDebug() << "rendercurve->m_vao :" << rendercurve->m_vao.objectId();
     rendercurve->m_vbo.create();
     rendercurve->m_vbo.bind();
     rendercurve->m_vbo.allocate(vertices, sizeof(GLfloat) * rendercurve->m_Num * 3);
-    int attr = -1;
-    attr = m_renderData->m_shaderProgramPtr->attributeLocation("aPos");
-    m_renderData->m_shaderProgramPtr->setAttributeBuffer(attr, GL_FLOAT, 0, 3, sizeof(GLfloat) * 3);
-    m_renderData->m_shaderProgramPtr->enableAttributeArray(attr);
+    
     rendercurve->m_vbo.release();
 
     delete vertices;
@@ -2900,7 +2886,14 @@ void GcodeViewer::paintCurveVbo(QOpenGLShaderProgram & shaderProgram, CHCurveSho
 
     //glLineWidth(curve->getLineWide());
     QOpenGLVertexArrayObject::Binder vaoBind(&(rc->m_vao));
-    glDrawArrays(GL_LINE_STRIP, 0, rc->m_Num);
+    
+    rc->m_vbo.bind();
+    int attr = -1;
+    attr = m_renderData->m_shaderProgramPtr->attributeLocation("aPos");
+    m_renderData->m_shaderProgramPtr->setAttributeBuffer(attr, GL_FLOAT, 0, 3, sizeof(GLfloat) * 3);
+    m_renderData->m_shaderProgramPtr->enableAttributeArray(attr);
+    glsafe(glDrawArrays(GL_LINE_STRIP, 0, rc->m_Num));
+    rc->m_vbo.release();
 }
 
 void GcodeViewer::paintPointVbo(QOpenGLShaderProgram & shaderProgram, CHPointShowObjPtr point, RenderPointSpherePtr rps, QMatrix4x4 & pvMatrix)
@@ -3366,8 +3359,8 @@ void GcodeViewer::mousePressEvent(QMouseEvent * event)
     if (m_scene3d == NULL)
         return;
     m_scene3d->setMousePress(true);
-    Vec3f center = (m_boundingBox.max + m_boundingBox.min) / 2.0;
-    if (center != Vec3f(0.0, 0.0, 0.0))
+    QVector3D center = m_scene3d->getMainbox().getCenterPoint();//(m_boundingBox.max + m_boundingBox.min) / 2.0;
+    if (center != QVector3D(0.0, 0.0, 0.0))
     {
         m_scene3d->setRefTranPoint(center.x(), center.y(), center.z());
     }
@@ -3528,7 +3521,7 @@ QString GcodeViewer::sendOriginalStlNamedFile(bool isNeedReplace)
         senStr = QString::fromStdString(this->m_gcode_path).replace(m_gcode_name,originalStlName);
     }else{
         AkUtil::TDebug("originalStlName size < 0 , use default gcode name");
-        senStr = QString::fromStdString(this->m_gcode_path).replace("aiGCode.gcode",originalGcodeName);
+        senStr = QString::fromStdString(this->m_gcode_path).replace("aiGcode.gcode",originalGcodeName);
     }
 
     if(senStr.size() > 0 && isNeedReplace)
@@ -3551,6 +3544,7 @@ QString GcodeViewer::sendOriginalStlNamedFile(bool isNeedReplace)
 QString GcodeViewer::sendAcodeToPrintCtr()
 {
     QString re = sendOriginalStlNamedFile(false);
+    qDebug()<< "re :" <<re;
     if(re.size() <= 1)
     {
         return re;
@@ -3696,16 +3690,11 @@ std::vector<float> GcodeViewer::get_roi_info(int w, int h)
 QImage GcodeViewer::render_singe_iamge()
 {
     AkUtil::TFunction("");
+
     paramsStack pst(this);
     boolLock orc(this->m_orceShader1);
     //m_scene3d->setVerticalAngle(45.0);
-    if (m_offscreenSurface)
-    {
-        cnt->makeCurrent(m_offscreenSurface);
-    }
-    else {
-        this->makeCurrent();
-    }
+
     QOpenGLFramebufferObjectFormat format;
     format.setSamples(24);
     format.setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
@@ -3727,7 +3716,6 @@ QImage GcodeViewer::render_singe_iamge()
 
     }
     this->refresh_render_paths(false,false);
-
     
     std::array<float, 3> setPosition;
     std::array<float, 3> viewCenter;
@@ -3737,9 +3725,6 @@ QImage GcodeViewer::render_singe_iamge()
     float boundbox_width = this->m_boundingBox.max.x() - this->m_boundingBox.min.x();
     float halfDepth = this->m_boundingBox.max.y() - this->m_boundingBox.min.y();
     float length = (m_boundingBox.max - m_boundingBox.min).norm();
-
-
-    //
 
     
     float degrees = 15.0f;
@@ -3791,7 +3776,7 @@ QImage GcodeViewer::render_singe_iamge()
     m_fbo = new QOpenGLFramebufferObject(2867, 2867, format);
     //m_fbo->setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
     if (!m_fbo->isValid()) {
-        qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
+        //qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
         AkUtil::TDebug(QString("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!" ));
     }
     // clear framebuffer
@@ -3828,6 +3813,20 @@ bool GcodeViewer::postGcodeHead(const QString &line,QString& reLine)
     return false;
 }
 
+bool GcodeViewer::waitForSceneInit()
+{
+    
+    
+    if(m_scene3d == nullptr)
+    {
+        m_scene3d_init_mutex.lock();
+        AkUtil::TDebug("wait for notify....");
+        m_scene3d_inited.wait(&m_scene3d_init_mutex);
+        m_scene3d_init_mutex.unlock();
+    }
+    return true;
+}
+
 void GcodeViewer::off_render_single(const QImage& res)
 {
     AkUtil::TFunction("");
@@ -3847,7 +3846,6 @@ void GcodeViewer::off_render_single(const QImage& res)
     //pngPath.replace(".gcode","withpng.gcode");
     QFile wfile(pngPath);
     if(!wfile.open(QIODevice::WriteOnly|QIODevice::Text)){
-        qDebug()<<"File open Failed";
     }
     QStringList resStrList;
     //AkUtil::TDebug("---start read_file--");
@@ -3929,15 +3927,12 @@ void GcodeViewer::off_render_single(const QImage& res)
         wfile.write(resstr+'\n');
         return ;
     });
-//    wfile.write(resStrList.join('\n').toUtf8());
     wfile.close();
     QString debugstr;
     QDebug(&debugstr) << "off_render_single gcode Path:" << QString::fromStdString(this->m_gcode_path);
     AkUtil::TDebug(debugstr);
     QFile::remove(QString::fromStdString(this->m_gcode_path));
     this->m_gcode_path = pngPath.toStdString();
-    
-    //AkUtil::TDebug("---Time end--");
 }
 
 void GcodeViewer::offPaint()
@@ -4028,14 +4023,15 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
             paramsStack pst(this);
             //m_extrusions.role_visibility_flags = 24630;
             m_extrusions.role_visibility_flags = 524287;
+            
+            set_toolpath_move_type_visible(EMoveType::Travel, false);
             this->m_isNotOffScreen = false;
-
             cstring = std::string((const char*)savePathName.fileName().toLocal8Bit().constData()); //convert UTF8 wide char
             //qDebug() <<"loopVec.size() "<<loopVec.size();
             assert(cstring.size() < 64);
             processAiPicture picWrite(cstring,std::string((const char*)akpicSave.toLocal8Bit().constData()),this->m_layers.size(), loopVec.size());
             qDebug() << "cstring"<<QString::fromStdString(cstring);
-            if (m_offscreenSurface)
+            if (cnt)
             {
                 cnt->makeCurrent(m_offscreenSurface);
             }
@@ -4078,8 +4074,11 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
 #endif
                 m_fbo->setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
                 if (!m_fbo->isValid()) {
-                    qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
+                    //qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
                     AkUtil::TDebug(QString("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!" ));
+                    control::MessageDialog a("ERROR",QObject::tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!"), control::MessageDialog::BUTTONFLAG::OK);
+                    bool re = a.exec();
+                    return ;
                 }
                 // clear framebuffer
                 m_fbo->bind();
@@ -4092,7 +4091,6 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
 #endif
 
                 m_scene3d->resizeWidget(2048, 1192);
-                //this->paintGL();
                 this->offPaint();
 
                 QImage test = m_fbo->toImage();//grabFramebufferInternal(m_fbo);
@@ -4143,6 +4141,11 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         pCmd->setWorkingDirectory(fileInfo.absoluteDir().path());
         cmd = "tar";
         QStringList args;
+#ifdef __APPLE__
+        args.append("--disable-copyfile");
+        args.append("--no-xattrs");
+#endif
+        args.append("--format=ustar"); 
         args.append("-cvf");
         args.append(savePath);
         args.append(fileInfo.fileName());
@@ -4150,7 +4153,10 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         pCmd->start(cmd,args);
         pCmd->waitForStarted();
         qDebug() << "GcodeView fileName = " << args;
-        AkUtil::TDebug("tar error : "+pCmd->errorString());
+        QString debugstr;
+        QDebug(&debugstr) <<"tar cmd  program: "<<pCmd->program();
+        QDebug(&debugstr) <<"tar cmd  arguments: "<<pCmd->arguments();
+        AkUtil::TDebug(debugstr);
         connect(pCmd,&QProcess::readyReadStandardError,this,[=]()
         {
             
@@ -4158,46 +4164,19 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
             AkUtil::TDebug("return  cmd : "+data);
         });
         pCmd->waitForFinished();
-//        QScopedPointer<QZipWriter> m_tar(new QZipWriter(savePath));
-//        m_tar->setCompressionPolicy(QZipWriter::NeverCompress);
-//        QString _saveName = filterFileName(savePath);
-//        QFile gcode_file(_gPath);
-//        if(!gcode_file.exists())
-//        {
-//            AkUtil::TDebug("error : gcode_file not exit");
-//        }
-//        gcode_file.open(QIODevice::ReadOnly);
-//        m_tar->addFile(_saveName+".gcode",gcode_file.readAll());
-//        QFile akpic_file(akpicSave);
-//        if(!akpic_file.exists())
-//        {
-//            AkUtil::TDebug("error : akpic_file not exit");
-//        }
-//        akpic_file.open(QIODevice::ReadOnly);
-//        m_tar->addFile(_saveName+".akpic",akpic_file.readAll());
-//        akpic_file.close();
-//        gcode_file.close();
-    }else if (!m_offscreenSurface){
-
+    }else{
         
-        //off_render_single();
-        //refresh_render_paths(true, false);
-        //this->update();
-
         if(QFile::exists(QString::fromStdString(this->m_gcode_path)))
         {
             QFile::copy(QString::fromStdString(this->m_gcode_path), savePath);
         }else{
             AkUtil::TDebug("error : file not exit");
         }
-        //qDebug()<<"this->m_gcode_path" <<QString(QString::fromStdString(this->m_gcode_path.c_str()));
         AkUtil::TDebug(QString("this->m_gcode_path " )+QString::fromStdString(this->m_gcode_path.c_str()));
         AkUtil::TDebug(QString("savePath " )+savePath);
     }
     emit setValue(100);
     //TODO: change the back
-    //     savePath += ".gcode";
-    //     QFile::copy(QString(QString::fromLocal8Bit(this->m_gcode_path.c_str())), savePath);
 }
 
 //TODO:no need

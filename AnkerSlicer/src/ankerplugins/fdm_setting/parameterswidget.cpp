@@ -41,6 +41,7 @@ ParametersWidget::ParametersWidget(PageWidget *parent)
 
     connect((QObject *)(quickView->rootObject()),SIGNAL(qmlMachineNameChanged(QString)),m_service,SLOT(onMachineNameChanged(QString)), Qt::QueuedConnection);
     connect((QObject *)(quickView->rootObject()),SIGNAL(qmlMaterialNameChanged(QString)),m_service,SLOT(onMaterialNameChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlNozzleSizeChanged(QString)),m_service,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
 
     connect(this,SIGNAL(parameterRename(QString,QString)),m_service,SLOT(renameCustomParameter(QString,QString)));
     connect(this,SIGNAL(importParameter(QString)),m_service,SLOT(onImportBtnClicked(QString)));
@@ -75,7 +76,8 @@ void ParametersWidget::renameCustomParameter(const QString &oldName)
     if(!m_messageDialog) {
         m_messageDialog = new MessageDialog(tr("Name These Parameters"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&ParametersWidget::textValid);
-        QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+        //QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+        QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
         m_messageDialog->setAutoClosed(false);

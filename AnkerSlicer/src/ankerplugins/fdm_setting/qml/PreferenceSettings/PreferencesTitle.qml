@@ -26,7 +26,6 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        //hoverEnabled: true
         acceptedButtons: Qt.LeftButton
         propagateComposedEvents: true
         onClicked: {

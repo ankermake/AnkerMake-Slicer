@@ -142,6 +142,21 @@ public:
         sortByTimestamp(sortItems);
         return getNameList(sortItems);
     }
+    
+    QList<TProfile*> getVisiableCustomProfiles()
+    {
+        QList<TProfile*> resultList;
+        for (TProfile & profile : customProfiles)
+        {
+            
+            if (!profile.getVisible())
+            {
+                continue;
+            }
+            resultList.append(&profile);
+        }
+        return resultList;
+    }
 
     void convertToSortItems(QList<TProfile> & profiles,QList<profileSortItem>& sortItems)
     {

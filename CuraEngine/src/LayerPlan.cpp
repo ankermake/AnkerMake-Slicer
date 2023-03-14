@@ -713,8 +713,11 @@ void LayerPlan::addWallLine(const Point& p0, const Point& p1, const SliceMeshSto
                 else
                 {
                     // no coasting required, just normal segment using non-bridge config
+//                    addExtrusionMove(segment_end, non_bridge_config, SpaceFillType::Polygons, segment_flow, spiralize,
+//                                     (overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
+
                     addExtrusionMove(segment_end, non_bridge_config, SpaceFillType::Polygons, segment_flow, spiralize,
-                                     (overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
+                                     speed_factor);
                     //logCL("$CL$ %s %d  speed: %f\n", __FUNCTION__, __LINE__ ,(overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
                 }
 
@@ -723,9 +726,12 @@ void LayerPlan::addWallLine(const Point& p0, const Point& p1, const SliceMeshSto
             else
             {
                 if(1){
-                    // no coasting required, just normal segment using non-bridge config
+                    //no coasting required, just normal segment using non-bridge config
+//                    addExtrusionMove(segment_end, non_bridge_config, SpaceFillType::Polygons, segment_flow, spiralize,
+//                                     (overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
+
                     addExtrusionMove(segment_end, non_bridge_config, SpaceFillType::Polygons, segment_flow, spiralize,
-                                     (overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
+                                     speed_factor);
                 }
                 else{
                     Ratio speed_factor_overhang = 1.0;
@@ -791,6 +797,7 @@ void LayerPlan::addWallLine(const Point& p0, const Point& p1, const SliceMeshSto
             //logCL("$CL$ %s %d addExtrusionMove\n", __FUNCTION__, __LINE__);
         }
     }
+    
     else
     {
         
@@ -799,98 +806,126 @@ void LayerPlan::addWallLine(const Point& p0, const Point& p1, const SliceMeshSto
         //  SVGHelper::appendPolygons(bridge_wall_mask, SVG::Color::RED, 1, html_name);
         //  SVGHelper::writePolygons(bridge_wall_mask);
 
+        
+        //bridge_wall_mask = bridge_wall_mask.offset(-non_bridge_config.getLineWidth()*4);
 
+        //bridge_wall_mask = Polygons();
+        // 
+        //SVGHelper::appendPolygons(bridge_wall_mask, SVG::Color::YELLOW);
+
+        //bridge_wall_mask = bridge_wall_mask.offset(-non_bridge_config.getLineWidth());
+
+        addExtrusionMove(p1, non_bridge_config, SpaceFillType::Polygons, flow, spiralize, speed_factor);
+        return;
+
+         //bridge_wall_mask = bridge_wall_mask.intersection(overhang_mask);
+         //bridge_wall_mask = overhang_mask;
+//         addNonBridgeLine(p1);
+//         return;
 
         
-        if (PolygonUtils::polygonCollidesWithLineSegment(bridge_wall_mask, p0, p1))
-        {
-            // the line crosses the boundary between supported and non-supported regions so one or more bridges are required determine which segments of the line are bridges
-            
+//        if (PolygonUtils::polygonCollidesWithLineSegment(bridge_wall_mask, p0, p1))
+//        {
+//             addNonBridgeLine(p1);
 
-            Polygon line_poly;
-            line_poly.add(p0);
-            line_poly.add(p1);
-            Polygons line_polys;
-            line_polys.add(line_poly);
-            line_polys = bridge_wall_mask.intersectionPolyLines(line_polys);
+////            //addNonBridgeLine(p1);
+////            addExtrusionMove(p1, non_bridge_config, SpaceFillType::Polygons, flow, spiralize,
+////                (overhang_mask.empty() || (!overhang_mask.inside(p0, true) && !overhang_mask.inside(p1, true))) ? speed_factor : overhang_speed_factor);
 
-            // line_polys now contains the wall lines that need to be printed using bridge_config
-            
-            while (line_polys.size() > 0)
-            {
-                // find the bridge line segment that's nearest to the current point
-                
-                int nearest = 0;
-                float smallest_dist2 = vSize2f(cur_point - line_polys[0][0]);
-                for(unsigned i = 1; i < line_polys.size(); ++i)
-                {
-                    float dist2 = vSize2f(cur_point - line_polys[i][0]);
-                    if (dist2 < smallest_dist2)
-                    {
-                        nearest = i;
-                        smallest_dist2 = dist2;
-                    }
-                }
-                ConstPolygonRef bridge = line_polys[nearest];
+////            // the line crosses the boundary between supported and non-supported regions so one or more bridges are required determine which segments of the line are bridges
 
-                // set b0 to the nearest vertex and b1 the furthest
-                Point b0 = bridge[0];
-                Point b1 = bridge[1];
 
-                if (vSize2f(cur_point - b1) < vSize2f(cur_point - b0))
-                {
-                    // swap vertex order
-                    b0 = bridge[1];
-                    b1 = bridge[0];
-                }
+////            Polygon line_poly;
+////            line_poly.add(p0);
+////            line_poly.add(p1);
+////            Polygons line_polys;
+////            line_polys.add(line_poly);
+////            line_polys = bridge_wall_mask.intersectionPolyLines(line_polys);
 
-                // extrude using non_bridge_config to the start of the next bridge segment
-                
-                addNonBridgeLine(b0);
+////            // line_polys now contains the wall lines that need to be printed using bridge_config
 
-                const double bridge_line_len = vSize(b1 - cur_point);
+////            while (line_polys.size() > 0)
+////            {
+////                // find the bridge line segment that's nearest to the current point
 
-                if (bridge_line_len >= min_bridge_line_len)
-                {
-                    // extrude using bridge_config to the end of the next bridge segment
-                    
-                    if (bridge_line_len > min_line_len)
-                    {
-                        addExtrusionMove(b1, bridge_config, SpaceFillType::Polygons, flow);
-                        non_bridge_line_volume = 0;
-                        cur_point = b1;
-                        // after a bridge segment, start slow and accelerate to avoid under-extrusion due to extruder lag
-                        speed_factor = std::max(std::min(Ratio(bridge_config.getSpeed() / non_bridge_config.getSpeed()), 1.0_r), 0.5_r);
-                    }
-                }
-                else
-                {
-                    // treat the short bridge line just like a normal line
-                    
-                    addNonBridgeLine(b1);
-                }
+////                int nearest = 0;
+////                float smallest_dist2 = vSize2f(cur_point - line_polys[0][0]);
+////                for(unsigned i = 1; i < line_polys.size(); ++i)
+////                {
+////                    float dist2 = vSize2f(cur_point - line_polys[i][0]);
+////                    if (dist2 < smallest_dist2)
+////                    {
+////                        nearest = i;
+////                        smallest_dist2 = dist2;
+////                    }
+////                }
+////                ConstPolygonRef bridge = line_polys[nearest];
 
-                // finished with this segment
-                line_polys.remove(nearest);
-            }
+////                // set b0 to the nearest vertex and b1 the furthest
+////                Point b0 = bridge[0];
+////                Point b1 = bridge[1];
 
-            // if we haven't yet reached p1, fill the gap with non_bridge_config line
-            
-            addNonBridgeLine(p1);
-        }
-        else if (bridge_wall_mask.inside(p0, true) && vSize(p0 - p1) >= min_bridge_line_len)
-        {
-            // both p0 and p1 must be above air (the result will be ugly!)
-            
-            addExtrusionMove(p1, bridge_config, SpaceFillType::Polygons, flow);
-            non_bridge_line_volume = 0;
-        }
-        else
-        {
-            // no part of the line is above air or the line is too short to print as a bridge line
-            
-            addNonBridgeLine(p1);
-        }
+////                if (vSize2f(cur_point - b1) < vSize2f(cur_point - b0))
+////                {
+////                    // swap vertex order
+////                    b0 = bridge[1];
+////                    b1 = bridge[0];
+////                }
+
+////                // extrude using non_bridge_config to the start of the next bridge segment
+
+////                addNonBridgeLine(b0);
+
+////                const double bridge_line_len = vSize(b1 - cur_point);
+
+////                if (bridge_line_len >= min_bridge_line_len)
+////                {
+////                    // extrude using bridge_config to the end of the next bridge segment
+
+////                    if (bridge_line_len > min_line_len)
+////                    {
+////                        addExtrusionMove(b1, bridge_config, SpaceFillType::Polygons, flow);
+////                        non_bridge_line_volume = 0;
+////                        cur_point = b1;
+////                        // after a bridge segment, start slow and accelerate to avoid under-extrusion due to extruder lag
+////                        speed_factor = std::max(std::min(Ratio(bridge_config.getSpeed() / non_bridge_config.getSpeed()), 1.0_r), 0.5_r);
+////                    }
+////                }
+////                else
+////                {
+////                    // treat the short bridge line just like a normal line
+
+////                    addNonBridgeLine(b1);
+////                }
+
+////                // finished with this segment
+////                line_polys.remove(nearest);
+////            }
+
+////            // if we haven't yet reached p1, fill the gap with non_bridge_config line
+
+////            addNonBridgeLine(p1);
+//        }
+//        else if (bridge_wall_mask.inside(p0, true) && bridge_wall_mask.inside(p1, true))
+//        {
+//            // both p0 and p1 must be above air (the result will be ugly!)
+
+//            addExtrusionMove(p1, bridge_config, SpaceFillType::Polygons, flow);
+//            non_bridge_line_volume = 0;
+//        }
+//        //else if (bridge_wall_mask.inside(p0, true) && vSize(p0 - p1) >= min_bridge_line_len)
+//        //{
+//        //    // both p0 and p1 must be above air (the result will be ugly!)
+
+//        //    addExtrusionMove(p1, bridge_config, SpaceFillType::Polygons, flow);
+//        //    non_bridge_line_volume = 0;
+//        //}
+//        else
+//        {
+//            // no part of the line is above air or the line is too short to print as a bridge line
+
+//            addNonBridgeLine(p1);
+//        }
     }
 }
 
@@ -1117,34 +1152,94 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
     const coord_t overhang_inner_wall_shrink = mesh.settings.get<coord_t>("overhang_inner_wall_shrink_distance");
 
     
-//    int centerLayerNr = 83;
-//    int startLayerNr = 50;
-//    int endLayerNr = 105;
-//    if (layer_nr >= startLayerNr && layer_nr <= endLayerNr)
-//    {
-//        double wall_overhang_speed_factor = mesh.settings.get<Ratio>("wall_overhang_speed_factor");
-//        speed_factor = wall_overhang_speed_factor;
-
-//        double step = (1 - wall_overhang_speed_factor) / (centerLayerNr - startLayerNr);
-//        double lowLayerSpeedFactor = (1 - (layer_nr - startLayerNr) * step);
-//        lowLayerSpeedFactor = lowLayerSpeedFactor < wall_overhang_speed_factor ? wall_overhang_speed_factor : (lowLayerSpeedFactor > 1 ? 1 : lowLayerSpeedFactor);
-
-//        double upperLayerSpeedFactor = wall_overhang_speed_factor + (layer_nr - centerLayerNr) * step;
-//        upperLayerSpeedFactor = upperLayerSpeedFactor < wall_overhang_speed_factor ? wall_overhang_speed_factor : (upperLayerSpeedFactor > 1 ? 1 : upperLayerSpeedFactor);
-
-//        speed_factor = layer_nr < centerLayerNr ? lowLayerSpeedFactor : upperLayerSpeedFactor;
-//    }
-
-//    int centerLayerNr = 83;
-//    int startLayerNr = 76;
-//    int endLayerNr = 93;
-//    if (layer_nr >= startLayerNr && layer_nr <= endLayerNr)
-//    {
-//        non_bridge_config.akPathFeature.isOverhangLayer = true;
-//    }
+    coord_t bridgeSplitMinLength = mesh.settings.get<coord_t>("bridge_split_min_length");
+    //coord_t bridgeShrinkLength = mesh.settings.get<coord_t>("bridge_shrink_length");
 
     
-    auto calcDistanceToOverhangMap = [](coord_t overhangMinLineLength, Polygons& overhangMask, ConstPolygonRef singleWall, std::unordered_map<int, double>& distanceToOverhangAreaMap)
+    auto spliteWall = [&](coord_t splitMinLineLength, int offsetLen, Polygons& slowMask,PolygonRef singleWall){
+        if (slowMask.empty())
+        {
+            return;
+        }
+
+        Polygon resultPolygon;
+
+        for (int point_idx = 0; point_idx < singleWall.size(); point_idx++)
+        {
+
+            const Point& p0 = singleWall[point_idx];
+            const Point& p1 = singleWall[(point_idx + 1) % singleWall.size()];
+            resultPolygon.add(p0);
+
+            
+            if (PolygonUtils::polygonCollidesWithLineSegment(slowMask, p0, p1))
+            {
+                Polygon line_poly;
+                line_poly.add(p0);
+                line_poly.add(p1);
+                Polygons line_polys;
+                line_polys.add(line_poly);
+                
+                line_polys = slowMask.intersectionPolyLines(line_polys);
+
+                while (line_polys.size() > 0)
+                {
+                    int nearest = 0;
+                    float smallest_dist2 = vSize2f(p0 - line_polys[0][0]);
+                    
+                    for(unsigned i = 1; i < line_polys.size(); ++i)
+                    {
+                        float dist2 = vSize2f(p0 - line_polys[i][0]);
+                        if (dist2 < smallest_dist2)
+                        {
+                            nearest = i;
+                            smallest_dist2 = dist2;
+                        }
+                    }
+                    ConstPolygonRef overhang = line_polys[nearest];
+
+                    // set b0 to the nearest vertex and b1 the furthest
+                    Point b0 = overhang[0];
+                    Point b1 = overhang[1];
+
+                    if (vSize2f(p0 - b1) < vSize2f(p0 - b0))
+                    {
+                        // swap vertex order
+                        b0 = overhang[1];
+                        b1 = overhang[0];
+                    }
+
+                    const double bridge_line_len = vSize(b1 - b0);
+
+                    
+                    if (bridge_line_len >= splitMinLineLength)
+                    {
+                        
+                        auto dir = b1-b0;
+                        auto lineLength =  vSize(dir);
+                        
+                        if (offsetLen != 0)
+                        {
+                            //int offsetLen = (lineLength - bridgeShrinkLength)/2 > 0 ? (lineLength - bridgeShrinkLength)/2 : 0 ;
+                            offsetLen = lineLength/4;
+                        }
+
+                        Point offset(dir.X / lineLength * offsetLen, dir.Y / lineLength * offsetLen);
+                        resultPolygon.add(b0+offset);
+                        resultPolygon.add(b1-offset);
+                    }
+
+                    // finished with this segment
+                    line_polys.remove(nearest);
+                }
+            }
+        }
+        
+        singleWall = std::move(resultPolygon);
+    };
+
+    
+    auto calcDistanceToMaskMap = [](coord_t overhangMinLineLength, Polygons& targetMask, ConstPolygonRef singleWall, std::unordered_map<int, double>& distanceToOverhangAreaMap)
     {
         
         //distanceToOverhangAreaMap.clear();
@@ -1158,7 +1253,7 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
         
         for (int point_idx = 0; point_idx < singleWall.size(); point_idx++)
         {
-            if (overhangMask.empty())
+            if (targetMask.empty())
             {
                 distanceToOverhangAreaMap[point_idx] = distanceToOverhangStart;
                 continue;
@@ -1170,75 +1265,13 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
             const Point& p1 = singleWall[(point_idx + 1) % singleWall.size()];
 
             
-            if (PolygonUtils::polygonCollidesWithLineSegment(overhangMask, p0, p1))
+            if (PolygonUtils::polygonCollidesWithLineSegment(targetMask, p0, p1))
             {
                 
-                
-                bool has_overhang_point =false;
-                if(overhangMask.inside(p0, true) || overhangMask.inside(p1, true)){
-                    has_overhang_point = true;
-                }
-                
-                if(!has_overhang_point){
-                    auto judgeOverhang = [&](){
-                        Polygon line_poly;
-                        line_poly.add(p0);
-                        line_poly.add(p1);
-                        Polygons line_polys;
-                        line_polys.add(line_poly);
-                        line_polys = overhangMask.intersectionPolyLines(line_polys);
-
-                        while (line_polys.size() > 0)
-                        {
-                            int nearest = 0;
-                            float smallest_dist2 = vSize2f(p0 - line_polys[0][0]);
-                            for(unsigned i = 1; i < line_polys.size(); ++i)
-                            {
-                                float dist2 = vSize2f(p0 - line_polys[i][0]);
-                                if (dist2 < smallest_dist2)
-                                {
-                                    nearest = i;
-                                    smallest_dist2 = dist2;
-                                }
-                            }
-                            ConstPolygonRef overhang = line_polys[nearest];
-
-                            // set b0 to the nearest vertex and b1 the furthest
-                            Point b0 = overhang[0];
-                            Point b1 = overhang[1];
-
-                            if (vSize2f(p0 - b1) < vSize2f(p0 - b0))
-                            {
-                                // swap vertex order
-                                b0 = overhang[1];
-                                b1 = overhang[0];
-                            }
-
-                            const double bridge_line_len = vSize(b1 - b0);
-
-                            if (bridge_line_len >= overhangMinLineLength)
-                            {
-                                
-                                has_overhang_point = true;
-                                return;
-                            }
-
-                            // finished with this segment
-                            line_polys.remove(nearest);
-                        }
-                    };
-                    judgeOverhang();
-                }
-                
-                if (has_overhang_point)
-                {
-                    DistanceCacheMap[point_idx] = 0;
-                    zeroIdx.push_back(point_idx);
-                    zeroIdx.push_back((point_idx + 1) % singleWall.size());
-                }
+                DistanceCacheMap[point_idx] = vSize(p1 - p0);
             }
             
-            else if (!overhangMask.inside(p0, true))
+            else if (!targetMask.inside(p0, true))
             {
                 DistanceCacheMap[point_idx] = vSize(p1 - p0);
             }
@@ -1252,7 +1285,7 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
         
         
-        if (overhangMask.empty())
+        if (targetMask.empty())
         {
             return;
         }
@@ -1332,10 +1365,14 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
     EWallOverhangExtendType extType = mesh.settings.get<EWallOverhangExtendType>("wall_overhang_extend_type");
     double overhangeBufferRange = MM2INT(mesh.settings.get<double>("wall_overhang_extend_xy_distance"));
+    
     Polygons speedDownMask = overhang_mask;
-//    Polygon newWall;
-//    Polygons  newWalls;
-    //cura::EWallOverhangExtendType extType = EWallOverhangExtendType::GRADUALLY_XY;
+//    if (layer_nr == 25 && speedDownMask.size() > 0)
+//    {
+//        SVGHelper::appendPolygon(wall);
+//        SVGHelper::appendPolygons(speedDownMask,SVG::Color::RED);
+//    }
+
     if (extType == EWallOverhangExtendType::CIRCLE)
     {
         
@@ -1475,11 +1512,6 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
                     }
                     
                     auto touchWallArea = skinOutline.offset(non_bridge_config.getLineWidth()*4).difference(tempWalls);
-                    //SVGHelper::writePolygons(touchWallArea);
-                    //touchWallArea = touchWallArea.intersection(tempWalls);
-                    //SVGHelper::writePolygons(tempWalls);
-                    //SVGHelper::writePolygons(touchWallArea);
-                    //SVGHelper::writePolygons(skinOutline);
                     
                     if (touchWallArea.polygonLength() > MM2INT(20)*2)
                     {
@@ -1496,17 +1528,6 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
             {
                 speedDownMask = speedDownMask.unionPolygons(the_skin_mask);
             }
-
-            
-//            if (layer_nr == 77)
-//            {
-//                int x = 0;
-//                SVGHelper::writePolygons(overhang_mask);
-//                SVGHelper::writePolygons(the_skin_mask);
-//                SVGHelper::writePolygons(speedDownMask);
-//                SVGHelper::appendPolygons(speedDownMask);
-//                SVGHelper::appendPolygons(mesh.layers[layerNumber].parts[0].outline);
-//            }
         };
 
         
@@ -1521,13 +1542,44 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
             
             addSkinMaskToSpeedDownMask(layer_nr);
         }
-        //else
-        //{
-        //    speedDownMask = overhang_mask;
-        //}
 
+//        if (layer_nr == 25 && speedDownMask.size() > 0)
+//        {
+//            SVGHelper::appendPolygon(wall);
+//            SVGHelper::appendPolygons(speedDownMask, SVG::Color::RED);
+//        }
+    }
+
+    
+    std::unordered_map<int, double> distanceToBridgeMap;
+    if (bridge_wall_mask.empty())
+    {
         
-        calcDistanceToOverhangMap(overhang_min_line_length, speedDownMask, wall, distanceToOverhangMap);
+        if (!speedDownMask.empty())
+        {
+            spliteWall(bridgeSplitMinLength, 0, speedDownMask,wall);
+        }
+    }
+    else
+    {
+        
+        spliteWall(bridgeSplitMinLength, -1, speedDownMask,wall);
+        
+        calcDistanceToMaskMap(min_bridge_line_len, bridge_wall_mask, wall, distanceToBridgeMap);
+    }
+
+//    if (layer_nr == 25 && speedDownMask.size() > 0)
+//    {
+//        for (size_t i = 0; i < wall.size(); i++)
+//        {
+//            SVGHelper::appendPoint(wall[i],true,3, SVG::Color::BLUE);
+//        }
+//    }
+
+    
+    if(!speedDownMask.empty())
+    {
+        calcDistanceToMaskMap(overhang_min_line_length, speedDownMask, wall, distanceToOverhangMap);
     }
 
     
@@ -1615,90 +1667,92 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
         }
     } while (false);
 
-    // helper function to calculate the distance from the start of the current wall line to the first bridge segment
-    auto computeDistanceToBridgeStart = [&](unsigned current_index)
-    {
-        distance_to_bridge_start = 0;
 
-        if (!bridge_wall_mask.empty())
-        {
-            // there is air below the part so iterate through the lines that have not yet been output accumulating the total distance to the first bridge segment
-            for (unsigned point_idx = current_index; point_idx < wall.size(); ++point_idx)
-            {
-                const Point& p0 = wall[point_idx];
-                const Point& p1 = wall[(point_idx + 1) % wall.size()];
+// helper function to calculate the distance from the start of the current wall line to the first bridge segment
+//    auto computeDistanceToBridgeStart = [&](unsigned current_index)
+//    {
+//        distance_to_bridge_start = 0;
 
-                if (PolygonUtils::polygonCollidesWithLineSegment(bridge_wall_mask, p0, p1))
-                {
-                    // the line crosses the boundary between supported and non-supported regions so it will contain one or more bridge segments
+//        if (!bridge_wall_mask.empty())
+//        {
+//            // there is air below the part so iterate through the lines that have not yet been output accumulating the total distance to the first bridge segment
+//            for (unsigned point_idx = current_index; point_idx < wall.size(); ++point_idx)
+//            {
+//                const Point& p0 = wall[point_idx];
+//                const Point& p1 = wall[(point_idx + 1) % wall.size()];
 
-                    // determine which segments of the line are bridges
+//                if (PolygonUtils::polygonCollidesWithLineSegment(bridge_wall_mask, p0, p1))
+//                {
+//                    // the line crosses the boundary between supported and non-supported regions so it will contain one or more bridge segments
 
-                    Polygon line_poly;
-                    line_poly.add(p0);
-                    line_poly.add(p1);
-                    Polygons line_polys;
-                    line_polys.add(line_poly);
-                    line_polys = bridge_wall_mask.intersectionPolyLines(line_polys);
+//                    // determine which segments of the line are bridges
 
-                    while (line_polys.size() > 0)
-                    {
-                        // find the bridge line segment that's nearest to p0
-                        int nearest = 0;
-                        float smallest_dist2 = vSize2f(p0 - line_polys[0][0]);
-                        for(unsigned i = 1; i < line_polys.size(); ++i)
-                        {
-                            float dist2 = vSize2f(p0 - line_polys[i][0]);
-                            if (dist2 < smallest_dist2)
-                            {
-                                nearest = i;
-                                smallest_dist2 = dist2;
-                            }
-                        }
-                        ConstPolygonRef bridge = line_polys[nearest];
+//                    Polygon line_poly;
+//                    line_poly.add(p0);
+//                    line_poly.add(p1);
+//                    Polygons line_polys;
+//                    line_polys.add(line_poly);
+//                    line_polys = bridge_wall_mask.intersectionPolyLines(line_polys);
 
-                        // set b0 to the nearest vertex and b1 the furthest
-                        Point b0 = bridge[0];
-                        Point b1 = bridge[1];
+//                    while (line_polys.size() > 0)
+//                    {
+//                        // find the bridge line segment that's nearest to p0
+//                        int nearest = 0;
+//                        float smallest_dist2 = vSize2f(p0 - line_polys[0][0]);
+//                        for(unsigned i = 1; i < line_polys.size(); ++i)
+//                        {
+//                            float dist2 = vSize2f(p0 - line_polys[i][0]);
+//                            if (dist2 < smallest_dist2)
+//                            {
+//                                nearest = i;
+//                                smallest_dist2 = dist2;
+//                            }
+//                        }
+//                        ConstPolygonRef bridge = line_polys[nearest];
 
-                        if (vSize2f(p0 - b1) < vSize2f(p0 - b0))
-                        {
-                            // swap vertex order
-                            b0 = bridge[1];
-                            b1 = bridge[0];
-                        }
+//                        // set b0 to the nearest vertex and b1 the furthest
+//                        Point b0 = bridge[0];
+//                        Point b1 = bridge[1];
 
-                        distance_to_bridge_start += vSize(b0 - p0);
+//                        if (vSize2f(p0 - b1) < vSize2f(p0 - b0))
+//                        {
+//                            // swap vertex order
+//                            b0 = bridge[1];
+//                            b1 = bridge[0];
+//                        }
 
-                        const double bridge_line_len = vSize(b1 - b0);
+//                        distance_to_bridge_start += vSize(b0 - p0);
 
-                        if (bridge_line_len >= min_bridge_line_len)
-                        {
-                            // job done, we have found the first bridge line
-                            return;
-                        }
+//                        const double bridge_line_len = vSize(b1 - b0);
 
-                        distance_to_bridge_start += bridge_line_len;
+//                        if (bridge_line_len >= min_bridge_line_len)
+//                        {
+//                            // job done, we have found the first bridge line
+//                            return;
+//                        }
 
-                        // finished with this segment
-                        line_polys.remove(nearest);
-                    }
-                }
-                else if (!bridge_wall_mask.inside(p0, true))
-                {
-                    // none of the line is over air
-                    distance_to_bridge_start += vSize(p1 - p0);
-                }
-            }
+//                        distance_to_bridge_start += bridge_line_len;
 
-            // we have got all the way to the end of the wall without finding a bridge segment so disable coasting by setting distance_to_bridge_start back to 0
+//                        // finished with this segment
+//                        line_polys.remove(nearest);
+//                    }
+//                }
+//                else if (!bridge_wall_mask.inside(p0, true))
+//                {
+//                    // none of the line is over air
+//                    distance_to_bridge_start += vSize(p1 - p0);
+//                }
+//            }
 
-            distance_to_bridge_start = 0;
-        }
-    };
+//            // we have got all the way to the end of the wall without finding a bridge segment so disable coasting by setting distance_to_bridge_start back to 0
+
+//            distance_to_bridge_start = 0;
+//        }
+//    };
 
     double speed_factor_before = speed_factor;
     double flow_ratio_before = flow_ratio;
+
 
     
 
@@ -1715,22 +1769,27 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
         if (!bridge_wall_mask.empty())
         {
-            computeDistanceToBridgeStart((start_idx + point_idx - 1) % wall.size());
+            //computeDistanceToBridgeStart((start_idx + point_idx - 1) % wall.size());
+            distance_to_bridge_start = distanceToBridgeMap[(start_idx + point_idx - 1) % wall.size()];
         }
 
         
-        if (extType == EWallOverhangExtendType::GRADUALLY_XY && !speedDownMask.empty())
+        if (!speedDownMask.empty())
         {
+            
+            if (extType != EWallOverhangExtendType::GRADUALLY_XY)
+            {
+                overhangeBufferRange = 0;
+            }
             //computeShortestDistanceToOverhangStart((start_idx + point_idx - 1) % wall.size());
             auto distance_to_overhang_start = distanceToOverhangMap[(start_idx + point_idx - 1) % wall.size()];
             double buffDistance = overhangeBufferRange;
             double step = 1000; 
-            
-            float speedDownPerMM = step * (speed_factor_before - wall_overhang_speed_factor) / buffDistance;
             double speed_factor_adjust = wall_overhang_speed_factor;
             
             if (distance_to_overhang_start > 0 && distance_to_overhang_start < buffDistance)
             {
+                float speedDownPerMM = step * (speed_factor_before - wall_overhang_speed_factor) / buffDistance;
                 
                 int speedAdjustTime = distance_to_overhang_start / step;
 
@@ -1784,7 +1843,8 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
     };
 
     const bool reverse_hole_outer_wall_print_orient = mesh.settings.get<bool>("reverse_hole_outer_wall_print_orient");
-    for (unsigned int point_idx = 1; point_idx < wall.size(); point_idx++)
+    
+    for (unsigned int point_idx = 1; point_idx <= wall.size(); point_idx++)
     {
         if (non_bridge_config.type == PrintFeatureType::OuterWall
                 && non_bridge_config.akPathFeature.isHoleWall
@@ -1808,7 +1868,8 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
         if (!bridge_wall_mask.empty())
         {
-            computeDistanceToBridgeStart((start_idx + wall.size() - 1) % wall.size());
+            //computeDistanceToBridgeStart((start_idx + wall.size() - 1) % wall.size());
+            distance_to_bridge_start = distanceToBridgeMap[(start_idx + wall.size() - 1) % wall.size()];
         }
 
         if (flow >= wall_min_flow)

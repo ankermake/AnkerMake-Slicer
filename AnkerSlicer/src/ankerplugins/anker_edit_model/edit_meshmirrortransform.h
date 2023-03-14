@@ -63,10 +63,10 @@ private:
 private:
 	CHModelMirrorTransformParamsSetUI* m_paramUI;
 	std::set<CHMeshShowObjPtr> m_editMeshModels;
-	CHMeshShowObjPtr m_firstMesh;//???????????????
+    CHMeshShowObjPtr m_firstMesh;
 	QVector3D m_operationCenter;
 
-	std::vector<std::vector<float>> m_initValues;//?????????????
+    std::vector<std::vector<float>> m_initValues;
 
 	float m_operateMoveZ;
 };

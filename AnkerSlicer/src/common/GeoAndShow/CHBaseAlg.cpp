@@ -50,8 +50,7 @@ bool CHBaseAlg::writeMeshesToStlFile(const std::vector<CHMeshShowObjPtr>& meshes
     fp = fopen(filePath.c_str(), "wb"); 
     if (fp == 0)
     {
-        TError(QString("open file %1 failed, errno=%2, reason is %3").arg(path).arg(errno).arg(strerror(errno)));
-        return false;
+       return false;
     }
 
     if (binary)

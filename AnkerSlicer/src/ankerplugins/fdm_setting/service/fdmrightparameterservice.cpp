@@ -219,7 +219,9 @@ void FdmRightParameterService::selectProfile(QString name)
     if (name.isEmpty())
     {
         name = AkConst::ProfileName::SIMPLE_MODE;
+        m_realTimeProfile->updateNozzleSize(0.4);
     }
+    bool getExpertSuccess = false;
 
     m_realTimeProfile->setProfileName(name);
     FdmParameterProfile* destProfile = nullptr;
@@ -241,8 +243,7 @@ void FdmRightParameterService::selectProfile(QString name)
             m_realTimeProfile->setMaterialName(AkConst::MaterialName::PLAPLUS);
             m_updateTime++;
         }
-
-        destProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_realTimeProfile->getMachineName(), m_realTimeProfile->getMaterialName());
+        destProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_realTimeProfile->getMachineName(), m_realTimeProfile->getMaterialName(),m_realTimeProfile->getNozzleSize(),getExpertSuccess);
     }
     else
     {
@@ -312,7 +313,17 @@ void FdmRightParameterService::selectProfile(QString name)
         setDefaultValueFromExpertMode();
     }
 
+    
+    if ((name == AkConst::ProfileName::EXPERT_MODE
+             || name == AkConst::ProfileName::SIMPLE_MODE)
+         && !getExpertSuccess)
+    {
+        selectNozzle(getNozzleSize());
+    }
+
     refreshUI();
+
+    m_updateTime++;
 }
 void FdmRightParameterService::applySimpleModeData()
 {
@@ -682,25 +693,11 @@ void FdmRightParameterService::onAiQualityCurrentIdxChanged(int idx)
     emit aiQualityCurrentIdxChanged();
 }
 
-
-void FdmRightParameterService::onNozzleSizeChanged(const QString name)
+void FdmRightParameterService::selectNozzle(QString name)
 {
     
     auto valueList = name.split(" ");
     auto nozzleSize = valueList[0].toFloat();
-
-
-//    FdmSettingItem nozzleSizeItem;
-//    nozzleSizeItem.name = AkConst::SettingKey::MACHINE_NOZZLE_SIZE;
-//    nozzleSizeItem.value = nozzleSize;
-//    m_realTimeProfile->setSetting(AkConst::Category::EXTRUDER_SETTINGS, nozzleSizeItem);
-
-
-//    auto currentProfileName = m_realTimeProfile->getProfileName();
-//    if (currentProfileName == ProfileName::EXPERT_MODE || currentProfileName == ProfileName::SIMPLE_MODE)
-//    {
-//        return selectProfile(currentProfileName);
-//    }
 
     
     FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
@@ -718,7 +715,27 @@ void FdmRightParameterService::onNozzleSizeChanged(const QString name)
 
     
     onAiQualityCurrentIdxChanged(getAiQualityIdx(nozzleSize / 2));
+}
 
+
+void FdmRightParameterService::onNozzleSizeChanged(const QString name)
+{
+    auto valueList = name.split(" ");
+    auto nozzleSize = valueList[0].toDouble();
+    m_realTimeProfile->updateNozzleSize(nozzleSize);
+
+    
+    if (m_realTimeProfile->getProfileName() != AkConst::ProfileName::EXPERT_MODE
+        && m_realTimeProfile->getProfileName() != AkConst::ProfileName::SIMPLE_MODE)
+    {
+        selectNozzle(name);
+    }
+    
+    else
+    {
+        selectProfile(m_realTimeProfile->getProfileName());
+    }
+    m_updateTime++;
 }
 
 //QList<int> FdmRightParameterService::getAiInfillDensityList()
@@ -886,6 +903,7 @@ void FdmRightParameterService::onSetBtnClicked(AkConst::EWidgetType widgetType, 
     {
         FdmParameterProfileService::instance()->setCurrentMachine(m_realTimeProfile->getMachineName());
         FdmParameterProfileService::instance()->setCurrentMaterial(m_realTimeProfile->getMaterialName());
+        FdmParameterProfileService::instance()->setNozzleSize(m_realTimeProfile->getNozzleSize());
     }
     FdmParameterProfileService::instance()->selectProfile(profileName);
 
@@ -919,61 +937,45 @@ void FdmRightParameterService::onResetBtnClicked()
 void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
 {
     
+    QString oriProfileName = m_realTimeProfile->getProfileName();
+    QString oriMachineName = m_realTimeProfile->getMachineName();
+    QString oriMaterialName = m_realTimeProfile->getMaterialName();
+
+    
     emit machineListChanged();
     emit materialListChanged();
     emit allParameterListChanged();
 
     
-    if (operLogPtr->constainsRemoveOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
+    if (operLogPtr->constainsRemoveOper(EProfileType::Parameter, oriProfileName))
     {
         m_realTimeProfile->setProfileName(AkConst::ProfileName::SIMPLE_MODE);
         m_realTimeProfile->setMachineName("");
         m_realTimeProfile->setMaterialName("");
+        m_realTimeProfile->updateNozzleSize(0.4);
         m_updateTime++;
         selectProfile(m_realTimeProfile->getProfileName());
         return;
     }
 
-    
-    auto reloadData = [&]()->void {
-        
-        if (m_realTimeProfile->getProfileName() == AkConst::ProfileName::SIMPLE_MODE
-            || m_realTimeProfile->getProfileName() == AkConst::ProfileName::EXPERT_MODE)
-        {
-            return;
-        }
 
-        
-        
-        //if (operLogPtr->constainsRemoveOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
-        //{
-        //    m_realTimeProfile->setProfileName("");
-        //    return;
-        //}
-        
-        if (operLogPtr->constainsRenameOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
-        {
-            auto newName = operLogPtr->getCurrentName(EProfileType::Parameter, m_realTimeProfile->getProfileName());
-            m_realTimeProfile->setProfileName(newName);
-        }
-        
-        if (operLogPtr->constainsValueChangeOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
-        {
-            selectProfile(m_realTimeProfile->getProfileName());
-        }
-    };
-    reloadData();
-    
     
     auto adjustName = [&]()->void {
         
-        if (operLogPtr->constainsRemoveOper(EProfileType::Machine, m_realTimeProfile->getMachineName()))
+        if (operLogPtr->constainsRenameOper(EProfileType::Parameter, oriProfileName))
+        {
+            auto newName = operLogPtr->getCurrentName(EProfileType::Parameter, oriProfileName);
+            m_realTimeProfile->setProfileName(newName);
+        }
+
+        
+        if (operLogPtr->constainsRemoveOper(EProfileType::Machine, oriMachineName))
         {
             m_realTimeProfile->setMachineName("");
         }
-        else if (operLogPtr->constainsRenameOper(EProfileType::Machine, m_realTimeProfile->getMachineName()))
+        else if (operLogPtr->constainsRenameOper(EProfileType::Machine, oriMachineName))
         {
-            auto newName = operLogPtr->getCurrentName(EProfileType::Machine, m_realTimeProfile->getMachineName());
+            auto newName = operLogPtr->getCurrentName(EProfileType::Machine, oriMachineName);
             m_realTimeProfile->setMachineName(newName);
         }
 
@@ -992,19 +994,6 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
     adjustName();
 
     
-    
-//    if (m_realTimeProfile->getProfileName() == AkConst::ProfileName::SIMPLE_MODE
-//        || m_realTimeProfile->getProfileName() == AkConst::ProfileName::EXPERT_MODE)
-//    {
-//        if (m_realTimeProfile->getMachineName().isEmpty()
-//            || m_realTimeProfile->getMaterialName().isEmpty())
-//        {
-//            selectProfile(m_realTimeProfile->getProfileName());
-//        }
-
-//        return;
-//    }
-
     if (m_realTimeProfile->getMachineName().isEmpty()
         || m_realTimeProfile->getMaterialName().isEmpty())
     {
@@ -1012,10 +1001,137 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
         return;
     }
 
+    
+    auto reloadData = [&]()->void {
+        
+        if (operLogPtr->constainsValueChangeOper(EProfileType::Parameter, oriProfileName))
+        {
+            selectProfile(m_realTimeProfile->getProfileName());
+        }
+
+        
+        
+        if (operLogPtr->constainsValueChangeOper(EProfileType::Machine, oriMachineName))
+        {
+            selectMachine(m_realTimeProfile->getMachineName());
+        }
+
+        
+        if (operLogPtr->constainsValueChangeOper(EProfileType::Material, oriMaterialName))
+        {
+            selectMaterial(m_realTimeProfile->getMaterialName());
+        }
+    };
+
+    
+    reloadData();
+
     emit currentParameterNameChanged();
     emit machineNameChanged();
     emit materialNameChanged();
 }
+
+
+//void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
+//{
+
+//    emit machineListChanged();
+//    emit materialListChanged();
+//    emit allParameterListChanged();
+
+
+//    if (operLogPtr->constainsRemoveOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
+//    {
+//        m_realTimeProfile->setProfileName(AkConst::ProfileName::SIMPLE_MODE);
+//        m_realTimeProfile->setMachineName("");
+//        m_realTimeProfile->setMaterialName("");
+//        m_updateTime++;
+//        selectProfile(m_realTimeProfile->getProfileName());
+//        return;
+//    }
+
+
+//    auto reloadData = [&]()->void {
+
+//        if (m_realTimeProfile->getProfileName() == AkConst::ProfileName::SIMPLE_MODE
+//            || m_realTimeProfile->getProfileName() == AkConst::ProfileName::EXPERT_MODE)
+//        {
+//            return;
+//        }
+
+
+
+//        //if (operLogPtr->constainsRemoveOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
+//        //{
+//        //    m_realTimeProfile->setProfileName("");
+//        //    return;
+//        //}
+
+//        if (operLogPtr->constainsRenameOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
+//        {
+//            auto newName = operLogPtr->getCurrentName(EProfileType::Parameter, m_realTimeProfile->getProfileName());
+//            m_realTimeProfile->setProfileName(newName);
+//        }
+
+//        if (operLogPtr->constainsValueChangeOper(EProfileType::Parameter, m_realTimeProfile->getProfileName()))
+//        {
+//            selectProfile(m_realTimeProfile->getProfileName());
+//        }
+//    };
+//    reloadData();
+
+
+//    auto adjustName = [&]()->void {
+
+//        if (operLogPtr->constainsRemoveOper(EProfileType::Machine, m_realTimeProfile->getMachineName()))
+//        {
+//            m_realTimeProfile->setMachineName("");
+//        }
+//        else if (operLogPtr->constainsRenameOper(EProfileType::Machine, m_realTimeProfile->getMachineName()))
+//        {
+//            auto newName = operLogPtr->getCurrentName(EProfileType::Machine, m_realTimeProfile->getMachineName());
+//            m_realTimeProfile->setMachineName(newName);
+//        }
+
+
+//        if (operLogPtr->constainsRemoveOper(EProfileType::Material, m_realTimeProfile->getMaterialName()))
+//        {
+//            m_realTimeProfile->setMaterialName("");
+//        }
+//        else if (operLogPtr->constainsRenameOper(EProfileType::Material, m_realTimeProfile->getMaterialName()))
+//        {
+//            auto newName = operLogPtr->getCurrentName(EProfileType::Material, m_realTimeProfile->getMaterialName());
+//            m_realTimeProfile->setMaterialName(newName);
+//        }
+//    };
+
+//    adjustName();
+
+
+
+////    if (m_realTimeProfile->getProfileName() == AkConst::ProfileName::SIMPLE_MODE
+////        || m_realTimeProfile->getProfileName() == AkConst::ProfileName::EXPERT_MODE)
+////    {
+////        if (m_realTimeProfile->getMachineName().isEmpty()
+////            || m_realTimeProfile->getMaterialName().isEmpty())
+////        {
+////            selectProfile(m_realTimeProfile->getProfileName());
+////        }
+
+////        return;
+////    }
+
+//    if (m_realTimeProfile->getMachineName().isEmpty()
+//        || m_realTimeProfile->getMaterialName().isEmpty())
+//    {
+//        selectProfile(m_realTimeProfile->getProfileName());
+//        return;
+//    }
+
+//    emit currentParameterNameChanged();
+//    emit machineNameChanged();
+//    emit materialNameChanged();
+//}
 
 void FdmRightParameterService::onGlobalSupportStateChanged(int state)
 {
@@ -1437,11 +1553,15 @@ QString FdmRightParameterService::getNozzleSize()
 QStringList FdmRightParameterService::getNozzleSizeList()
 {
     QStringList resultList;
-    //resultList << AkConst::NozzleSizeName::SIZE2;
     resultList << AkConst::NozzleSizeName::SIZE4;
-    //resultList << AkConst::NozzleSizeName::SIZE6;
-    //resultList << AkConst::NozzleSizeName::SIZE8;
     return resultList;
+
+//    QStringList resultList;
+//    resultList << AkConst::NozzleSizeName::SIZE2;
+//    resultList << AkConst::NozzleSizeName::SIZE4;
+//    resultList << AkConst::NozzleSizeName::SIZE6;
+//    resultList << AkConst::NozzleSizeName::SIZE8;
+//    return resultList;
 }
 
 

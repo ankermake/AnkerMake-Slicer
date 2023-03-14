@@ -27,6 +27,7 @@ public:
     
     void updateMachine(FdmMachineProfile* profile);
     void updateMaterial(FdmMaterialProfile* profile);
+    void updateNozzleSize(double nozzleSize);
     
     
 
@@ -35,6 +36,7 @@ public:
     
     QString getMachineName();
     QString getMaterialName();
+    double getNozzleSize();
 
     void setMachineName(QString name);
     void setMaterialName(QString name);

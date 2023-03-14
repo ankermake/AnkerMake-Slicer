@@ -48,6 +48,7 @@ namespace Param {
     const QString GLOBAL_SUPPORT_DISABLED_STATUS = "GlobalSupportDisabledStatus";
     //gcode preview Gcode wid
     const QString GCODE_PREVIEW_WID = "gcodePreviewWid";
+    const QString LOGGING_STATUS = "loggingStatus";
 
     const QString AIMODE_STATE = "AiModeState";
     const QString LANGUAGE_STATE = "languageState";
@@ -133,6 +134,7 @@ namespace Msg {
     const QString OPEN_PREVIEW_WITHOUT_FILE = "OpenPreviewWithoutFile";
     const QString OPEN_PREVIEW_IN_NETWORK = "OpenPreviewInNetwork";
     const QString CHECKOUT_PREVIEW = "CheckoutPreview";
+    const QString GET_LOGGING_STATUS = "getLoggingStatus";
 
     //AI mode
     const QString AIMODE_CHANGED = "AiMode";

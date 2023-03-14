@@ -24,19 +24,20 @@ Rectangle {
     RowLayout {
         id:textLayout
         anchors.fill: parent
-        anchors.leftMargin: 8
-        anchors.rightMargin: 6
         TextInput {
             id: input
             text: model.value
+            horizontalAlignment: Text.AlignLeft
+            leftPadding: 8
+            verticalAlignment: Text.AlignVCenter
+            Layout.fillHeight: true
             Layout.fillWidth: true
             selectByMouse: true
             readOnly: false
             activeFocusOnPress :true
             color: root.enabled == true ? "#FFFFFF" : "#666666"
-           // property bool inputting: false
-            validator: RegExpValidator{ regExp: (unitLabel.text == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (unitLabel.text == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
-            //input rule
+          //  validator: RegExpValidator{ regExp: (unitLabel.text == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (unitLabel.text == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
+            //限制用户的输入
             // validator: RegExpValidator{ regExp: (model.type == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (model.type == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
             /*RegExpValidator{ regExp: /[+-]?\d+(\.\d*)?|[+-]?\.\d+/ }*/
             onTextEdited: {
@@ -54,6 +55,14 @@ Rectangle {
         Label {
             id: unitLabel
             color: "#999999"
+           // text: "mm"
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            rightPadding: 6
+            Layout.minimumWidth: 20
+            Layout.fillWidth: false
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
         }
 
     }
@@ -62,32 +71,27 @@ Rectangle {
         propagateComposedEvents : true
         hoverEnabled: true
         cursorShape: Qt.IBeamCursor
-        //containsMouse :true
         onEntered: {
-           // input.forceActiveFocus()
-             //mouse.accepted=false
             borderColor = "#61D37D"
-           console.log("MouseArea  enter=============== model.label == ",model.label);
+//           console.log("MouseArea  enter=============== model.label == ",model.label);
         }
-//        onPositionChanged: {
-//            console.log("onPositionChanged =====================")
-//        }
         onClicked: {
-
             mouse.accepted = true;
             inputFocus = true;
-           // input.focus = true;
             input.forceActiveFocus();
             input.update();
-            console.log("click...................", model.label ,"foucus == ", input.focus, "activeFocusOnPress =" , input.activeFocusOnPress  ,"length ==" , input.length )
+           // console.log("click...................", model.label ,"foucus == ", input.focus, "activeFocusOnPress =" , input.activeFocusOnPress  ,"length ==" , input.length )
         }
-    // onPressed: {mouse.accepted = false}
         onExited: {
-             //mouse.accepted=false
             borderColor = "#4F5259"
             inputEditFinished()
-             console.log("MouseArea  Exited===============");
-           // input.focus = false
+            //console.log("MouseArea  Exited===============");
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;formeditorZoom:3}
+}
+##^##*/

@@ -16,22 +16,7 @@ Rectangle {
     signal qmlExportButtonClicked(string name)
     signal qmlMachineNameChanged(string name)
     signal qmlMaterialNameChanged(string name)
-
-    property int height1 : 0
-
-//    Label {
-//        id:titleLabel
-//        anchors.left: parent.left
-//        anchors.top: parent.top
-//        horizontalAlignment: Text.AlignLeft
-//        verticalAlignment: Text.AlignVCenter
-//        font.pixelSize: 18
-//        font.weight: Font.Bold
-//        anchors.topMargin: 12
-//        anchors.leftMargin: 12
-//        anchors.bottomMargin: 12
-//        text: qsTr("Parameter Setting")
-//    }
+    signal qmlNozzleSizeChanged(string nozzleSize)
 
     FdmSetting.PreferencesListView {
         id:listview
@@ -99,7 +84,7 @@ Rectangle {
                 model:parameter.machineList
                 currentIndex: parameter.machineList.indexOf(parameter.machineName)
                 onActivated: {
-                   qmlMachineNameChanged(machineCombox.currentText)
+                    qmlMachineNameChanged(machineCombox.currentText)
                 }
             }
         }
@@ -108,91 +93,102 @@ Rectangle {
             Layout.fillWidth: true
             color: "transparent"
             Label{
-                id:material
+                id:nozzle
                 anchors.top: parent.top
                 color: "#FFFFFF"
-                text: qsTr("Material")
+                text: qsTr("Nozzle")
             }
             BaseControl.DefaultComboBox{
-                id:materialCombox
-                anchors.top: material.bottom
+                id:nozzleCombox
+                anchors.top: nozzle.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.topMargin: 8
                 width: 226
                 height: 40
-                model:parameter.materialList
-                currentIndex:parameter.materialList.indexOf(parameter.materialName)
+                model:parameter.nozzleSizeList
+                currentIndex:parameter.nozzleSizeList.indexOf(parameter.nozzleSize)
                 onActivated: {
-                   qmlMaterialNameChanged(materialCombox.currentText)
+                    qmlNozzleSizeChanged(nozzleCombox.currentText)
                 }
             }
 
         }
     }
 
+    Rectangle{
+        id:materialRectangle
+        anchors.left: listview.right
+        anchors.right: parent.right
+        anchors.top: comboxLayout.bottom
+        anchors.leftMargin: 24
+        anchors.rightMargin: 24
+        implicitHeight: 70
+        Layout.fillWidth: true
+        color: "transparent"
+        Label{
+            id:material
+            anchors.top: parent.top
+            color: "#FFFFFF"
+            text: qsTr("Material")
+        }
+        BaseControl.DefaultComboBox{
+            id:materialCombox
+            anchors.top: material.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.topMargin: 8
+            width: 226
+            height: 40
+            model:parameter.materialList
+            currentIndex:parameter.materialList.indexOf(parameter.materialName)
+            onActivated: {
+                qmlMaterialNameChanged(materialCombox.currentText)
+            }
+        }
+
+    }
     Rectangle {
         id:lines
         anchors.left: listview.right
         anchors.right: parent.right
-        anchors.top: comboxLayout.bottom
+        anchors.top: materialRectangle.bottom
         anchors.leftMargin: 24
         anchors.rightMargin: 24
         anchors.topMargin: 17
         color: "#393B44"
         height: 1
     }
+    BaseControl.BaseListView {
+        id: listView
+        anchors.top:lines.bottom
+        anchors.left: listview.right
+        anchors.right: parent.right
+        anchors.leftMargin: 24
+        anchors.topMargin: 24
+        anchors.bottomMargin: 24
+        anchors.rightMargin: 6
+        model : preferenceModel;
+        implicitHeight: 340
+        currentIndex: -1
 
-//    ScrollView {
-//        id: scrollView
-//        anchors.top:lines.bottom
-//        anchors.left: listview.right
-//        anchors.right: parent.right
-//        ScrollBar.horizontal.policy : ScrollBar.AlwaysOff
-//        anchors.margins: 24
-//        height: 400
-        ListView {
-            id: listView
-            anchors.top:lines.bottom
-            anchors.left: listview.right
-            anchors.right: parent.right
-           // anchors.margins: 24
-            anchors.leftMargin: 24
-            anchors.topMargin: 24
-            anchors.bottomMargin: 24
-            anchors.rightMargin: 6
-            model : preferenceModel;
-            implicitHeight: 340
-            spacing: 0
-            ScrollBar.vertical:  ScrollBar{
-                policy: ScrollBar.AsNeeded
-                anchors.right: listView.right
-                width: 8
-                active: true
-                contentItem: Rectangle {
-                    radius: width/2
-                    color: '#D6D6D6'
-                }
-            }
-            delegate: Loader
+        delegate: Loader
+        {
+            id:viewDelegate
+            width: listView.width - 14
+            height: model.visible ? 42 : 0
+            opacity: model.visible ? 1 : 0
+            active: model.type !== undefined
+
+            source:
             {
-                id:viewDelegate
-                width: listView.width - 14
-                height: model.visible ? 42 : 0
-                opacity: model.visible ? 1 : 0
-                active: model.type !== undefined
-
-                source:
-                {
-                    switch(model.type){
-                    case "category" :
-                        return "qrc:/qml/PreferenceSettings/CategoryItem.qml" ;
-                    default:
-                        return "qrc:/qml/PreferenceSettings/ParamItem.qml"
-                    }
+                switch(model.type){
+                case "category" :
+                    return "qrc:/qml/PreferenceSettings/CategoryItem.qml" ;
+                default:
+                    return "qrc:/qml/PreferenceSettings/ParamItem.qml"
                 }
             }
         }
-    //}
-
+    }
 }

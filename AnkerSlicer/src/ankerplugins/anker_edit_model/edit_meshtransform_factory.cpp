@@ -31,7 +31,7 @@ QString EditMeshTransformFactory::pluginName() const
 
 void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 {
-
+    
 //    if (metaData.from == AkConst::Plugin::FDM_SETTING
 //        && metaData.msg == AkConst::Msg::GET_GLOBAL_SUPPORT_DISABLED_STATUS){
 //        for (auto* action : actionList) {
@@ -48,7 +48,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //                    return;
 //                }
 
-
+                
 //                PluginMessageData data;
 //                data.from = AkConst::Plugin::FDM_EDIT_MODEL;
 //                data.dest = AkConst::Plugin::FDM_SETTING;
@@ -60,7 +60,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //        }
 //    }
 
-
+    
 //    else if (metaData.from == AkConst::Plugin::FDM_SLICER
 //             && metaData.msg == AkConst::Msg::GET_GLOBAL_SUPPORT_DISABLED_STATUS)
 //    {
@@ -78,7 +78,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //                    return;
 //                }
 
-
+                
 //                PluginMessageData data;
 //                data.from = AkConst::Plugin::FDM_EDIT_MODEL;
 //                data.dest = AkConst::Plugin::FDM_SLICER;
@@ -299,6 +299,57 @@ void EditMeshTransformFactory::__initActionEditTools()
         });
         actionList.push_back(m_mirrorMeshTransform);
     }
+
+
+//    {
+//        QIcon icon_s = QIcon(":/images/fdm_manual_icon_s.png"); // is strat
+//        QIcon icon_n = QIcon(":/images/fdm_manual_icon_n.png"); // is end
+//        m_manualTreeSupport = new ActionEditTool(icon_n, tr("Support"), this);
+//        m_manualTreeSupport->setObjectName("Support");
+//        auto ankerEditTool = new ManualTreeSupportTool();
+
+//        ankerEditTool->setParent(m_manualTreeSupport);
+//        m_manualTreeSupport->setDescription(tr("Tree Support"));
+//        m_manualTreeSupport->ankerEditTool = ankerEditTool;
+//        m_manualTreeSupport->ankerEditPlugin = this;
+//        QObject::connect(m_manualTreeSupport, &QAction::toggled, [this, icon_s, icon_n](bool check) {
+//            m_manualTreeSupport->setIcon(check ? icon_s : icon_n);
+//            });
+//        actionList.push_back(m_manualTreeSupport);
+//    }
+
+//    {
+//        QIcon icon_s = QIcon(":/images/fdm_manual_icon_s.png"); // is strat
+//        QIcon icon_n = QIcon(":/images/fdm_manual_icon_n.png"); // is end
+//        m_manualTreeSupport = new ActionEditTool(icon_n, tr("Support"), this);
+//        m_manualTreeSupport->setObjectName("Support");
+//        auto ankerEditTool = new ManualTreeSupportTool();
+
+//        ankerEditTool->setParent(m_manualTreeSupport);
+//        m_manualTreeSupport->setDescription(tr("Tree Support"));
+//        m_manualTreeSupport->ankerEditTool = ankerEditTool;
+//        m_manualTreeSupport->ankerEditPlugin = this;
+//        QObject::connect(m_manualTreeSupport, &QAction::toggled, [this, icon_s, icon_n](bool check) {
+//            m_manualTreeSupport->setIcon(check ? icon_s : icon_n);
+//            });
+//        actionList.push_back(m_manualTreeSupport);
+//    }
+
+    //{
+    //    QIcon icon_s = QIcon(":/images/fdm_manual_icon_s.png"); // is strat
+    //    QIcon icon_e = QIcon(":/images/fdm_manual_icon_e.png"); // is end
+    //    m_manualSupport = new ActionEditTool(icon_e, tr("Support"), this);
+    //    auto ankerEditTool = new ManualSupportTool();
+    //    ankerEditTool->setParent(m_manualSupport);
+    //    m_manualSupport->setDescription(tr("Manual Support"));
+    //    m_manualSupport->ankerEditTool   = ankerEditTool;
+    //    m_manualSupport->ankerEditPlugin = this;
+    //    QObject::connect(m_manualSupport, &QAction::toggled, [this, icon_s, icon_e](bool check){
+    //        m_manualSupport->setIcon(check ? icon_s : icon_e);
+    //    });
+    //    actionList.push_back(m_manualSupport);
+    //}
+
 
 }
 

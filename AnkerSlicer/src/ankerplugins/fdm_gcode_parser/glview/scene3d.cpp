@@ -174,6 +174,11 @@ void Scene3D::getBoxPoints(const CHAABB3D& box, std::vector<QVector3D>& points)
     points.push_back(QVector3D(box.m_Xmax, box.m_Ymin, box.m_Zmax));
 }
 
+CHAABB3D Scene3D::getMainbox() const
+{
+    return m_mainBox;
+}
+
 void Scene3D::setCenter()
 {
 

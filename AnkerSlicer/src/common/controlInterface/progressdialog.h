@@ -10,6 +10,7 @@
 #include <QPushButton>
 #include <QTimer>
 #include <QMutex>
+#include <QKeyEvent>
 #include "progressbar.h"
 #include "line.h"
 class ProgressDialog : public QDialog
@@ -39,6 +40,7 @@ public slots:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     QVBoxLayout *m_mainLayout;

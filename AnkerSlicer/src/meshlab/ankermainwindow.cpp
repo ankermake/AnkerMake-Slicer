@@ -5,16 +5,16 @@
 #include <common/filterscript.h>
 #include <common/mlexception.h>
 #include <common/globals.h>
-#include <common/utilities/load_save.h>
+//#include <common/utilities/load_save.h>
 #include <wrap/io_trimesh/alnParser.h>
 #include <QLocalSocket>
 #include "rich_parameter_gui/richparameterlistdialog.h"
-#include "dialogs/about_dialog.h"
-#include "dialogs/filter_script_dialog.h"
-#include "dialogs/options_dialog.h"
-#include "dialogs/plugin_info_dialog.h"
-#include "dialogs/save_mesh_attributes_dialog.h"
-#include "dialogs/save_snapshot_dialog.h"
+//#include "dialogs/about_dialog.h"
+//#include "dialogs/filter_script_dialog.h"
+//#include "dialogs/options_dialog.h"
+//#include "dialogs/plugin_info_dialog.h"
+//#include "dialogs/save_mesh_attributes_dialog.h"
+//#include "dialogs/save_snapshot_dialog.h"
 #include <common/file_property/project_load_save.h>
 #include <common/file_property/mesh_model_import_export.h>
 #include "common/GeoAndShow/CHCircleShowObj.h"
@@ -48,8 +48,11 @@ AnkerMainWindow::AnkerMainWindow() :
     m_acodePath(QString()),
     m_pCmd(nullptr)
 {
-    setWindowFlags(Qt::FramelessWindowHint);
+#ifdef Q_OS_WIN
+    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
+    setWindowFlag(Qt::WindowStaysOnTopHint, false);
     installEventFilter(this);
+#endif
     init();
 
     
@@ -123,7 +126,7 @@ void AnkerMainWindow::initMainWindow() {
     QString title = MeshLabApplication::appVer(true, true);  //  change @2022-06-06 by CL
     QSettings settings;
     setContextMenuPolicy(Qt::NoContextMenu);
-    setWindowIcon(QIcon(":/logo_ankerslicer.png")); 
+    setWindowIcon(QIcon(":/logo_AnkerMake.png")); 
     setWindowTitle(title);
 
     setMinimumSize(1200, 720);
@@ -147,18 +150,13 @@ void AnkerMainWindow::initRichParameterList()
     //    }
 
     static auto createMachineSize = [this]() {
-        {  
-
+        {
             const RichPoint3f& param = static_cast<const RichPoint3f&>(defaultGlobalParams.getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE));
             mainMachineBoxChanged(param.value());
             QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, this, &AnkerMainWindow::mainMachineBoxChanged);
         }
 
-        {   /*
-
-
-        **/
-
+        {
             PrintMachineBoxParam printMachineBoxParam;
             const RichParameter& param = defaultGlobalParams.getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE);
             printMachineBoxParam.m_length = param.value().getPoint3f().X();
@@ -284,7 +282,6 @@ void AnkerMainWindow::initEditTool()
             
             QObject::connect(editAction, &QAction::toggled, [iEditFactory, editAction]() {
                 ActionEditTool* actionEditTool = static_cast<ActionEditTool*>(editAction);
-
                 if (actionEditTool->isChecked() == false) {
                     currActionEdit = nullptr;
                     iEditFactory->endAnkerEdit(actionEditTool);
@@ -409,6 +406,13 @@ bool AnkerMainWindow::isProject(QStringList pathList, QString suffix)
     return true;
 }
 
+void AnkerMainWindow::openFileFromAppRaram(const QString &fileName)
+{
+    QStringList fileNameList;
+    fileNameList.append(fileName);
+    openFileList(fileNameList);
+}
+
 void AnkerMainWindow::openFileList(QStringList fileNameList)
 {
     if(fileNameList.isEmpty()) {
@@ -425,11 +429,6 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
         fileNameList.push_back(tmppath + tmpSuffix);
     }
     suffixList << m_projectSuffix << m_meshSuffixList << m_gcodeSuffix  << m_acodeSuffix;
-    //    if (!pathIsValid(fileNameList, suffixList)) {
-    //        control::MessageDialog box(tr("Notice"), tr("Please do not open multiple files at once."), MessageDialog::OK, this);
-    //        box.exec();
-    //        return;
-    //    }
     int resultInt = checkFileSuffix(fileNameList, suffixList);
     if(resultInt  < 0 ) {
         QString errorString;
@@ -453,7 +452,7 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
         QString suffix = info.suffix();
         if (suffix == m_projectSuffix) {
 
-            if (!m_projectPath.isEmpty() || !m_meshPath.isEmpty()) {
+            if ((!m_projectPath.isEmpty() || !m_meshPath.isEmpty()) && (getDoc()->m_printObjs.size() > 0)) {
                 control::MessageDialog box(tr("Notice"), tr("This will overwrite the file. Do you want to continue?"), MessageDialog::CANCEL | MessageDialog::SAVE, nullptr);
                 if (box.exec() == MessageDialog::SAVE) {
                     if (!m_projectPath.isEmpty()) {
@@ -553,14 +552,14 @@ void AnkerMainWindow::importModelProgressFinished()
     if (m_importProgress != nullptr)
     {
         m_importProgress->close();
-        delete m_importProgress;
+        m_importProgress->deleteLater();
         m_importProgress = nullptr;
         modelImporting = false;
         if(importModelThread->isRunning())
         {
             importModelThread->quit();
             importModelThread->wait();
-            delete importModelThread;
+            importModelThread->deleteLater();
             importModelThread = nullptr;
         }
     }
@@ -620,12 +619,12 @@ void AnkerMainWindow::exportModelError(int type, const QString &err)
 void AnkerMainWindow::mainMachineBoxChanged(const Value &value)
 {
     Point3m size = value.getPoint3f();
-    qDebug() << "Machine Box Size: (" << size.X() << ", " << size.Y() << ", " << size.Z() << ")";
     CHChildDocWindow* docWindow = static_cast<CHChildDocWindow*>(curScene);
     //  docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(229, 229, 229));
     // docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(102, 102, 102));
     docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(80, 80, 80));
-    qDebug() << size.X() << size.Y() << size.Z() << AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE << "&RichParameterQObject::valueChange";
+    emit docWindow->machinePlatformSizeSignal(size.X(), size.Y(), size.Z());
+    qDebug() << "mainMachineBoxChanged: " << size.X() << size.Y() << size.Z() << AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE << "&RichParameterQObject::valueChange";
     getDoc()->modelCheckSceneInChanged();
     if(defaultGlobalParams.hasParameter(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM))
     {
@@ -768,6 +767,7 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
     data.msg = AkConst::Msg::PREVIEW_GCODE;
     data.map.insert(AkConst::Param::GCODE_FILE, gcodeFile);
     data.map.insert(AkConst::Param::AKPIC_FILE, akpicFile);
+    data.map.insert(AkConst::Param::ORIGINAL_STL_NAME,fileInfo.fileName());
 
     
     messageProcessing->sendMsg2Manager(data);
@@ -804,7 +804,7 @@ void AnkerMainWindow::slotSaveProject()
         }
         QFileDialog fileDialog;
         path = QFileDialog::getSaveFileName(NULL, tr("Save File"), QApplication::applicationDirPath() + QString("/Document/") + fileName, QString("Project File(*.akpro)"));
-        if(!path.contains(".akpro"))
+        if(!path.isEmpty() && !path.contains(".akpro"))
         {
             path += ".akpro";
         }
@@ -889,6 +889,17 @@ void AnkerMainWindow::slotSaveAsProject()
         fileName = fileName.mid(index1, index2 - index1);
     }
     QString path = QFileDialog::getSaveFileName(NULL, tr("Save File"), QApplication::applicationDirPath() + QString("/Document/") + fileName, QString("Project File(*.akpro)"));
+    if(path.isEmpty())
+    {
+        return;
+    }
+    int lastIndexDot = path.lastIndexOf(".");
+    QString format = path.mid(lastIndexDot, path.length() - lastIndexDot);
+    if(!format.contains("akpro"))
+    {
+        path += ".akpro";
+    }
+
     bool ret = ProjectLoadSave::getInstance().saveProject(PM, path);
 
     if (ret)
@@ -923,20 +934,21 @@ void AnkerMainWindow::open()
     //QFileInfo info(lastPath);
    // info.absoluteFilePath();
     QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), /*info.absolutePath()*/dir.path(), filter/*tr("files (*akpro; *obj; *stl)")*/);
+    //qDebug() << "open fileNameList: " << fileNameList;
     if (!fileNameList.isEmpty()) {
         openFileList(fileNameList);
     }
 }
 
-bool AnkerMainWindow::save_ak(const bool saveAllPossibleAttributes)
-{
-    return exportMesh_ak(meshDoc()->mm()->fullName(), meshDoc()->mm(), saveAllPossibleAttributes);
-}
+//bool AnkerMainWindow::save_ak(const bool saveAllPossibleAttributes)
+//{
+//    return exportMesh_ak(meshDoc()->mm()->fullName(), meshDoc()->mm(), saveAllPossibleAttributes);
+//}
 
-bool AnkerMainWindow::saveAs_ak(QString fileName, const bool saveAllPossibleAttributes)
-{
-    return exportMesh_ak(fileName, meshDoc()->mm(), saveAllPossibleAttributes);
-}
+//bool AnkerMainWindow::saveAs_ak(QString fileName, const bool saveAllPossibleAttributes)
+//{
+//    return exportMesh_ak(fileName, meshDoc()->mm(), saveAllPossibleAttributes);
+//}
 
 
 //void AnkerMainWindow::resizeEvent(QResizeEvent *event)
@@ -995,12 +1007,12 @@ bool AnkerMainWindow::QCallBack_ak(const int pos, const char* str)
 {
     if (importModelThread != nullptr && modelImporting)
     {
-        //qDebug() << "pos1: " << pos << ", str1: " << str << "CallBack Thread: " << QThread::currentThreadId();
         if (lastPos == pos) 
         {
             return true;
         }
         emit importModelThread->openData(pos, QString(str));
+
         lastPos = pos;
     }
 
@@ -1094,8 +1106,9 @@ void AnkerMainWindow::importMesh(QString fileName)
             connect(importModelThread, &ImportModelThread::finished, this, &AnkerMainWindow::importModelProgressFinished);
             //connect(importModelThread, &ImportModelThread::finished, importModelThread, &QObject::deleteLater);
             connect(importModelThread, &ImportModelThread::openData, this, &AnkerMainWindow::importModelProgress);
-            connect(importModelThread, &ImportModelThread::exitThreadSignal, importModelThread, &ImportModelThread::exitThreadSLot);
+            connect(importModelThread, &ImportModelThread::exitThreadSignal, this, &AnkerMainWindow::importModelProgressFinished);
             connect(importModelThread, &ImportModelThread::errorEncountered, this, &AnkerMainWindow::openFileError);
+            connect(this, &AnkerMainWindow::usbStateChanged, importModelThread, &ImportModelThread::usbChanged);
             importModelThread->start();
             m_importProgress->exec();
 
@@ -1158,7 +1171,7 @@ void AnkerMainWindow::importMesh(QString fileName)
                 //tmpPrintModelPtr->isSceneIn(tmpPrintModelPtr->m_realAABB, getDoc()->m_machineBox->getBaseAABB());
                 tmpPrintModelPtr->updateToScene();
                 getDoc()->addObj(tmpPrintModelPtr);
-                emit getDoc()->modelCheckSceneIn();
+                getDoc()->modelCheckSceneIn();
             }
         }
         catch (const MLException& e)
@@ -1173,223 +1186,223 @@ void AnkerMainWindow::importMesh(QString fileName)
     return;
 }
 
-void AnkerMainWindow::importMesh_ak(QString fileName)
-{
-    QStringList fileNameList;
-    if (fileName.isEmpty())
-    {
-        fileNameList = QFileDialog::getOpenFileNames(
-                    this, tr("Import Mesh"),
-                    lastUsedDirectory.path(),
-                    PM.inputMeshFormatListDialog().join(";;"));
-    }
-    else
-    {
-        fileNameList.push_back(fileName);
-    }
+//void AnkerMainWindow::importMesh_ak(QString fileName)
+//{
+//    QStringList fileNameList;
+//    if (fileName.isEmpty())
+//    {
+//        fileNameList = QFileDialog::getOpenFileNames(
+//                    this, tr("Import Mesh"),
+//                    lastUsedDirectory.path(),
+//                    PM.inputMeshFormatListDialog().join(";;"));
+//    }
+//    else
+//    {
+//        fileNameList.push_back(fileName);
+//    }
 
-    if (fileNameList.isEmpty())
-    {
-        return;
-    }
-    else
-    {
-        //save path away so we can use it again
-        QString path = fileNameList.first();
-        path.truncate(path.lastIndexOf("/"));
-        lastUsedDirectory.setPath(path);
-    }
+//    if (fileNameList.isEmpty())
+//    {
+//        return;
+//    }
+//    else
+//    {
+//        //save path away so we can use it again
+//        QString path = fileNameList.first();
+//        path.truncate(path.lastIndexOf("/"));
+//        lastUsedDirectory.setPath(path);
+//    }
 
-    QElapsedTimer allFileTime;
-    allFileTime.start();
-    for (const QString& fileName : fileNameList)
-    {
-        QFileInfo fi(fileName);
-        if (!fi.exists())
-        {
-            QString errorMsgFormat = "Unable to open file:\n\"%1\"\n\nError details: file %1 does not exist.";
-            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
-            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
-            messageBox.exec();
-            return;
-        }
-        if (!fi.isReadable())
-        {
-            QString errorMsgFormat = "Unable to open file:\n\"%1\"\n\nError details: file %1 is not readable.";
-            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
-            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
-            messageBox.exec();
-            return;
-        }
+//    QElapsedTimer allFileTime;
+//    allFileTime.start();
+//    for (const QString& fileName : fileNameList)
+//    {
+//        QFileInfo fi(fileName);
+//        if (!fi.exists())
+//        {
+//            QString errorMsgFormat = "Unable to open file:\n\"%1\"\n\nError details: file %1 does not exist.";
+//            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
+//            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
+//            messageBox.exec();
+//            return;
+//        }
+//        if (!fi.isReadable())
+//        {
+//            QString errorMsgFormat = "Unable to open file:\n\"%1\"\n\nError details: file %1 is not readable.";
+//            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
+//            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
+//            messageBox.exec();
+//            return;
+//        }
 
-        QString extension = fi.suffix();
-        IOPlugin* pCurrentIOPlugin = PM.inputMeshPlugin(extension);
+//        QString extension = fi.suffix();
+//        IOPlugin* pCurrentIOPlugin = PM.inputMeshPlugin(extension);
 
-        if (pCurrentIOPlugin == nullptr)
-        {
-            QString errorMsgFormat("Unable to open file:\n\"%1\"\n\nError details: file format " + extension + " not supported.");
-            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
-            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
-            messageBox.exec();
-            return;
-        }
+//        if (pCurrentIOPlugin == nullptr)
+//        {
+//            QString errorMsgFormat("Unable to open file:\n\"%1\"\n\nError details: file format " + extension + " not supported.");
+//            //QMessageBox::critical(this, tr("Meshlab Opening Error"), errorMsgFormat.arg(fileName));
+//            MessageDialog messageBox(tr("Error While Opening"), errorMsgFormat, MessageDialog::OK);
+//            messageBox.exec();
+//            return;
+//        }
 
-        pCurrentIOPlugin->setLog(&meshDoc()->Log);
-        RichParameterList prePar = pCurrentIOPlugin->initPreOpenParameter(extension);
-        if (!prePar.isEmpty())
-        {
-            // take the default values of the plugin and overwrite to the settings
-            // default values
-            for (RichParameter& p : prePar)
-            {
-                QString prefixName = "MeshLab::IO::" + extension.toUpper() + "::";
-                if (currentGlobalParams.hasParameter(prefixName + p.name()))
-                {
-                    const RichParameter& cp = currentGlobalParams.getParameterByName(prefixName + p.name());
-                    p.setValue(cp.value());
-                }
-            }
-        }
+//        pCurrentIOPlugin->setLog(&meshDoc()->Log);
+//        RichParameterList prePar = pCurrentIOPlugin->initPreOpenParameter(extension);
+//        if (!prePar.isEmpty())
+//        {
+//            // take the default values of the plugin and overwrite to the settings
+//            // default values
+//            for (RichParameter& p : prePar)
+//            {
+//                QString prefixName = "MeshLab::IO::" + extension.toUpper() + "::";
+//                if (currentGlobalParams.hasParameter(prefixName + p.name()))
+//                {
+//                    const RichParameter& cp = currentGlobalParams.getParameterByName(prefixName + p.name());
+//                    p.setValue(cp.value());
+//                }
+//            }
+//        }
 
-        meshDoc()->setBusy(true);
-        qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+//        meshDoc()->setBusy(true);
+//        qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
-        //check how many meshes are going to be loaded from the file
-        unsigned int nMeshes = pCurrentIOPlugin->numberMeshesContainedInFile(extension, fileName, prePar);
+//        //check how many meshes are going to be loaded from the file
+//        unsigned int nMeshes = pCurrentIOPlugin->numberMeshesContainedInFile(extension, fileName, prePar);
 
-        QFileInfo info(fileName);
-        std::list<MeshModel*> meshList;
-        for (unsigned int i = 0; i < nMeshes; i++)
-        {
-            MeshModel* mm = meshDoc()->addNewMesh(fileName, info.fileName());
-            mm->m_bePrintObj = true;
-            if (nMeshes != 1)
-            {
-                // if the file contains more than one mesh, this id will be
-                // != -1
-                mm->setIdInFile(i);
-            }
-            meshList.push_back(mm);
-        }
-        //qb->show();
-        std::list<int> masks;
-        try
-        {
-            QElapsedTimer t;
-            t.start();
-            std::list<std::string> unloadedTextures =
-                    meshlab::loadMesh(fileName, pCurrentIOPlugin, prePar, meshList, masks, QCallBack_ak);
-            //saveRecentFileList_ak(fileName);
-            //updateLayerDialog();
-            /*for (MeshModel* mm : meshList)
-            {
-                computeRenderingDataOnLoading(mm, false, nullptr);
-                if (!(mm->cm.textures.empty()))
-                    updateTexture(mm->id());
-            }*/
-            QString warningString = pCurrentIOPlugin->warningMessageString();
-            if (unloadedTextures.size() > 0)
-            {
-                warningString += "\n\nThe following textures have not been loaded: \n";
-                for (const std::string& txt : unloadedTextures)
-                    warningString += QString::fromStdString(txt) + "\n";
-            }
-            if (!warningString.isEmpty())
-            {
-                //QMessageBox::warning(this, "Meshlab Opening Warning", warningString);
-                MessageDialog messageBox(tr("Error While Opening"), warningString, MessageDialog::OK);
-                messageBox.exec();
-            }
-            //GLA()->Logf(0, "Opened mesh %s in %i msec", qUtf8Printable(fileName), t.elapsed());
-        }
-        catch (const MLException& e)
-        {
-            for (const MeshModel* mm : meshList)
-                meshDoc()->delMesh(mm->id());
-            //GLA()->Logf(0, "Error: File %s has not been loaded", qUtf8Printable(fileName));
-            //QMessageBox::critical(this, "Meshlab Opening Error", e.what());
-            MessageDialog messageBox(tr("Error While Opening"), QString(e.what()), MessageDialog::OK);
-            messageBox.exec();
-        }
-        meshDoc()->setBusy(false);
-        qApp->restoreOverrideCursor();
-    }// end foreach file of the input list
-    //GLA()->Logf(0, "All files opened in %i msec", allFileTime.elapsed());
+//        QFileInfo info(fileName);
+//        std::list<MeshModel*> meshList;
+//        for (unsigned int i = 0; i < nMeshes; i++)
+//        {
+//            MeshModel* mm = meshDoc()->addNewMesh(fileName, info.fileName());
 
-    static std::set<MeshModel*> doneModels;
-    std::vector<CH3DPrintModelPtr> ttmeshes;
-    int countNum = 0;
-    for (MeshDocument::MeshIterator it = meshDoc()->meshBegin(); it != meshDoc()->meshEnd(); it++)
-    {
-        std::set<MeshModel*>::iterator tttt = doneModels.find(&*it);
-        if (tttt == doneModels.end())
-        {
-            doneModels.insert(&*it);
-            CH3DPrintModelPtr tmodel = it->toMyModel();
-            tmodel->setColor(QColor(198, 198, 198));
-            QMatrix4x4 trans;
-            QVector3D offset;
+//            if (nMeshes != 1)
+//            {
+//                // if the file contains more than one mesh, this id will be
+//                // != -1
+//                mm->setIdInFile(i);
+//            }
+//            meshList.push_back(mm);
+//        }
+//        //qb->show();
+//        std::list<int> masks;
+//        try
+//        {
+//            QElapsedTimer t;
+//            t.start();
+//            std::list<std::string> unloadedTextures =
+//                    meshlab::loadMesh(fileName, pCurrentIOPlugin, prePar, meshList, masks, QCallBack_ak);
+//            //saveRecentFileList_ak(fileName);
+//            //updateLayerDialog();
+//            /*for (MeshModel* mm : meshList)
+//            {
+//                computeRenderingDataOnLoading(mm, false, nullptr);
+//                if (!(mm->cm.textures.empty()))
+//                    updateTexture(mm->id());
+//            }*/
+//            QString warningString = pCurrentIOPlugin->warningMessageString();
+//            if (unloadedTextures.size() > 0)
+//            {
+//                warningString += "\n\nThe following textures have not been loaded: \n";
+//                for (const std::string& txt : unloadedTextures)
+//                    warningString += QString::fromStdString(txt) + "\n";
+//            }
+//            if (!warningString.isEmpty())
+//            {
+//                //QMessageBox::warning(this, "Meshlab Opening Warning", warningString);
+//                MessageDialog messageBox(tr("Error While Opening"), warningString, MessageDialog::OK);
+//                messageBox.exec();
+//            }
+//            //GLA()->Logf(0, "Opened mesh %s in %i msec", qUtf8Printable(fileName), t.elapsed());
+//        }
+//        catch (const MLException& e)
+//        {
+//            for (const MeshModel* mm : meshList)
+//                meshDoc()->delMesh(mm->id());
+//            //GLA()->Logf(0, "Error: File %s has not been loaded", qUtf8Printable(fileName));
+//            //QMessageBox::critical(this, "Meshlab Opening Error", e.what());
+//            MessageDialog messageBox(tr("Error While Opening"), QString(e.what()), MessageDialog::OK);
+//            messageBox.exec();
+//        }
+//        meshDoc()->setBusy(false);
+//        qApp->restoreOverrideCursor();
+//    }// end foreach file of the input list
+//    //GLA()->Logf(0, "All files opened in %i msec", allFileTime.elapsed());
 
-            QVector3D platformCenter = getDoc()->m_machineBox->getBaseAABB().getCenterPoint();
-            QVector3D modelCenter = tmodel->calRealAABB().getCenterPoint();
-            offset = platformCenter - modelCenter;
-            tmodel->m_rotCenter = modelCenter;
-            tmodel->m_realAABB.m_Xmin = offset.x() + tmodel->m_realAABB.m_Xmin;
-            tmodel->m_realAABB.m_Ymin = offset.y() + tmodel->m_realAABB.m_Ymin;
-            //tmodel->m_realAABB.m_Zmin = offset.z() + tmodel->m_realAABB.m_Zmin;
+//    static std::set<MeshModel*> doneModels;
+//    std::vector<CH3DPrintModelPtr> ttmeshes;
+//    int countNum = 0;
+//    for (MeshDocument::MeshIterator it = meshDoc()->meshBegin(); it != meshDoc()->meshEnd(); it++)
+//    {
+//        std::set<MeshModel*>::iterator tttt = doneModels.find(&*it);
+//        if (tttt == doneModels.end())
+//        {
+//            doneModels.insert(&*it);
+//            CH3DPrintModelPtr tmodel = it->toMyModel();
+//            tmodel->setColor(QColor(198, 198, 198));
+//            QMatrix4x4 trans;
+//            QVector3D offset;
 
-            tmodel->m_realAABB.m_Xmax = offset.x() + tmodel->m_realAABB.m_Xmax;
-            tmodel->m_realAABB.m_Ymax = offset.y() + tmodel->m_realAABB.m_Ymax;
-            //tmodel->m_realAABB.m_Zmax = offset.z() + tmodel->m_realAABB.m_Zmax;
+//            QVector3D platformCenter = getDoc()->m_machineBox->getBaseAABB().getCenterPoint();
+//            QVector3D modelCenter = tmodel->calRealAABB().getCenterPoint();
+//            offset = platformCenter - modelCenter;
+//            tmodel->m_rotCenter = modelCenter;
+//            tmodel->m_realAABB.m_Xmin = offset.x() + tmodel->m_realAABB.m_Xmin;
+//            tmodel->m_realAABB.m_Ymin = offset.y() + tmodel->m_realAABB.m_Ymin;
+//            //tmodel->m_realAABB.m_Zmin = offset.z() + tmodel->m_realAABB.m_Zmin;
 
-            tmodel->m_params.clear();
-            tmodel->m_params.push_back(1.0);
-            tmodel->m_params.push_back(1.0);
-            tmodel->m_params.push_back(1.0);
-            tmodel->m_params.push_back(0.0);
-            tmodel->m_params.push_back(0.0);
-            tmodel->m_params.push_back(0.0);
-            tmodel->m_params.push_back(offset[0]);
-            tmodel->m_params.push_back(offset[1]);
-            tmodel->m_params.push_back(0.0);
-            trans.translate(offset[0], offset[1], 0.0);
+//            tmodel->m_realAABB.m_Xmax = offset.x() + tmodel->m_realAABB.m_Xmax;
+//            tmodel->m_realAABB.m_Ymax = offset.y() + tmodel->m_realAABB.m_Ymax;
+//            //tmodel->m_realAABB.m_Zmax = offset.z() + tmodel->m_realAABB.m_Zmax;
 
-            tmodel->setTransform(trans * tmodel->getTransform());
-            tmodel->m_initParams = tmodel->m_params;
-            tmodel->m_initTransform = tmodel->getTransform();
-            
-            //QString mmname = it->fullName();
-            //QFileInfo info(mmname);
-            int first = it->fullName().lastIndexOf("/"); 
-            QString tname = it->fullName().right(it->fullName().length() - first - 1);
-            //QString tname = info.fileName();
-            tmodel->setObjectName(tname);
-            tmodel->updateToScene();
+//            tmodel->m_params.clear();
+//            tmodel->m_params.push_back(1.0);
+//            tmodel->m_params.push_back(1.0);
+//            tmodel->m_params.push_back(1.0);
+//            tmodel->m_params.push_back(0.0);
+//            tmodel->m_params.push_back(0.0);
+//            tmodel->m_params.push_back(0.0);
+//            tmodel->m_params.push_back(offset[0]);
+//            tmodel->m_params.push_back(offset[1]);
+//            tmodel->m_params.push_back(0.0);
+//            trans.translate(offset[0], offset[1], 0.0);
 
-            ttmeshes.push_back(tmodel);
-            countNum++;
-        }
-    }
+//            tmodel->setTransform(trans * tmodel->getTransform());
+//            tmodel->m_initParams = tmodel->m_params;
+//            tmodel->m_initTransform = tmodel->getTransform();
 
-    if (ttmeshes.size() > 0)
-    {
-        getDoc()->addObjs(ttmeshes);
-        curScene->refresh();
-    }
+//            //QString mmname = it->fullName();
+//            //QFileInfo info(mmname);
+
+//            QString tname = it->fullName().right(it->fullName().length() - first - 1);
+//            //QString tname = info.fileName();
+
+//            tmodel->updateToScene();
+
+//            ttmeshes.push_back(tmodel);
+//            countNum++;
+//        }
+//    }
+
+//    if (ttmeshes.size() > 0)
+//    {
+//        getDoc()->addObjs(ttmeshes);
+//        curScene->refresh();
+//    }
 
 
-    //    qb->reset();
-    //insertRecentFile(fileNameList);
-    //QMdiSubWindow* subwindow = mdiarea->currentSubWindow();
-    //if (subwindow) {
-    //    MultiViewer_Container* split = qobject_cast<CHChildDocWindow*>(mdiarea->currentSubWindow()->widget());
-    //    if (split) {
-    //        GLArea* glarea = split->currentgla;
-    //        glarea->update();
-    //    }
-    //}
-    return;
-}
+//    //    qb->reset();
+//    //insertRecentFile(fileNameList);
+//    //QMdiSubWindow* subwindow = mdiarea->currentSubWindow();
+//    //if (subwindow) {
+//    //    MultiViewer_Container* split = qobject_cast<CHChildDocWindow*>(mdiarea->currentSubWindow()->widget());
+//    //    if (split) {
+//    //        GLArea* glarea = split->currentgla;
+//    //        glarea->update();
+//    //    }
+//    //}
+//    return;
+//}
 
 void AnkerMainWindow::closeEvent(QCloseEvent* event)
 {
@@ -1456,7 +1469,7 @@ bool AnkerMainWindow::nativeEvent(const QByteArray &eventType, void *message, lo
                 {
                     qDebug() << __FUNCTION__ << "u disk come";
                     TDebug("u disk come");
-                    emit uDiskCome();
+                    emit usbStateChanged(USB_STATE_COME_IN);
                 }
             }
             break;
@@ -1469,7 +1482,7 @@ bool AnkerMainWindow::nativeEvent(const QByteArray &eventType, void *message, lo
                 {
                     qDebug() << __FUNCTION__ << "u disk remove";
                     TDebug("u disk remove");
-                    emit uDiskRemove();
+                    emit usbStateChanged(USB_STATE_COME_OUT);
                 }
             }
             break;
@@ -1510,7 +1523,6 @@ void AnkerMainWindow::getMask(int& mask, const CMeshO& cm)
     }
 }
 
-
 bool AnkerMainWindow::exportMesh_ak(const QString& _fileName, CMeshO& cm)
 {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save Model File"), QApplication::applicationDirPath(), QString("Model Files(*.stl) ;; Model Files(*.obj)"));
@@ -1520,8 +1532,9 @@ bool AnkerMainWindow::exportMesh_ak(const QString& _fileName, CMeshO& cm)
     QString format = fi.suffix();
 
     bool saved = true;
-    int mask = 1;
+    int mask = 0;
     getMask(mask, cm);
+    qDebug() << "exportMesh_ak mask: " << mask;
     
     bool isBinary = true;
     try
@@ -1555,152 +1568,152 @@ bool AnkerMainWindow::exportMesh_ak(const QString& _fileName, CMeshO& cm)
 }
 
 
-bool AnkerMainWindow::exportMesh_ak(QString fileName, MeshModel* mod, const bool saveAllPossibleAttributes)
-{
-    const QStringList& suffixList = PM.outputMeshFormatListDialog();
-    if (fileName.isEmpty()) {
-        //QHash<QString, MeshIOInterface*> allKnownFormats;
-        //PM.LoadFormats( suffixList, allKnownFormats,PluginManager::EXPORT);
-        //QString defaultExt = "*." + mod->suffixName().toLower();
-        QString defaultExt = "*.ply";
-        if (mod == NULL)
-            return false;
-        mod->setMeshModified(false);
-        QString laylabel = "Save \"" + mod->label() + "\" Layer";
-        QFileDialog* saveDialog = new QFileDialog(this, laylabel, lastUsedDirectory.path());
-        //saveDialog->setOption(QFileDialog::DontUseNativeDialog);
-        saveDialog->setNameFilters(suffixList);
-        saveDialog->setAcceptMode(QFileDialog::AcceptSave);
-        saveDialog->setFileMode(QFileDialog::AnyFile);
-        saveDialog->selectFile(fileName);
-        QStringList matchingExtensions = suffixList.filter(defaultExt);
-        if (!matchingExtensions.isEmpty())
-            saveDialog->selectNameFilter(matchingExtensions.last());
+//bool AnkerMainWindow::exportMesh_ak(QString fileName, MeshModel* mod, const bool saveAllPossibleAttributes)
+//{
+//    const QStringList& suffixList = PM.outputMeshFormatListDialog();
+//    if (fileName.isEmpty()) {
+//        //QHash<QString, MeshIOInterface*> allKnownFormats;
+//        //PM.LoadFormats( suffixList, allKnownFormats,PluginManager::EXPORT);
+//        //QString defaultExt = "*." + mod->suffixName().toLower();
+//        QString defaultExt = "*.ply";
+//        if (mod == NULL)
+//            return false;
+//        mod->setMeshModified(false);
+//        QString laylabel = "Save \"" + mod->label() + "\" Layer";
+//        QFileDialog* saveDialog = new QFileDialog(this, laylabel, lastUsedDirectory.path());
+//        //saveDialog->setOption(QFileDialog::DontUseNativeDialog);
+//        saveDialog->setNameFilters(suffixList);
+//        saveDialog->setAcceptMode(QFileDialog::AcceptSave);
+//        saveDialog->setFileMode(QFileDialog::AnyFile);
+//        saveDialog->selectFile(fileName);
+//        QStringList matchingExtensions = suffixList.filter(defaultExt);
+//        if (!matchingExtensions.isEmpty())
+//            saveDialog->selectNameFilter(matchingExtensions.last());
 
-        saveDialog->selectFile(meshDoc()->mm()->fullName());
-        int dialogRet = saveDialog->exec();
-        if (dialogRet == QDialog::Rejected)
-            return false;
-        fileName = saveDialog->selectedFiles().at(0);
-        QFileInfo fni(fileName);
-        if (fni.suffix().isEmpty()) {
-            QString ext = saveDialog->selectedNameFilter();
-            ext.chop(1); ext = ext.right(4);
-            fileName = fileName + ext;
-            qDebug("File without extension adding it by hand '%s'", qUtf8Printable(fileName));
-        }
-    }
-    QFileInfo fi(fileName);
+//        saveDialog->selectFile(meshDoc()->mm()->fullName());
+//        int dialogRet = saveDialog->exec();
+//        if (dialogRet == QDialog::Rejected)
+//            return false;
+//        fileName = saveDialog->selectedFiles().at(0);
+//        QFileInfo fni(fileName);
+//        if (fni.suffix().isEmpty()) {
+//            QString ext = saveDialog->selectedNameFilter();
+//            ext.chop(1); ext = ext.right(4);
+//            fileName = fileName + ext;
+//            qDebug("File without extension adding it by hand '%s'", qUtf8Printable(fileName));
+//        }
+//    }
+//    QFileInfo fi(fileName);
 
-    QStringList fs = fileName.split(".");
+//    QStringList fs = fileName.split(".");
 
-    if (!fileName.isEmpty() && fs.size() < 2) {
-        MessageDialog messageBox(tr("Error While Saving"), tr("You must specify file extension!!"), MessageDialog::OK);
-        messageBox.exec();
-        return false;
-    }
+//    if (!fileName.isEmpty() && fs.size() < 2) {
+//        MessageDialog messageBox(tr("Error While Saving"), tr("You must specify file extension!!"), MessageDialog::OK);
+//        messageBox.exec();
+//        return false;
+//    }
 
-    bool saved = true;
-    if (!fileName.isEmpty()) {
-        //save path away so we can use it again
-        QString path = fileName;
-        path.truncate(path.lastIndexOf("/"));
-        lastUsedDirectory.setPath(path);
+//    bool saved = true;
+//    if (!fileName.isEmpty()) {
+//        //save path away so we can use it again
+//        QString path = fileName;
+//        path.truncate(path.lastIndexOf("/"));
+//        lastUsedDirectory.setPath(path);
 
-        QString extension = fileName;
-        extension.remove(0, fileName.lastIndexOf('.') + 1);
+//        QString extension = fileName;
+//        extension.remove(0, fileName.lastIndexOf('.') + 1);
 
-        QStringListIterator itFilter(suffixList);
+//        QStringListIterator itFilter(suffixList);
 
-        IOPlugin* pCurrentIOPlugin = PM.outputMeshPlugin(extension);
-        if (pCurrentIOPlugin == 0) {
-            MessageDialog messageBox(tr("Unknown File Type"), tr("File extension not supported."), MessageDialog::OK);
-            messageBox.exec();
-            return false;
-        }
-        pCurrentIOPlugin->setLog(&meshDoc()->Log);
+//        IOPlugin* pCurrentIOPlugin = PM.outputMeshPlugin(extension);
+//        if (pCurrentIOPlugin == 0) {
+//            MessageDialog messageBox(tr("Unknown File Type"), tr("File extension not supported."), MessageDialog::OK);
+//            messageBox.exec();
+//            return false;
+//        }
+//        pCurrentIOPlugin->setLog(&meshDoc()->Log);
 
-        int capability = 0, defaultBits = 0;
-        pCurrentIOPlugin->exportMaskCapability(extension, capability, defaultBits);
+//        int capability = 0, defaultBits = 0;
+//        pCurrentIOPlugin->exportMaskCapability(extension, capability, defaultBits);
 
-        // optional saving parameters (like ascii/binary encoding)
-        RichParameterList savePar = pCurrentIOPlugin->initSaveParameter(extension, *(mod));
+//        // optional saving parameters (like ascii/binary encoding)
+//        RichParameterList savePar = pCurrentIOPlugin->initSaveParameter(extension, *(mod));
 
-        SaveMeshAttributesDialog maskDialog(this, mod, capability, defaultBits, savePar);
-        int quality = -1;
-        bool saveTextures = true;
-        if (!saveAllPossibleAttributes)
-        {
-            maskDialog.exec();
-        }
-        else
-        {
-            //this is horrible: creating a dialog object but then not showing the
-            //dialog.. And using it just to select all the possible options..
-            //to be removed soon
-            maskDialog.selectAllPossibleBits();
-        }
-        int mask = maskDialog.getNewMask();
-        savePar = maskDialog.getNewAdditionalSaveParameters();
-        quality = maskDialog.getTextureQuality();
-        saveTextures = maskDialog.saveTextures();
+//        SaveMeshAttributesDialog maskDialog(this, mod, capability, defaultBits, savePar);
+//        int quality = -1;
+//        bool saveTextures = true;
+//        if (!saveAllPossibleAttributes)
+//        {
+//            maskDialog.exec();
+//        }
+//        else
+//        {
+//            //this is horrible: creating a dialog object but then not showing the
+//            //dialog.. And using it just to select all the possible options..
+//            //to be removed soon
+//            maskDialog.selectAllPossibleBits();
+//        }
+//        int mask = maskDialog.getNewMask();
+//        savePar = maskDialog.getNewAdditionalSaveParameters();
+//        quality = maskDialog.getTextureQuality();
+//        saveTextures = maskDialog.saveTextures();
 
-        if (!saveTextures)
-        {
-            std::vector<std::string> textureNames = maskDialog.getTextureNames();
+//        if (!saveTextures)
+//        {
+//            std::vector<std::string> textureNames = maskDialog.getTextureNames();
 
-            for (unsigned int i = 0; i < mod->cm.textures.size(); ++i)
-            {
-                if (textureNames[i].find('.') == std::string::npos)
-                {
-                    textureNames[i] += ".png";
-                }
-                mod->changeTextureName(mod->cm.textures[i], textureNames[i]);
-            }
-        }
-        if (!saveAllPossibleAttributes)
-        {
-            maskDialog.close();
-            if (maskDialog.result() == QDialog::Rejected)
-                return false;
-        }
-        if (mask == -1)
-            return false;
+//            for (unsigned int i = 0; i < mod->cm.textures.size(); ++i)
+//            {
+//                if (textureNames[i].find('.') == std::string::npos)
+//                {
+//                    textureNames[i] += ".png";
+//                }
+//                mod->changeTextureName(mod->cm.textures[i], textureNames[i]);
+//            }
+//        }
+//        if (!saveAllPossibleAttributes)
+//        {
+//            maskDialog.close();
+//            if (maskDialog.result() == QDialog::Rejected)
+//                return false;
+//        }
+//        if (mask == -1)
+//            return false;
 
-        qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
-        //qb->show();
-        QElapsedTimer tt; tt.start();
-        meshDoc()->setBusy(true);
-        try
-        {
-            if (mask & vcg::tri::io::Mask::IOM_BITPOLYGONAL)
-                mod->updateDataMask(MeshModel::MM_FACEFACETOPO);
-            pCurrentIOPlugin->save(extension, fileName, *mod, mask, savePar, QCallBack_ak);
-            QFileInfo finfo(fileName);
-            if (saveTextures)
-                mod->saveTextures(finfo.absolutePath(), quality, &meshDoc()->Log, QCallBack_ak);
-            //GLA()->Logf(GLLogStream::SYSTEM, "Saved Mesh %s in %i msec", qUtf8Printable(fileName), tt.elapsed());
-            mod->setFileName(fileName);
-            QSettings settings;
-            int savedMeshCounter = settings.value("savedMeshCounter", 0).toInt();
-            settings.setValue("savedMeshCounter", savedMeshCounter + 1);
-        }
-        catch (const MLException& e) {
-            //GLA()->Logf(GLLogStream::SYSTEM, "Error Saving Mesh %s", qUtf8Printable(fileName));
-            MessageDialog messageBox(tr("Error While Saving"), QString(e.what()), MessageDialog::OK);
-            messageBox.exec();
-            saved = false;
-        }
-        qApp->restoreOverrideCursor();
-        //updateLayerDialog();
-        meshDoc()->setBusy(false);
-        //qb->reset();
+//        qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+//        //qb->show();
+//        QElapsedTimer tt; tt.start();
+//        meshDoc()->setBusy(true);
+//        try
+//        {
+//            if (mask & vcg::tri::io::Mask::IOM_BITPOLYGONAL)
+//                mod->updateDataMask(MeshModel::MM_FACEFACETOPO);
+//            pCurrentIOPlugin->save(extension, fileName, *mod, mask, savePar, QCallBack_ak);
+//            QFileInfo finfo(fileName);
+//            if (saveTextures)
+//                mod->saveTextures(finfo.absolutePath(), quality, &meshDoc()->Log, QCallBack_ak);
+//            //GLA()->Logf(GLLogStream::SYSTEM, "Saved Mesh %s in %i msec", qUtf8Printable(fileName), tt.elapsed());
+//            mod->setFileName(fileName);
+//            QSettings settings;
+//            int savedMeshCounter = settings.value("savedMeshCounter", 0).toInt();
+//            settings.setValue("savedMeshCounter", savedMeshCounter + 1);
+//        }
+//        catch (const MLException& e) {
+//            //GLA()->Logf(GLLogStream::SYSTEM, "Error Saving Mesh %s", qUtf8Printable(fileName));
+//            MessageDialog messageBox(tr("Error While Saving"), QString(e.what()), MessageDialog::OK);
+//            messageBox.exec();
+//            saved = false;
+//        }
+//        qApp->restoreOverrideCursor();
+//        //updateLayerDialog();
+//        meshDoc()->setBusy(false);
+//        //qb->reset();
 
-        if (saved)
-            QDir::setCurrent(fi.absoluteDir().absolutePath()); //set current dir
-    }
-    return saved;
-}
+//        if (saved)
+//            QDir::setCurrent(fi.absoluteDir().absolutePath()); //set current dir
+//    }
+//    return saved;
+//}
 
 void AnkerMainWindow::initTitleBar()
 {
@@ -1710,9 +1723,11 @@ void AnkerMainWindow::initTitleBar()
     m_mainTitleBar = new customTitle(this, mainMenuBar);
     m_mainTitleBar->setObjectName("m_mainTitleBar");
     m_mainTitleBar->setFixedHeight(40);
+#ifdef Q_OS_WIN
     this->setMenuWidget(m_mainTitleBar);
     m_framelessHelper = new QFramelessHelper(this, true, false, true, this);
     m_framelessHelper->setTitleBar(m_mainTitleBar);
+#endif
     connect(m_mainTitleBar, SIGNAL(signalButtonMinClicked()), this, SLOT(onButtonMinClicked()));
     connect(m_mainTitleBar, SIGNAL(signalButtonRestoreClicked()), this, SLOT(onButtonRestoreClicked()), Qt::DirectConnection);
     connect(m_mainTitleBar, SIGNAL(signalButtonMaxClicked()), this, SLOT(onButtonMaxClicked()), Qt::DirectConnection);

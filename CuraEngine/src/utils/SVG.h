@@ -161,6 +161,8 @@ public:
     static void appendPoint(const Point& p, bool write_coords = false, int size = 5, SVG::ColorObject color = SVG::Color::BLACK, std::string filename = "debug_append.html");
     static void appendPolygons(const Polygons& polys, SVG::ColorObject color = SVG::Color::BLACK, float stroke_width = 1, std::string filename = "debug_append.html");
     static void appendPolygon(ConstPolygonRef poly, SVG::ColorObject color = SVG::Color::BLACK, float stroke_width = 1, std::string filename = "debug_append.html");
+
+    static void clear() { fileMap.clear(); };
 private:
     static std::unordered_map<std::string, SVG*> fileMap;
     

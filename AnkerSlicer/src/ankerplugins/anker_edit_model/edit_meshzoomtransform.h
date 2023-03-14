@@ -31,6 +31,7 @@
 #include <common/plugins/interfaces/edit_plugin.h>
 #include "common/GeoAndShow/CHLineSegment3DShowObj.h"
 #include "common/GeoAndShow/CHPointShowObj.h"
+#include "common/GeoAndShow/CHScene.h"
 #include "CHModelZoomTransformParamsSetUI.h"
 
 
@@ -65,8 +66,6 @@ Q_SIGNALS:
     void sendBoxSizeParam(std::vector<float > params);
     void boxSizeParamsChanged(std::vector<double> params, ZoomChangedType type);
     void scaleParamsChanged(std::vector<double> params, ZoomChangedType type);
-
-
 private:
 
     
@@ -77,6 +76,7 @@ private:
     void refreshBoxSizeUI();
     void createFrame(const QVector3D& origin, float len, float width, float height);
     void stickOnBottom(); 
+    void resetSelectedScale();
 
 private:
     CHModelZoomTransformParamsSetUI* m_paramUI;

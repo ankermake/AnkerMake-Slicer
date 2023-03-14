@@ -10,7 +10,7 @@ Item {
     anchors.leftMargin: 2
 
      signal showAllChildern(string category)
-
+    //当item为子节点时， 缩进 占位
     Item {
         id: itemSpace
         anchors.left: parent.left
@@ -29,7 +29,6 @@ Item {
     Loader {
         id :typeLoder
         anchors.right: parent.right
-//        anchors.rightMargin: 16
         anchors.verticalCenter: parent.verticalCenter
         source: {
             switch (model.type) {

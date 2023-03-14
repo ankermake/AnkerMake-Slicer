@@ -8,7 +8,7 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     QWidget(parent),
     model(new ParamListModel),
     treeModel(new FdmSettingsTreeModel),
-    m_toolTip(new ToolTip()),
+    m_toolTip(nullptr),
     m_timer(new QTimer(this))
 {
     connect(m_timer,&QTimer::timeout,this,&FdmParamSettingsWidget::showBubbleTip);
@@ -79,9 +79,12 @@ void FdmParamSettingsWidget::reload(const QString &fileName)
 
 void FdmParamSettingsWidget::showToolTip(const QString &titlte, const QString &description, const QString &affects, const QString &affectedBy, QPoint point)
 {
-   // qDebug() << "description == " << description << "affects ==" << affects << "affectedBy ==" << affectedBy << "point =" << point;
+  // qDebug() << "description == " << description << "affects ==" << affects << "affectedBy ==" << affectedBy << "point =" << point;
     m_timer->start(1000);
     m_point = point;
+    if(!m_toolTip) {
+    m_toolTip = new ToolTip();
+    }
     m_toolTip->setDescription(titlte, description, affects, affectedBy);
 }
 
@@ -89,6 +92,8 @@ void FdmParamSettingsWidget::hideToolTip()
 {
     m_timer->stop();
     m_toolTip->hide();
+    delete m_toolTip;
+    m_toolTip = nullptr;
 }
 
 
@@ -127,9 +132,10 @@ void FdmParamSettingsWidget::resertButtonClicked()
 
 void FdmParamSettingsWidget::showBubbleTip()
 {
-    if(!m_toolTip->isHidden()) {
+    if(!m_toolTip || !m_toolTip->isHidden()) {
         return;
     }
+
     QPoint globalP =  mapToGlobal(QPoint( 0,0));
     int maxY = this->parentWidget()->height() + globalP.y();
     m_toolTip->setPoint(m_point,maxY);

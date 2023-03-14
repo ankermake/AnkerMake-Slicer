@@ -288,13 +288,13 @@ void AkSlicer::runCmd(QString cmd)
     
     engineLib.runCmd(cmd);
     AkUtil::TWarning("run static lib: ");
-    qDebug() << __CodeLocation__ << __ThreadId2__ << "run as lib: ";
+
 #else
     //pInvoker->start("C:/workspace/TortoiseGit/Repository/SliceEngine/CuraEngine slice -v -p -m4 -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2.def.json -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2_extruder_0.def.json -o C:/workspace/TortoiseGit/Repository/SliceEngine/result/cube.gcode -l C:/workspace/TortoiseGit/Repository/SliceEngine/stl/SimpleCube.stl");
     
     pInvoker->start(cmd);
     AkUtil::TWarning("run exe : ");
-    qDebug() << __CodeLocation__ << __ThreadId2__ << "run as exe: ";
+
 #endif
     qDebug() << "\t" << cmd;
 }
@@ -364,32 +364,23 @@ void AkSlicer::newStdErrGeneratedChars(QByteArray res)
     //qWarning().noquote().nospace() << "[[SlicerEngine]]" << msg;
 //    TInfo(msg);
 //    TInfo(QString("================== %1 ").arg(++count));
-#if defined(DEBUG_BY_CL) // add  @2022-05-15 by CL
-    if(msg.startsWith("$CL$"))
-    {
-        if(1){
-            TMessage(msg);
-        }
-        if(1){
-            QString logPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-            QString logFile = QDir(logPath).absoluteFilePath("engine.log");
-
-            //static QMutex fileLock;
-            //QMutexLocker locker(&fileLock);
-            {
-                AkUtil::IoApi::touch(logFile);
-                AkUtil::IoApi::append(logFile, res);
-                qDebug() << res;
-            }
-        }
-    }
-#endif
     
     //QChar hell[]{'\r','\n'};
     QStringList lines = msg.split('\r',Qt::SkipEmptyParts);
     foreach(QString line, lines)
     {
-        //if(msg.startsWith("$CL$")){ qWarning().noquote().nospace() << msg; }
+#if defined(DEBUG_BY_CL) // add  @2022-05-15 by CL
+        if(true || line.startsWith("$CL$"))  
+        {
+            
+            QString logPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+            QString logFile = QDir(logPath).absoluteFilePath("engine.log");
+
+            AkUtil::IoApi::touch(logFile);
+            AkUtil::IoApi::append(logFile, line);
+            qDebug() << line;
+        }
+#endif
         
         if (line.indexOf("[ERROR]") >= 0)
         {

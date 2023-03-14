@@ -200,6 +200,7 @@ namespace fdmsettings {
                     do{
                         QVariantMap & refreshLanguageArg = FdmQmlSourceTree::instance().refreshLanguageArg;
                         
+                        refreshLanguageArg.insert("Realtime", true);  
                         if(refreshLanguageArg.contains("Realtime")){
                             refreshLanguage = true;
                             break;
@@ -358,6 +359,35 @@ namespace fdmsettings {
         
         //FdmParameterProfileService::instance()->exportIniFromTree("c:/workspace/log/tree.ini");
 
+        
+        auto customStorePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation));
+        QString currentCustomSettingPath = customStorePath.absoluteFilePath("setting");
+        auto upperDir = customStorePath;
+        upperDir.cdUp();
+        
+        QString upgradeFile = customStorePath.absoluteFilePath("../../AnkerSlicer/_DO_NOT_DELETE_SETTING_MOVED.log");
+        QString oldCustomDir = customStorePath.absoluteFilePath("../../AnkerSlicer");
+        if(upperDir.dirName().toLower() == "ankermake"
+           && customStorePath.exists(oldCustomDir)
+           && !QFile::exists(upgradeFile))
+        {
+            AkUtil::TInfo("auto update begin, move the AnkerSlicer/AnkerMake_64bit_fp/setting to AnkerMake/AnkerMake_64bit_fp/setting ....");
+            
+            QString settingPath = "";
+            AkUtil::IoApi::getPath(oldCustomDir,"setting", settingPath);
+            if (!settingPath.isEmpty())
+            {
+                AkUtil::IoApi::copyDir(settingPath, currentCustomSettingPath, true, true);
+                AkUtil::IoApi::touch(upgradeFile);
+                AkUtil::TInfo("auto update end, copy setting from " + settingPath +  " -> " + currentCustomSettingPath);
+            }
+        }
+        else
+        {
+            AkUtil::TInfo("Don't have to do the setting profiles moving... ");
+        }
+        
+
 
 		
 		//qDebug()<< "enter initGui" ;
@@ -430,10 +460,9 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getOpenFileName(
 				nullptr,
-                QString::fromLocal8Bit("Import ini config file"),
+                tr("Import ini config file"),
 				QString(),
 				QString("Ini File(*.ini)"));
-            qDebug() << QString::fromLocal8Bit("Import ini config file \t") << fileName;
 			return fileName;
 		};
 
@@ -441,10 +470,9 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getSaveFileName(
 				nullptr,
-                QString::fromLocal8Bit("Export ini config file"),
+                tr("Import ini config file"),
 				QString(),
 				QString("Ini File(*.ini)"));
-            qDebug() << QString::fromLocal8Bit("Export ini config file \t") << fileName;
 			return fileName;
 		};
 

@@ -69,16 +69,14 @@ FdmGcodePreviewEntry::FdmGcodePreviewEntry()
 
 FdmGcodePreviewEntry::~FdmGcodePreviewEntry()
 {
-    if(this->ww != nullptr){
-        delete  ww;
-        ww = nullptr;
-    }
+    AkUtil::TFunction("");
+    
 }
 
 //void FdmGcodePreviewEntry::createView(int argc, char *argv[])
 void FdmGcodePreviewEntry::createView(QStringList& args)
 {
-    //QCoreApplication::setOrganizationName("AnkerSlicer");
+    //QCoreApplication::setOrganizationName("AnkerMake");
     //QString appName = QString("AnkerMake_%1bit_fp").arg(QString::number(QSysInfo::WordSize));
     //QCoreApplication::setApplicationName(appName);
 
@@ -126,7 +124,6 @@ void FdmGcodePreviewEntry::createView(QStringList& args)
     {
         QOffscreenSurface surf;
         surf.create();
-
         QOpenGLContext ctx;
         ctx.create();
         ctx.makeCurrent(&surf);

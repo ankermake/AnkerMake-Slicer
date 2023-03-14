@@ -20,4 +20,7 @@ class fdmRpc
     PROP(int linkNum);
     PROP(QString oStlName);
     PROP(bool isAiMode = true);
+    PROP(bool loggingStatus = false);
+    PROP(float gcodeTotalTime = false);
+    PROP(float gcodeTotalFilament = false);
 }

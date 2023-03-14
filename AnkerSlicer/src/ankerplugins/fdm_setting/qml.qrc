@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>qml/BaseControl/BaseComboBox.qml</file>
         <file>qml/BaseControl/DefaultComboBox.qml</file>
-        <file>qml/BaseControl/BaseRadio.qml</file>
         <file>qml/BaseControl/SwitchButton.qml</file>
         <file>qml/FdmParameter/CategoryItem.qml</file>
         <file>qml/FdmParameter/ParamCheckBox.qml</file>
@@ -29,5 +28,8 @@
         <file>qml/PreferenceSettings/ParamComboBox.qml</file>
         <file>qml/PreferenceSettings/ParamTextField.qml</file>
         <file>qml/BaseControl/BaseTextEdit.qml</file>
+        <file>qml/BaseControl/BaseListView.qml</file>
+        <file>qml/PreferenceSettings/PrinterPage.qml</file>
+        <file>qml/PreferenceSettings/ExtruderPage.qml</file>
     </qresource>
 </RCC>

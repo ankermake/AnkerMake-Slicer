@@ -40,6 +40,9 @@ public:
     void setInitValue(double value);
     void setOnlyValue(double value);
 
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
 signals:
     void rotateValueChangedSignal(double value, RotateChangedType type);
 

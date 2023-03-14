@@ -92,6 +92,7 @@ public:
     void selectProfile(QString name);
     void selectMachine(QString name);
     void selectMaterial(QString name);
+    void selectNozzle(QString name);
 
     void applySimpleModeData();
     void setDefaultValueFromExpertMode();

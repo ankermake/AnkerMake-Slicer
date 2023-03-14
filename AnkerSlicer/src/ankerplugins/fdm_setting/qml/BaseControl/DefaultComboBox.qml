@@ -1,81 +1,38 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
+
+import "../BaseControl" as BaseControl
+
 ComboBox {
     id: combox
     implicitHeight: 30
-//    delegate: ItemDelegate {
-//        width: combox.width
-//        contentItem: Rectangle {
-//            Component.onCompleted:  {
-//                console.log("listview = " ,listview.model/*.model.get(index).key*/,"type ==",typeof(listview.model))
-//            }
-//            anchors.fill: parent
-//            radius: 4
-//            color:  "transparent"
-//           // color: control.highlightedIndex === index ? "#61D37D" :"transparent"
-//            anchors.margins: 12
-
-//            RowLayout {
-//                id :combLayout
-//                anchors.left: parent.left
-//                anchors.right: parent.right
-//               // anchors.top: .bottom
-//                Label {
-//                    id:myText
-//                   // text: listview.model.model.get(index).value
-//                    Layout.fillWidth: true
-//                    font.weight: Font.Bold
-//                    color: combox.highlightedIndex === index ? "#333333": "#FFFFFF"
-//                    // font: control.font
-//                    elide: Text.ElideRight
-//                    verticalAlignment: Text.AlignVCenter
-//                }
-
-
-//            }
-//        }
-//        highlighted: combox.highlightedIndex === index
-//    }
+    property int listViewItemHeight: 40
+    property int maxItemCount: 5
     delegate: ItemDelegate {
-           implicitWidth: combox.implicitWidth
-//           implicitHeight: combox.implicitHeight
-           width: combox.width
-           contentItem: Text {
-               text: combox.textRole
-                     ? (Array.isArray(combox.model)
-                        ? modelData[combox.textRole]
-                        : model[combox.textRole])
-                     : modelData
-               color: "#FFFFFF"
-               elide: Text.ElideRight
-               renderType: Text.NativeRendering
-               verticalAlignment: Text.AlignVCenter
-                horizontalAlignment: Text.AlignLeft
-           }
-           hoverEnabled: combox.hoverEnabled
-           background: Rectangle{
-               //radius: control.radius
-               color: (combox.highlightedIndex === index) ? "#61D37D" :"transparent"
-//               Rectangle{
-//                   height: 1
-//                   width: parent.width
-//                   anchors.bottom: parent.bottom
-//                   color: "red"
-//               }
-           }
-       }
+        height: listViewItemHeight
+        width: combox.width
+        contentItem: Text {
+            text: combox.textRole ? ((Array.isArray(combox.model) ? modelData[combox.textRole] : model[combox.textRole])): modelData
+            color: "#FFFFFF"
+            elide: Text.ElideRight
+            renderType: Text.NativeRendering
+            verticalAlignment: Text.AlignVCenter
+            horizontalAlignment: Text.AlignLeft
+        }
+        hoverEnabled: combox.hoverEnabled
+        background: Rectangle{
+            color: (combox.highlightedIndex === index) ? "#61D37D" :"transparent"
+        }
+    }
 
     background: Rectangle {
-        // visible: control.enabled && control.editable && !control.flat
-      //  border.width:  1
         border.color: combox.hovered  ? "#71D78A" : (combox.pressed ? "#71D78A" : "#51545F")
-        border.width: 1 /*combox.hovered ? 1 : ( combox.pressed ? 1 : 0 )*/
+        border.width: 1
         color: "transparent"
         radius: 4
     }
     contentItem: Rectangle {
-        //anchors.fill: parent
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: name.left
@@ -86,11 +43,10 @@ ComboBox {
         Text {
             anchors.fill: parent
             text: combox.displayText
-            //font: combox.font
             horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignVCenter
             color: combox.enabled == true ? "#FFFFFF" : "#666666"
-             elide: Text.ElideRight
+            elide: Text.ElideRight
         }
     }
     indicator:Image {
@@ -101,52 +57,31 @@ ComboBox {
     }
 
     popup: Popup {
-        y: combox.height - 1
+        id:pop
+        y: combox.height + 4
         width: combox.width
-        implicitHeight:/* listview.contentHeight*/ combox.delegateModel.count < 6 ? 40 * combox.delegateModel.count : 40 * 6
-        padding: 1
-
+        property int extraHeight: 8;
+        implicitHeight:combox.delegateModel.count < maxItemCount ? (listViewItemHeight * combox.delegateModel.count + extraHeight ) : (listViewItemHeight * maxItemCount + extraHeight )
+        padding: 0
+        bottomInset: 0
+        topInset: 0
+        background: Rectangle {
+          color: "transparent"
+        }
         contentItem: Rectangle{
-             color: "#3A3B3F"
-           // color: "#3A3B3F"
-            ListView {
+           color: "#3A3B3F"
+            radius: 4
+             BaseControl.BaseListView {
                 id: listview
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                spacing: 0
-                height:  combox.delegateModel.count < 6 ? 40 * combox.delegateModel.count : 40 * 6
-                ScrollBar.vertical:  ScrollBar{
-                    policy: ScrollBar.AsNeeded
-                    anchors.right: listview.right
-                    width: 6
-                    active: true
-                    contentItem: Rectangle {
-                        radius: width/2
-                        color: '#D6D6D6'
-                    }
-                }
+                anchors.fill: parent
+                anchors.topMargin: 4
+                anchors.bottomMargin: 4
+                anchors.leftMargin: 0
+                anchors.rightMargin: 0
+                itemHeight: listViewItemHeight
                 clip: true
                 model: combox.popup.visible ? combox.delegateModel : null
                 currentIndex: combox.highlightedIndex
-                //ScrollIndicator.vertical: ScrollIndicator { }
-//                delegate: Rectangle
-//                {
-//                    anchors.fill: parent
-//                    radius: 4
-//                    color:  "transparent"
-//                    // color: control.highlightedIndex === index ? "#61D37D" :"transparent"
-//                    anchors.margins: 12
-
-//                    Label {
-//                        text: modelData
-//                        anchors.fill: parent
-//                        color: /*combox.highlightedIndex == index ? "#999999": */"#FFFFFF"
-//                        // font: control.font
-//                        //elide: Text.ElideRight
-//                        //verticalAlignment: Text.AlignVCenter
-//                    }
-//                }
             }
         }
     }

@@ -20,7 +20,7 @@ public:
 
     IoApi();
     static QFileInfoList getFiles(QString path,QStringList filters,SearchOption option);
-    static bool copyDir(QString path,QString destPath, bool coverFileIfExist);
+    static bool copyDir(QString path,QString destPath, bool coverFileIfExist,bool failedContinue = true);
     static bool write(QString fileName,QString info, QFile::OpenModeFlag flag);
     static bool append(QString fileName, QString info);
     static bool write(QString fileName, QString info);
@@ -45,6 +45,7 @@ public:
     static QString subContent(QString fileName, QString startWords, QString endWords, bool trimStartWords, QString encode = "UTF-8");
     static QList<QByteArray> splite(QByteArray array, int len);
     static QString mergeStr(QString content, QString trim);
+    static void getPath(QString path, QString folderName, QString& destPath);
 };
 AK_UTIL_NAME_SPACE_END
 

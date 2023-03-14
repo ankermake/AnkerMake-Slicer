@@ -34,6 +34,7 @@
 #include "common/GeoAndShow/CHPointShowObj.h"
 #include "CHModelRotationTransformParamsSetUI.h"
 #include "common/GeoAndShow/CHAssembly.h"
+#include "common/GeoAndShow/CHScene.h"
 
 
 DEF_PTR(CHLocalCoordinateAxis)
@@ -63,7 +64,8 @@ public:
 
 public:
     void create(QVector3D center, double rad, QVector3D nor, QVector3D refVec);
-
+    QVector3D getOriginCenter() const;
+    QVector3D getCurrentCenter() const;
 
 public:
     
@@ -108,6 +110,7 @@ private:
     void refreshRotationFrame();
 
     void submitToUI();
+    void resetSelectedRotate();
 
 
 private:

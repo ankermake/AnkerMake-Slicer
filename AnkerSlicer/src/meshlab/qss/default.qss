@@ -1,13 +1,5 @@
 
 
-QPushButton{
-    border: 0px;
-    border-radius:4;
-    background-color:#3A3B3F;
-    color:#FFFFFF;
-    font-size:16px
-}
-
 QToolButton#titleCloseButton{
     background-color:#404249;
     color:#FFFFFF;
@@ -15,6 +7,14 @@ QToolButton#titleCloseButton{
 QToolButton#titleCloseButton:hover{
     background-color:#4E5058;
     color:#FFFFFF;
+}
+
+QPushButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#3A3B3F;
+    color:#FFFFFF;
+    font-size:16px
 }
 QPushButton:hover{
     color:#71D78A;
@@ -60,7 +60,7 @@ QPushButton#hightButton:pressed, #m_signIn:pressed, #m_printBtn:pressed, #PrintB
     background-color:#61D37D;
      color:#FFFFFF;
 }
-QPushButton#hightButton:disabled,#m_signIn:disabled{
+QPushButton#hightButton:disabled,#m_signIn:disabled, #m_printBtn:disabled{
     background-color:#3A3B3F;
     color: #696969;
 }
@@ -378,7 +378,24 @@ QWidget#deviceWraper {
 customTitle  {
     background-color: #343539;
 }
+QPushButton#listItemButton{
+    border: 0px;
+    border-radius:0;
+    background-color:#343539;
+    font-size:14px
+}
 
+QPushButton#listItemButton:checked{
+    border: 0px;
+    border-radius:0;
+    background-color:#5C5E66;
+    font-size:14px
+}
+
+QPushButton:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
 /**********************************network*********************************************************************/
 
 QWidget#netWorkMainWidget {

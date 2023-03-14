@@ -14,7 +14,9 @@
 #include "utils/math.h"
 #include "utils/polygonUtils.h"
 
+
 #define MIN_AREA_SIZE (0.4 * 0.4)
+#define MIN_REMOVE_INSETX 3*3
 
 namespace cura
 {
@@ -338,6 +340,7 @@ void SkinInfillAreaComputation::applySkinExpansion(const Polygons& original_outl
  */
 void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerPart* part)
 {
+
     for (SkinPart& skin_part : part->skin_parts)
     {
         // Do not generate insets if the Bottom Pattern Initial Layer (for layer 0) and the Top/Bottom Layer Pattern
@@ -345,7 +348,45 @@ void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerP
         if ((layer_nr == 0 && mesh.settings.get<EFillMethod>("top_bottom_pattern_0") != EFillMethod::CONCENTRIC)
             || (layer_nr > 0 && mesh.settings.get<EFillMethod>("top_bottom_pattern") != EFillMethod::CONCENTRIC))
         {
-            generateSkinInsets(skin_part);
+
+            //2022/11/07 top_surface Binary: Top skin not need insets,
+            auto poly = Polygons();
+            if (layer_nr < mesh.layers.size() - 1)
+            {
+                poly = skin_part.outline.difference(mesh.layers[layer_nr + 1].getOutlines());
+            }
+            //if((layer_nr<mesh.layers.size() && (poly.size()==0))
+            //    ||!mesh.settings.get<bool>("top_surface_one_wall"))
+            if (!(mesh.settings.get<bool>("top_surface_one_wall") && (poly.size() > 0 || layer_nr == mesh.layers.size() - 1)))
+            {
+                generateSkinInsets(skin_part);
+            }
+            else
+            {
+                //shrink top surface inner wall insets only live one wall
+                size_t wall_count = mesh.settings.get<size_t>("wall_line_count");
+                coord_t skin_outline_offset = mesh.settings.get<coord_t>("wall_line_width_x") * (wall_count - 1);
+                if (wall_count > 1)
+                {
+                     //shrink or remove the inner insets usr skin instead
+                   // part->insets.erase(part->insets.begin() + 1, part->insets.end());
+                    auto insetoutline = part->insets[0].difference(skin_part.outline.offset(skin_outline_offset));
+                    insetoutline.removeSmallAreas(MIN_REMOVE_INSETX);
+                    auto skin_outline = part->insets[0].difference(insetoutline);
+                    for (size_t wall_no = 1; wall_no < wall_count; ++wall_no)
+                    {
+                        //inner wall cut the skin_part areas
+                        auto polys = part->insets[wall_no].difference(skin_part.outline.offset(skin_outline_offset));
+                        polys.removeSmallAreas(MIN_REMOVE_INSETX);
+
+                        skin_outline.add(part->insets[wall_no].difference(polys));
+                        part->insets[wall_no].clear();
+                        part->insets[wall_no].add(polys);
+                    }
+                    skin_part.outline.clear();
+                    skin_part.outline.add(skin_outline.unionPolygons());
+                }
+            }
         }
         generateInnerSkinInfill(skin_part);
     }

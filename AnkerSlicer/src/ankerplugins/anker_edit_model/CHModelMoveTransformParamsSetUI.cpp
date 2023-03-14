@@ -38,7 +38,6 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_resetButton->setMinimumWidth(30);
     m_resetButton->setMinimumHeight(30);
     connect(m_resetButton, &QToolButton::clicked, this, &CHModelMoveTransformParamsSetUI::reset);
-
     //int left, int top, int width, int height
     QHBoxLayout* hblaout1 = new QHBoxLayout;
     hblaout1->addWidget(m_moveLabel);
@@ -88,7 +87,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
 
     m_xMoveBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
     m_xMoveBox->setAutoFillBackground(true);
-    m_xMoveBox->setSuffix("mm");
+    m_xMoveBox->setSuffix(" mm");
 
     QLabel* yLogo = new QLabel;
     QPixmap yLogoPixmap(":/images/fdm_move_y_icon_u.png");
@@ -112,7 +111,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_yMoveBox->setMinimumHeight(30);
     m_yMoveBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
     m_yMoveBox->setAutoFillBackground(true);
-    m_yMoveBox->setSuffix("mm");
+    m_yMoveBox->setSuffix(" mm");
 
     QHBoxLayout* yhlayout = new QHBoxLayout;
     yhlayout->addWidget(yLogo);
@@ -145,7 +144,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_zMoveBox->setMinimumWidth(110);
     m_zMoveBox->setMinimumHeight(30);
     m_zMoveBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
-    m_zMoveBox->setSuffix("mm");
+    m_zMoveBox->setSuffix(" mm");
     m_zMoveBox->setAutoFillBackground(true);
 
     QHBoxLayout* zhlayout = new QHBoxLayout;
@@ -178,7 +177,6 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     mainblaout->setStretch(3, 30);
     mainblaout->setStretch(4, 30);
     mainblaout->setStretch(5, 14);
-
     m_xMoveBox->setDecimals(2);
     m_xMoveBox->setMaximum(MAXNUM);
     m_xMoveBox->setMinimum(MINNUM);//moveValuesChangedSlot
@@ -288,7 +286,7 @@ void CHModelMoveTransformParamsSetUI::changeEvent(QEvent * event)
             m_moveLabel->setText(tr("Move"));
         }
         if (m_keepLabel != nullptr) {
-            m_keepLabel->setText(tr("Keeping Lay On Panel"));
+            m_keepLabel->setText(tr("Place On Bed"));
         }
     }
 }

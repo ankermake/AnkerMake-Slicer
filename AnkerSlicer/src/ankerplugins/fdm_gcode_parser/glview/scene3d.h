@@ -122,6 +122,8 @@ public:
     void getBoxPoints(const BoxType& box, std::vector<QVector3D>& points);
     void getBoxPoints(const CHAABB3D& box, std::vector<QVector3D>& points);
 
+    CHAABB3D getMainbox() const;
+
     void setEye(float x, float y, float z);
     void setUp(float x, float y, float z);
     void setRefTranPoint(float x, float y, float z);

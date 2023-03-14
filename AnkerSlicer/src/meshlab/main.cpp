@@ -23,13 +23,13 @@
 #include <common/mlapplication.h>
 #include <common/GLExtensionsManager.h>
 #include <QMessageBox>
-#include "mainwindow.h"
+//#include "mainwindow.h"
 #include "translator.h"
 #include <QGLFormat>
 #include <QSurfaceFormat>
 #include <QString>
 #include <QTextCodec>
-
+#include <QOffscreenSurface>
 #include <clocale>
 #ifdef _WIN32
 #include <windows.h>
@@ -46,9 +46,9 @@
 #include "common/Socket/HeartBeatThead.h"
 
 #ifdef _WIN32
-#define ANKERMAKE_EXE "AnkerSlicer.exe"
+#define ANKERMAKE_EXE "AnkerMake.exe"
 #elif __APPLE__
-#define ANKERMAKE_EXE "AnkerSlicer.app"
+#define ANKERMAKE_EXE "AnkerMake.app"
 #endif
 
 char LocalSeverName[]="AnkerMakerLocalServer";
@@ -78,6 +78,21 @@ void wait(unsigned int TimeMS);
 
 int main(int argc, char *argv[]){
 
+//    MeshLabApplication app(argc, argv);
+
+//    int clearLogCreatedMoreThanXDays = 5;
+//    QString logPath = TLogger::instance()->getLogPath();
+//    QStringList filter;
+//    filter << "*.log";
+//    QSet<QString> excludeSet;
+//    IoApi::clearFilesUnderPath(clearLogCreatedMoreThanXDays*24*60*AkConst::Time::MINUTE_SECOND, logPath, filter,excludeSet);
+
+//    AkUtil::TWarning("\n\n\n\n");
+//    QString dbgStr;
+//    {QDebug debug(&dbgStr); debug.noquote(); for(int i=0; i<argc;++i){debug<<argv[i];} qDebug() << dbgStr;}
+//    AkUtil::TWarning(dbgStr);
+//    TDebug("Application exec Start...");
+
     
     {
         bool ret = false;
@@ -91,9 +106,10 @@ int main(int argc, char *argv[]){
         ret &= outputStr.count(ANKERMAKE_EXE) > 1; 
         qDebug() << "outputStr: " << outputStr;
 #elif __APPLE__
-/*         std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE_EXE).toStdString() + " |grep -v grep |awk '{print $2}'";
+        std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE_EXE).toStdString() + " |grep -v grep |awk '{print $2}'";
         const char* strFindName = strCmd.c_str();
         FILE *pPipe = popen(strFindName, "r");
+        int count = 0;
         if(pPipe != NULL)
         {
             char name[512] = { 0 };
@@ -103,12 +119,15 @@ int main(int argc, char *argv[]){
                 if(nLen > 0 && name[nLen - 1] == '\n')
                 {
                     name[nLen - 1] = '\0';
-                    ret = true;
-                    break;
+                    count++;
                 }
             }
+            if(count > 1)
+            {
+                ret = true;
+            }
             pclose(pPipe);
-        } */
+        }
 #endif
         if(ret)
         {
@@ -127,7 +146,7 @@ int main(int argc, char *argv[]){
                     for(int i=1; i<argc;++i)
                     {
                         wait(500);
-                        client.sendMessage(QString::fromLocal8Bit(argv[i]));
+                        client.sendMessage(QString::fromLocal8Bit(argv[i]).replace("\\", "/"));
                         qDebug() <<"tell the existing process to open:"<<QString::fromLocal8Bit(argv[i]) ;
                     }
                 }
@@ -153,11 +172,7 @@ int main(int argc, char *argv[]){
 
     }
 
-
     MeshLabApplication app(argc, argv);
-
-
-
     
     int clearLogCreatedMoreThanXDays = 5;
     QString logPath = TLogger::instance()->getLogPath();
@@ -203,7 +218,27 @@ int main(int argc, char *argv[]){
     file.open(QFile::ReadOnly);
     QString styleSheet = QString::fromLatin1(file.readAll());
     qApp->setStyleSheet(styleSheet);
-
+#ifdef __APPLE__
+#else
+    //query the version of opengl ,and
+    QString openglVersion;
+    {
+        QOffscreenSurface surf;
+        surf.create();
+        QOpenGLContext ctx;
+        ctx.create();
+        ctx.makeCurrent(&surf);
+        openglVersion = QString::fromStdString((const char*)ctx.functions()->glGetString(GL_VERSION));
+    }
+    QStringList glVersion = openglVersion.split(u' ')[0].split(u'.');
+    AkUtil::TWarning("openglVersion :"+openglVersion);
+    assert(glVersion.size() >= 2);
+    if(glVersion[0].toInt() <= 3 && glVersion[1].toInt() < 3){
+        control::MessageDialog a("notice",QObject::tr("Sorry, the version of OpenGL is too low, please upgrade the graphics driver."), control::MessageDialog::BUTTONFLAG::OK);
+        bool re = a.exec();
+        return 0;
+    }
+#endif
     bool flag = setting.getAcceptUserAgreement();
     if(!flag) {
         UserAgreementWidget userAgreementWidget;
@@ -212,7 +247,7 @@ int main(int argc, char *argv[]){
         int i = userAgreementWidget.exec();
         if(i == QDialog::Rejected) {
             setting.setAcceptUserAgreement(false);
-            return -1;
+            return 0;
         }
         setting.setAcceptUserAgreement(true);
     }
@@ -236,20 +271,25 @@ int main(int argc, char *argv[]){
     }
 
     window->showMaximized();
+    app.processEvents();
 
     // click .stl startup exe
     QStringList argvFileList;
     for(int i=1; i<argc;++i)
     {
-       argvFileList.append(QString::fromLocal8Bit(argv[i]));
+       argvFileList.append(QString::fromLocal8Bit(argv[i]).replace("\\", "/") );
     }
+#ifdef _WIN32
+
+#elif __APPLE__
+    argvFileList = app.fileList;
+#endif
     window->openFileList(argvFileList);
+    QObject::connect(&app, &MeshLabApplication::openFileSignal, window.get(), &AnkerMainWindow::openFileFromAppRaram, Qt::QueuedConnection);
 
-    LocalServer server;
-    QObject::connect(&server, &LocalServer::processArgvfileNameMsg, window.get(), &AnkerMainWindow::openFileList);
-    server.RunServer(LocalSeverName);
-
-    app.processEvents();
+//    LocalServer server;
+//    QObject::connect(&server, &LocalServer::processArgvfileNameMsg, window.get(), &AnkerMainWindow::openFileList);
+//    server.RunServer(LocalSeverName);
 
 	return app.exec();
 }

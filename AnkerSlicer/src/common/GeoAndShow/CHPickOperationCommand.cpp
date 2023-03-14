@@ -182,7 +182,6 @@ void CHPickOperationCommand::mouseMoveEvent(QMouseEvent* event)
 
         CHMeshShowObjPtr pickModel = nullptr;
         float minDis = FLT_MAX;
-
         for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
         {
             
@@ -224,7 +223,6 @@ void CHPickOperationCommand::mouseMoveEvent(QMouseEvent* event)
     }
 
     CHMeshShowObjPtr pickModel = pickMeshes();
-
     if (pickModel && pickModel->getStatus() == general)
     {
         pickModel->setStatus(canPicked);
@@ -312,8 +310,10 @@ void CHPickOperationCommand::keyPressEvent(QKeyEvent* event)
 void CHPickOperationCommand::doWithFileListPickedChanged()
 {
     m_selectedObjs.clear();
+    //qDebug() << "doWithFileListPickedChanged.";
     for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
     {
+        //qDebug() << "name: " << getDoc()->m_printObjs[i]->getObjectName() << ", status: " << getDoc()->m_printObjs[i]->getStatus();
         if (getDoc()->m_printObjs[i]->getStatus() == selected)
         {
             m_selectedObjs.insert(getDoc()->m_printObjs[i]);
@@ -520,26 +520,24 @@ void CHPickOperationCommand::pasteObjs()
         {
             ttt->m_rotCenter = ttt->getBaseAABB().getCenterPoint();
             ttt->m_params.resize(9);
-            for (int k = 0; k < 3; k++)
+            for (int k = 0; k < 9; k++)
             {
-                ttt->m_params[k] = 1;
-            }
-            for (int k = 3; k < 9; k++)
-            {
-                ttt->m_params[k] = 0;
+                ttt->m_params[k] = m_copiedObjs[i]->m_params[k];
             }
         }
         float yOffset = 20;
         ttt->m_params[7] += yOffset;
+        ttt->m_rotCenter[1] += yOffset;
         ttt->setTransform(CHBaseAlg::instance()->calTransformFromParams(ttt->m_rotCenter, ttt->m_params));
         ttt->m_realAABB.m_Ymin += yOffset;
         ttt->m_realAABB.m_Ymax += yOffset;
-
+        ttt->m_baseAABB.m_Ymax += yOffset;
+        ttt->m_baseAABB.m_Ymin += yOffset;
+        //ttt->m_baseAABB = ttt->m_realAABB;
         ttt->m_initParams = ttt->m_params;
         ttt->m_initTransform = ttt->getTransform();
         ttt->isSceneIn(ttt->getRealAABB(), getDoc()->m_machineBox->getBaseAABB());
         ttt->updateToScene();
-
         meshes.push_back(ttt);
     }
     if(meshes.size() > 0)

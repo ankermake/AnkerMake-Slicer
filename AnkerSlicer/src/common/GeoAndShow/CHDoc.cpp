@@ -134,7 +134,6 @@ CHDoc::~CHDoc()
 
 bool CHDoc::writeVisibleMeshesToStlFile(const QString& path, bool binary)
 {
-    qDebug() << "enter writeVisibleMeshesToStlFile.size is ";
     if (m_printObjs.size() == 0)
     {
         return false;
@@ -310,6 +309,7 @@ bool CHDoc::writeAllMeshModelsToStlFile(const QString& path, bool binary)
 }
 
 void CHDoc::clearDocMeshModels()
+
 {
     for (int i = 0; i < m_printObjs.size(); i++)
     {
@@ -320,6 +320,8 @@ void CHDoc::clearDocMeshModels()
 
     emit modelObjsStatusChanged(ModelStatusChangedType::ClearDoc);
     calcVisibleModelCount();
+    
+    modelCheckSceneIn();
 }
 
 void CHDoc::resetAllMeshModels()
@@ -374,6 +376,7 @@ void CHDoc::deleteObj(CH3DPrintModelPtr obj)
 }
 
 void CHDoc::addObjs(std::vector<CH3DPrintModelPtr> objs)
+
 {
     
     for (int i = 0; i < objs.size(); i++)
@@ -444,6 +447,8 @@ void CHDoc::addObjs(std::vector<CH3DPrintModelPtr> objs)
 
     emit modelObjsStatusChanged(ModelStatusChangedType::AddMesh);
     calcVisibleModelCount();
+    
+    modelCheckSceneIn();
 }
 
 void CHDoc::addObj(CH3DPrintModelPtr obj)
@@ -460,20 +465,7 @@ void CHDoc::appendObj(CH3DPrintModelPtr obj)
 }
 
 void CHDoc::setObjsVisuable(std::vector<CH3DPrintModelPtr> objs, bool visual)
-{
-    for (int i = 0; i < objs.size(); i++)
-    {
-        if (objs[i] != nullptr)
-        {
-            objs[i]->setVisuable(visual);
-        }
-    }
 
-    emit modelObjsStatusChanged(ModelStatusChangedType::VisuableChanged);
-    calcVisibleModelCount();
-}
-
-void CHDoc::setObjsVisuable(std::vector<CHMeshShowObjPtr> objs, bool visual)
 {
     for (int i = 0; i < objs.size(); i++)
     {
@@ -486,6 +478,26 @@ void CHDoc::setObjsVisuable(std::vector<CHMeshShowObjPtr> objs, bool visual)
 
     emit modelObjsStatusChanged(ModelStatusChangedType::VisuableChanged);
     calcVisibleModelCount();
+    
+    modelCheckSceneIn();
+}
+
+void CHDoc::setObjsVisuable(std::vector<CHMeshShowObjPtr> objs, bool visual)
+
+{
+    for (int i = 0; i < objs.size(); i++)
+    {
+        if (objs[i] != nullptr)
+        {
+            objs[i]->setVisuable(visual);
+            objs[i]->updateToScene();
+        }
+    }
+
+    emit modelObjsStatusChanged(ModelStatusChangedType::VisuableChanged);
+    calcVisibleModelCount();
+    
+    modelCheckSceneIn();
 }
 
 void CHDoc::setObjVisuable(CHMeshShowObjPtr obj, bool visual)
@@ -518,7 +530,9 @@ void CHDoc::resetObjs(std::vector<CH3DPrintModelPtr> objs)
     emit modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
 }
 
+
 void CHDoc::calcVisibleModelCount()
+
 {
     int count =0;
     for (int i = 0; i < m_printObjs.size(); i++)
@@ -530,13 +544,22 @@ void CHDoc::calcVisibleModelCount()
     }
 
     emit visibleModelCountChanged(count);
+
 }
 
-void CHDoc::modelCheckSceneIn()
+void CHDoc::modelCheckSceneIn() 
 {
+    
+    
     bool allInPrintBox = true;
+    int visuableCount = 0;
     for(int i = 0; i < m_printObjs.size(); i++)
     {
+        if(!m_printObjs[i] -> getVisuable()) 
+        {
+            continue;
+        }
+        visuableCount++;
         
         //m_printObjs[i]->isSceneIn(m_printObjs[i]->getRealAABB(), m_machineBox->m_baseAABB);
         auto printAABB = m_printObjs[i]->getRealAABB();
@@ -552,15 +575,12 @@ void CHDoc::modelCheckSceneIn()
         }
         m_printObjs[i]->isSceneIn(printAABB, m_machineBox->m_baseAABB);
         allInPrintBox = allInPrintBox && m_printObjs[i]->getIsSceneIn();
+
     }
-    if(m_printObjs.size() > 0)
+    if(visuableCount > 0)
     {
         emit modelOutOfRangeChanged(allInPrintBox);
     }
-    //else
-    //{
-    //    emit modelOutOfRangeChanged(false);
-    //}
 }
 
 

@@ -137,7 +137,13 @@ void FdmParameterProfile::updateMaterial(FdmMaterialProfile *profile)
     setModifyTimeNow();
 }
 
-
+void FdmParameterProfile::updateNozzleSize(double nozzleSize)
+{
+    FdmSettingItem IdxItem;
+    IdxItem.name = AkConst::SettingKey::MACHINE_NOZZLE_SIZE;
+    IdxItem.value = nozzleSize;
+    setSetting(AkConst::Category::MACHINE_SETTINGS, IdxItem);
+}
 
 QString FdmParameterProfile::getMachineName()
 {
@@ -160,6 +166,18 @@ QString FdmParameterProfile::getMaterialName()
     }
     return akMaterialName.toString();
 }
+
+//
+double FdmParameterProfile::getNozzleSize()
+{
+    auto nozzleSizeVar = getSetting(AkConst::Category::MACHINE_SETTINGS, AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
+    if (nozzleSizeVar.isNull())
+    {
+        return 0.4;
+    }
+    return nozzleSizeVar.toDouble();
+}
+
 
 void FdmParameterProfile::setMachineName(QString name)
 {

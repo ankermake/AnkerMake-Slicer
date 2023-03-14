@@ -9,7 +9,7 @@
 #include <qthreadpool.h>
 namespace  control{
 FdmMainWidget::FdmMainWidget(MessageProcessing *messageProcessing, customTitle *title, ControlManager *controlManager, QWidget *parent)
-    : QWidget(parent),
+    : BubbleWidget(parent),
       m_messageProcessing(messageProcessing),
       m_controlManager(controlManager),
       m_tabWidget(new BaseTabWidget(this)),
@@ -20,12 +20,13 @@ FdmMainWidget::FdmMainWidget(MessageProcessing *messageProcessing, customTitle *
 
 FdmMainWidget::~FdmMainWidget()
 {
-    qDebug() << "~FdmMainWidget.";
 }
 
 void FdmMainWidget::initWindow(ControlManager *controlManager)
 {
     AkUtil::TFunction("");
+    this->setBackgroundColor(QColor("#343539"));
+    this->setRadius(0);
     QGridLayout *gridLayout = new QGridLayout(this);
     setLayout(gridLayout);
     gridLayout->setSpacing(0);
@@ -58,7 +59,7 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
         m_gcodeWidget = qobject_cast<QWidget *>(object);
         if(m_gcodeWidget != nullptr)
         {
-            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/previewTab.png"), tr("Preview"));
+            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/previewTab.png"), tr("Preview"), 1);
             connect(m_tabWidget,SIGNAL(currentChanged(int)),m_gcodeWidget,SLOT(pauseGcodePlay(int)));
         }
     });
@@ -79,12 +80,13 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     connect(m_messageProcessing,&MessageProcessing::networkSendWid2AnkerMake,[=](QObject *object){
         AkUtil::TFunction("");
         m_netWorkWidget = qobject_cast<QWidget *>(object);
+         qDebug() <<" add tab networkWidget";
         QString str;
         QDebug(&str) << "m_netWorkWidget: " << m_netWorkWidget << ", object: " << object;
         AkUtil::TDebug("network insert tab widget display: " + str);
         if(m_netWorkWidget != nullptr)
         {
-            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/deviceTab.png"), tr("Device"));
+            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/deviceTab.png"), tr("Device"), 2);
         }
 
         //WId _wid = wid.toInt();
@@ -193,8 +195,9 @@ void FdmMainWidget::initTool()
     m_recentMenu = m_menuFile->addMenu(QIcon(), tr("Open Recent"));
 
     createRecentProject(m_settings.readRecent(), m_recentMenu);
-    m_exportMenu = m_menuFile->addMenu(QIcon(), tr("Export..."));
+    m_exportMenu = m_menuFile->addMenu(QIcon(), tr("Export"));
     m_exportAllObjectAction = m_exportMenu->addAction(QIcon(), tr("All Objects"), this, &FdmMainWidget::saveAllMesh);
+    connect(getDoc().get(), &CHDoc::visibleModelCountChanged, this, &FdmMainWidget::visibleModelCountChanged);
     m_exportSelectObjectAction = m_exportMenu->addAction(QIcon(), tr("Select Object"), this, &FdmMainWidget::saveMesh);
     //m_exportMenu->addAction(QIcon(), tr("G-code"));
     m_actionFileSave = m_menuFile->addAction(QIcon(), tr("Save"), this, &FdmMainWidget::slotSaveProject);
@@ -218,7 +221,7 @@ void FdmMainWidget::initTool()
     m_resetAllAction = m_resetMenu->addAction(QIcon(), tr("All Objects"), this, &FdmMainWidget::resetAllMeshModels);
     m_controlManager->addMenuToToolBar(m_menuEdit);
 
-    m_menuSetting = m_titleBar->addMenu(tr("Settings"));
+    m_menuSetting = m_titleBar->addMenu(tr("Setting"));
     //QMenu* menuSetting= new QMenu(tr("Setting"));
    // menuSetting->setIcon(QIcon(":/images/icon/fdm_tool_setting_icon_n.png"));
     //     QAction* languageAction = menuSetting->addAction(QIcon(), tr("Language"), this, &FdmMainWidget::openPreferencesDialog);
@@ -276,8 +279,8 @@ void FdmMainWidget::initTool()
      //m_controlManager->addMenuToToolBar(menuAccount,Qt::AlignRight);
     // QAction *accountAction = new QAction(tr("Account"));
     // m_titleBar->addAction(accountAction);
-//     m_accoutMenu = m_titleBar->addMenu(tr("Account"));
-//     m_accountAction = m_accoutMenu->addAction(QIcon(), tr("Account"));
+     m_accoutMenu = m_titleBar->addMenu(tr("Account"));
+     m_accountAction = m_accoutMenu->addAction(QIcon(), tr("Account"));
      connect(m_accountAction,&QAction::triggered,this, &FdmMainWidget::loginWidgetDisplaySlot);
      m_controlManager->addAction(m_accountAction,Qt::AlignRight);
 
@@ -326,6 +329,8 @@ void FdmMainWidget::initScene(QMdiArea* mdiarea)
             this, &FdmMainWidget::setButtonEnableByPickStatus);
     connect(docWindow->m_doc.get(), &CHDoc::modelObjsStatusChanged,
             this, &FdmMainWidget::setButtonEnableByDocument);
+    connect(docWindow->m_doc.get(), &CHDoc::visibleModelCountChanged,
+            this, &FdmMainWidget::setButtonEnableByVisible);
 
     connect(docWindow, &CHChildDocWindow::openFiles, this, &FdmMainWidget::fdmOpeFileList);
 
@@ -383,11 +388,14 @@ void FdmMainWidget::insertRecent(const QStringList &fileList)
 void FdmMainWidget::setActionEnble(bool enble)
 {
     m_exportSelectObjectAction->setEnabled(enble);
+   // m_exportAllObjectAction->setEnabled(enble);
     m_copyAction->setEnabled(enble);
     m_undo->setEnabled(enble);
     m_redo->setEnabled(enble);
     m_deleteSelectedObjectAction->setEnabled(enble);
+   // m_deleteAllObjectAction->setEnabled(enble);
     m_resetSelectedAction->setEnabled(enble);
+   // m_resetAllAction->setEnabled(enble);
 }
 
 
@@ -593,6 +601,7 @@ void FdmMainWidget::loginWidgetDisplayFeedBackSlot(qint64 cmdId, int result)
 
 void FdmMainWidget::setButtonEnableByPickStatus()
 {
+    // qDebug() << "setButtonEnableByPickStatus doc->m_printObjs.size()";
     auto pick = getGlobalPick();
     auto selected = pick.get()->m_selectedObjs;
     if (selected.size() <= 0) {
@@ -606,7 +615,7 @@ void FdmMainWidget::setButtonEnableByPickStatus()
 void FdmMainWidget::setButtonEnableByDocument()
 {
       auto doc = getDoc();
-     //qDebug() << "doc->m_printObjs.size() = " << doc->m_printObjs.size();
+     //qDebug() << "setButtonEnableByDocument doc->m_printObjs.size() = " << doc->m_printObjs.size();
 
     if (doc->m_printObjs.size() > 0) {
         m_exportAllObjectAction->setEnabled(true);
@@ -618,6 +627,23 @@ void FdmMainWidget::setButtonEnableByDocument()
         m_deleteAllObjectAction->setEnabled(false);
         m_resetAllAction->setEnabled(false);
     }
+}
+
+
+
+void FdmMainWidget::setButtonEnableByVisible(int visbleModelNumber)
+{
+    if (visbleModelNumber > 0) {
+        m_exportAllObjectAction->setEnabled(true);
+        m_deleteAllObjectAction->setEnabled(true);
+        m_resetAllAction->setEnabled(true);
+    }
+    else {
+        m_exportAllObjectAction->setEnabled(false);
+        m_deleteAllObjectAction->setEnabled(false);
+        m_resetAllAction->setEnabled(false);
+    }
+    // qDebug() << "setButtonEnableByVisible doc->m_printObjs.size() = ";
 }
 
 void FdmMainWidget::viewChanged(bool checked)
@@ -777,6 +803,13 @@ void FdmMainWidget::tabCurrentPageChanged(int index)
     }
    // qDebug() << " current ===" << m_tabWidget->currentIndex();
 }
+void FdmMainWidget::visibleModelCountChanged(int count)
+{
+    if(count <= 0)
+    {
+        m_exportAllObjectAction->setDisabled(true);
+    }
+}
 
 void FdmMainWidget::currentPageChanged(int index)
 {
@@ -811,6 +844,12 @@ void FdmMainWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         retranslateUi();
+        QVector<QString> TAB_TITLE = { tr("Slice"),
+                                     tr("Preview"),
+                                     tr("Device")};
+        for (int i = 0; i < TAB_TITLE.size(); i++) {
+            m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
+        }
     }
     QWidget::changeEvent(e);
 }
@@ -829,10 +868,10 @@ void FdmMainWidget::retranslateUi()
             m_actionFileSaveAs->setText(tr("Save as"));
         }
         if (m_recentMenu != nullptr) {
-            m_recentMenu->setTitle(tr("Open Recent..."));
+            m_recentMenu->setTitle(tr("Open Recent"));
         }
         if (m_exportMenu != nullptr) {
-            m_exportMenu->setTitle(tr("Export..."));
+            m_exportMenu->setTitle(tr("Export"));
         }
         if (m_exportAllObjectAction != nullptr) {
             m_exportAllObjectAction->setText(tr("All Object"));
@@ -857,7 +896,7 @@ void FdmMainWidget::retranslateUi()
         m_copyAction->setText(tr("Copy"));
     }
     if (m_deleteMenu != nullptr) {
-        m_deleteMenu->setTitle(tr("Delete.."));
+        m_deleteMenu->setTitle(tr("Delete"));
     }
     if (m_deleteSelectedObjectAction != nullptr) {
         m_deleteSelectedObjectAction->setText(tr("Select Object"));
@@ -866,7 +905,7 @@ void FdmMainWidget::retranslateUi()
         m_deleteAllObjectAction->setText(tr("All Objects"));
     }
     if (m_resetMenu != nullptr) {
-        m_resetMenu->setTitle(tr("Reset Transformations"));
+        m_resetMenu->setTitle(tr("Revert to Original"));
     }
     if (m_resetSelectedAction != nullptr) {
         m_resetSelectedAction->setText(tr("Select Object"));

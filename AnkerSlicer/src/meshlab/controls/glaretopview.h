@@ -2,7 +2,7 @@
 #define GLARETOPVIEW_H
 
 #include <QObject>
-#include "glarea.h"
+//#include "glarea.h"
 #include "modeltransformwidget.h"
 #include "splitterwidget.h"
 #include "viewwidget.h"

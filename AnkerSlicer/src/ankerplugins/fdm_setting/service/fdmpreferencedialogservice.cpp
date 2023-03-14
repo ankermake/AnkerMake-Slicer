@@ -27,6 +27,7 @@ void FdmPreferenceDialogService::init()
     connect(&(FdmQmlSourceTree::instance().getFdmQmlTreeApi_Preference()), &FdmQmlTreeApi::anyNodeValueChange, this, &FdmPreferenceDialogService::onSourceTreeApiNodeValueChanged);
     
     connect(&(FdmQmlSourceTree::instance().getFdmQmlTreeApi_Preference()), &FdmQmlTreeApi::anyNodeValueChangeByUI, this, &FdmPreferenceDialogService::onSourceTreeApiNodeValueChangedByUI);
+
 }
 
 
@@ -70,6 +71,7 @@ void FdmPreferenceDialogService::onPreferenceWindowOpen(int idx)
         {
             FdmParameterProfileService::instance()->setCurrentMachine(realtimeProfile->getMachineName());
             FdmParameterProfileService::instance()->setCurrentMaterial(realtimeProfile->getMaterialName());
+            FdmParameterProfileService::instance()->setNozzleSize(realtimeProfile->getNozzleSize());
         }
         FdmParameterProfileService::instance()->selectProfile(profileName);
 
@@ -115,6 +117,7 @@ void FdmPreferenceDialogService::onPreferencesPageSwitch(int idx)
             break;
         }
     }
+    lastManuClickTime = QDateTime::currentDateTime();
 }
 
 
@@ -179,18 +182,21 @@ void FdmPreferenceDialogService::onCurrentMaterialNameChanged(const QString & na
 {
     TFunction(name);
     activeProfile = FdmMaterialProfileService::instance()->getCurrentProifle();
+    lastManuClickTime = QDateTime::currentDateTime();
 }
 
 void FdmPreferenceDialogService::onCurrentMachineNameChanged(const QString & name)
 {
     TFunction(name);
     activeProfile = FdmMachineProfileService::instance()->getCurrentProifle();
+    lastManuClickTime = QDateTime::currentDateTime();
 }
 
 void FdmPreferenceDialogService::onCurrentParameterNameChanged(const QString & name)
 {
     TFunction(name);
     activeProfile = FdmParameterProfileService::instance()->getCurrentProifle();
+    lastManuClickTime = QDateTime::currentDateTime();
 }
 
 
@@ -211,6 +217,15 @@ void FdmPreferenceDialogService::onSourceTreeApiNodeValueChanged(const QString &
 
     
     activeProfile->setSetting(categoryName,item);
+
+    
+    auto machineProfile = dynamic_cast<FdmMachineProfile*>(activeProfile);
+    auto materialProfile = dynamic_cast<FdmMaterialProfile*>(activeProfile);
+    if ((machineProfile != nullptr || materialProfile != nullptr)
+            && (QDateTime::currentDateTime() > lastManuClickTime.addMSecs(500)))
+    {
+        activeProfile->setModifyTimeNow();
+    }
 }
 
 void FdmPreferenceDialogService::onSourceTreeApiNodeValueChangedByUI(const QString& categoryName, const FdmSettingItem& item)

@@ -506,11 +506,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_overhang_extend_type; objectName: "wall_overhang_extend_type"
-                    fdmLabel: "wall overhang extend type"
-                    fdmDescription: "set the range of the overhang effect to make the printing smoothly."
+                    fdmLabel: "wall overhang speed down type"
+                    fdmDescription: "set the strategy of slow down when printing overhang to make the a smoothly printing ."
                     fdmType: "enum"
                     fdmOptions:{
-                        "none": "none",
+                        "instant": "instant",
                         "gradually_xy": "gradually_xy",
                         "circle": "circle"
                     }
@@ -552,8 +552,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDescription: "inner wall shrink to make a tiny gap between outter wall and inner wall , expect to make the out line more wide "
                         fdmUnit: "mm"
                         fdmType: "float"
-                        fdmDefaultValue: 0.05
-                        fdmValue: Number(machine_nozzle_size.fdmValue) * 0.125
+                        fdmDefaultValue: 0
+                        fdmValue: 0.05
                         fdmEnabled: wall_overhang_extend_type.fdmValue === "gradually_xy"
                         fdmSettablePerMesh: true
                         fdmAffectedById: "machine_nozzle_size"
@@ -730,19 +730,19 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:bridge_split_min_length; objectName: "bridge_split_min_length"
                     fdmLabel: "Bridge split min length"
-                    fdmDescription: "Split long bridge to be ."
+                    fdmDescription: "Split a long bridge to 3 part to perform a variable speed printing"
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
-                    fdmDefaultValue: 5.0
+                    fdmDefaultValue: 20.0
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmSettablePerExtruder: false
                     fdmAffectedById: ""
                 }
-                FdmQml_Param{ id:bridge_shrink_length; objectName: "bridge_shrink_length"
-                    fdmLabel: "Minimum Bridge Wall Length"
-                    fdmDescription: "Unsupported walls shorter than this will be printed using the normal wall settings. Longer unsupported walls will be printed using the bridge wall settings."
+                FdmQml_Param{ id:bridge_slow_length; objectName: "bridge_shrink_length"
+                    fdmLabel: "Bridge Slow down length"
+                    fdmDescription: "set the middle of the bridge print at a low speed "
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -804,11 +804,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "The speed at which the bridge walls are printed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
-                    fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                    fdmMinimumValue: 15 //Number(cool_min_speed.fdmValue)
                     fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                     fdmMaximumValueWarning: 300.0
                     fdmDefaultValue: 15.0
-                    fdmValue: Math.max(Number(cool_min_speed.fdmValue), Number(speed_wall_0.fdmValue) / 2)
+                    fdmValue: 25 //Math.max(Number(cool_min_speed.fdmValue), Number(speed_wall_0.fdmValue) / 2)
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y,speed_wall_0,cool_min_speed"
@@ -831,11 +831,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "The speed at which bridge skin regions are printed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
-                    fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                    fdmMinimumValue:  15 //Number(cool_min_speed.fdmValue)
                     fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                     fdmMaximumValueWarning: 300.0
                     fdmDefaultValue: 15.0
-                    fdmValue: Math.max(Number(cool_min_speed.fdmValue), Number(speed_topbottom.fdmValue) / 2)
+                    fdmValue: 25 //Math.max(Number(cool_min_speed.fdmValue), Number(speed_topbottom.fdmValue) / 2)
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y,speed_topbottom,cool_min_speed"
@@ -862,7 +862,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmMinimumValue: 5.0
                     fdmMaximumValue: 100.0
                     fdmMinimumValueWarning: 20.0
-                    fdmMaximumValueWarning: 100.0
+                    fdmMaximumValueWarning: 150.0
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmAffectedById: ""
@@ -892,7 +892,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDescription: "Print speed to use when printing the second bridge skin layer."
                         fdmUnit: "mm/s"
                         fdmType: "float"
-                        fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                        fdmMinimumValue: 15 //Number(cool_min_speed.fdmValue)
                         fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                         fdmMaximumValueWarning: 300.0
                         fdmDefaultValue: 25.0
@@ -924,7 +924,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmMinimumValue: 5.0
                         fdmMaximumValue: 100.0
                         fdmMinimumValueWarning: 20.0
-                        fdmMaximumValueWarning: 100.0
+                        fdmMaximumValueWarning: 150 //100.0
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
                         fdmAffectedById: ""
@@ -946,7 +946,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDescription: "Print speed to use when printing the third bridge skin layer."
                         fdmUnit: "mm/s"
                         fdmType: "float"
-                        fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                        fdmMinimumValue: 15 //Number(cool_min_speed.fdmValue)
                         fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                         fdmMaximumValueWarning: 300.0
                         fdmDefaultValue: 15.0
@@ -978,7 +978,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmMinimumValue: 5.0
                         fdmMaximumValue: 100.0
                         fdmMinimumValueWarning: 20.0
-                        fdmMaximumValueWarning: 100.0
+                        fdmMaximumValueWarning: 150 //100.0
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
                         fdmAffectedById: ""
@@ -1312,7 +1312,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "Number of extruder trains. An extruder train is the combination of a feeder, bowden tube, and nozzle."
                 fdmDefaultValue: 1
                 fdmMinimumValue: 1
-                fdmMaximumValue: 2
+                fdmMaximumValue: 1
                 fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
                 fdmSettablePerMesh: false
@@ -1430,12 +1430,9 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmType: "enum"
                 fdmOptions:{
                     "RepRap (Marlin/Sprinter)": "Marlin",
-                    "RepRap (Volumetric)": "Marlin (Volumetric)",
                     "RepRap (RepRap)": "RepRap",
-                    "UltiGCode": "Ultimaker 2",
                     "Griffin": "Griffin",
                     "Makerbot": "Makerbot",
-                    "BFB": "Bits from Bytes"
                 }
                 fdmDefaultValue: "RepRap (Marlin/Sprinter)"
                 fdmSettablePerMesh: false
@@ -1936,7 +1933,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "The height of the initial layer in mm. A thicker initial layer makes adhesion to the build plate easier."
                 fdmUnit: "mm"
                 fdmType: "float"
-                fdmValue: layer_height.fdmValue * 0.7
+                fdmValue: layer_height.fdmValue * 0.7 > 0.1 ? layer_height.fdmValue * 0.7 : 0.1
                 fdmDefaultValue: 0.3
                 fdmResolve: Number(layer_height_0.fdmValue)
                 fdmMinimumValue: 0.001
@@ -1979,7 +1976,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmMinimumValueWarning: outer_inset_first.fdmValue ? (0.1 + 0.4 * Number(machine_nozzle_size.fdmValue)) : (0.1 * Number(machine_nozzle_size.fdmValue))
                         fdmMaximumValueWarning: 2 * Number(machine_nozzle_size.fdmValue)
                         fdmDefaultValue: 0.4
-                        fdmValue: Number(wall_line_width.fdmValue)
+                        fdmValue: Number(wall_line_width.fdmValue) * 1.1
                         fdmType: "float"
                         fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
                         fdmSettablePerMesh: true
@@ -2671,6 +2668,32 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: true
                 fdmAffectedById: "top_bottom_extruder_nr,roofing_layer_count,top_bottom_pattern,top_bottom_pattern_0"
             }
+			FdmQml_Param{ id:top_skin_density; objectName: "top_skin_density"
+                fdmLabel: "Top Skin Infill Density"
+                fdmDescription: "Adjusts the Top Skin Infill Density."
+                fdmUnit: "%"
+                fdmType: "float"
+                fdmDefaultValue: 110.0
+                fdmMinimumValue: 100.0
+                fdmMaximumValueWarning: 200.0
+                fdmLimitToExtruder: Number(infill_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "infill_extruder_nr"
+            }
+
+            FdmQml_Param{id:top_surface_one_wall;objectName:"top_surface_one_wall"
+                fdmLabel:"Use One Wall On Top Surface"
+                fdmDescription:"Use only one wall on flat top surface ,to give more space to the top infill pattern"
+                fdmValue: (top_bottom_pattern.fdmValue === "concentric" && top_bottom_pattern_0.fdmValue === "concentric" && Number(roofing_layer_count.fdmValue) <= 0) ? false : true
+                fdmType: "bool"
+                fdmDefaultValue:true
+                fdmEnabled: (Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0) && (top_bottom_pattern.fdmValue !== "concentric" || top_bottom_pattern_0.fdmValue !== "concentric" || (Number(roofing_layer_count.fdmValue) > 0 && roofing_pattern.fdmValue !== "concentric"))
+                fdmLimitToExtruder: Number(top_bottom_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById:"top_bottom_extruder_nr,roofing_layer_count,top_bottom_pattern,top_bottom_pattern_0"
+            }
+			
+			
             FdmQml_Param{ id:ironing_enabled; objectName: "ironing_enabled"
                 fdmLabel: "Enable Ironing"
                 fdmDescription: "Go over the top surface one additional time, but this time extruding very little material. This is meant to melt the plastic on top further, creating a smoother surface. The pressure in the nozzle chamber is kept high so that the creases in the surface are filled with material."
