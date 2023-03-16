@@ -36,7 +36,8 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     m_resetButton = new QToolButton;
     m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
+    m_resetButton->setIcon(xIcon);
     m_resetButton->setMaximumWidth(30);
     m_resetButton->setMaximumHeight(30);
     m_resetButton->setMinimumWidth(30);
@@ -79,7 +80,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
 
 
     QLabel* xLogo = new QLabel;
-    QPixmap xLogoPixmap(":/images/fdm_scale_x_icon_u.png");
+    static QPixmap xLogoPixmap(":/images/fdm_scale_x_icon_u.png");
     xLogo->setPixmap(xLogoPixmap);
     xLogo->setScaledContents(true);
     xLogo->setMaximumWidth(30);
@@ -108,7 +109,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     //m_xBox->setReadOnly(true);
 
     QLabel* xLogo2 = new QLabel;
-    QPixmap xLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
+    static QPixmap xLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
     xLogo2->setPixmap(xLogo2Pixmap);
     xLogo2->setScaledContents(true);
     xLogo2->setMaximumWidth(16);
@@ -142,7 +143,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     mainblaout->addLayout(hblayout4);
 
     QLabel* yLogo = new QLabel;
-    QPixmap yLogoPixmap(":/images/fdm_scale_y_icon_u.png");
+    static QPixmap yLogoPixmap(":/images/fdm_scale_y_icon_u.png");
     yLogo->setPixmap(yLogoPixmap);
     yLogo->setScaledContents(true);
     yLogo->setMaximumWidth(30);
@@ -171,7 +172,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
 
     //m_yBox->setReadOnly(true);
     QLabel* yLogo2 = new QLabel;
-    QPixmap yLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
+    static QPixmap yLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
     yLogo2->setPixmap(yLogo2Pixmap);
     yLogo2->setScaledContents(true);
     yLogo2->setMaximumWidth(16);
@@ -206,7 +207,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
 
 
     QLabel* zLogo = new QLabel;
-    QPixmap zLogoPixmap(":/images/fdm_scale_z_icon_u.png");
+    static QPixmap zLogoPixmap(":/images/fdm_scale_z_icon_u.png");
     zLogo->setPixmap(zLogoPixmap);
     zLogo->setScaledContents(true);
     zLogo->setMaximumWidth(30);
@@ -233,7 +234,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     m_zSizeBox->setSuffix(" mm");
 
     QLabel* zLogo2 = new QLabel;
-    QPixmap zLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
+    static QPixmap zLogo2Pixmap(":/images/fm_scale_round_icon_u.png");
     zLogo2->setPixmap(zLogo2Pixmap);
     zLogo2->setScaledContents(true);
     zLogo2->setMaximumWidth(16);
@@ -273,9 +274,9 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     m_scaleToFitButton = new QToolButton;
     m_scaleToFitButton->setObjectName("scaleToFitButton");
     m_scaleToFitButton->setText(tr("Scale To Fit"));
-    m_scaleToFitButton->setMaximumWidth(200);
+    m_scaleToFitButton->setMaximumWidth(220);//200
     m_scaleToFitButton->setMaximumHeight(32);
-    m_scaleToFitButton->setMinimumWidth(200);
+    m_scaleToFitButton->setMinimumWidth(220);//200
     m_scaleToFitButton->setMinimumHeight(32);
     m_scaleToFitButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "   background-color: #3A3B3F;\n"
@@ -611,4 +612,5 @@ void CHModelZoomTransformParamsSetUI::changeEvent(QEvent *e)
             m_scaleToFitButton->setText(tr("Scale To Fit"));
         }
     }
+    QWidget::changeEvent(e);
 }

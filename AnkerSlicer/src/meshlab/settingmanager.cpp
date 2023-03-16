@@ -1,4 +1,6 @@
 #include "settingmanager.h"
+#include "common/ak_const.h"
+#include "common/utilities/tlogger.h"
 
 namespace settings {
 SettingManager::SettingManager()
@@ -107,11 +109,36 @@ void SettingManager::setCurrentLanguage(int index)
     m_settings.setValue("CurrentLanguage",index);
 }
 
+//int SettingManager::getCurrentLanguage()
+//{
+//    QVariant var = m_settings.value("CurrentLanguage");
+//    if(!var.isValid()) {
+//        setCurrentLanguage(0);
+//    }
+//    return  m_settings.value("CurrentLanguage").toInt();
+//}
+
+
 int SettingManager::getCurrentLanguage()
 {
     QVariant var = m_settings.value("CurrentLanguage");
     if(!var.isValid()) {
-        setCurrentLanguage(0);
+        QLocale local = QLocale::system();
+        auto country = local.country();
+        qDebug() << "country is " << country;
+        AkUtil::TDebug("country index is " + QString::number(country));
+        if (country == QLocale::Country::China)
+        {
+            setCurrentLanguage(AkConst::ELanguage::Chinese);
+        }
+        else if (country == QLocale::Country::Japan)
+        {
+            setCurrentLanguage(AkConst::ELanguage::Japenese);
+        }
+        else
+        {
+            setCurrentLanguage(AkConst::ELanguage::English);
+        }
     }
     return  m_settings.value("CurrentLanguage").toInt();
 }

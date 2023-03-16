@@ -116,12 +116,6 @@ PluginManager& meshlab::pluginManagerInstance()
 	return pm;
 }
 
-pymeshlab::FunctionSet& pymeshlab::functionSetInstance()
-{
-	static FunctionSet fs(meshlab::pluginManagerInstance());
-	return fs;
-}
-
 QVariantMap &meshlab::AppInfo()
 {
     static QVariantMap appInfo;

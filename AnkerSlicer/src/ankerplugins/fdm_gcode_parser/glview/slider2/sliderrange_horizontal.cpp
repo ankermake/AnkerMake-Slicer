@@ -383,7 +383,6 @@ QSize HSliderRang::minimumSizeHint() const
 
 void HSliderRang::setRange(int minValue, int maxValue, bool isEmit)
 {
-    AkUtil::TFunction("");
 	
 	if (minValue >= maxValue) {
 		return;

@@ -336,17 +336,23 @@ void FdmRightParameterService::selectProfile(QString name)
     
 
     
-    if (name == AkConst::ProfileName::SIMPLE_MODE)
-    {
-        setDefaultValueFromExpertMode();
-    }
-
-    
     if ((name == AkConst::ProfileName::EXPERT_MODE
              || name == AkConst::ProfileName::SIMPLE_MODE)
          && !getExpertSuccess)
     {
         selectNozzle(getNozzleSize());
+
+        
+        FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
+        QList<FdmProfileCategory> categories;
+        rightTree.getAll(categories);
+        destProfile->setCategories(categories);
+    }
+
+    
+    if (name == AkConst::ProfileName::SIMPLE_MODE)
+    {
+        setDefaultValueFromExpertMode();
     }
 
     refreshUI();
@@ -697,7 +703,8 @@ void FdmRightParameterService::refreshTree()
     rightTree.setAny(categories);
 
     
-    //rightTree.setAny(categories);
+    
+    rightTree.setAny(categories);
     
     refreshUI();
 }

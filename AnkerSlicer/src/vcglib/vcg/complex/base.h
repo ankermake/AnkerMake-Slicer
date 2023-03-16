@@ -450,7 +450,7 @@ public:
 		Clear();
 	}
 
-	int Mem(const int & nv, const int & nf, const int & nt) const  {
+    int Mem(const int & nv, const int & nf, const int & nt=0) const  {
 		typename std::set< PointerToAttribute>::const_iterator i;
 		int size = 0;
 		size += sizeof(TriMesh)+sizeof(VertexType)*nv+sizeof(FaceType)*nf;

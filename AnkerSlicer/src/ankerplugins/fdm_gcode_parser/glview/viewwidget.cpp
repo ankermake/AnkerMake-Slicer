@@ -100,6 +100,8 @@ void viewWidget::connectedRPC()
     this->m_sceneParam.m_front = var_test.value<passSceneParam>().m_front;
     this->m_sceneParam.m_up = var_test.value<passSceneParam>().m_up;
     this->m_sceneParam.m_printMachineBox = var_test.value<passSceneParam>().m_printMachineBox;
+    this->m_sceneParam.logo = var_test.value<passSceneParam>().logo;
+    qDebug() << "connectedRPC eye: " << m_sceneParam.m_eye << ", m_sceneParam: " << "logo verts size: " << m_sceneParam.logo.points.size();
     //QObject::connect(this,SIGNAL(closePreviewEvent(int)), m_rpc.data(),SLOT(msgFromGcodepreview(int)));
     ui->openGLWidget->setSceneParams(m_sceneParam);
     this->changeSlider();
@@ -132,6 +134,7 @@ void viewWidget::paramChange(QVariant p)
     if(p.canConvert<passSceneParam>())
     {
        m_sceneParam.m_printMachineBox = p.value<passSceneParam>().m_printMachineBox;
+       m_sceneParam.logo = p.value<passSceneParam>().logo;
        ui->openGLWidget->setSceneParams(m_sceneParam);
        if(printModeInit){
           this->changeSlider();
@@ -890,8 +893,8 @@ void viewWidget::initForm()
     travelLayout->addWidget(travelcheckBox);
     lineTypeLayout->addLayout(travelLayout);
     //verticalLayout->addLayout(travelLayout);
-#ifdef USE_EXTRA_UI
-#endif
+
+
     line_11 = new QFrame(ui->widget);
     line_11->setObjectName(QString::fromUtf8("line_11"));
     sizePolicy3.setHeightForWidth(line_11->sizePolicy().hasHeightForWidth());
@@ -919,7 +922,7 @@ void viewWidget::initForm()
     zlapLayout->addWidget(zlapLabelC);
     zlapLabel = new QLabel(ui->widget);
     zlapLabel->setObjectName(QString::fromUtf8("zlapLabel"));
-    zlapLabel->setText(tr("zlap"));
+    zlapLabel->setText(tr("Zlap"));
     sizePolicy2.setHeightForWidth(zlapLabel->sizePolicy().hasHeightForWidth());
     zlapLabel->setSizePolicy(sizePolicy2);
     zlapLabel->setMinimumSize(QSize(80, 15));
@@ -932,7 +935,8 @@ void viewWidget::initForm()
     zlapcheckBox->setMaximumSize(QSize(41, 20));
     zlapLayout->addWidget(zlapcheckBox);
     lineTypeLayout->addLayout(zlapLayout);
-
+#ifdef USE_EXTRA_UI
+#endif
 
     line_7 = new QFrame(ui->widget);
     line_7->setObjectName(QString::fromUtf8("line_7"));
@@ -1966,7 +1970,7 @@ void viewWidget::initForm()
     filamentLabel->setStyleSheet("font: normal normal 16px;font-family:Microsoft YaHei;");
     sizePolicy2.setHeightForWidth(filamentLabel->sizePolicy().hasHeightForWidth());
     filamentLabel->setSizePolicy(sizePolicy2);
-    filamentLabel->setMinimumSize(QSize(80, 15));
+    filamentLabel->setMinimumSize(QSize(240, 15));
     filamentLayout->addWidget(filamentLabel);
     horizontalSpacer_filamentLayout10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     filamentLayout->addItem(horizontalSpacer_filamentLayout10);
@@ -2947,6 +2951,7 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
     {
     this->mPlayTimer->stop();
     }
+    this->pushButton_9->setChecked(false);
     
     QFileInfo fi(QString::fromStdString(gcodePath));
     f_size = fi.size() / 1024; 
@@ -2984,6 +2989,7 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
         }, Qt::BlockingQueuedConnection);
         this->ui->openGLWidget->clearGcodeSource();
         this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
+
         
         this->tp_timer->stop();
         this->timer_value = 0.0;
@@ -3010,6 +3016,8 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
             m_rpc.data()->setProperty("gcodeExtruderTargetTemperature",gcodeExtruderTargetTemperature);
             QVariant gcodeBedTargetTemperature = bedTemperature;
             m_rpc.data()->setProperty("gcodeBedTargetTemperature",gcodeBedTargetTemperature);
+            QVariant maxSpeed = this->ui->openGLWidget->gcode_result.MaxSpeed;
+            m_rpc.data()->setProperty("maxSpeed",maxSpeed);
         }, Qt::QueuedConnection);
     }
 }
@@ -3122,6 +3130,8 @@ void viewWidget::changeSlider()
         if(!printModeInit || !innerModeInit)
         {
             control::MessageDialog a(tr("Warning"), tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
+            QVariant gcodeComplete = false;
+            m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
             a.exec();
         }
         if(printModeInit){
@@ -3142,6 +3152,8 @@ void viewWidget::changeSlider()
         this->ExitButton->setEnabled(true);
         this->ExportButton->setEnabled(true);
         this->lastShowFileComplete = true;
+        QVariant gcodeComplete = true;
+        m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
     }
 
     this->verticalSlider->setRange(1, layersize);
@@ -3312,7 +3324,7 @@ void viewWidget::changeEvent(QEvent * event)
         travelLabel->setText(tr("Travel"));
     }
     if (zlapLabel) {
-        zlapLabel->setText(tr("zlap"));
+        zlapLabel->setText(tr("Zlap"));
     }
     if (supportLabel) {
         supportLabel->setText(tr("Support"));
@@ -3430,7 +3442,7 @@ void viewWidget::setFilamentStr()
         showValue += showLabelCount[7];
     }
     double mm_per_g = 0.00298;
-    QString showStr = QString("%1 g").arg(int(showValue * mm_per_g), 6);
+    QString showStr = QString("%1 g").arg(int(qRound(showValue * mm_per_g)), 6);
     filamentValue->setText(showStr);
     double sum = std::accumulate(std::begin(showLabelCount), std::end(showLabelCount), 0.0);
     allFilamentValue = sum * mm_per_g;

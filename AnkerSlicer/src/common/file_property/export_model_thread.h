@@ -4,9 +4,17 @@
 #include <QObject>
 #include <QThread>
 #include "mesh_model_import_export.h"
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-
-class ExportModelThread : public QThread
+class COMMONLIB_EXPORT ExportModelThread : public QThread
 {
     Q_OBJECT
 

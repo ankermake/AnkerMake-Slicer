@@ -107,6 +107,12 @@ void EditMeshTransformFactory::initialize(ControlInterface* controlmanager, Rich
         m_conInt->addActionToModelTranform(action);
     }
     m_currAction = m_moveMeshTransform;
+
+//  add  @2023-01-13 by ChunLian
+    if(m_moveMeshTransform  ){ m_moveMeshTransform  ->ankerEditTool->initInMainUI(); }
+    if(m_rotateMeshTransform){ m_rotateMeshTransform->ankerEditTool->initInMainUI(); }
+    if(m_scaleMeshTransform ){ m_scaleMeshTransform ->ankerEditTool->initInMainUI(); }
+    if(m_mirrorMeshTransform){ m_mirrorMeshTransform->ankerEditTool->initInMainUI(); }
 }
 
 ///  AnkerEditPlugin interface

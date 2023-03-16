@@ -45,6 +45,8 @@
 #include "common/utilities/ioapi.h"
 #include "common/Socket/HeartBeatThead.h"
 #include "dbgcrash.h"
+#include <QDebug>
+#include <QFontDatabase>
 
 #ifdef _WIN32
 #define ANKERMAKE "AnkerMake"
@@ -211,9 +213,45 @@ int main(int argc, char *argv[]){
 //        font.setPixelSize(14);
 //        app.setFont(font);
 //    }
-    QFont font("Microsoft YaHei");
-    font.setPixelSize(14);
-    app.setFont(font);
+    
+//    QFontDatabase::addApplicationFont(":/qss/SourceHanSansCN-VF.ttf");
+//    QFont font("Noto Sans");
+//    font.setPixelSize(14);
+//    app.setFont(font);
+
+    {
+        int index =  SettingManager().getCurrentLanguage();
+        QFontDatabase::addApplicationFont(":/qss/NotoSansJP-Regular.ttf");
+        QFont font("Microsoft YaHei");
+        if (index == 2) {
+            font = QFont("Noto Sans");
+        }
+        font.setPixelSize(14);
+        app.setFont(font);
+    }
+
+
+    //set font
+//    {
+//        int index =  SettingManager().getCurrentLanguage();
+//        int lcdFontId = 0;
+//        if (index == 2) {
+//            lcdFontId = QFontDatabase::addApplicationFont(":/qss/SourceHanSansJP-VF.ttf");
+//        }
+//        else
+//        {
+//            lcdFontId = QFontDatabase::addApplicationFont(":/qss/SourceHanSansCN-VF.ttf");
+//        }
+
+//        if(lcdFontId != -1) {
+//            QStringList fontList;
+//            fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+//            QFont font(fontList.at(0));
+//            font.setPixelSize(14);
+//            app.setFont(font);
+//        }
+//    }
+
 
     //add qss
     QFile file(":/qss/default.qss");
@@ -242,6 +280,20 @@ int main(int argc, char *argv[]){
     }
 #endif
     SettingManager setting;
+
+    auto m_translator =  Translator::instance();
+
+    int index =  setting.getCurrentLanguage();
+    if(index == 1) {
+        m_translator->loadLanguage(Language::CH);
+    }
+    else if (index == 0) {
+        m_translator->loadLanguage(Language::EN);
+    } else if (index == 2) {
+        m_translator->loadLanguage(Language::JA);
+    }
+
+
     bool flag = setting.getAcceptUserAgreement();
     if(!flag) {
         UserAgreementWidget userAgreementWidget;
@@ -254,17 +306,8 @@ int main(int argc, char *argv[]){
         }
         setting.setAcceptUserAgreement(true);
     }
-    auto m_translator =  Translator::instance();
 
-    int index =  setting.getCurrentLanguage();
-    if(index == 1) {
-        m_translator->loadLanguage(Language::CH);
-    }
-    else if (index == 0) {
-        m_translator->loadLanguage(Language::EN);
-    } else if (index == 2) {
-        m_translator->loadLanguage(Language::JA);
-    }
+
 #ifdef __APPLE__
     QSurfaceFormat glFormat;
     glFormat.setVersion(3, 3);

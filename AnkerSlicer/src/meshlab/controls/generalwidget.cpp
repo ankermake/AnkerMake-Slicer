@@ -132,21 +132,30 @@ void GeneralWidget::init()
     m_autoUpdateCheck = autoUpdateChecked;
     //connect(m_updateCheckBox, &QCheckBox::stateChanged, this, &GeneralWidget::updateCheckBox);
     //m_updateCheckBox->setCheckable(true);
+
     MessageProcessing *tmpMessageProcessing = m_messageProcessing;
-    auto autoUpdateCheck = [autoUpdateChecked, versionStr, tmpMessageProcessing]()
+    auto autoUpdateCheck = [this, autoUpdateChecked, versionStr, tmpMessageProcessing]()
     {
-        QTimer::singleShot(5000, [autoUpdateChecked, versionStr, tmpMessageProcessing]() {
+        this->m_StartUpCheck = true;
+        int waitTime = 5000;
+        QTimer::singleShot(waitTime, [this, autoUpdateChecked, versionStr, tmpMessageProcessing]() {
+            AkUtil::TDebug("-------dhf---to send AUTO_UPDATE msg in autoUpdateCheck");
             PluginMessageData updateData;
             updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
             updateData.dest = AkConst::Plugin::FDM_NETWORK;
             updateData.msg = AkConst::Msg::AUTO_UPDATE;
             updateData.map.insert(AkConst::Param::UPDATE_DO, autoUpdateChecked);
             updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
+            updateData.map.insert(AkConst::Param::APP_STARTUP, this->m_StartUpCheck);
             updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
             emit tmpMessageProcessing->sendMsg2Manager(updateData);
         });
-    };
 
+        QTimer::singleShot(waitTime + 3000, [this]() {
+            this->m_StartUpCheck = false;
+        });
+
+    };
 
     versionLayout->addLayout(hlayout);
     versionLayout->addWidget(m_updateCheckBox);
@@ -162,6 +171,14 @@ void GeneralWidget::init()
     m_releaseNote = settings.value("release_note").toString();
     qDebug() << "recentVersion: " << recentVersion << ", recentPath: " << recentPath << ", versionStr: " << versionStr;
     AkUtil::TDebug("Recent Version: " + recentVersion + ", Recent Path: " + recentPath);
+    settings.setValue("appVer", versionStr);
+    QString recentInstallNetworkVersion = settings.value("RecentInstallNetworkVersion").toString();
+    if (versionCompare(recentInstallNetworkVersion, versionStr) > 0)
+    {
+        settings.setValue("RecentInstallNetworkVersion", "");
+        settings.sync();
+    }
+
     if(!recentVersion.isEmpty() && !recentPath.isEmpty() && recentVersion != versionStr)
     {
         bool isUpdate = false;
@@ -294,6 +311,7 @@ void GeneralWidget::changeEvent(QEvent *e)
             m_languageCombox->setItemText(i, m_languageList.at(i));
         }
     }
+    QWidget::changeEvent(e);
 }
 
 void GeneralWidget::closeWidget()
@@ -325,6 +343,33 @@ void GeneralWidget::save()
         m_messageProcessing->sendMsg2Manager(lanData);
         m_settings.setCurrentLanguage(m_languageCombox->currentIndex());
         Translator::instance()->loadLanguage(static_cast<Language>(m_languageCombox->currentIndex()));
+
+        
+        auto requestOTAReleasNote = [this]()
+        {
+            AkUtil::TDebug("Language change， request releaseNote for the language.");
+            this->m_requestingReleasNote = true;
+            int waitTime = 100;
+            QTimer::singleShot(waitTime, [this]() {
+                QString versionStr = MeshLabApplication::appVer(false, false);
+                PluginMessageData updateData;
+                updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+                updateData.dest = AkConst::Plugin::FDM_NETWORK;
+                updateData.msg = AkConst::Msg::AUTO_UPDATE;
+                updateData.map.insert(AkConst::Param::UPDATE_DO, 1);
+                updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
+                updateData.map.insert(AkConst::Param::APP_STARTUP, false);
+                updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+                emit m_messageProcessing->sendMsg2Manager(updateData);
+            });
+
+            
+            QTimer::singleShot(waitTime + 4000, [this]() {
+                this->m_requestingReleasNote = false;
+            });
+        };
+
+        requestOTAReleasNote();
     }
     m_settings.setAiMode(m_aiCheckBox->checkState() == Qt::Checked ? true : false );
     bool autoUpdateCheck = m_updateCheckBox->checkState() == Qt::Checked ? true : false;
@@ -340,6 +385,7 @@ void GeneralWidget::save()
         updateData.msg = AkConst::Msg::AUTO_UPDATE;
         updateData.map.insert(AkConst::Param::UPDATE_DO, check);
         updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
+        updateData.map.insert(AkConst::Param::APP_STARTUP, m_StartUpCheck);
         updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
         m_messageProcessing->sendMsg2Manager(updateData);
     }
@@ -366,6 +412,7 @@ void GeneralWidget::manualUpdate()
     updateData.map.insert(AkConst::Param::UPDATE_DO, 0);
     updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
     updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+    updateData.map.insert(AkConst::Param::PREFERENCE_SHOW, isVisible());
     emit m_messageProcessing->sendMsg2Manager(updateData);
 }
 
@@ -404,6 +451,7 @@ void GeneralWidget::checkButtonClicked()
         updateData.map.insert(AkConst::Param::UPDATE_DO, 0);
         updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
         updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+        updateData.map.insert(AkConst::Param::PREFERENCE_SHOW, isVisible());
         emit m_messageProcessing->sendMsg2Manager(updateData);
     }
     else {
@@ -412,6 +460,9 @@ void GeneralWidget::checkButtonClicked()
         if(m_filePath.isNull()) {
             return;
         }
+
+        QSettings settings;
+        m_releaseNote = settings.value("release_note").toString();
         int index0 = m_filePath.lastIndexOf("/") + 1;
         QString fileName = m_filePath.mid(index0, m_filePath.length() - index0);
         int index1 = fileName.indexOf("AnkerMake_") + 10;
@@ -428,7 +479,14 @@ void GeneralWidget::checkButtonClicked()
         messageDialog->setOTAReleaseNoteVisible(true);
         messageDialog->setBottonText(updateMessageDialog::NO, tr("Later"));
         messageDialog->setBottonText(updateMessageDialog::YES, tr("Restart"));
-        messageDialog->setDetailTitleText(QString(tr("What's new")) );
+        if (m_releaseNote.trimmed().isEmpty())
+        {
+            messageDialog->setDetailTitleText("");
+        }
+        else
+        {
+            messageDialog->setDetailTitleText(QString(tr("What's new")) );
+        }
         messageDialog->setDetailText(QString("\n%1").arg(m_releaseNote));
         int ret = messageDialog->exec();
         if (ret == updateMessageDialog::YES) {
@@ -513,50 +571,84 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
         QString version = metadata.map.find(AkConst::Param::ANKERMAKE_VERSION).value().toString();
         QString fileName = metadata.map.find(AkConst::Param::ANKERMAKE_UPDATE_EXE).value().toString();
         m_releaseNote = metadata.map.find(AkConst::Param::ANKERMAKE_RELEASE_NOTE).value().toString();
+        AkUtil::TDebug("m_releaseNote:"+m_releaseNote);
         if (m_downLoadNewverDlg)
         {
             return;
         }
-        m_downLoadNewverDlg = new updateMessageDialog(tr("Check for Update"), QString("AnkerMake %1 ").arg(version) + tr("is ready, click to download new version"),
-                                               updateMessageDialog::NO|updateMessageDialog::YES,nullptr);
-        m_downLoadNewverDlg->setOTAReleaseNoteVisible(true);
-        m_downLoadNewverDlg->setBottonText(updateMessageDialog::NO, tr("Close"));
-        m_downLoadNewverDlg->setBottonText(updateMessageDialog::YES, tr("OK"));
-        m_downLoadNewverDlg->setDetailTitleText(QString(tr("What's new")) );
-        m_downLoadNewverDlg->setDetailText( QString("\n%1").arg(m_releaseNote) );
-        int ret = m_downLoadNewverDlg->exec();
-        if (ret == updateMessageDialog::YES) {
+        if (m_requestingReleasNote)  
+        {
+            AkUtil::TDebug("requesting ReleasNote only, not download" );
+            return;
+        }
+
+        int check = (m_updateCheckBox->checkState()  == Qt::Checked ? 1 : 0);
+        if (check)
+        {
+            AkUtil::TDebug("auto download." );
             PluginMessageData updateData;
             updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
             updateData.dest = AkConst::Plugin::FDM_NETWORK;
-            int check = (m_updateCheckBox->checkState()  == Qt::Checked ? 1 : 0);
-            if(!check)
-            {
-                updateData.msg = AkConst::Msg::MANUAL_UPDATE;
-                updateData.map.insert(AkConst::Param::UPDATE_DO, 0);
-            }
-            else
-            {
-                updateData.msg = AkConst::Msg::AUTO_UPDATE;
-                updateData.map.insert(AkConst::Param::UPDATE_DO, 1);
-            }
+            updateData.msg = AkConst::Msg::AUTO_UPDATE;
+            updateData.map.insert(AkConst::Param::UPDATE_DO, check);
             updateData.map.insert(AkConst::Param::UPDATE_PHASE, 2);  
+            updateData.map.insert(AkConst::Param::APP_STARTUP, 0);
             updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
             emit m_messageProcessing->sendMsg2Manager(updateData);
         }
-        else if(ret == updateMessageDialog::NO)
+        else
         {
-            
-            AkUtil::TDebug("send CANCEL_AUTO_CHECK_SERVER_VERSION msg");
-            PluginMessageData updateData;
-            updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
-            updateData.dest = AkConst::Plugin::FDM_NETWORK;
-            updateData.msg = AkConst::Msg::CANCEL_AUTO_CHECK_SERVER_VERSION;
-            emit m_messageProcessing->sendMsg2Manager(updateData);
-        }
+            AkUtil::TDebug("tell user have new version" );
+            m_downLoadNewverDlg = new updateMessageDialog(tr("Check for Update"), QString("AnkerMake %1 ").arg(version) + tr("is ready, click to download new version"),
+                                                   updateMessageDialog::NO|updateMessageDialog::YES,nullptr);
+            m_downLoadNewverDlg->setOTAReleaseNoteVisible(true);
+            m_downLoadNewverDlg->setBottonText(updateMessageDialog::NO, tr("Close"));
+            m_downLoadNewverDlg->setBottonText(updateMessageDialog::YES, tr("OK"));
+            if (m_releaseNote.trimmed().isEmpty())
+            {
+                m_downLoadNewverDlg->setDetailTitleText("");
+            }
+            else
+            {
+                m_downLoadNewverDlg->setDetailTitleText(QString(tr("What's new")) );
+            }
+            m_downLoadNewverDlg->setDetailText( QString("\n%1").arg(m_releaseNote) );
+            int ret = m_downLoadNewverDlg->exec();
+            if (ret == updateMessageDialog::YES) {
+                PluginMessageData updateData;
+                updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+                updateData.dest = AkConst::Plugin::FDM_NETWORK;
+                int check = (m_updateCheckBox->checkState()  == Qt::Checked ? 1 : 0);
+                if(!check)
+                {
+                    updateData.msg = AkConst::Msg::MANUAL_UPDATE;
+                    updateData.map.insert(AkConst::Param::UPDATE_DO, 0);
+                }
+                else
+                {
+                    updateData.msg = AkConst::Msg::AUTO_UPDATE;
+                    updateData.map.insert(AkConst::Param::UPDATE_DO, 1);
+                    updateData.map.insert(AkConst::Param::APP_STARTUP, m_StartUpCheck);
+                }
+                updateData.map.insert(AkConst::Param::UPDATE_PHASE, 2);  
+                updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+                updateData.map.insert(AkConst::Param::PREFERENCE_SHOW, isVisible());
+                emit m_messageProcessing->sendMsg2Manager(updateData);
+            }
+            else if(ret == updateMessageDialog::NO)
+            {
+                
+                AkUtil::TDebug("send CANCEL_AUTO_CHECK_SERVER_VERSION msg");
+                PluginMessageData updateData;
+                updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+                updateData.dest = AkConst::Plugin::FDM_NETWORK;
+                updateData.msg = AkConst::Msg::CANCEL_AUTO_CHECK_SERVER_VERSION;
+                emit m_messageProcessing->sendMsg2Manager(updateData);
+            }
 
-        delete m_downLoadNewverDlg;
-        m_downLoadNewverDlg = nullptr;
+            delete m_downLoadNewverDlg;
+            m_downLoadNewverDlg = nullptr;
+        }
     }
 
     if (metadata.from == AkConst::Plugin::FDM_NETWORK &&
@@ -577,7 +669,7 @@ void GeneralWidget::doPluginUnloaded()
 
 void GeneralWidget::forcedUpdateApp()
 {
-    AkUtil::TDebug("filePath: " + m_filePath);
+    AkUtil::TFunction("");
     qDebug() << "filePath: " << m_filePath;
     if(m_filePath.isNull()) {
         return;
@@ -601,18 +693,104 @@ void GeneralWidget::forcedUpdateApp()
     QString updatMsg1 = QString("AnkerMake %1 ").arg(version) + updatMsg;
     if (settings.value("is_forced").toBool()) {
         updateMessageDialog *messageDialog = new updateMessageDialog(tr("Check for Update"), updatMsg1,
-                                                         updateMessageDialog::NO|updateMessageDialog::YES);
+                                                         updateMessageDialog::NO|updateMessageDialog::YES, this);
         messageDialog->setOTAReleaseNoteVisible(true);
         messageDialog->setBottonText(updateMessageDialog::NO, tr("Later"));
         messageDialog->setBottonText(updateMessageDialog::YES, tr("Restart"));
-        messageDialog->setDetailTitleText(QString(tr("What's new")) );
+        if (releaseNote.trimmed().isEmpty())
+        {
+            messageDialog->setDetailTitleText("");
+        }
+        else
+        {
+            messageDialog->setDetailTitleText(QString(tr("What's new")) );
+        }
         messageDialog->setDetailText( QString("\n%1").arg(releaseNote) );
         int ret = messageDialog->exec();
         if (ret == updateMessageDialog::YES) {
+            QSettings settings;
+            settings.setValue("RecentInstallNetworkVersion", version);
+            settings.sync();
             update_app(m_filePath);
         }
     }
+    else
+    {
+        AkUtil::TDebug("is_forced:0");
+    }
 }
+
+
+
+int GeneralWidget::versionCompare(const QString &ver1, const QString &ver2)
+{
+    if (ver1.isEmpty() || ver2.isEmpty())
+    {
+        return -999;
+    }
+
+    
+    QString tmpVer1 = ver1;
+    if ( !(tmpVer1.startsWith("v") || tmpVer1.startsWith("V")) )
+    {
+        tmpVer1 = QString("v")+tmpVer1;
+    }
+
+    QString tmpVer2 = ver2;
+    if ( !(tmpVer2.startsWith("v") || tmpVer2.startsWith("V")) )
+    {
+        tmpVer2 = QString("v")+tmpVer2;
+    }
+
+    
+    tmpVer1 = tmpVer1.mid(1, tmpVer1.length() - 1);
+    QStringList ver1List = tmpVer1.split(QRegExp("[._]"));
+
+    tmpVer2 = tmpVer2.mid(1, tmpVer2.length() - 1);
+    QStringList ver2List = tmpVer2.split(QRegExp("[._]"));
+
+    
+    if(tmpVer1 == tmpVer2)
+    {
+         return 0;
+    }
+    else if(ver1List[0].toInt() > ver2List[0].toInt())
+    {
+        return 1;
+    }
+    else if(ver1List[0].toInt() == ver2List[0].toInt() &&
+            ver1List[1].toInt() > ver2List[1].toInt())
+    {
+        return 1;
+    }
+    else if(ver1List[0].toInt() == ver2List[0].toInt() &&
+            ver1List[1].toInt() == ver2List[1].toInt() &&
+            ver1List[2].toInt() > ver2List[2].toInt())
+    {
+        return 1;
+    }
+    else if(ver1List[0].toInt() == ver2List[0].toInt() &&
+            ver1List[1].toInt() == ver2List[1].toInt() &&
+            ver1List[2].toInt() == ver2List[2].toInt() &&
+            ver1List.size() == 4 && ver2List.size() == 3)
+    {
+        return 1;
+    }
+    else if(ver1List[0].toInt() == ver2List[0].toInt() &&
+            ver1List[1].toInt() == ver2List[1].toInt() &&
+            ver1List[2].toInt() == ver2List[2].toInt() &&
+            ver1List.size() == 4 && ver2List.size() == 4 &&
+            ver1List[3].toInt() > ver2List[3].toInt())
+    {
+        return 1;
+    }
+    else
+    {
+        return -1;
+    }
+
+}
+
 
 
 }

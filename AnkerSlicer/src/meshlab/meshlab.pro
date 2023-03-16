@@ -174,8 +174,8 @@ macx:RC_FILE = ankerimages/ankermake.rc
 #QMAKE_INFO_PLIST = Info.plist
 
 # to add MacOS icon
-#ICON = images/meshlab.icns
-ICON = ankerimages/logo_AnkerMake.png
+macx:ICON = ankerimages/logo_AnkerMake.icns
+win32:ICON = ankerimages/logo_AnkerMake.png
 
 # note that to add the file icons on the mac the following line does not work.
 # You have to copy the file by hand into the meshlab.app/Contents/Resources directory.
@@ -184,7 +184,7 @@ ICON = ankerimages/logo_AnkerMake.png
 CONFIG += stl
 
 LIBS += -L$$MESHLAB_DISTRIB_EXT_DIRECTORY
-
+LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 win32-msvc:LIBS += \
         -L$$MESHLAB_DISTRIB_DIRECTORY/lib -lmeshlab-common \
         -lopengl32  \

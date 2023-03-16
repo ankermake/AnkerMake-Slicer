@@ -33,7 +33,8 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     m_resetButton = new QToolButton;
     m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
+    m_resetButton->setIcon(xIcon);
     m_resetButton->setMaximumWidth(20);
     m_resetButton->setMaximumHeight(20);
     m_resetButton->setMinimumWidth(20);
@@ -51,7 +52,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     mainblaout->addWidget(line);
 
     QLabel* xLogo = new QLabel;
-    QPixmap xLogoPixmap(":/images/fdm_rotate_x_icon_u.png");
+    static QPixmap xLogoPixmap(":/images/fdm_rotate_x_icon_u.png");
     xLogo->setPixmap(xLogoPixmap);
     xLogo->setScaledContents(true);
     xLogo->setMaximumWidth(30);
@@ -92,7 +93,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     QLabel* yLogo = new QLabel;
-    QPixmap yLogoPixmap(":/images/fdm_rotate_y_icon_u.png");
+    static QPixmap yLogoPixmap(":/images/fdm_rotate_y_icon_u.png");
     yLogo->setPixmap(yLogoPixmap);
     yLogo->setScaledContents(true);
     yLogo->setMaximumWidth(30);
@@ -132,7 +133,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     QLabel* zLogo = new QLabel;
-    QPixmap zLogoPixmap(":/images/fdm_rotate_z_icon_u.png");
+    static QPixmap zLogoPixmap(":/images/fdm_rotate_z_icon_u.png");
     zLogo->setPixmap(zLogoPixmap);
     zLogo->setScaledContents(true);
     zLogo->setMaximumWidth(30);
@@ -366,6 +367,7 @@ void CHModelRotationTransformParamsSetUI::changeEvent(QEvent *e)
             m_rotateLabel->setText(tr("Rotate"));
         }
     }
+    QWidget::changeEvent(e);
 }
 
 bool CHModelRotationTransformParamsSetUI::equalTo180(float value)

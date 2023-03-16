@@ -62,10 +62,12 @@ class SnapshotLayerCommand{
 
     
 public:
-    bool snapshot_layer_M1024_enable    {false};    const std::string key_snapshot_layer_M1024_enable   {"anker_param_ai_camera"};
+    bool snapshot_layer_M1024_enable    {false};            const std::string key_snapshot_layer_M1024_enable   {"anker_param_ai_camera"};
     bool snapshot_uplayer_enable        {false};
-    std::vector<int>     snapshot_uplayer_array;    const std::string key_snapshot_uplayer_array        {"anker_param_ai_uplayer_array"};
-    std::vector<double>  snapshot_height_array ;    const std::string key_snapshot_height_array         {"anker_param_ai_height_array"};
+
+    double               anker_camera_take_picture_time{1}; const std::string key_camera_take_picture_time      {"camera_take_picture_time"};
+    std::vector<int>     anker_param_ai_uplayer_array;      const std::string key_snapshot_uplayer_array        {"anker_abc_1"};  
+    std::vector<double>  anker_param_ai_height_array ;      const std::string key_snapshot_height_array         {"anker_abc_2"};  //  @2023-02-23 by ChunLian
 
     int snapshot_count {0};
 

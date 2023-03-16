@@ -434,7 +434,6 @@ QSize VSliderRange::minimumSizeHint() const
 
 void VSliderRange::setRange(int minValue, int maxValue)
 {
-	AkUtil::TFunction("");
 	
     if (minValue >= maxValue && maxValue != 1) {
 		return;
@@ -600,4 +599,5 @@ void VSliderRange::changeEvent(QEvent *e)
     if (e->type() == QEvent::LanguageChange) {
         setFont(QFont(tr("Arial"), 8));
     }
+    QWidget::changeEvent(e);
 }

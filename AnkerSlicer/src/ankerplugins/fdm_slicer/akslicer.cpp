@@ -427,6 +427,7 @@ void AkSlicer::runCmd(QString cmd)
     //pInvoker->setProcessChannelMode(QProcess::MergedChannels);
     pInvoker->start(cmd);
     AkUtil::TWarning("run exe : ");
+
 #endif
     qDebug() << "\t" << cmd;
 }

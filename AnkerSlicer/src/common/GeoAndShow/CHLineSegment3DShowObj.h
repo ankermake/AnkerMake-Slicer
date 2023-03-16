@@ -11,7 +11,7 @@
 
 
 DEF_PTR(CHLineSegment3DShowObj)
-class CHLineSegment3DShowObj :public CHCurveShowObj
+class COMMONLIB_EXPORT CHLineSegment3DShowObj :public CHCurveShowObj
 {
 public:
 	CHLineSegment3DShowObj();

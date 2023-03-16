@@ -68,6 +68,8 @@ FdmGcodeParser::FdmGcodeParser()
          data.dest = AkConst::Plugin::FDM_NETWORK;
          data.msg = AkConst::Msg::A_KEY_PRINT;
          data.map.insert(AkConst::Param::A_KEY_PRINT_FILE_PATH, msg);
+         QVariant maxSpeed = m_rpc_inner->property("maxSpeed");
+         data.map.insert(AkConst::Param::MAX_PRINT_SPEED, maxSpeed);
          this->sendMsg2Manager(data);
     });
 
@@ -138,7 +140,6 @@ void FdmGcodeParser::recMsgfromManager(PluginMessageData metaData)
         bool status = metaData.map.value(AkConst::Param::LOGGING_STATUS).toBool();
         loggingStausChange(status);
     }
-
 }
 
 void FdmGcodeParser::setUseTimes(int ut)
@@ -175,7 +176,7 @@ void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
         const RichParameter& param = globalParams->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM);
         const Value& sceneValue = param.value();
 
-        qDebug() << "m_printMachineBox: (" << sceneValue.getSceneParam().m_printMachineBox.m_length
+        qDebug() << "messageProcessing m_printMachineBox: (" << sceneValue.getSceneParam().m_printMachineBox.m_length
                  << ", " << sceneValue.getSceneParam().m_printMachineBox.m_width
                  << ", " << sceneValue.getSceneParam().m_printMachineBox.m_height << ")";
         iniSceneParam = sceneValue.getSceneParam();
@@ -322,10 +323,39 @@ QVariant FdmGcodeParser::getSceneParams()
             const RichParameter& param = globalParams->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM);
             const Value& sceneValue = param.value();
 
-            qDebug() << "m_printMachineBox: (" << sceneValue.getSceneParam().m_printMachineBox.m_length
+            qDebug() << "getSceneParams m_printMachineBox: (" << sceneValue.getSceneParam().m_printMachineBox.m_length
                      << ", " << sceneValue.getSceneParam().m_printMachineBox.m_width
                      << ", " << sceneValue.getSceneParam().m_printMachineBox.m_height << ")";
             iniSceneParam = sceneValue.getSceneParam();
+            qDebug() << "logoMesh vert size: " << iniSceneParam.logoMesh.vert.size();
+            iniSceneParam.logo.points.clear();
+            iniSceneParam.logo.nors.clear();
+            iniSceneParam.logo.faces.clear();
+            iniSceneParam.logo.points.resize(iniSceneParam.logoMesh.vert.size());
+            iniSceneParam.logo.nors.resize(iniSceneParam.logoMesh.vert.size());
+            iniSceneParam.logo.faces.resize(iniSceneParam.logoMesh.face.size());
+            int i = 0;
+            for(vcgTriMesh::VertexIterator it = iniSceneParam.logoMesh.vert.begin(); it != iniSceneParam.logoMesh.vert.end(); it++)
+            {
+                iniSceneParam.logo.points[i][0] = it->P().X();
+                iniSceneParam.logo.points[i][1] = it->P().Y();
+                iniSceneParam.logo.points[i][2] = it->P().Z();
+
+                iniSceneParam.logo.nors[i][0] = it->N().X();
+                iniSceneParam.logo.nors[i][1] = it->N().Y();
+                iniSceneParam.logo.nors[i][2] = it->N().Z();
+                i++;
+            }
+
+            int p = 0;
+            for(vcgTriMesh::FaceIterator it = iniSceneParam.logoMesh.face.begin(); it != iniSceneParam.logoMesh.face.end(); it++)
+            {
+                iniSceneParam.logo.faces[p].m_index1 = it->V(0) - iniSceneParam.logoMesh.vert.data();
+                iniSceneParam.logo.faces[p].m_index2 = it->V(1) - iniSceneParam.logoMesh.vert.data();
+                iniSceneParam.logo.faces[p].m_index3 = it->V(2) - iniSceneParam.logoMesh.vert.data();
+                p++;
+            }
+            iniSceneParam.logo.trans = iniSceneParam.logoMesh.m_trans;
         }
         else
         {
@@ -347,6 +377,7 @@ QVariant FdmGcodeParser::getSceneParams()
     pSP.m_up = iniSceneParam.m_up;
     pSP.m_backgroundColor = iniSceneParam.m_backgroundColor;
     pSP.m_printMachineBox = iniSceneParam.m_printMachineBox;
+    pSP.logo = iniSceneParam.logo;
     QVariant pspV ;
     pspV.setValue(pSP);
     return pspV;

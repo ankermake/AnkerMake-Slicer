@@ -2,7 +2,7 @@
 #define SUPPORTCONE_H
 #include "SupportMesh.h"
 
-class SupportCone : public SupportMesh
+class COMMONLIB_EXPORT SupportCone : public SupportMesh
 {
 
 public:

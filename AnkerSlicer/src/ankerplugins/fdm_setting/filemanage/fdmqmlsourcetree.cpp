@@ -164,9 +164,9 @@ const QList<FdmParamNode *> FdmQmlTreeApi::__getCategoryNodes()
 void FdmQmlSourceTree::init()
 {
     
-    //QString qmlFile = "qrc:/qml/FdmBackLogic/FdmJsonObjTree_All.qml";
-    QString qmlFile = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All.qml");
-    AkUtil::TFunction(qmlFile);
+    QUrl qmlFile = QUrl::fromLocalFile(":/qml/back_logic/FdmJsonObjTree_All.qml");  //  @2023-02-23 by ChunLian
+
+    AkUtil::TFunction(qmlFile.toString());
 
     {
         QObject * root = FdmQmlEngine::instance()->loadQmlFile(qmlFile);
@@ -300,18 +300,18 @@ void FdmQmlSourceTree::setLanguage(int index)
         }
     };
 
+    QUrl qmlFile_en = QUrl::fromLocalFile(":/qml/back_logic/FdmJsonObjTree_All.qml");       //  @2023-02-23 by ChunLian
+    QUrl qmlFile_zh = QUrl::fromLocalFile(":/qml/back_logic/FdmJsonObjTree_All_zh.qml");    //  @2023-02-23 by ChunLian
+    QUrl qmlFile_jp = QUrl::fromLocalFile(":/qml/back_logic/FdmJsonObjTree_All_jp.qml");    //  @2023-02-23 by ChunLian
 
-
-    QString qmlFile_en = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All.qml");
-    QString qmlFile_zh = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All_zh.qml");
-    QString qmlFile_jp = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All_jp.qml");
-
-    //QString qmlFile = (index == 1) ? qmlFile_zh : qmlFile_en;
-    QString qmlFile = qmlFile_zh;
+    QUrl qmlFile;
     switch (index) {
-        case 0: qmlFile = qmlFile_en;break;
         case 1: qmlFile = qmlFile_zh;break;
         case 2: qmlFile = qmlFile_jp;break;
+        case 0:
+        default:
+            qmlFile = qmlFile_en;
+            break;
     }
 
     

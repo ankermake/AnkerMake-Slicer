@@ -175,8 +175,9 @@ Rectangle {
 
             BaseControl.BaseTextEdit {
                 id: startGcodeText
+                Layout.fillWidth: true
+                width: 460
                 height: 100
-                Layout.preferredWidth: 460
                 gCodetext: machineList["machine_start_gcode"].fdmValueUI
                 textEnabled: (machineParameter.defaultMachineList).indexOf(machineParameter.currentMachineName) < 0 ? true : false
                 onGCodeTextEditFinished: {

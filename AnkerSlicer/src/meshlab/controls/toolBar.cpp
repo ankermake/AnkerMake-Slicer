@@ -183,6 +183,7 @@ void ToolBar::changeEvent(QEvent *e)
             }
         }
     }
+    return QWidget::changeEvent(e);
 }
 
 

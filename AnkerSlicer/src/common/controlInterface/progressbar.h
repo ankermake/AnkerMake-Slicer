@@ -6,8 +6,16 @@
 #include <QPainter>
 #include <QDebug>
 #include <QProgressBar>
-
-class ProgressBar : public QWidget
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT ProgressBar : public QWidget
 {
     Q_OBJECT
 public:

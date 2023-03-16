@@ -165,7 +165,7 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
             }
             
 
-            IoApi::write(sliceResult.gcodeFile, gcodeContent);
+            IoApi::write(sliceResult.gcodeFile, gcodeContent.toUtf8());
         }
 
         
@@ -190,7 +190,8 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
         
 
         paramList << ";End of Gcode";
-        IoApi::append(sliceResult.gcodeFile, paramList.join("\r\n"));
+        auto data = paramList.join("\r\n").toUtf8();
+        IoApi::append(sliceResult.gcodeFile, data);
         fileOperEnd = true;
         //IoApi::append(sliceInfo.gcodeFile, QString(";paramBegin").toLocal8Bit());
         //auto realtimeBase64 = content.toLocal8Bit().toBase64();

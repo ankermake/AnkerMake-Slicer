@@ -181,4 +181,5 @@ void SavePanel::changeEvent(QEvent *e)
             saveBtn->setText(tr("Save"));
         }
     }
+    QWidget::changeEvent(e);
 }

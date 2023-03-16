@@ -26,8 +26,16 @@ Item {
         id :label
         anchors.left: itemSpace.right
         anchors.verticalCenter: parent.verticalCenter
-        color: "#999999"
-        text: model.label
+        //color: "#999999"
+        Text {
+            id: name
+            text: model.label
+            elide:Text.ElideRight
+            color: "#999999"
+            width: 300
+           // wrapMode: Text.Wrap.Overflow
+        }
+//        text: model.label
     }
 
     Loader {

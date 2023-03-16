@@ -20,6 +20,7 @@ DEFINES += "MESHLAB_VERSION=$$MESHLAB_VERSION"
 #macx:CONFIG += MAC_M1_BUILD_X86
 #macx:DEFINES += FORCE_ARM
 
+win32-msvc: QMAKE_CXXFLAGS += /wd4819 /wd4100 /wd4267 /wd4828
 win32-g++{
 CONFIG += warn_off
 QMAKE_CXXFLAGS += -Wall
@@ -119,6 +120,14 @@ linux:QMAKE_RPATHDIR += $$MESHLAB_DISTRIB_DIRECTORY/lib
 linux:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib/linux -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 linux:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib/linux -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 
+CONFIG(debug  , debug|release){ LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/../common/debug  }
+CONFIG(release, debug|release){ LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/../common/release}
+
+win32-msvc:LIBS +=  -lopengl32	\
+                    -lGLU32
+#win32-g++:LIBS += -lmeshlab-common -lopengl32 -lGLU32
+win32-g++:LIBS += -lopengl32	\
+                    -lGLU32
 #DEFINES += USE_EXTRA_UI
 
 

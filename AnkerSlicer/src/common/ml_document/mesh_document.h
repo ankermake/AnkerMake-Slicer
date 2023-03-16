@@ -29,8 +29,17 @@
 
 #include "helpers/mesh_document_state_data.h"
 //#include "../GeoAndShow/CHScene.h"
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-class MeshDocument : public QObject
+class COMMONLIB_EXPORT MeshDocument : public QObject
 {
 	Q_OBJECT
 

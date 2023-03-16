@@ -31,25 +31,27 @@ Rectangle {
 
     signal qmlNozzleSizeCurrentIndexChanged(string currentText)
 
+    //与C++中的保持一致 参考ak_const.h
     enum EGlobalSupportState
     {
         Unactived = 0,
         Selected ,
         UnSelected
     }
-
+    //文案描述有4個
     enum EGlobalSupportTextCode
     {
-
+        //手动支撑禁用全局支撑
         GlobalSupportUnactived = 0,
-
+        //手动支撑没禁用全局支撑。全局支撑打开
         GlobalSupportAndManualSupport,
-
+        //场景中没手动支撑.仅仅全局支撑会生效
         GlobalSupportOnly,
-
+        //全局支撑关闭
         GlobalSupportUnSelected
     }
 
+    //按钮状态有2个
     enum EGenerateAdhesionState
     {
         GenAdhesionSelected = 0,
@@ -312,7 +314,7 @@ Rectangle {
                // height: model.visible ? column.implicitHeight + 4 : 0
 //                width: listView.width
                height: model.visible ? 42 : 0
-                Behavior on height { NumberAnimation { duration: 100 } }
+               // Behavior on height { NumberAnimation { duration: 10 } }
                 opacity: model.visible ? 1 : 0
                 Behavior on opacity { NumberAnimation { duration: 100 } }
                 active: model.type !== undefined

@@ -690,9 +690,11 @@ void FdmMainWidget::loginWidgetDisplayFeedBackSlot(qint64 cmdId, int result)
 
 void FdmMainWidget::setButtonEnableByPickStatus()
 {
+    AkUtil::TFunction("");
     // qDebug() << "setButtonEnableByPickStatus doc->m_printObjs.size()";
     auto pick = getGlobalPick();
     auto selected = pick.get()->m_selectedObjs;
+    AkUtil::TDebug("selected size: " + QString::number(selected.size()));
     if (selected.size() <= 0) {
         setActionEnble(false);
     }

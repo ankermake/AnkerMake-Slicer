@@ -33,7 +33,8 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     m_resetButton = new QToolButton;
     m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
+    m_resetButton->setIcon(xIcon);
     m_resetButton->setMaximumWidth(20);
     m_resetButton->setMaximumHeight(20);
     m_resetButton->setMinimumWidth(20);
@@ -199,6 +200,7 @@ void CHModelMirrorTransformParamsSetUI::changeEvent(QEvent * event)
             m_zStrLabel->setText(Z_STR + tr("Axis"));
         }
     }
+    QWidget::changeEvent(event);
 }
 
 

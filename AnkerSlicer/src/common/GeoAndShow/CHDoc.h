@@ -25,7 +25,7 @@ enum ModelStatusChangedType
 
 
 DEF_PTR(CHDoc)
-class CHDoc : public QObject
+class COMMONLIB_EXPORT CHDoc : public QObject
 {
     Q_OBJECT
 

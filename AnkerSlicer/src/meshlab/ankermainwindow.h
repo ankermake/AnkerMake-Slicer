@@ -186,6 +186,7 @@ private:
     QStringList m_meshPath = QStringList();
     QString m_acodePath;
     QProcess  *m_pCmd;
+    QString m_cmdErrorData;
 
     ProgressDialog *m_importProgress;
     QThread loadThread;

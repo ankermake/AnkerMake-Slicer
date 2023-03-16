@@ -27,6 +27,7 @@ void CopyRightWidget::changeEvent(QEvent *event)
             m_titleWidget->setTitle(tr("Copyright Information"));
         }
     }
+    return QWidget::changeEvent(event);
 }
 
 void CopyRightWidget::initUi()

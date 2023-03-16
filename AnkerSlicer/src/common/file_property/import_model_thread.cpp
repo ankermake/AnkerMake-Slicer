@@ -14,45 +14,50 @@ void ImportModelThread::run()
     {
         return;
     }
+    QFile tmpAppDataFile;
     successful = true;
     try {
         QString tmpFileName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/";
         QFile tmpFile(m_fileName);
         int index = m_fileName.lastIndexOf("/") + 1;
         tmpFileName += m_fileName.mid(index, m_fileName.length() - index);
-        QFile::remove(tmpFileName);  //  add  @2023-01-06 by ChunLian
-        bool ret = tmpFile.copy(tmpFileName);
-        //qDebug() << "copy " << ret << ", source: " << m_fileName << ", target: " << tmpFileName;
-        if(ret)
+        tmpAppDataFile.setFileName(tmpFileName);
+        if(tmpAppDataFile.exists())
         {
-            ret = MeshModelImport_Export::open(m_formatName, tmpFileName, *m_cm, m_cb);
+            tmpAppDataFile.remove();
+        }
+        bool isCopyFile = false;
+        if(tmpAppDataFile.error() != QFile::NoError)
+        {
+            tmpFileName = m_fileName;
+        }
+        else
+        {
+            tmpFile.copy(tmpFileName);
+            isCopyFile = true;
+        }
+
+        bool ret = MeshModelImport_Export::open(m_formatName, tmpFileName, *m_cm, m_cb);
+        if(isCopyFile)
+        {
+            QFile::remove(tmpFileName); 
         }
         if (!ret)
         {
             successful = false;
             emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
         }
-        QFile::remove(tmpFileName); 
     }
     catch (std::exception& e) {
         qDebug() << __FUNCTION__ << __LINE__ << e.what();
         successful = false;
         emit  errorEncountered(0, QString::fromLocal8Bit(e.what()));
-    }
+    }//readChannelCount()
     catch (...) {
         successful = false;
         qDebug() << __FUNCTION__ << __LINE__;
         emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
     }
-    //MeshModelImport_Export::open(m_formatName, m_fileName, *m_cm, m_cb);
-//    while(1)
-//    {
-//        if(m_exit)
-//        {
-//            break;
-//        }
-//        sleep(1);
-//    }
     m_exit = false;
     qDebug() << "Import Thread m_cm.VertexNumber(): " << m_cm->VertexNumber();
 }

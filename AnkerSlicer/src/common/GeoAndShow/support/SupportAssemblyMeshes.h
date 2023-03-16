@@ -3,7 +3,7 @@
 #include "SupportMesh.h"
 
 
-class SupportAssemblyMeshes: public SupportMesh
+class COMMONLIB_EXPORT SupportAssemblyMeshes: public SupportMesh
 {
 public:
     SupportAssemblyMeshes();

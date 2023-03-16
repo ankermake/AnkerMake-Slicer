@@ -2,7 +2,7 @@
 #define SUPPORTCUBOID_H
 #include "SupportMesh.h"
 
-class SupportCuboid :public SupportMesh
+class COMMONLIB_EXPORT SupportCuboid :public SupportMesh
 {
 public:
     bool create(float lenth, float wide, float height);

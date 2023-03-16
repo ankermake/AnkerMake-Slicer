@@ -23,7 +23,7 @@
 //	return QVector3D(x, y, z);
 //}
 
-struct LineLineExtremeResult
+struct COMMONLIB_EXPORT LineLineExtremeResult
 {
     bool m_parallel;
 	double m_u1;
@@ -32,7 +32,7 @@ struct LineLineExtremeResult
 	QVector3D m_pt2;
 };
 
-class CHBaseAlg
+class COMMONLIB_EXPORT CHBaseAlg
 {
 public:
 	CHBaseAlg();

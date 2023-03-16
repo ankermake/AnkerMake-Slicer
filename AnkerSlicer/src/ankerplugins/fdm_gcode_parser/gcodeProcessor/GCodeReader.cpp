@@ -221,7 +221,7 @@ void GCodeReader::GCodeLine::set(const GCodeReader &reader, const Axis axis, con
     m_mask |= 1 << int(axis);
 }
 
-bool GCodeReader::GCodeLine::get_ai_layer(int& value) const
+bool GCodeReader::GCodeLine::get_ai_layer(double& value) const
 {
     const char* c = m_raw.c_str();
     bool  hasL = false;
@@ -257,7 +257,7 @@ bool GCodeReader::GCodeLine::get_ai_layer(int& value) const
             //pend != nullptr && is_end_of_word(*pend)
             if (*pend == '/') {
                 // The axis value has been parsed correctly.
-                value = int(v);
+                value = v;
                 hasL = true;
             }
         }

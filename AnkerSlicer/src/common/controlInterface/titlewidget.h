@@ -8,7 +8,7 @@
 #include "line.h"
 #include "bubbleWidget.h"
 
-class TitleWidget : public control::BubbleWidget
+class COMMONLIB_EXPORT TitleWidget : public control::BubbleWidget
 {
     Q_OBJECT
 public:

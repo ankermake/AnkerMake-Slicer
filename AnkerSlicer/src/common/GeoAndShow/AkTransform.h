@@ -4,10 +4,18 @@
 #include <QObject>
 #include <QQuaternion>
 #include <QMatrix4x4>
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 /*================ class AkTransformData ================*/
-struct AkTransformData
+struct COMMONLIB_EXPORT AkTransformData
 {
     //#ifdef _WIN32
     //    constexpr static QVector3D Zero3D = QVector3D(0,0,0);
@@ -43,7 +51,7 @@ struct AkTransformData
 
 
 /*================ class AkTransform : QObject ================*/
-class AkTransform : public QObject
+class COMMONLIB_EXPORT AkTransform : public QObject
 {
     Q_OBJECT
     AkTransformData m_data;

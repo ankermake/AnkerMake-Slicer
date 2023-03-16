@@ -16,7 +16,8 @@ public:
     
     static FdmMaterialProfileManager& Instance()
     {
-        static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/material");
+        //static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/material");
+        static QString profileStorePath = ":/fdm/material";
         static QString customStorePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/material");
         static FdmMaterialProfileManager manager(profileStorePath, customStorePath);
         return manager;

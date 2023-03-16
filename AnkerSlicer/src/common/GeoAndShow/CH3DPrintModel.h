@@ -16,7 +16,7 @@
 //DEF_PTR(CHSupportMesh)
 
 DEF_PTR(CH3DPrintModel)
-class CH3DPrintModel :public CHMeshShowObj
+class COMMONLIB_EXPORT CH3DPrintModel :public CHMeshShowObj
 {
 public:
     CH3DPrintModel();

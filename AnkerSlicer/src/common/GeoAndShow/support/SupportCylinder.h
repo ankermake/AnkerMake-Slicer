@@ -2,7 +2,7 @@
 #define SUPPORTCYLINDER_H
 #include "SupportMesh.h"
 
-class SupportCylinder : public SupportMesh
+class COMMONLIB_EXPORT SupportCylinder : public SupportMesh
 {
 public:
     SupportCylinder();

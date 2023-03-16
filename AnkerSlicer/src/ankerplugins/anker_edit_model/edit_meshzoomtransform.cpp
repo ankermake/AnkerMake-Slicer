@@ -48,6 +48,22 @@ EditMeshZoomTransformTool::EditMeshZoomTransformTool()
     originMove[0] = originMove[1] = originMove[2] = 0.0;
 }
 
+void EditMeshZoomTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelZoomTransformParamsSetUI();
+
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Zoom);
+
+    connect(this, &EditMeshZoomTransformTool::boxSizeParamsChanged,     m_paramUI, &CHModelZoomTransformParamsSetUI::boxSizeValuesChanged);
+    connect(this, &EditMeshZoomTransformTool::scaleParamsChanged,       m_paramUI, &CHModelZoomTransformParamsSetUI::scaleValuesChanged);
+
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::viewValuesChanged, this, &EditMeshZoomTransformTool::viewValuesChanged);
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::scaleToFitSignal,  this, &EditMeshZoomTransformTool::scaleToFitClicked);
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::resetSignal,       this, &EditMeshZoomTransformTool::resetBtnClicked);
+    //connect(m_paramUI, &CHModelZoomTransformParamsSetUI::stateChanged,    this, &EditMeshZoomTransformTool::updateLock);
+    m_paramUI->hide();
+}
+
 bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg1, void* arg2)
 {
     AkUtil::TFunction("");
@@ -67,27 +83,10 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     m_pickedObj = 0;
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelZoomTransformParamsSetUI();
 
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Zoom);
-
-
-    connect(this, &EditMeshZoomTransformTool::boxSizeParamsChanged,
-            m_paramUI, &CHModelZoomTransformParamsSetUI::boxSizeValuesChanged);
-    connect(this, &EditMeshZoomTransformTool::scaleParamsChanged,
-            m_paramUI, &CHModelZoomTransformParamsSetUI::scaleValuesChanged);
-
-
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::viewValuesChanged,
-            this, &EditMeshZoomTransformTool::viewValuesChanged);
-
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::scaleToFitSignal,
-            this, &EditMeshZoomTransformTool::scaleToFitClicked);
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::resetSignal,
-            this, &EditMeshZoomTransformTool::resetBtnClicked);
-
-//    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::stateChanged,
-//            this, &EditMeshZoomTransformTool::updateLock);
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     m_currentType = ZoomChangedType_View;
     
@@ -236,8 +235,7 @@ void EditMeshZoomTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
 
     if (m_paramUI)
     {
-        delete m_paramUI;
-        m_paramUI = 0;
+        m_paramUI->hide();
     }
     for (int i = 0; i < m_allShowObjs.size(); i++)
     {
@@ -450,6 +448,7 @@ void EditMeshZoomTransformTool::resetBtnClicked()
         curScene->refresh();
         emit getDoc()->modelCheckSceneInChanged();
         emit getDoc()->modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
+        emit restartEditToolSignal();
         //m_lockToPrintPlatform = lockToPrintPlatform;
     }
 
@@ -656,13 +655,21 @@ void EditMeshZoomTransformTool::mouseMoveEvent(QMouseEvent* event, void*, void*)
                 {
                     (*it)->m_params[index] = m_values[i][index] * result.m_u1;
                 }
-                if(index == 3)
-                {
-                    index = 0;
-                }
+//                if(index == 3)
+//                {
+//                    index = 0;
+//                }
                 
                 QVector3D vecDir = (*it)->m_rotCenter + QVector3D(m_initValues[i][3], m_initValues[i][4], m_initValues[i][5]) - m_operationCenter;
-                QVector3D newCenter = vecDir * fabs((*it)->m_params[index] / m_initValues[i][index]) + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                QVector3D newCenter;
+                if(index == 3)
+                {
+                    newCenter = vecDir /** fabs((*it)->m_params[0] / m_initValues[i][0])*/ + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                }
+                else
+                {
+                    newCenter = vecDir /** fabs((*it)->m_params[index] / m_initValues[i][index]) */+ m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                }
                 (*it)->m_params[6] = newCenter[0] - (*it)->m_rotCenter[0];
                 (*it)->m_params[7] = newCenter[1] - (*it)->m_rotCenter[1];
                 (*it)->m_params[8] = newCenter[2] - (*it)->m_rotCenter[2];
@@ -778,7 +785,7 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params, ZoomAxi
         
         QVector3D vecDir = QVector3D((*it)->m_rotCenter[0], (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]) +
             QVector3D(m_initValues[k][3], m_initValues[k][4], m_initValues[k][5]) - m_operationCenter;
-        QVector3D newCenter = vecDir * params[(int)axisType] + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+        QVector3D newCenter = vecDir  + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
         (*it)->m_params[6] = newCenter[0] - (*it)->m_rotCenter[0];
         (*it)->m_params[7] = newCenter[1] - (*it)->m_rotCenter[1];
         (*it)->m_params[8] = newCenter[2] - (*it)->m_rotCenter[2];
@@ -978,8 +985,8 @@ void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, Zo
             values[1] = params[1];
             values[2] = params[2];
         }
-        qDebug() << "m_currentType: " << m_currentType << ", params: " << params[0] << " " << params[1] << " " << params[2] <<
-                    ", values: " << values[0] << " " << values[1] << " " << values[2];
+        //qDebug() << "m_currentType: " << m_currentType << ", params: " << params[0] << " " << params[1] << " " << params[2] <<
+        //            ", values: " << values[0] << " " << values[1] << " " << values[2];
         receiveParams(values, axisType);
     }
 }
@@ -1115,7 +1122,7 @@ void EditMeshZoomTransformTool::resetSelectedScale()
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
         //(*it)->resetZoom();
-        (*it)->reset3x3Transform();
+        (*it)->resetTransform();
         
         //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
 

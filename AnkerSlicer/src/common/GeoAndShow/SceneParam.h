@@ -68,6 +68,56 @@ struct PrintMachineBoxParam
 	}
 };
 
+struct MyTriangle2
+{
+    MyTriangle2() {}
+    MyTriangle2(const int& index1, const int& index2, const int& index3)
+    {
+        m_index1 = index1;
+        m_index2 = index2;
+        m_index3 = index3;
+    }
+    int m_index1;
+    int m_index2;
+    int m_index3;
+
+    inline MyTriangle2& operator= (const MyTriangle2& triangle)
+    {
+        m_index1 = triangle.m_index1;
+        m_index2 = triangle.m_index2;
+        m_index3 = triangle.m_index3;
+        return *this;
+    }
+};
+
+inline QDataStream& operator <<(QDataStream& out, const MyTriangle2& item)
+{
+    out << item.m_index1 << item.m_index2 << item.m_index3;
+    return out;
+}
+
+inline QDataStream& operator >>(QDataStream& in, MyTriangle2& item)
+{
+    in >> item.m_index1 >> item.m_index2 >> item.m_index3;
+    return in;
+}
+struct MyMesh
+{
+    QVector<QVector3D> points;
+    QVector<QVector3D> nors;
+    QVector<MyTriangle2> faces;
+    QMatrix4x4 trans;
+
+    inline MyMesh& operator= (const MyMesh& mesh)
+    {
+        points = mesh.points;
+        nors = mesh.nors;
+        faces = mesh.faces;
+        trans = mesh.trans;
+        return *this;
+    }
+};
+
 struct ViewButtonPixmap
 {
 	
@@ -106,6 +156,7 @@ struct SceneParam
     QVector3D m_front;
 
     CMeshO logoMesh;  //logo CMeshO
+    MyMesh logo;
 
 	PrintMachineBoxParam m_printMachineBox;	 
 
@@ -132,6 +183,7 @@ struct SceneParam
         logoMesh = sp.logoMesh;
 		m_printMachineBox = sp.m_printMachineBox;
 		m_backgroundColor = sp.m_backgroundColor;
+        logo = sp.logo;
 		//m_viewBtnPixmap = sp.m_viewBtnPixmap;
 
 		return *this;
@@ -154,17 +206,22 @@ struct SceneParam
 inline QDataStream& operator <<(QDataStream& out, const SceneParam& item)
 {
     out<<item.m_eye<<item.m_up<<item.m_front<<item.m_printMachineBox.m_color<<
-         item.m_printMachineBox.m_height<<item.m_printMachineBox.m_length<<item.m_printMachineBox.m_lineWidth<<item.m_printMachineBox.m_width<<item.m_printMachineBox.num<<item.m_backgroundColor;
+         item.m_printMachineBox.m_height<<item.m_printMachineBox.m_length<<
+         item.m_printMachineBox.m_lineWidth<<item.m_printMachineBox.m_width<<
+         item.m_printMachineBox.num<<item.m_backgroundColor<< item.logo.points<< item.logo.nors<< item.logo.faces<< item.logo.trans;;
     return out;
 }
 
 inline QDataStream& operator >>(QDataStream& in, SceneParam& item)
 {
     in>>item.m_eye>>item.m_up>>item.m_front>>item.m_printMachineBox.m_color>>
-         item.m_printMachineBox.m_height>>item.m_printMachineBox.m_length>>item.m_printMachineBox.m_lineWidth>>item.m_printMachineBox.m_width>>item.m_printMachineBox.num>>item.m_backgroundColor;
+         item.m_printMachineBox.m_height>>item.m_printMachineBox.m_length>>
+            item.m_printMachineBox.m_lineWidth>>item.m_printMachineBox.m_width>>
+            item.m_printMachineBox.num>>item.m_backgroundColor>>
+            item.logo.points>> item.logo.nors >> item.logo.faces>> item.logo.trans;
     return in;
 }
-
+Q_DECLARE_METATYPE(MyMesh)
 Q_DECLARE_METATYPE(SceneParam)
 struct passSceneParam
 {
@@ -173,12 +230,15 @@ struct passSceneParam
     QVector3D m_front;
     PrintMachineBoxParam m_printMachineBox;
     QColor m_backgroundColor;
+    MyMesh logo;
 };
 
 inline QDataStream& operator <<(QDataStream& out, const passSceneParam& item)
 {
-    out<<item.m_eye<<item.m_up<<item.m_front<<item.m_printMachineBox.m_length<<
-         item.m_printMachineBox.m_width<<item.m_printMachineBox.m_height<<item.m_printMachineBox.m_color<<item.m_printMachineBox.m_lineWidth<<item.m_printMachineBox.num<<item.m_backgroundColor;
+    out<<item.m_eye<<item.m_up<<item.m_front<<item.m_printMachineBox.m_length
+      <<item.m_printMachineBox.m_width<<item.m_printMachineBox.m_height<<item.m_printMachineBox.m_color
+      <<item.m_printMachineBox.m_lineWidth<<item.m_printMachineBox.num<<item.m_backgroundColor
+      << item.logo.points<< item.logo.nors<< item.logo.faces<< item.logo.trans;
 //    out<<item.m_eye<<item.m_up<<item.m_front;
 //    out<<item.m_backgroundColor;
     return out;
@@ -187,7 +247,10 @@ inline QDataStream& operator <<(QDataStream& out, const passSceneParam& item)
 inline QDataStream& operator >>(QDataStream& in, passSceneParam& item)
 {
     in>>item.m_eye>>item.m_up>>item.m_front>>item.m_printMachineBox.m_length>>
-             item.m_printMachineBox.m_width>>item.m_printMachineBox.m_height>>item.m_printMachineBox.m_color>>item.m_printMachineBox.m_lineWidth>>item.m_printMachineBox.num>>item.m_backgroundColor;
+             item.m_printMachineBox.m_width>>item.m_printMachineBox.m_height>>
+            item.m_printMachineBox.m_color>>item.m_printMachineBox.m_lineWidth>>
+            item.m_printMachineBox.num>>item.m_backgroundColor >>
+            item.logo.points>> item.logo.nors >> item.logo.faces>> item.logo.trans;
 
 //    in>>item.m_eye>>item.m_up>>item.m_front;
 //    in>>item.m_backgroundColor;

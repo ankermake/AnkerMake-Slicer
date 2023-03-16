@@ -13,7 +13,7 @@ DEF_PTR(SupportTrapezoidBody)
 DEF_PTR(SupportCuboid)
 DEF_PTR(SupportCylinder)
 
-class SupportMesh: public CHMeshShowObj
+class COMMONLIB_EXPORT SupportMesh: public CHMeshShowObj
 {
 public:
     enum EMeshType

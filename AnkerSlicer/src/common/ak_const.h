@@ -2,6 +2,15 @@
 #define AK_CONST_H
 #include <QString>
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 namespace AkConst{
 
 namespace Time {
@@ -60,6 +69,8 @@ namespace Param {
     const QString ANKERMAKE_UPDATE_EXE = "AnkerMakeUpdateExe"; 
     const QString ANKERMAKE_RELEASE_NOTE = "AnkerMakeReleaseNote"; 
     const QString UPDATE_PHASE = "UpdatePhase";
+    const QString APP_STARTUP = "AppStartUp";
+    const QString PREFERENCE_SHOW = "PreferenceShow";
 
     
     const QString ANKERMAKE_MAINWINDOW_WID = "AnkerMakeMainwindowWid";
@@ -67,6 +78,7 @@ namespace Param {
 
     
     const QString A_KEY_PRINT_FILE_PATH = "AKeyPrintFilePath";
+    const QString MAX_PRINT_SPEED = "MaxPrintSpeed";
 
     
     const QString GENERATE_SUPPORT_RESULT = "GenerateSupportResult";
@@ -414,6 +426,14 @@ enum NetworkUpdateType
 {
     NetworkUpdateType_ManualUpdate = 0,
     NetworkUpdateType_AutoUpdate,
+};
+
+
+enum ELanguage
+{
+    English = 0,
+    Chinese ,
+    Japenese
 };
 
 namespace WebAddress {

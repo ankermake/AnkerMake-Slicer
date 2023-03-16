@@ -64,6 +64,7 @@ public:
     EditMeshMoveTransformTool();
     virtual ~EditMeshMoveTransformTool() {}
 
+    void initInMainUI  () override ; //  add  @2023-01-13 by ChunLian
     bool startAnkerEdit(ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
     void endAnkerEdit  (ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
 
@@ -95,7 +96,7 @@ private:
 
 
 private:
-    CHModelMoveTransformParamsSetUI* m_paramUI;
+    CHModelMoveTransformParamsSetUI* m_paramUI{nullptr};
     std::set<CHMeshShowObjPtr> m_editMeshModels;
     CHMeshShowObjPtr m_firstMesh;//???????????????
     QVector3D m_operationCenter;

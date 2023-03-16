@@ -239,5 +239,6 @@ void PreferencesDialog::changeEvent(QEvent * event)
             m_saveButton->setText(tr("Save"));
         }
     }
+    return QDialog::changeEvent(event);
 }
 }

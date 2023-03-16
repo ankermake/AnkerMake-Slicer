@@ -45,6 +45,8 @@ public:
     void manualUpdate();
 protected:
     void changeEvent(QEvent *e);
+private:
+    int versionCompare(const QString &ver1, const QString &ver2);
 signals:
    void networkLanguageChangedSignal(qint64);
    void unloadPluginsSignal();
@@ -74,8 +76,11 @@ private:
      QLabel *m_aiLabel = nullptr;
      bool m_updateFlag = false;
      bool m_autoUpdateCheck;
+     bool m_StartUpCheck = false;         
+     bool m_requestingReleasNote = false; 
      updateMessageDialog* m_downLoadNewverDlg = nullptr;
      QLabel *m_versionLabel = nullptr;
+     bool m_formGeneral = false;
 };
 
 

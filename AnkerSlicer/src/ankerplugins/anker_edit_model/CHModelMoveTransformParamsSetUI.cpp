@@ -33,13 +33,14 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     //    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
     //    m_resetButton->setGeometry(QRect(281.3, 277.04, 13.4, 281.3));
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
     m_resetButton->setMaximumWidth(30);
     m_resetButton->setMaximumHeight(30);
     m_resetButton->setMinimumWidth(30);
     m_resetButton->setMinimumHeight(30);
     connect(m_resetButton, &QToolButton::clicked, this, &CHModelMoveTransformParamsSetUI::reset);
-    m_resetButton->hide(); 
+    //m_resetButton->setIcon(xIcon);
+    m_resetButton->setDisabled(true); 
     //int left, int top, int width, int height
     QHBoxLayout* hblaout1 = new QHBoxLayout;
     hblaout1->addWidget(m_moveLabel);
@@ -58,7 +59,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     mainblaout->addLayout(hblaout2);
 
     QLabel* xLogo = new QLabel;
-    QPixmap xLogoPixmap(":/images/fdm_move_x_icon_u.png");
+    static QPixmap xLogoPixmap(":/images/fdm_move_x_icon_u.png");
     xLogo->setPixmap(xLogoPixmap);
     xLogo->setScaledContents(true);
     xLogo->setMaximumWidth(30);
@@ -92,7 +93,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_xMoveBox->setSuffix(" mm");
 
     QLabel* yLogo = new QLabel;
-    QPixmap yLogoPixmap(":/images/fdm_move_y_icon_u.png");
+    static QPixmap yLogoPixmap(":/images/fdm_move_y_icon_u.png");
     yLogo->setPixmap(yLogoPixmap);
     yLogo->setScaledContents(true);
     yLogo->setMaximumWidth(30);
@@ -125,7 +126,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     mainblaout->addLayout(yhlayout);
 
     QLabel* zLogo = new QLabel;
-    QPixmap zLogoPixmap(":/images/fdm_move_z_icon_u.png");
+    static QPixmap zLogoPixmap(":/images/fdm_move_z_icon_u.png");
     zLogo->setPixmap(zLogoPixmap);
     zLogo->setScaledContents(true);
     zLogo->setMaximumWidth(30);
@@ -291,5 +292,6 @@ void CHModelMoveTransformParamsSetUI::changeEvent(QEvent * event)
             m_keepLabel->setText(tr("Place On Bed"));
         }
     }
+    QWidget::changeEvent(event);
 }
 

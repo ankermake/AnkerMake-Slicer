@@ -164,6 +164,7 @@ void MachineWidget::changeEvent(QEvent *e)
         connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomMachine(QString)),this,SLOT(renameCustomMachine(QString)),Qt::QueuedConnection);
         connect(this,SIGNAL(machineRename(QString,QString)),m_service,SLOT(renameCustomMachine(QString,QString)), Qt::QueuedConnection);
     }
+    QWidget::changeEvent(e);
 }
 
 }

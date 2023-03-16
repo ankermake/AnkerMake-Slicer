@@ -14,7 +14,7 @@ ProgressDialog::ProgressDialog(QWidget *parent)
 void ProgressDialog::init()
 {
     this->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool);
-    this->setMinimumSize(480,298);
+    this->setFixedSize(480,330);
     m_mainLayout->setContentsMargins(0,32,0,16);
     m_mainLayout->setSpacing(25);
     QFont font = this->font();
@@ -22,6 +22,8 @@ void ProgressDialog::init()
     m_label->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
     m_label->setFont(font);
     m_label->setVisible(false);
+    m_label->setAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    m_label->setWordWrap(true);
     setAttribute(Qt::WA_TranslucentBackground);
     m_cancelButton = new QPushButton(tr("Cancel"));
     m_cancelButton->setFont(font);
@@ -49,10 +51,11 @@ void ProgressDialog::changeEvent(QEvent *e)
             m_cancelButton->setText(tr("Cancel"));
         }
     }
+    QDialog::changeEvent(e);
 }
 void ProgressDialog::setValue(int value)
 {
-    qDebug() << "set value ";
+    //qDebug() << "set value ";
     m_progressbar->setValue(value);
 //    QCoreApplication::processEvents();
     update();

@@ -461,7 +461,8 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
                 orderOptimizer.addPolygons(part_inner_walls);
                 orderOptimizer.optimize();
 
-                constexpr coord_t wall_0_wipe_dist = 0;
+                
+                //constexpr coord_t wall_0_wipe_dist = 0;
                 constexpr float flow_ratio = 1.0;
                 constexpr bool always_retract = false;
 
@@ -475,7 +476,7 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
                     // oo hh
                     // T  T  1234 -> 4[0]123   0,1,  1,e
                     // F  F  4321 -> 321[0]4   1,e,  0,1
-                    // T  T  1234 -> 4[0]123   0,1,  1,e
+                    // T  F  1234 -> 4[0]123   0,1,  1,e
                     // F  T  4321 -> 432[0]1   0,c,  c,e
                 }
                 bool oo = !outer_inset_first;

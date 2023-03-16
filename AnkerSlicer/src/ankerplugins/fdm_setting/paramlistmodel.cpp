@@ -257,6 +257,7 @@ void ParamListModel::onNodeValueChange(QVariant row){
     //    qDebug() << "    "  << m_datas[r]->getNodeName() << m_datas.at(r)->getFdmEnable() << row;
     //qDebug() << "    " << __LINE__ << __FUNCTION__ << row;
     emit dataChanged(createIndex(r,0),createIndex(r,0),QVector<int>() << datatype::label << datatype::value << datatype::visible);
+
 }
 
 

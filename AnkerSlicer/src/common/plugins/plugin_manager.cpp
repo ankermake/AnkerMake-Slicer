@@ -170,9 +170,9 @@ void PluginManager::loadPlugins(QDir pluginsDirectory)
 			}
 		}
 		if (errors.size() > 0){
-			QString singleError = "Unable to load the following plugins:\n\n";
+            QString singleError = "Unable to load the following plugins:";
 			for (const auto& p : errors){
-				singleError += "\t" + p.first + ": " + p.second + "\n";
+                singleError += "\t" + p.first + ": " + p.second ;
 			}
 			throw MLException(singleError);
 		}

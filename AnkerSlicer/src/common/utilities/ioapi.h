@@ -4,9 +4,17 @@
 #include <qstring.h>
 #include <QFile>
 #include <QFileInfo>
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 AK_UTIL_NAME_SPACE_BEGIN
-class IoApi
+class COMMONLIB_EXPORT IoApi
 {
 public:
     

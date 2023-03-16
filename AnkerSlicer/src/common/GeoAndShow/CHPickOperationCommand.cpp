@@ -644,6 +644,7 @@ void SceneRightMenu::changeEvent(QEvent *e)
             actReset->setText(tr("Reset"));
         }
     }
+    QMenu::changeEvent(e);
 }
 
 

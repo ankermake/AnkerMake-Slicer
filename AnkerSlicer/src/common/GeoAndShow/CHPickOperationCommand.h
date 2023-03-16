@@ -15,6 +15,15 @@
 #include "CH3DPrintModel.h"
 #include <QMenu>
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 class SceneRightMenu : public QMenu{
     Q_OBJECT
@@ -43,7 +52,7 @@ protected:
 
 
 DEF_PTR(CHPickOperationCommand)
-class CHPickOperationCommand : public QObject
+class COMMONLIB_EXPORT CHPickOperationCommand : public QObject
 {
     Q_OBJECT
 

@@ -1,7 +1,7 @@
 #ifndef SUPPORTTETRAHEDRON_H
 #define SUPPORTTETRAHEDRON_H
 #include "SupportMesh.h"
-class SupportTetrahedron : public SupportMesh
+class COMMONLIB_EXPORT SupportTetrahedron : public SupportMesh
 {
 public:
     SupportTetrahedron();

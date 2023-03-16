@@ -465,8 +465,9 @@ namespace fdmsettings {
 		controlmanager->addPageToPreferences(machine, 1);
 		MaterialWidget* material = new MaterialWidget();
 		controlmanager->addPageToPreferences(material, 2);
-		ParametersWidget* parameter = new ParametersWidget();
+        ParametersWidget* parameter = new ParametersWidget();
 		controlmanager->addPageToPreferences(parameter, 3);
+        parameter->setControlmanager(controlmanager);
 
        // fdmParamSettingsWidget->setCurrent(controlmanager);
         
@@ -506,7 +507,7 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getOpenFileName(
 				nullptr,
-                tr("Import ini config file"),
+                tr("Import ini config "),
 				QString(),
 				QString("Ini File(*.ini)"));
 			return fileName;

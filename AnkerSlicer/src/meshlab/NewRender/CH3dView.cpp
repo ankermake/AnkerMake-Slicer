@@ -815,7 +815,7 @@ void CH3dView::getBoxPoints(const QVector3D& iMin, const QVector3D& iMax, std::v
     points.push_back(QVector3D(iMax.x(), iMin.y(), iMax.z()));
 }
 
-void CH3dView::machinePlatformSizeChanged(float length, float width, float height)
+void CH3dView:: machinePlatformSizeChanged(float length, float width, float height)
 {
     m_length = length;
     m_width = width;
@@ -854,6 +854,7 @@ void CH3dView::machinePlatformSizeChanged(float length, float width, float heigh
     m_ViewVec[BOTTOM_VIEW_TYPE].up = QVector3D(0, -1, 0);
 
     initView();
+    setView(m_viewType, getDoc()->m_machineBox->m_realAABB);
 }
 
 

@@ -12,7 +12,8 @@ public:
     
     static FdmParameterProfileManager& Instance()
     {
-        static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/parameter");
+        //static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/parameter");
+        static QString profileStorePath = ":/fdm/parameter";
         static QString customStorePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/parameter");
         static FdmParameterProfileManager manager(profileStorePath, customStorePath);
         return manager;

@@ -7,7 +7,7 @@
 
 
 DEF_PTR(CHAssembly)
-class CHAssembly :public CHShowObj
+class COMMONLIB_EXPORT CHAssembly :public CHShowObj
 {
 public:
 	CHAssembly();

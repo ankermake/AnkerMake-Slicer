@@ -4,11 +4,19 @@
 
 #include "anker_plugin.h"
 #include "edit_plugin.h"
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 class AnkerEditTool;
 class AnkerEditPlugin;
-class ActionEditTool : public QAction{
+class COMMONLIB_EXPORT ActionEditTool : public QAction{
     Q_OBJECT
 public:
     using QAction::QAction;
@@ -18,11 +26,12 @@ public:
     AnkerEditPlugin *ankerEditPlugin{nullptr};
 };
 
-class AnkerEditTool : public EditTool
+class COMMONLIB_EXPORT AnkerEditTool : public EditTool
 {
 public:
     virtual ~AnkerEditTool() {}
 
+    virtual void   initInMainUI(){}   //  add  @2023-01-13 by ChunLian
     virtual bool startAnkerEdit(ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) { return false;  Q_UNUSED(action);Q_UNUSED(arg1);Q_UNUSED(arg2);}
     virtual void   endAnkerEdit(ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) {Q_UNUSED(action);Q_UNUSED(arg1);Q_UNUSED(arg2);}
 
@@ -41,7 +50,7 @@ protected:
 };
 
 
-class AnkerEditPlugin : public QObject, public AnkerEditTool, public MeshLabPlugin
+class COMMONLIB_EXPORT AnkerEditPlugin : public QObject, public AnkerEditTool, public MeshLabPlugin
 {
     Q_OBJECT
 public:
@@ -51,7 +60,7 @@ public:
     virtual void setEditToolsEnable(QVariant){} //  for AnkerEditPlugin
 
     //gets a list of actions available from this plugin
-    virtual QList<QAction *> actions() const {return actionList;};
+    virtual QList<QAction *> actions() const {return actionList;}
 
     //get the edit tool for the given action
     //virtual AnkerEditTool* getEditTool(const QAction *) = 0;

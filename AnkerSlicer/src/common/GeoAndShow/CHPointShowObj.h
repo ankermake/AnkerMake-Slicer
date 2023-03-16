@@ -12,7 +12,7 @@
 
 
 DEF_PTR(CHPointShowObj)
-class CHPointShowObj :public CHShowObj
+class COMMONLIB_EXPORT CHPointShowObj :public CHShowObj
 {
 public:
 	CHPointShowObj();

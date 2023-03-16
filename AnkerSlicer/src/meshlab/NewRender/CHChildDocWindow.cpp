@@ -145,8 +145,7 @@ void CHChildDocWindow::updatePoint(CHPointShowObjPtr pb)
     }
 }
 
-void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
-{
+void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve){
     m_view->makeCurrent();
 
     std::map<CHCurveShowObjPtr, CHRenderCurvePtr>::iterator it = m_renderData->m_allcurves.find(showcurve);
@@ -157,7 +156,6 @@ void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
             
             it->second->m_vbo.destroy();
             it->second->m_vao.destroy();
-
             
             m_renderData->m_allcurves.erase(it);
         }
@@ -168,9 +166,9 @@ void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
                 showcurve->setDirty(false);
 
                 
+                qDebug() << "destroy ago: " << it->second->m_vbo.bufferId();
                 it->second->m_vbo.destroy();
                 it->second->m_vao.destroy();
-
                 writeToGPUBUffer(showcurve, it->second);
             }
         }
@@ -347,6 +345,7 @@ void CHChildDocWindow::writeToGPUBUffer(CHCurveShowObjPtr curvebody, CHRenderCur
 
     QOpenGLVertexArrayObject::Binder vaoBind(&(rendercurve->m_vao));
     rendercurve->m_vbo.create();
+    //qDebug() << "create vbo: " << rendercurve->m_vbo.bufferId();
     rendercurve->m_vbo.bind();
     rendercurve->m_vbo.allocate(vertices, sizeof(GLfloat) * rendercurve->m_Num * 3);
     int attr = -1;
@@ -355,7 +354,7 @@ void CHChildDocWindow::writeToGPUBUffer(CHCurveShowObjPtr curvebody, CHRenderCur
     m_renderData->m_shaderProgram.enableAttributeArray(attr);
     rendercurve->m_vbo.release();
 
-    delete vertices;
+    delete [] vertices;
 }
 
 void CHChildDocWindow::setView(const CH3dView::ViewType& _type, const CHAABB3D& aabb)

@@ -16,9 +16,17 @@
 #include <QVector4D>
 #include <QMatrix4x4>
 #include "CHPlane.h"
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-
-class CHAABB3D
+class COMMONLIB_EXPORT CHAABB3D
 {
 public:
 	CHAABB3D();

@@ -31,5 +31,9 @@
         <file>qml/BaseControl/BaseListView.qml</file>
         <file>qml/PreferenceSettings/PrinterPage.qml</file>
         <file>qml/PreferenceSettings/ExtruderPage.qml</file>
+        <file>qml/back_logic/anker_expert.cfg</file>
+        <file>qml/back_logic/FdmJsonObjTree_All.qml</file>
+        <file>qml/back_logic/FdmJsonObjTree_All_jp.qml</file>
+        <file>qml/back_logic/FdmJsonObjTree_All_zh.qml</file>
     </qresource>
 </RCC>

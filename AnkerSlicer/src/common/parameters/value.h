@@ -31,6 +31,15 @@
 class MeshModel;
 class MeshDocument;
 class QDomElement;
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 /**
  * @brief The Value class
@@ -39,7 +48,7 @@ class QDomElement;
  * Specializations inherit from this class, depending on the type of the
  * value. Value class is an attribute of the RichParameter class.
  */
-class Value
+class COMMONLIB_EXPORT Value
 {
 public:
 	virtual ~Value() {}
@@ -72,7 +81,7 @@ public:
 	virtual void fillToXMLElement(QDomElement& element) const = 0;
 };
 
-class BoolValue : public Value
+class COMMONLIB_EXPORT BoolValue : public Value
 {
 public:
 	BoolValue(const bool val) : pval(val) {};
@@ -89,7 +98,7 @@ private:
 	bool pval;
 };
 
-class IntValue : public Value
+class COMMONLIB_EXPORT IntValue : public Value
 {
 public:
 	IntValue(const int val) : pval(val) {}
@@ -106,7 +115,7 @@ private:
 	int pval;
 };
 
-class FloatValue : public Value
+class COMMONLIB_EXPORT FloatValue : public Value
 {
 public:
 	FloatValue(const float val) :pval(val) {}
@@ -123,7 +132,7 @@ private:
 	Scalarm pval;
 };
 
-class StringValue : public Value
+class COMMONLIB_EXPORT StringValue : public Value
 {
 public:
 	StringValue(const QString& val) :pval(val) {}
@@ -140,7 +149,7 @@ private:
 	QString pval;
 };
 
-class Matrix44fValue : public Value
+class COMMONLIB_EXPORT Matrix44fValue : public Value
 {
 public:
 	Matrix44fValue(const Matrix44m& val) :pval(val) {}
@@ -158,7 +167,7 @@ private:
 	Matrix44m pval;
 };
 
-class Point3fValue : public Value
+class COMMONLIB_EXPORT Point3fValue : public Value
 {
 public:
 	Point3fValue(const Point3m& val) : pval(val) {}
@@ -175,7 +184,7 @@ private:
 	Point3m pval;
 };
 
-class ShotfValue : public Value
+class COMMONLIB_EXPORT ShotfValue : public Value
 {
 public:
 	ShotfValue(const Shotm& val) : pval(val) {}
@@ -192,7 +201,7 @@ private:
 	Shotm pval;
 };
 
-class ColorValue : public Value
+class COMMONLIB_EXPORT ColorValue : public Value
 {
 public:
 	ColorValue(QColor val) :pval(val) {}
@@ -210,7 +219,7 @@ private:
 };
 
 //TODO!!! Add By Aden Hu 
-class SceneValue : public Value
+class COMMONLIB_EXPORT SceneValue : public Value
 {
 public:
 	SceneValue(SceneParam param) : m_params(param) {}

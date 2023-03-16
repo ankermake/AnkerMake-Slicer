@@ -38,7 +38,7 @@
 <context>
     <name>AkSlicer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="526"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="527"/>
         <source>Slice Engine Error</source>
         <translation>スライスエンジンのエラー</translation>
     </message>
@@ -46,112 +46,118 @@
 <context>
     <name>AnkerMainWindow</name>
     <message>
-        <location filename="../ankermainwindow.cpp" line="216"/>
+        <location filename="../ankermainwindow.cpp" line="228"/>
         <source>Plugin Loading Error</source>
         <translation>プラグインロードのエラー</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="447"/>
+        <location filename="../ankermainwindow.cpp" line="460"/>
         <source>Tip: Open files one at a time.</source>
         <translation>注意：
 ファイルは一度に１つのみ開いてください。</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="449"/>
-        <location filename="../ankermainwindow.cpp" line="664"/>
+        <location filename="../ankermainwindow.cpp" line="462"/>
+        <location filename="../ankermainwindow.cpp" line="678"/>
         <source>The file is damaged. Try again.</source>
         <translation>ファイルが破損しています。もう一度試してください。</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="451"/>
+        <location filename="../ankermainwindow.cpp" line="464"/>
         <source>Only a single project file can be opened at a time.</source>
         <translation>一度に開けるプロジェクトファイルは1つだけです。</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="454"/>
         <location filename="../ankermainwindow.cpp" line="467"/>
-        <location filename="../ankermainwindow.cpp" line="554"/>
-        <location filename="../ankermainwindow.cpp" line="1482"/>
+        <location filename="../ankermainwindow.cpp" line="480"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="467"/>
+        <location filename="../ankermainwindow.cpp" line="480"/>
         <source>This will overwrite the file. Do you want to continue?</source>
         <translation>ファイルが上書きされます。続行しますか？</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="476"/>
-        <location filename="../ankermainwindow.cpp" line="875"/>
-        <location filename="../ankermainwindow.cpp" line="960"/>
+        <location filename="../ankermainwindow.cpp" line="489"/>
+        <location filename="../ankermainwindow.cpp" line="899"/>
+        <location filename="../ankermainwindow.cpp" line="984"/>
         <source>Save File</source>
         <translation>ファイルを保存</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="554"/>
-        <location filename="../ankermainwindow.cpp" line="1482"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
         <source>Your changes will be lost without saving. Do you want to save now?</source>
         <translation>保存しない場合は変更内容が失われます。保存しますか？</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="664"/>
-        <location filename="../ankermainwindow.cpp" line="672"/>
+        <location filename="../ankermainwindow.cpp" line="678"/>
+        <location filename="../ankermainwindow.cpp" line="686"/>
+        <location filename="../ankermainwindow.cpp" line="847"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="672"/>
+        <location filename="../ankermainwindow.cpp" line="686"/>
         <source>Export File Error</source>
         <translation>ファイルのエクスポートエラー</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="914"/>
-        <location filename="../ankermainwindow.cpp" line="941"/>
-        <location filename="../ankermainwindow.cpp" line="983"/>
-        <location filename="../ankermainwindow.cpp" line="1149"/>
+        <location filename="../ankermainwindow.cpp" line="847"/>
+        <source>acode file name too long</source>
+        <translation>acode ファイル名が長すぎます</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="914"/>
-        <location filename="../ankermainwindow.cpp" line="941"/>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
         <source>Model Not Detected</source>
         <translation>モデルが検出されません</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="983"/>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
         <source>An unknown error has occurred, please try again</source>
         <translation>不明なエラーが発生しました。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1006"/>
+        <location filename="../ankermainwindow.cpp" line="1033"/>
         <source>Open</source>
         <translation>開く</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1108"/>
+        <location filename="../ankermainwindow.cpp" line="1154"/>
         <source>Import Mesh</source>
         <translation>メッシュをインポート</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1135"/>
-        <location filename="../ankermainwindow.cpp" line="1142"/>
-        <location filename="../ankermainwindow.cpp" line="1247"/>
+        <location filename="../ankermainwindow.cpp" line="1181"/>
+        <location filename="../ankermainwindow.cpp" line="1188"/>
+        <location filename="../ankermainwindow.cpp" line="1279"/>
         <source>Error While Opening</source>
         <translation>起動中のエラー</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1149"/>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
         <source>Model File Error</source>
         <translation>モデルファイルのエラー</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1609"/>
+        <location filename="../ankermainwindow.cpp" line="1646"/>
         <source>Save Model File</source>
         <translation>モデルファイルを保存</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1644"/>
+        <location filename="../ankermainwindow.cpp" line="1681"/>
         <source>Error While Saving</source>
         <translation>保存エラー</translation>
     </message>
@@ -160,17 +166,17 @@
     <name>CHModelMirrorTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="190"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="191"/>
         <source>Mirror</source>
         <translation>ミラー</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="61"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="91"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="119"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="193"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="196"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="199"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="62"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="92"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="120"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="194"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="197"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="200"/>
         <source>Axis</source>
         <translation>軸</translation>
     </message>
@@ -179,13 +185,13 @@
     <name>CHModelMoveTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="29"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="288"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="289"/>
         <source>Move</source>
         <translation>移動</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="163"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="291"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="164"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="292"/>
         <source>Place On Bed</source>
         <translation>ヒートベッドに固定</translation>
     </message>
@@ -194,7 +200,7 @@
     <name>CHModelRotationTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="369"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="370"/>
         <source>Rotate</source>
         <translation>回転</translation>
     </message>
@@ -262,21 +268,21 @@
     <name>CHModelZoomTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="34"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="605"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="606"/>
         <source>Scale</source>
         <translation>スケール</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="65"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="608"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="66"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="609"/>
         <source>Uniform Scaling</source>
         <translation>スケール比を固定</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="275"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="611"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="276"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="612"/>
         <source>Scale To Fit</source>
-        <translation>サイズに合わせてスケール変更</translation>
+        <translation>サイズに合わせてスケール</translation>
     </message>
 </context>
 <context>
@@ -298,37 +304,37 @@
     <name>CopyRightWidget</name>
     <message>
         <location filename="../controls/copyrightwidget.cpp" line="27"/>
-        <location filename="../controls/copyrightwidget.cpp" line="43"/>
+        <location filename="../controls/copyrightwidget.cpp" line="44"/>
         <source>Copyright Information</source>
         <translation>著作権情報</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="65"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Name</source>
         <translation>名前</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="65"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>License</source>
         <translation>ライセンス</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="65"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Modifications</source>
         <translation>変更</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="71"/>
+        <location filename="../controls/copyrightwidget.cpp" line="72"/>
         <source>Copyright@2021 Anker Innovations Limited</source>
         <translation>Copyright@2021 Anker Innovations Limited</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="105"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>Yes</source>
         <translation>はい</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="105"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>No</source>
         <translation>いいえ</translation>
     </message>
@@ -396,16 +402,20 @@
         <translation type="vanished">節約した時間</translation>
     </message>
     <message>
-        <source>The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</source>
-        <translation type="vanished">ノズル温度がプリンターの上限を超えました。続行すると、ノズルの温度はプリンターの温度まで下げます。</translation>
-    </message>
-    <message>
-        <source>The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</source>
-        <translation type="vanished">ヒートベッドの温度がプリンターの上限を超えました。続行すると、ヒートベッドの温度はプリンターの温度まで下げます。</translation>
-    </message>
-    <message>
         <source>Notice</source>
         <translation type="vanished">通知</translation>
+    </message>
+    <message>
+        <source>Frequent requests, please try again later.</source>
+        <translation type="vanished">頻繁なリクエストです。しばらくしてからもう一度お試しください。</translation>
+    </message>
+    <message>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">速度がプリンターの上限を超えました。続行すると、お使いのプリンターに合わせて速度が遅くなります。</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="vanished">継続</translation>
     </message>
     <message>
         <source>Are you sure you want to stop printing?</source>
@@ -428,14 +438,6 @@
         <translation type="vanished">プロセスG-Code</translation>
     </message>
     <message>
-        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
-        <translation type="vanished">速度がプリンターの上限を超えました。続行すると、お使いのプリンターに合わせて速度が遅くなります。</translation>
-    </message>
-    <message>
-        <source>Continue</source>
-        <translation type="vanished">続く</translation>
-    </message>
-    <message>
         <source>Leveling</source>
         <translation type="vanished">レベリング</translation>
     </message>
@@ -450,6 +452,84 @@
     <message>
         <source>Finished</source>
         <translation type="vanished">終了</translation>
+    </message>
+    <message>
+        <source>Before starting, we suggest running the Auto-Level for a better</source>
+        <translation type="vanished">始める前に、オートレベルを実行することをお勧めします</translation>
+    </message>
+    <message>
+        <source>Auto-Level</source>
+        <translation type="vanished">自動レベリング</translation>
+    </message>
+    <message>
+        <source>You don&apos;t have printer control permissions.</source>
+        <translation type="vanished">プリンターコントロールの権限がありません。</translation>
+    </message>
+</context>
+<context>
+    <name>EditMeshTransformFactory</name>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="135"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="353"/>
+        <source>Rotate Mesh Model</source>
+        <translation>ローテータメッシュモデル</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="241"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="344"/>
+        <source>Move</source>
+        <translation>移動</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="256"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="348"/>
+        <source>Zoom</source>
+        <translation>ズーム</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="260"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="349"/>
+        <source>Zoom Mesh Model</source>
+        <translation>ズームメッシュモデル</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="271"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="352"/>
+        <source>Rotate</source>
+        <translation>回転</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="286"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="356"/>
+        <source>Mirror</source>
+        <translation>ミラー</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="345"/>
+        <source>Move Mesh Model</source>
+        <translation>移動メッシュモデル</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="357"/>
+        <source>Mirror Mesh Model</source>
+        <translation>ミラーメッシュモデル</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="360"/>
+        <source>Support</source>
+        <translation>サポート</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="361"/>
+        <source>Tree Support</source>
+        <translation>ツリー状サポート</translation>
+    </message>
+</context>
+<context>
+    <name>ErrorMessage</name>
+    <message>
+        <source>Printing failed. Check and try again. </source>
+        <translation type="vanished">プリントできませんでした。確認して、もう一度試してください。 </translation>
     </message>
     <message>
         <source>Printer error. Printing has stopped.</source>
@@ -472,87 +552,36 @@
         <translation type="vanished">フィラメント押出しが中断され、印刷が停止しました。確認後、印刷を再開してください。</translation>
     </message>
     <message>
-        <source>Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</source>
-        <translation type="vanished">プリンターの電源を切ります。エラーにより、異常に高温になる場合があります。サポート チームにお問い合わせください。</translation>
-    </message>
-    <message>
         <source>An error has been detected. Check your printer.</source>
         <translation type="vanished">エラーが検出されました。お使いのプリンターをご確認ください。</translation>
     </message>
     <message>
-        <source>Printing failed. Check and try again. </source>
-        <translation type="vanished">プリントできませんでした。確認して、もう一度試してください。 </translation>
+        <source>An error has been detected, please check the device.</source>
+        <translation type="vanished">エラーが検出されました。プリンタを確認してください。</translation>
     </message>
     <message>
-        <source>Before starting, we suggest running the Auto-Level for a better</source>
-        <translation type="vanished">始める前に、オートレベルを実行することをお勧めします</translation>
+        <source>The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</source>
+        <translation type="vanished">ノズル温度がプリンターの上限を超えました。続行すると、ノズルの温度はプリンターの温度まで下げます。</translation>
     </message>
     <message>
-        <source>Auto-Level</source>
-        <translation type="vanished">自動レベリング</translation>
+        <source>The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</source>
+        <translation type="vanished">ヒートベッドの温度がプリンターの上限を超えました。続行すると、ヒートベッドの温度はプリンターの温度まで下げます。</translation>
     </message>
     <message>
-        <source>You don&apos;t have printer control permissions.</source>
-        <translation type="vanished">プリンターコントロールの権限がありません。</translation>
-    </message>
-</context>
-<context>
-    <name>EditMeshTransformFactory</name>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="129"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="347"/>
-        <source>Rotate Mesh Model</source>
-        <translation>ローテータメッシュモデル</translation>
+        <source>Connection timeout. Try again or contact us for support.</source>
+        <translation type="vanished">接続がタイムアウトしました。再試行するか、カスタマーサポートにお問い合わせください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="235"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="338"/>
-        <source>Move</source>
-        <translation>移動</translation>
+        <source>Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</source>
+        <translation type="vanished">プリンターの電源を切ります。エラーにより、異常に高温になる場合があります。サポート チームにお問い合わせください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="250"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="342"/>
-        <source>Zoom</source>
-        <translation>ズーム</translation>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">ネットワークが検出されませんでした。確認してください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="254"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="343"/>
-        <source>Zoom Mesh Model</source>
-        <translation>ズームメッシュモデル</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="265"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="346"/>
-        <source>Rotate</source>
-        <translation>回転</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="280"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="350"/>
-        <source>Mirror</source>
-        <translation>ミラー</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="339"/>
-        <source>Move Mesh Model</source>
-        <translation>移動メッシュモデル</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="351"/>
-        <source>Mirror Mesh Model</source>
-        <translation>ミラーメッシュモデル</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="354"/>
-        <source>Support</source>
-        <translation>サポート</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="355"/>
-        <source>Tree Support</source>
-        <translation>ツリー状サポート</translation>
+        <source>Unknown network error.</source>
+        <translation type="vanished">ネットワークエラー：お使いのPCがネットワークに接続されているか確認してください。</translation>
     </message>
 </context>
 <context>
@@ -607,17 +636,17 @@
 <context>
     <name>FdmGcodeParser</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="164"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="164"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
         <source>can&apos;t open more gcode preview widgt whice numbers must less than 10.</source>
         <translation>これ以上の gcode プレビュー ウィジェットを開くことはできません。番号は 10 未満でなければなりません。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="256"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="257"/>
         <source>Load G-Code</source>
         <translation>Gコードをロード</translation>
     </message>
@@ -625,19 +654,19 @@
 <context>
     <name>FdmSlicer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="320"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="328"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="375"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="321"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="329"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="376"/>
         <source>Slicing</source>
         <translation>スライス</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="342"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
         <source>Notice</source>
         <translation>通知</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="342"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
         <source>The model is hovering in the air. Please generate support or switch on [place on bed].</source>
         <translation>モデルが宙に浮いています。サポート機能をオンにするか、モデル フィッティング ホット ベッド ボタンをオンにしてください。</translation>
     </message>
@@ -645,7 +674,7 @@
 <context>
     <name>GcodeViewer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2617"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2644"/>
         <source>Load G-Code</source>
         <translation>Gコードをロード</translation>
     </message>
@@ -653,8 +682,8 @@
 <context>
     <name>ImportModelThread</name>
     <message>
-        <location filename="../../common/file_property/import_model_thread.cpp" line="33"/>
-        <location filename="../../common/file_property/import_model_thread.cpp" line="45"/>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="48"/>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="59"/>
         <source>An unknown error has occurred, please try again</source>
         <translation>不明なエラーが発生しました。もう一度お試しください</translation>
     </message>
@@ -694,12 +723,16 @@
         <translation type="vanished">サインイン</translation>
     </message>
     <message>
-        <source>No Acount?</source>
+        <source>No Account?</source>
         <translation type="vanished">アカウントがありませんか？</translation>
     </message>
     <message>
         <source>Create one</source>
-        <translation type="vanished">新しいアカウントを作成する</translation>
+        <translation type="vanished">アカウント登録をする</translation>
+    </message>
+    <message>
+        <source>Sign Up</source>
+        <translation type="vanished">アカウント登録をする</translation>
     </message>
     <message>
         <source>To protect your data privacy and security, your printer&apos;s information will only be stored on a server in your region.</source>
@@ -765,50 +798,6 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <source>Printing failed. Check and try again. </source>
-        <translation type="vanished">プリントできませんでした。確認して、もう一度試してください。 </translation>
-    </message>
-    <message>
-        <source>Printer error. Printing has stopped.</source>
-        <translation type="vanished">プリンターエラーです。印刷が停止しました。</translation>
-    </message>
-    <message>
-        <source>Nozzle heating failure. Printing has stopped.</source>
-        <translation type="vanished">ノズルの加熱に失敗しました。印刷が停止しました。</translation>
-    </message>
-    <message>
-        <source>Heatbed failed to heat. Printing has stopped.</source>
-        <translation type="vanished">ヒートベッドの加熱に失敗しました。印刷が停止しました。</translation>
-    </message>
-    <message>
-        <source>Auto-Level Error</source>
-        <translation type="vanished">オートレベリングエラー</translation>
-    </message>
-    <message>
-        <source>Filament transfer interrupted, printing has paused. Resume printing after checking.</source>
-        <translation type="vanished">フィラメント押出しが中断され、印刷が停止しました。確認後、印刷を再開してください。</translation>
-    </message>
-    <message>
-        <source>An error has been detected. Check your printer.</source>
-        <translation type="vanished">エラーが検出されました。お使いのプリンターをご確認ください。</translation>
-    </message>
-    <message>
-        <source>The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</source>
-        <translation type="vanished">ノズル温度がプリンターの上限を超えました。続行すると、ノズルの温度はプリンターの温度まで下げます。</translation>
-    </message>
-    <message>
-        <source>The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</source>
-        <translation type="vanished">ヒートベッドの温度がプリンターの上限を超えました。続行すると、ヒートベッドの温度はプリンターの温度まで下げます。</translation>
-    </message>
-    <message>
-        <source>Connection timeout. Try again or contact us for support.</source>
-        <translation type="vanished">接続がタイムアウトしました。再試行するか、カスタマーサポートにお問い合わせください。</translation>
-    </message>
-    <message>
-        <source>Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</source>
-        <translation type="vanished">プリンターの電源を切ります。エラーにより、異常に高温になる場合があります。サポート チームにお問い合わせください。</translation>
-    </message>
-    <message>
         <source>AnkerMake</source>
         <translation type="vanished">AnkerMake</translation>
     </message>
@@ -818,7 +807,7 @@
     </message>
     <message>
         <source>Disconnect</source>
-        <translation type="vanished">切断する</translation>
+        <translation type="vanished">ディスコネクト</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1178,7 +1167,7 @@
         <translation>Gコードの開始</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="205"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="206"/>
         <source>End G-Code</source>
         <translation>Gコードの終了</translation>
     </message>
@@ -1186,8 +1175,8 @@
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="26"/>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="49"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="28"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="51"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
@@ -1215,18 +1204,26 @@
     <name>QHttpsSelect</name>
     <message>
         <source>HTTP 407 Authentication Required Error. Please log in again.</source>
-        <translation type="vanished">HTTP 407 Authentication Required Error. 再度ログインしてください。</translation>
+        <translation type="vanished">エラー: 再度ログインしてください。</translation>
     </message>
     <message>
-        <source>No network detected. Please check.</source>
-        <translation type="vanished">ネットワークが検出されませんでした。確認してください。</translation>
+        <source>Operation canceled.</source>
+        <translation type="vanished">操作がキャンセルされました。</translation>
+    </message>
+    <message>
+        <source>Unknown network error.</source>
+        <translation type="vanished">不明なネットワーク エラーです。</translation>
+    </message>
+    <message>
+        <source>Timeout error.</source>
+        <translation type="vanished">タイムアウト エラー。</translation>
     </message>
 </context>
 <context>
     <name>QNetworkObject</name>
     <message>
         <source>HTTP 407 Authentication Required Error. Please log in again.</source>
-        <translation type="vanished">HTTP 407 Authentication Required Error. 再度ログインしてください。</translation>
+        <translation type="vanished">エラー: 再度ログインしてください。</translation>
     </message>
     <message>
         <source>No network detected. Please check.</source>
@@ -1297,12 +1294,24 @@
         <translation type="vanished">ダウンロードしています...</translation>
     </message>
     <message>
-        <source>Failed to start the print. Try again.</source>
-        <translation type="vanished">プリントを開始できませんでした。もう一度試してください。</translation>
-    </message>
-    <message>
         <source>Notice</source>
         <translation type="vanished">通知</translation>
+    </message>
+    <message>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">速度がプリンターの上限を超えました。続行すると、お使いのプリンターに合わせて速度が遅くなります。</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">キャンセル</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="vanished">継続</translation>
+    </message>
+    <message>
+        <source>Failed to start the print. Try again.</source>
+        <translation type="vanished">プリントを開始できませんでした。もう一度試してください。</translation>
     </message>
 </context>
 <context>
@@ -1344,32 +1353,32 @@
         <translation type="vanished">予熱しています...</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4159"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4200"/>
         <source>Failed to create background FBO. There may be insufficient memory.</source>
         <translation>バックグラウンドでのフレームバッファオブジェクトの作成に失敗しました。メモリ不足の可能性があります。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4267"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4309"/>
         <source>An unknown error has occurred, please try again</source>
         <translation>不明なエラーが発生しました。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="../main.cpp" line="239"/>
+        <location filename="../main.cpp" line="277"/>
         <source>This version of OpenGL is not compatible with your setup. Upgrade your graphics driver.</source>
         <translation>このバージョンのOpenGLは互換性がありません。グラフィックドライバをアップグレードしてください。</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="152"/>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="152"/>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="152"/>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>Japanese</source>
         <translation>日本語</translation>
     </message>
@@ -1491,47 +1500,47 @@
 <context>
     <name>SettingView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="74"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="76"/>
         <source>Machine</source>
         <translation>プリンター</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="94"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="96"/>
         <source>Nozzle</source>
         <translation>ノズル</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="117"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="119"/>
         <source>Material</source>
         <translation>マテリアル</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="153"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="155"/>
         <source>Parameters</source>
         <translation>パラメーター</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="201"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="203"/>
         <source>Layer Height</source>
         <translation>レイヤー高さ</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="232"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="234"/>
         <source>Infill</source>
         <translation>インフィル</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="259"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="261"/>
         <source>Global Support</source>
         <translation>サポートの自動生成</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="276"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
         <source>Global Support have been disabled by Manual Support.</source>
         <translation>サポートの自動生成はサポートの手動調整により無効になっています。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="276"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
         <source>Global Support and Manual Support will take effect at the same time.</source>
         <translation>サポートの自動生成とサポートの手動調整は同時に有効になります。</translation>
     </message>
@@ -1541,7 +1550,7 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="286"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="288"/>
         <source>Start Adhesion</source>
         <translation>接着サポート</translation>
     </message>
@@ -1625,11 +1634,11 @@
     <name>UploadLogWidget</name>
     <message>
         <source>Log Upload</source>
-        <translation type="vanished">ログのアップロード</translation>
+        <translation type="vanished">ログアップロード</translation>
     </message>
     <message>
         <source>Upload log to diagnose issues.We only see the error history, date, and system information.</source>
-        <translation type="vanished">問題を診断するためにログをアップロードします。エラー履歴、日付、およびシステム情報のみが表示されます。</translation>
+        <translation type="vanished">問題を診断するためのログをアップロードします。エラーの履歴、日付、システム情報のみ表示されます。</translation>
     </message>
     <message>
         <source>Downloading...</source>
@@ -1637,7 +1646,7 @@
     </message>
     <message>
         <source>The upload will continue in the background when you close.</source>
-        <translation type="vanished">閉じると、アップロードはバックグラウンドで続行されます。</translation>
+        <translation type="vanished">閉じるをタップすると、バックグラウンドでアップロードが継続されます。</translation>
     </message>
     <message>
         <source>Close</source>
@@ -1652,12 +1661,12 @@
         <translation type="vanished">アップロード</translation>
     </message>
     <message>
-        <source>Uploading...</source>
-        <translation type="vanished">アップロード中...</translation>
-    </message>
-    <message>
         <source>Installing Updates for</source>
         <translation type="vanished">のアップデートのインストール</translation>
+    </message>
+    <message>
+        <source>Uploading...</source>
+        <translation type="vanished">アップロード中...</translation>
     </message>
 </context>
 <context>
@@ -1689,8 +1698,13 @@
     <message>
         <location filename="../controls/useragreementwidget.cpp" line="60"/>
         <location filename="../controls/useragreementwidget.cpp" line="94"/>
-        <source>Read the Terms of Use and Privacy Policy.</source>
-        <translation>利用規約とプライバシーポリシーをお読みください。</translation>
+        <source>Read the </source>
+        <translation>を読み、同意してください</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <source>Please read and accept</source>
+        <translation>を読み、同意してください</translation>
     </message>
     <message>
         <location filename="../controls/useragreementwidget.cpp" line="60"/>
@@ -1714,7 +1728,7 @@
     <name>VSliderRange</name>
     <message>
         <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="14"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="601"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="600"/>
         <source>Arial</source>
         <translation>Arial</translation>
     </message>
@@ -1723,45 +1737,45 @@
     <name>control::FdmMainWidget</name>
     <message>
         <location filename="../controls/mainwidget.cpp" line="50"/>
-        <location filename="../controls/mainwidget.cpp" line="937"/>
+        <location filename="../controls/mainwidget.cpp" line="939"/>
         <source>Slice</source>
         <translation>スライス</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="67"/>
-        <location filename="../controls/mainwidget.cpp" line="938"/>
+        <location filename="../controls/mainwidget.cpp" line="940"/>
         <source>Preview</source>
         <translation>プレビュー</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="94"/>
-        <location filename="../controls/mainwidget.cpp" line="939"/>
+        <location filename="../controls/mainwidget.cpp" line="941"/>
         <source>Device</source>
         <translation>デバイス</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="191"/>
-        <location filename="../controls/mainwidget.cpp" line="974"/>
+        <location filename="../controls/mainwidget.cpp" line="976"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="201"/>
         <location filename="../controls/mainwidget.cpp" line="356"/>
-        <location filename="../controls/mainwidget.cpp" line="976"/>
-        <location filename="../controls/mainwidget.cpp" line="1061"/>
+        <location filename="../controls/mainwidget.cpp" line="978"/>
+        <location filename="../controls/mainwidget.cpp" line="1063"/>
         <source>Open</source>
         <translation>開く</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="202"/>
-        <location filename="../controls/mainwidget.cpp" line="985"/>
+        <location filename="../controls/mainwidget.cpp" line="987"/>
         <source>Open Recent</source>
         <translation>最近使ったファイルを開く</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="205"/>
-        <location filename="../controls/mainwidget.cpp" line="988"/>
+        <location filename="../controls/mainwidget.cpp" line="990"/>
         <source>Export</source>
         <translation>エクスポート</translation>
     </message>
@@ -1769,9 +1783,9 @@
         <location filename="../controls/mainwidget.cpp" line="206"/>
         <location filename="../controls/mainwidget.cpp" line="225"/>
         <location filename="../controls/mainwidget.cpp" line="228"/>
-        <location filename="../controls/mainwidget.cpp" line="991"/>
-        <location filename="../controls/mainwidget.cpp" line="1019"/>
-        <location filename="../controls/mainwidget.cpp" line="1028"/>
+        <location filename="../controls/mainwidget.cpp" line="993"/>
+        <location filename="../controls/mainwidget.cpp" line="1021"/>
+        <location filename="../controls/mainwidget.cpp" line="1030"/>
         <source>All Objects</source>
         <translation>すべてのオブジェクト</translation>
     </message>
@@ -1779,151 +1793,151 @@
         <location filename="../controls/mainwidget.cpp" line="208"/>
         <location filename="../controls/mainwidget.cpp" line="223"/>
         <location filename="../controls/mainwidget.cpp" line="227"/>
-        <location filename="../controls/mainwidget.cpp" line="994"/>
-        <location filename="../controls/mainwidget.cpp" line="1016"/>
-        <location filename="../controls/mainwidget.cpp" line="1025"/>
+        <location filename="../controls/mainwidget.cpp" line="996"/>
+        <location filename="../controls/mainwidget.cpp" line="1018"/>
+        <location filename="../controls/mainwidget.cpp" line="1027"/>
         <source>Select Object</source>
         <translation>オブジェクトを選択</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="210"/>
         <location filename="../controls/mainwidget.cpp" line="248"/>
-        <location filename="../controls/mainwidget.cpp" line="979"/>
-        <location filename="../controls/mainwidget.cpp" line="1034"/>
+        <location filename="../controls/mainwidget.cpp" line="981"/>
+        <location filename="../controls/mainwidget.cpp" line="1036"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="211"/>
-        <location filename="../controls/mainwidget.cpp" line="982"/>
+        <location filename="../controls/mainwidget.cpp" line="984"/>
         <source>Save As</source>
         <translation>名前を付けて保存</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="215"/>
-        <location filename="../controls/mainwidget.cpp" line="998"/>
+        <location filename="../controls/mainwidget.cpp" line="1000"/>
         <source>Edit</source>
         <translation>編集</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="216"/>
-        <location filename="../controls/mainwidget.cpp" line="1001"/>
+        <location filename="../controls/mainwidget.cpp" line="1003"/>
         <source>Undo</source>
         <translation>元に戻す</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="217"/>
-        <location filename="../controls/mainwidget.cpp" line="1004"/>
+        <location filename="../controls/mainwidget.cpp" line="1006"/>
         <source>Redo</source>
         <translation>やり直し</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="220"/>
-        <location filename="../controls/mainwidget.cpp" line="1007"/>
+        <location filename="../controls/mainwidget.cpp" line="1009"/>
         <source>Select Project</source>
         <translation>プロジェクトを選択</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="221"/>
-        <location filename="../controls/mainwidget.cpp" line="1010"/>
+        <location filename="../controls/mainwidget.cpp" line="1012"/>
         <source>Copy</source>
         <translation>コピー</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="222"/>
-        <location filename="../controls/mainwidget.cpp" line="1013"/>
+        <location filename="../controls/mainwidget.cpp" line="1015"/>
         <source>Delete</source>
         <translation>削除</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="226"/>
-        <location filename="../controls/mainwidget.cpp" line="1022"/>
+        <location filename="../controls/mainwidget.cpp" line="1024"/>
         <source>Revert to Original</source>
         <translation>オリジナルに戻す</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="231"/>
-        <location filename="../controls/mainwidget.cpp" line="1031"/>
+        <location filename="../controls/mainwidget.cpp" line="1033"/>
         <source>Settings</source>
         <translation>設定</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="237"/>
-        <location filename="../controls/mainwidget.cpp" line="1064"/>
+        <location filename="../controls/mainwidget.cpp" line="1066"/>
         <source>General</source>
         <translation>一般</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="239"/>
-        <location filename="../controls/mainwidget.cpp" line="1067"/>
+        <location filename="../controls/mainwidget.cpp" line="1069"/>
         <source>Machine</source>
         <translation>プリンター</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="241"/>
-        <location filename="../controls/mainwidget.cpp" line="1070"/>
+        <location filename="../controls/mainwidget.cpp" line="1072"/>
         <source>Material</source>
         <translation>マテリアル</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="243"/>
-        <location filename="../controls/mainwidget.cpp" line="1073"/>
+        <location filename="../controls/mainwidget.cpp" line="1075"/>
         <source>Parameters</source>
         <translation>パラメーター</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="259"/>
-        <location filename="../controls/mainwidget.cpp" line="1037"/>
+        <location filename="../controls/mainwidget.cpp" line="1039"/>
         <source>Help</source>
         <translation>ヘルプ</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="265"/>
-        <location filename="../controls/mainwidget.cpp" line="1040"/>
+        <location filename="../controls/mainwidget.cpp" line="1042"/>
         <source>Tutorial</source>
         <translation>チュートリアル</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="276"/>
-        <location filename="../controls/mainwidget.cpp" line="1043"/>
+        <location filename="../controls/mainwidget.cpp" line="1045"/>
         <source>Feedback</source>
         <translation>フィードバック</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="289"/>
-        <location filename="../controls/mainwidget.cpp" line="1046"/>
+        <location filename="../controls/mainwidget.cpp" line="1048"/>
         <source>Software Update</source>
         <translation>ソフトウェアの更新</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="292"/>
-        <location filename="../controls/mainwidget.cpp" line="1049"/>
+        <location filename="../controls/mainwidget.cpp" line="1051"/>
         <source>Privacy Policy</source>
         <translation>プライバシーポリシー</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="312"/>
-        <location filename="../controls/mainwidget.cpp" line="1052"/>
+        <location filename="../controls/mainwidget.cpp" line="1054"/>
         <source>Terms of Use</source>
         <translation>利用規約</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="332"/>
-        <location filename="../controls/mainwidget.cpp" line="944"/>
+        <location filename="../controls/mainwidget.cpp" line="946"/>
         <source>Log Upload</source>
-        <translation>ログのアップロード</translation>
+        <translation>ログアップロード</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="342"/>
-        <location filename="../controls/mainwidget.cpp" line="1055"/>
+        <location filename="../controls/mainwidget.cpp" line="1057"/>
         <source>Copyright Information</source>
         <translation>著作権情報</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="351"/>
         <location filename="../controls/mainwidget.cpp" line="352"/>
-        <location filename="../controls/mainwidget.cpp" line="1058"/>
-        <location filename="../controls/mainwidget.cpp" line="1076"/>
+        <location filename="../controls/mainwidget.cpp" line="1060"/>
+        <location filename="../controls/mainwidget.cpp" line="1078"/>
         <source>Account</source>
         <translation>アカウント</translation>
     </message>
@@ -1934,43 +1948,43 @@
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="481"/>
-        <location filename="../controls/mainwidget.cpp" line="947"/>
+        <location filename="../controls/mainwidget.cpp" line="949"/>
         <source>3D View</source>
         <translation>3D画像</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="485"/>
-        <location filename="../controls/mainwidget.cpp" line="950"/>
+        <location filename="../controls/mainwidget.cpp" line="952"/>
         <source>Front View</source>
         <translation>正面図</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="489"/>
-        <location filename="../controls/mainwidget.cpp" line="953"/>
+        <location filename="../controls/mainwidget.cpp" line="955"/>
         <source>Rear View</source>
         <translation>背面図</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="493"/>
-        <location filename="../controls/mainwidget.cpp" line="956"/>
+        <location filename="../controls/mainwidget.cpp" line="958"/>
         <source>Left View</source>
         <translation>側面図 (左)</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="497"/>
-        <location filename="../controls/mainwidget.cpp" line="959"/>
+        <location filename="../controls/mainwidget.cpp" line="961"/>
         <source>Right View</source>
         <translation>側面図 (右)</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="501"/>
-        <location filename="../controls/mainwidget.cpp" line="962"/>
+        <location filename="../controls/mainwidget.cpp" line="964"/>
         <source>Top View</source>
         <translation>上面図</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="505"/>
-        <location filename="../controls/mainwidget.cpp" line="965"/>
+        <location filename="../controls/mainwidget.cpp" line="967"/>
         <source>Bottom View</source>
         <translation>底面図</translation>
     </message>
@@ -1989,109 +2003,109 @@
     <name>control::GeneralWidget</name>
     <message>
         <location filename="../controls/generalwidget.cpp" line="23"/>
-        <location filename="../controls/generalwidget.cpp" line="266"/>
+        <location filename="../controls/generalwidget.cpp" line="283"/>
         <source>General</source>
         <translation>一般</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="42"/>
-        <location filename="../controls/generalwidget.cpp" line="268"/>
+        <location filename="../controls/generalwidget.cpp" line="285"/>
         <source>Language</source>
         <translation>言語</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="53"/>
-        <location filename="../controls/generalwidget.cpp" line="271"/>
+        <location filename="../controls/generalwidget.cpp" line="288"/>
         <source>Language will change after software restarts.</source>
         <translation>言語はソフトウェアの再起動後に変更されます。</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="84"/>
-        <location filename="../controls/generalwidget.cpp" line="274"/>
+        <location filename="../controls/generalwidget.cpp" line="291"/>
         <source>Create AI File</source>
         <translation>AIファイルの作成</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="88"/>
-        <location filename="../controls/generalwidget.cpp" line="277"/>
+        <location filename="../controls/generalwidget.cpp" line="294"/>
         <source>Create AI file when slicing.</source>
         <translation>スライス時にAIファイルを作成します。</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="105"/>
-        <location filename="../controls/generalwidget.cpp" line="287"/>
+        <location filename="../controls/generalwidget.cpp" line="304"/>
         <source>Version</source>
         <translation>バージョン</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="115"/>
-        <location filename="../controls/generalwidget.cpp" line="283"/>
+        <location filename="../controls/generalwidget.cpp" line="300"/>
         <source>Check</source>
         <translation>確認</translation>
     </message>
     <message>
         <location filename="../controls/generalwidget.cpp" line="128"/>
-        <location filename="../controls/generalwidget.cpp" line="290"/>
+        <location filename="../controls/generalwidget.cpp" line="307"/>
         <source>Auto-Check for Updates</source>
         <translation>更新の自動確認</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="214"/>
-        <location filename="../controls/generalwidget.cpp" line="281"/>
-        <location filename="../controls/generalwidget.cpp" line="463"/>
-        <location filename="../controls/generalwidget.cpp" line="485"/>
+        <location filename="../controls/generalwidget.cpp" line="231"/>
+        <location filename="../controls/generalwidget.cpp" line="298"/>
+        <location filename="../controls/generalwidget.cpp" line="522"/>
+        <location filename="../controls/generalwidget.cpp" line="544"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="233"/>
+        <location filename="../controls/generalwidget.cpp" line="250"/>
         <source>AnkerMake is up to date.</source>
         <translation>Anker Makeは最新です。</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="424"/>
-        <location filename="../controls/generalwidget.cpp" line="600"/>
+        <location filename="../controls/generalwidget.cpp" line="476"/>
+        <location filename="../controls/generalwidget.cpp" line="693"/>
         <source>is ready, the changes will effective once you restart the app.</source>
         <translation>の準備ができました。アプリを再起動すると、変更が有効になります。</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="426"/>
-        <location filename="../controls/generalwidget.cpp" line="520"/>
+        <location filename="../controls/generalwidget.cpp" line="478"/>
         <location filename="../controls/generalwidget.cpp" line="603"/>
+        <location filename="../controls/generalwidget.cpp" line="696"/>
         <source>Check for Update</source>
         <translation>アップデートを確認</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="429"/>
-        <location filename="../controls/generalwidget.cpp" line="606"/>
+        <location filename="../controls/generalwidget.cpp" line="481"/>
+        <location filename="../controls/generalwidget.cpp" line="699"/>
         <source>Later</source>
-        <translation>後で</translation>
+        <translation>後日談</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="430"/>
-        <location filename="../controls/generalwidget.cpp" line="607"/>
+        <location filename="../controls/generalwidget.cpp" line="482"/>
+        <location filename="../controls/generalwidget.cpp" line="700"/>
         <source>Restart</source>
         <translation>再起動</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="431"/>
-        <location filename="../controls/generalwidget.cpp" line="525"/>
-        <location filename="../controls/generalwidget.cpp" line="608"/>
+        <location filename="../controls/generalwidget.cpp" line="489"/>
+        <location filename="../controls/generalwidget.cpp" line="614"/>
+        <location filename="../controls/generalwidget.cpp" line="707"/>
         <source>What&apos;s new</source>
         <translation>新着情報</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="520"/>
+        <location filename="../controls/generalwidget.cpp" line="603"/>
         <source>is ready, click to download new version</source>
         <translation>の準備ができました。クリックして新しいバージョンをダウンロードしてください</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="523"/>
+        <location filename="../controls/generalwidget.cpp" line="606"/>
         <source>Close</source>
         <translation>閉じる</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="524"/>
+        <location filename="../controls/generalwidget.cpp" line="607"/>
         <source>OK</source>
         <translation>わかった</translation>
     </message>
@@ -2168,7 +2182,7 @@
     <message>
         <location filename="../../common/controlInterface/messageDialog.cpp" line="108"/>
         <source>OK</source>
-        <translation>わかった</translation>
+        <translation>確認</translation>
     </message>
     <message>
         <location filename="../../common/controlInterface/messageDialog.cpp" line="120"/>
@@ -2204,42 +2218,42 @@
     <name>control::ParametersWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="11"/>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="151"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="162"/>
         <source>Parameters</source>
         <translation>パラメーター</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Name These Parameters</source>
         <translation>パラメーターに名前をつける</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Input a name before you save.</source>
         <translation>保存する前に名前を入力してください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="102"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="106"/>
         <source>Input a name.</source>
         <translation>名前を入力してください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="110"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="114"/>
         <source>Name is longer than 128 characters. Create a shorter one.</source>
         <translation>名前が128文字を超えています。短くしてください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="117"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="121"/>
         <source>Name already exists. Try another.</source>
         <translation>名前はすでに存在しています。別のものを試してください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="128"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="132"/>
         <source>Import</source>
         <translation>インポート</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="140"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="148"/>
         <source>Export</source>
         <translation>エクスポート</translation>
     </message>
@@ -2288,36 +2302,36 @@
 <context>
     <name>control::updateMessageDialog</name>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="154"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="140"/>
         <source>OK</source>
         <translation>わかった</translation>
     </message>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="166"/>
-        <location filename="../controls/updateMessageDialog.cpp" line="173"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="152"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="159"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="168"/>
-        <location filename="../controls/updateMessageDialog.cpp" line="175"/>
-        <location filename="../controls/updateMessageDialog.cpp" line="188"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="154"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="161"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="174"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="177"/>
-        <location filename="../controls/updateMessageDialog.cpp" line="186"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="163"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="172"/>
         <source>Don&apos;t Save</source>
         <translation>保存しない</translation>
     </message>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="193"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="179"/>
         <source>No</source>
         <translation>いいえ</translation>
     </message>
     <message>
-        <location filename="../controls/updateMessageDialog.cpp" line="196"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="182"/>
         <source>Yes</source>
         <translation>はい</translation>
     </message>
@@ -2325,12 +2339,12 @@
 <context>
     <name>fdmsettings::FdmParamSettingsWidget</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="172"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Reset Parameters</source>
         <translation>パラメーターをリセット</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="172"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Parameters will be reset. Continue?</source>
         <translation>パラメーターがリセットされます。続行しますか？</translation>
     </message>
@@ -2338,12 +2352,12 @@
 <context>
     <name>fdmsettings::FdmSettingPlugin</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="509"/>
-        <source>Import ini config file</source>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="510"/>
+        <source>Import ini config </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="519"/>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="520"/>
         <source>Export ini config file</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2357,235 +2371,239 @@
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="68"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2092"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3228"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2096"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3240"/>
         <source>Print</source>
         <translation>プリント</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="169"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3230"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="172"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3242"/>
         <source>AnkerMake G-Code Preview</source>
         <translation>AnkerMake G-codeプレビュー</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="338"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3327"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="341"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3339"/>
         <source>AI View</source>
         <translation>AI ビュー</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="367"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3330"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="370"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3342"/>
         <source>3D View</source>
         <translation>3D画像</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="391"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3324"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="394"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3336"/>
         <source>Front View</source>
         <translation>正面図</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="414"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3333"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="417"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3345"/>
         <source>Rear View</source>
         <translation>背面図</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="437"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3336"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="440"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3348"/>
         <source>Left View</source>
         <translation>側面図 (左)</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="460"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3339"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="463"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3351"/>
         <source>Right View</source>
         <translation>側面図 (右)</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="483"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3342"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3354"/>
         <source>Top View</source>
         <translation>上面図</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="504"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3345"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="507"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3357"/>
         <source>Bottom View</source>
         <translation>底面図</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="622"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="631"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3235"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3282"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="625"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="634"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3247"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3294"/>
         <source>Line Type</source>
         <translation>ラインタイプ</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="623"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3236"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="626"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3248"/>
         <source>Speed</source>
         <translation>速度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="624"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3237"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="627"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3249"/>
         <source>Trapezoid</source>
         <translation>台形</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="625"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3238"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="628"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3250"/>
         <source>Flow</source>
         <translation>フロー</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="664"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1056"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1358"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1662"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3251"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3285"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="667"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1060"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1362"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1666"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3263"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3297"/>
         <source>Inner Wall</source>
         <translation>内側ウォール</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="712"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1089"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1391"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1695"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3254"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3288"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="715"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1093"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1395"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1699"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3266"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3300"/>
         <source>Outer Wall</source>
         <translation>外側ウォール</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="754"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1119"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1421"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1725"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3257"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3260"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3291"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="757"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1123"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1425"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1729"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3269"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3272"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3303"/>
         <source>Skin</source>
         <translation>スキン</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="796"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1149"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1451"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1755"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3263"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3294"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="799"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1153"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1455"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1759"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3275"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3306"/>
         <source>Adhesion</source>
         <translation>接着</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="838"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1180"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1482"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1786"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3266"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3297"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="841"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1184"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1790"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3278"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3309"/>
         <source>Fill</source>
         <translation>インフィル</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="879"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3309"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3312"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="882"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3321"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3324"/>
         <source>Travel</source>
         <translation>移動</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="922"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3315"/>
-        <source>zlap</source>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="925"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3327"/>
+        <source>Zlap</source>
         <translation>ズーミング</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="963"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1211"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1513"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1817"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3242"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3269"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3272"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3318"/>
+        <source>zlap</source>
+        <translation type="vanished">ズーミング</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="967"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1215"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1517"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1821"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3254"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3281"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3284"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3330"/>
         <source>Support</source>
         <translation>サポート</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1005"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1242"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1544"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1848"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3245"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3275"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3321"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1009"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1246"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1548"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1852"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3257"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3287"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3333"/>
         <source>Unknown</source>
         <translation>不明</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1282"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1585"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1888"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3248"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3278"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1286"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1589"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1892"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3260"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3290"/>
         <source>mm/s</source>
         <translation>mm / 秒</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1946"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3300"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1950"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3312"/>
         <source>Consumables</source>
         <translation>消費</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1965"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3303"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1969"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3315"/>
         <source>Filament</source>
         <translation>フィラメント</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2008"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3306"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2012"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3318"/>
         <source>Time</source>
         <translation>時間</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2045"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3225"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2049"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3237"/>
         <source>Export</source>
         <translation>エクスポート</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2874"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3380"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2878"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3392"/>
         <source>Generate AI Image</source>
         <translation>AI画像を生成</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2876"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2880"/>
         <source>Export G-Code</source>
         <translation>Gコードのエクスポート</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3124"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3373"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3124"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
         <source>G-Code failed to open. Try again.</source>
         <translation>G-Codeを開くのに失敗しました。もう一度試してください。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3373"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
         <source>No GCODE here!</source>
         <translation>ここにGCODEはありません！</translation>
     </message>

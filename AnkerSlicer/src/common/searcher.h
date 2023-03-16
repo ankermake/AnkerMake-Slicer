@@ -8,8 +8,17 @@
 #include<QRegExp>
 #include<QVector>
 #include<QSet>
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-class WordActionsMap
+class COMMONLIB_EXPORT WordActionsMap
 {
 public:
 	WordActionsMap();
@@ -23,7 +32,7 @@ private:
 
 class RankedMatches;
 
-class WordActionsMapAccessor
+class COMMONLIB_EXPORT WordActionsMapAccessor
 {
 public:
 	WordActionsMapAccessor();
@@ -44,7 +53,7 @@ private:
 	QRegExp ignexp;
 };
 
-class RankedMatches
+class COMMONLIB_EXPORT RankedMatches
 {
 public:
 	RankedMatches();

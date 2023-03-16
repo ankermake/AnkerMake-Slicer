@@ -15,6 +15,7 @@
 #include <QTimer>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QTextEdit>
 #include "common/controlInterface/titlewidget.h"
 namespace  control{
 
@@ -82,9 +83,9 @@ private:
    QLabel *m_title;
    QLabel *m_description;
 
-   QLabel *m_detailTitle;  
-   QLabel *m_detail;  
-   QScrollArea *m_scrollArea;
+   QLabel *m_detailTitle = nullptr;  
+   QTextEdit *m_releaseNote = nullptr;
+
    QLineEdit *m_edit;
    QLabel *m_warning;
    QPushButton *m_leftButton;

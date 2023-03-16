@@ -4,8 +4,16 @@
 #include <QObject>
 #include <QThread>
 #include "mesh_model_import_export.h"
-
-class ImportModelThread : public QThread
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT ImportModelThread : public QThread
 {
     Q_OBJECT
 public:
@@ -37,7 +45,7 @@ private:
     bool successful = true;
 };
 
-class ImportModelWoker : public QObject
+class COMMONLIB_EXPORT ImportModelWoker : public QObject
 {
     Q_OBJECT
 
@@ -61,7 +69,7 @@ private:
     vcg::CallBackPos *m_cb;
 };
 
-class ImportModelController : public QObject
+class COMMONLIB_EXPORT ImportModelController : public QObject
 {
     Q_OBJECT
     QThread workerThread;

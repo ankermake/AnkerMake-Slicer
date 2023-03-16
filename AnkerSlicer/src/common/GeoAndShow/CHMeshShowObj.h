@@ -37,7 +37,7 @@ struct MyTriangle
 
 
 DEF_PTR(CHMeshShowObj)
-class CHMeshShowObj :public CHShowObj
+class COMMONLIB_EXPORT CHMeshShowObj :public CHShowObj
 {
 public:
     CHMeshShowObj();

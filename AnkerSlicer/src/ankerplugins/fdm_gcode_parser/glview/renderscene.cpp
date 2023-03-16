@@ -68,18 +68,21 @@ void RenderData::bindPrintMachineBoxRenderData()
            }
 
         }
-		if (std::dynamic_pointer_cast<CHMeshShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]) != nullptr)
-		{		 //CHMeshShowObjPtr		  std::dynamic_pointer_cast<CH3DPrintModel>(mesh)
-			CHMeshShowObjPtr meshShowObjPtr = std::dynamic_pointer_cast<CHMeshShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]);
-			RenderMeshPtr renderMeshPtr = RenderMeshPtr(new RenderMesh);
-			m_allmeshes.insert(std::pair<CHMeshShowObjPtr, RenderMeshPtr>(meshShowObjPtr, renderMeshPtr));
-		}
-		else if (std::dynamic_pointer_cast<CHCurveShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]) != nullptr)
-		{
-			CHCurveShowObjPtr curveShowObjPtr = std::dynamic_pointer_cast<CHCurveShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]);
-			RenderCurvePtr renderCurvePtr = RenderCurvePtr(new RenderCurve);
-			m_allcurves.insert(std::pair<CHCurveShowObjPtr, RenderCurvePtr>(curveShowObjPtr, renderCurvePtr));
-		}
+        else
+        {
+            if (std::dynamic_pointer_cast<CHMeshShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]) != nullptr)
+            {		 //CHMeshShowObjPtr		  std::dynamic_pointer_cast<CH3DPrintModel>(mesh)
+                CHMeshShowObjPtr meshShowObjPtr = std::dynamic_pointer_cast<CHMeshShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]);
+                RenderMeshPtr renderMeshPtr = RenderMeshPtr(new RenderMesh);
+                m_allmeshes.insert(std::pair<CHMeshShowObjPtr, RenderMeshPtr>(meshShowObjPtr, renderMeshPtr));
+            }
+            else if (std::dynamic_pointer_cast<CHCurveShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]) != nullptr)
+            {
+                CHCurveShowObjPtr curveShowObjPtr = std::dynamic_pointer_cast<CHCurveShowObj>(m_printMachineBoxPtr->m_baseShowObjs[i]);
+                RenderCurvePtr renderCurvePtr = RenderCurvePtr(new RenderCurve);
+                m_allcurves.insert(std::pair<CHCurveShowObjPtr, RenderCurvePtr>(curveShowObjPtr, renderCurvePtr));
+            }
+        }
 	}
 
 }

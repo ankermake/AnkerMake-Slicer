@@ -9,19 +9,19 @@ QT += remoteobjects
 
 TEMPLATE = lib
 TARGET = meshlab-common
+INCLUDEPATH *= ../.. $$VCGDIR $$EIGENDIR
+!CONFIG(system_glew): INCLUDEPATH *=  $$GLEWDIR/include
+DEPENDPATH += ../.. $$VCGDIR
 DEPENDPATH += .
 
 #QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
 
-DESTDIR = $$MESHLAB_DISTRIB_DIRECTORY/lib
+macx:DESTDIR = $$MESHLAB_DISTRIB_DIRECTORY/lib
 
 win32-msvc:QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
-#win32-msvc:CONFIG += staticlib
-win32:CONFIG += staticlib
+#win32:CONFIG += shared
 #CONFIG += staticlib
 win32-g++:DLLDESTDIR = $$MESHLAB_DISTRIB_DIRECTORY/lib
-
-linux:CONFIG += dll
 
 CONFIG += c++17
 
@@ -40,6 +40,46 @@ INCLUDEPATH *= \
 	SOURCES += $$GLEWCODE
 	DEFINES += GLEW_STATIC
 }
+
+macx:{
+    DEFINES += LINUX
+
+    MAC_M1_BUILD_X86{
+        message("build openssl, MAC_M1_BUILD_X86 is set")
+        LIBS += /Users/anker/mac_x64_86/openssl@1.1/1.1.1n/lib/libcrypto.a
+        LIBS += -L -lpthread -lstdc++
+
+        INCLUDEPATH += /Users/anker/mac_x64_86/openssl@1.1/1.1.1n/include
+    }else{
+        message("build openssl, MAC_M1_BUILD_X86 is not set")
+        LIBS += /usr/local/opt/openssl@1.1/lib/libcrypto.a
+        LIBS += -L -lpthread -lstdc++
+
+        INCLUDEPATH += /usr/local/opt/openssl@1.1/include
+    }
+
+CONFIG(debug, debug|release){
+    DEPENDPATH +=$$DEP/debug/bin
+    QMAKE_LIBDIR += $$DEP/debug/bin
+
+    DEPENDPATH += $$DEP/debug/lib
+    QMAKE_LIBDIR += $$DEP/debug/lib
+#    EXEPATH = $$OUT_PWD
+}
+
+CONFIG(release, debug|release){
+    DEPENDPATH += $$DEP/release/bin
+    QMAKE_LIBDIR += $$DEP/release/bin
+
+    DEPENDPATH += $$DEP/release/lib
+    QMAKE_LIBDIR += $$DEP/release/lib
+#    EXEPATH = $$EXEPATH
+}
+
+}
+
+
+DEFINES += COMMONLIB
 
 message(MeshLab Version: $$MESHLAB_VERSION)
 

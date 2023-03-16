@@ -4,11 +4,21 @@
 #include "akUtilSpace.h"
 #include <QMutex>
 #include <QObject>
+#include <QDebug>
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 AK_UTIL_NAME_SPACE_BEGIN
 
 
-QString _ThreadId_();
+QString COMMONLIB_EXPORT _ThreadId_();
 
 #define __TimeStamp__ (QDateTime::currentDateTime().toString("[yyyy-MM-dd HH:mm:ss.zzz]"))
 #define __ThreadId__  (QString("[%1]").arg(qintptr(QThread::currentThread()->currentThreadId())))
@@ -27,8 +37,11 @@ QString _ThreadId_();
 #define TFunction(msg) TLogHelper toollibLogHelper(QString("Function %1, %2").arg(__FUNCTION__).arg(msg),__CodeLocation__)
 #define TConditon(msg) TLogHelper toollibLogHelper(QString("Condition %1").arg(msg),__CodeLocation__)
 
+template<typename T>  
+static QString TQtVar(T var){ QString str; QDebug dbg = QDebug(&str); dbg << var; return str; }
+
 //class TOOLLIB_EXPORT TLogger
-class TLogger
+class COMMONLIB_EXPORT TLogger
 {
 public:
     TLogger();
@@ -84,7 +97,7 @@ private:
 };
 
 //class TOOLLIB_EXPORT TLogHelper
-class TLogHelper
+class COMMONLIB_EXPORT TLogHelper
 {
 public:
     TLogHelper(QString msg, QString funcInfo);

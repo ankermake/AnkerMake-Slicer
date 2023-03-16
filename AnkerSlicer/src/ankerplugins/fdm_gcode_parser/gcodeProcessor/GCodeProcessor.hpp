@@ -457,6 +457,7 @@ namespace Anker {
             TrapezoidFeedrateProfile motor_process;
             unsigned int g1_line_id{ 0 };
             unsigned int layerId{ 0 };
+            bool on_takepic{false};
             float volumetric_rate() const { return feedrate * mm3_per_mm; }
         };
 
@@ -483,11 +484,12 @@ namespace Anker {
             std::vector<std::string> extruder_colors;
             std::vector<std::string> filament_colors;
             PrintEstimatedTimeStatistics time_statistics;
-            std::vector<int> ai_pic_Layer;
+            std::vector<double> ai_pic_Layer_d;
             std::vector<std::array<double,4>> layer_offset;
 
             std::vector<float> freedrate_range;
             std::vector<float> flow_range;
+            float MaxSpeed;
 #if ENABLE_GCODE_VIEWER_STATISTICS
             int64_t time{ 0 };
             void reset()
@@ -510,10 +512,11 @@ namespace Anker {
                 settings_ids.reset();
                 freedrate_range = {-1.0f, -1.0f};
                 flow_range = {-1.0f,-1.0f};
-                std::vector<int>().swap(ai_pic_Layer);
+                MaxSpeed = 0.0f;
+                std::vector<double>().swap(ai_pic_Layer_d);
                 std::vector<std::array<double,4>>().swap(layer_offset);
 //                std::vector<double>().swap(layer_z_offset);
-//                ai_pic_Layer.swap();
+//                ai_pic_Layer_d.swap();
 //                layer_y_offset.swap(std::vector<double>());
             }
 #endif // ENABLE_GCODE_VIEWER_STATISTICS
@@ -602,7 +605,7 @@ namespace Anker {
         AxisCoords m_origin; // mm
         CachedPosition m_cached_position;
         bool m_wiping;
-
+        bool m_on_takepic;
         float m_feedrate; // mm/s
         float m_width; // mm
         float m_height; // mm

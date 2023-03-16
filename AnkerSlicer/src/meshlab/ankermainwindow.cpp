@@ -114,10 +114,17 @@ void AnkerMainWindow::init()
     }
 
     initEditTool();
+    //remove update cache before use ankermake
+    auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    QString dirPath = writableLocation + "/AICamera";
+    QDir dir(dirPath);
+    if (dir.exists())
+    {
+        dir.removeRecursively();
+    }
 
     QTimer::singleShot(10, [this]() {
         init_9_Delayed();
-
     });
 }
 
@@ -140,7 +147,7 @@ void AnkerMainWindow::initRichParameterList()
 
 
     //    QSettings settings;
-    {  
+    {
         defaultGlobalParams.addParam(RichPoint3f(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE, Point3m(235.0f, 235.0f, 250.0f)));
         defaultGlobalParams.addParam(RichBool(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE, false));
         defaultGlobalParams.addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, 90.0f));
@@ -151,6 +158,7 @@ void AnkerMainWindow::initRichParameterList()
             const RichPoint3f& param = static_cast<const RichPoint3f&>(defaultGlobalParams.getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE));
             mainMachineBoxChanged(param.value());
             QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, this, &AnkerMainWindow::mainMachineBoxChanged);
+            qDebug() << "Connect Machine Size.";
         }
 
         {
@@ -179,6 +187,9 @@ void AnkerMainWindow::initRichParameterList()
                                         sceneParam.value().getSceneParam().m_printMachineBox.m_width,
                                         sceneParam.value().getSceneParam().m_printMachineBox.m_height, QColor(80, 80, 80));
             getDoc()->modelCheckSceneInChanged();
+
+            //mainMachineBoxChanged(param.value());
+             qDebug() << "createMachineBox.";
 
             //            auto sceneParamChanged = [](const Value& value) {
             
@@ -213,6 +224,7 @@ void AnkerMainWindow::initLoadPlugin()
         PM.loadPlugins();
     }
     catch (const MLException& e) {
+        TDebug(QString( e.what()));
         MessageDialog messageBox(tr("Plugin Loading Error"), QString( e.what()), MessageDialog::OK);
         messageBox.exec();
     }
@@ -260,6 +272,7 @@ void AnkerMainWindow::changeEvent(QEvent *e)
             iEditFactory->changeEvent(e);
         }
     }
+    return QMainWindow::changeEvent(e);
 }
 
 void AnkerMainWindow::initEditTool()
@@ -595,13 +608,14 @@ void AnkerMainWindow::otaNeedSaveProject(const QString &filePath)
 
 void AnkerMainWindow::importModelProgress(int pos, const QString& str)
 {
+    //qDebug() << "importModelProgress pos = " << pos << " str == " << str;
     if (m_importProgress == nullptr)
     {
         return;
     }
 
     m_importProgress->setValue(pos);
-    m_importProgress->setText(str);
+    //m_importProgress->setText(str);
 }
 
 void AnkerMainWindow::importModelProgressFinished()
@@ -783,7 +797,7 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
     }
     QDateTime current_date_time =QDateTime::currentDateTime();
     QString current_date =current_date_time.toString("yyyy_MM_dd_hh_mm_ss_zzz");
-    QString  acodePath = m_acodePath + "/" + fileInfo.baseName() + current_date;
+    QString  acodePath = m_acodePath + "/"/* + fileInfo.baseName()*/ + current_date;
     QDir saveFileName(acodePath);
     bool ismkdir = saveFileName.mkdir(acodePath);
 
@@ -792,10 +806,11 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
         connect(m_pCmd,&QProcess::readyReadStandardError,this,[=]()
         {
             
-            QString data=m_pCmd->readAllStandardError();
-            AkUtil::TDebug("return  cmd : "+data);
+            m_cmdErrorData = m_pCmd->readAllStandardError();
+            AkUtil::TDebug("return  cmd : "+m_cmdErrorData);
         });
     }
+
     QString cmd;
     m_pCmd->setWorkingDirectory(fileInfo.absoluteDir().path());
     cmd = "tar";
@@ -825,6 +840,15 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
             akpicFile = file.absoluteFilePath();
         }
     }
+
+    if(m_cmdErrorData.contains("could not chdir"))
+    {
+        AkUtil::TDebug("acode file name too long");
+        control::MessageDialog messageBox(tr("Error"), tr("acode file name too long"), MessageDialog::OK);
+        messageBox.exec();
+        return;
+    }
+
     if(gcodeFile.isEmpty()) {
         AkUtil::TDebug("Gcode File or Akpic File is inexistence ");
         return;
@@ -1003,10 +1027,32 @@ void AnkerMainWindow::open()
     }
     QDir dir(lastPath);
     dir.cdUp();
-    QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), dir.path(), filter);
-    if (!fileNameList.isEmpty()) {
-        openFileList(fileNameList);
+
+    
+    QFileDialog *fileDialog = new QFileDialog(this);
+    fileDialog->setWindowTitle(tr("Open"));
+    fileDialog->setDirectory(dir.path());
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    QStringList filters;
+    filters.push_back(("*.akpro *.obj *.stl *.gcode *.acode"));
+    filters.push_back("*.akpro");// << "(*.akpro)" << "(*.obj)" << "(*.stl)" << "(*.gcode)" << "(*.acode)";
+    filters.push_back("*.obj");
+    filters.push_back("*.stl");
+    filters.push_back("*.gcode");
+    filters.push_back("*.acode");
+    fileDialog->setNameFilters(filters);
+    if(fileDialog->exec() == QDialog::Accepted)
+    {
+        QStringList fileNameList = fileDialog->selectedFiles();
+        if (!fileNameList.isEmpty()) {
+            openFileList(fileNameList);
+        }
     }
+    delete fileDialog;
+//    QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), dir.path(), filter);
+//    if (!fileNameList.isEmpty()) {
+//        openFileList(fileNameList);
+//    }
 }
 
 //bool AnkerMainWindow::save_ak(const bool saveAllPossibleAttributes)
@@ -1074,7 +1120,7 @@ bool AnkerMainWindow::importMeshWithLayerManagement_ak(QString fileName)
 
 bool AnkerMainWindow::QCallBack_ak(const int pos, const char* str)
 {
-    //qDebug() << "pos: " << pos << ", str: " << str;
+    qDebug() << "QCallBack_ak pos: " << pos << ", str: " << str;
     if (importModelThread != nullptr && modelImporting)
     {
         if (lastPos == pos) 
@@ -1155,8 +1201,6 @@ void AnkerMainWindow::importMesh(QString fileName)
 
         qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
-
-
         // m_openFileSuccess = true;
         int mask;
         CH3DPrintModelPtr tmpPrintModelPtr;
@@ -1170,6 +1214,7 @@ void AnkerMainWindow::importMesh(QString fileName)
             m_importProgress->setModal(true);
             m_importProgress->setAutoClosed(false);
             m_importProgress->setCancelVisible(false);
+            m_importProgress->setText(fi.fileName());
             modelImporting = true;
             //m_importProgress->setWindowFlags(Qt::Dialog | Qt::WindowStaysOnTopHint);
             importModelThread->initOpenParam(extension, fileName, tmpPrintModelPtr->m_oldMesh, QCallBack_ak);
@@ -1181,20 +1226,6 @@ void AnkerMainWindow::importMesh(QString fileName)
             //connect(this, &AnkerMainWindow::usbStateChanged, importModelThread, &ImportModelThread::usbChanged);
             importModelThread->start();
             m_importProgress->exec();
-
-            //            importModelWorker = new ImportModelWoker();
-            //            m_importProgress = new ProgressDialog();
-            //            m_importProgress->setModal(true);
-            //            m_importProgress->setCancelVisible(false);
-            //            importModelWorker->initOpenParam(extension, fileName, tmpPrintModelPtr->m_oldMesh, QCallBack_ak);
-            //            importModelWorker->moveToThread(&loadThread);
-            //            connect(importModelWorker, &ImportModelWoker::exitThreadSignal, this, &AnkerMainWindow::importModelProgressFinished);
-            //            connect(importModelWorker, &ImportModelWoker::exitThreadSignal, importModelWorker, &QObject::deleteLater);
-            //            connect(importModelWorker, &ImportModelWoker::openData, this, &AnkerMainWindow::importModelProgress);
-            //            loadThread.start();
-            //            QTimer::singleShot(0, importModelWorker, &ImportModelWoker::doWork);
-            //            m_importProgress->exec();
-
             if(importModelThread->openFileSuccessful()){  //
 
                 tmpPrintModelPtr->cmeshoToMeshShowObj(*tmpPrintModelPtr->m_oldMesh);
@@ -1240,6 +1271,7 @@ void AnkerMainWindow::importMesh(QString fileName)
                 tmpPrintModelPtr->updateToScene();
                 getDoc()->addObj(tmpPrintModelPtr);
                 getDoc()->modelCheckSceneIn();
+                qDebug() << "Import Matrix: " << tmpPrintModelPtr->getTransform();
             }
         }
         catch (const MLException& e)
@@ -1474,9 +1506,14 @@ void AnkerMainWindow::importMesh(QString fileName)
 
 void AnkerMainWindow::closeEvent(QCloseEvent* event)
 {
+    AkUtil::TFunction("");
     if(m_ota)
     {
-        return QMainWindow::closeEvent(event);
+        AkUtil::TDebug("to close QMainWindow");
+        QMainWindow::closeEvent(event);
+        QApplication::quit();
+        QCoreApplication::processEvents();
+        return;
     }
     
     MessageDialog messageDialog(tr("Notice"), tr("Your changes will be lost without saving. Do you want to save now?"),

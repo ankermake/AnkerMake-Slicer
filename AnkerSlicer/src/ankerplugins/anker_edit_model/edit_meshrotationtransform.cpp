@@ -115,6 +115,17 @@ EditMeshRotationTransformTool::EditMeshRotationTransformTool()
     m_operateMoveZ = 0;
 }
 
+void EditMeshRotationTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelRotationTransformParamsSetUI();
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Rotate);
+    connect(this, &EditMeshRotationTransformTool::sendParamsToGui, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParams);
+    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::sendParams, this, &EditMeshRotationTransformTool::receiveParamsFromGui);
+    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::reset, this, &EditMeshRotationTransformTool::resetBtnClicked);
+    connect(this, &EditMeshRotationTransformTool::sendParam, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParam);
+    m_paramUI->hide();
+}
+
 bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void * arg1, void *arg2)
 {
     AkUtil::TFunction("");
@@ -136,12 +147,9 @@ bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void
     m_pickedObj = 0;
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelRotationTransformParamsSetUI();
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Rotate);
-    connect(this, &EditMeshRotationTransformTool::sendParamsToGui, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParams);
-    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::sendParams, this, &EditMeshRotationTransformTool::receiveParamsFromGui);
-    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::reset, this, &EditMeshRotationTransformTool::resetBtnClicked);
-    connect(this, &EditMeshRotationTransformTool::sendParam, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParam);
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
@@ -313,8 +321,7 @@ void EditMeshRotationTransformTool::endAnkerEdit  (ActionEditTool *, void *, voi
                 p++;
             }
         }
-        delete m_paramUI;
-        m_paramUI = 0;
+        m_paramUI->hide();
     }
 
     for (int i = 0; i < m_allShowObjs.size(); i++)
@@ -716,9 +723,6 @@ void EditMeshRotationTransformTool::receiveParams(vector<float> params)
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
         {
-            
-            
-            
             QMatrix4x4 tran1, tran2, tran3, tran4, tran5, tran6;
             tran1.rotate(m_initValues[i][0], QVector3D(1, 0, 0));
             tran2.rotate(m_initValues[i][1], QVector3D(0, 1, 0));
@@ -857,7 +861,7 @@ void EditMeshRotationTransformTool::receiveParamsFromGui(std::vector<double> par
             vecParams[1] = params[1];
             vecParams[2] = params[2];
         }
-        qDebug() << "vecParams: " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
+        //qDebug() << "vecParams: " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
         receiveParams(vecParams);
     }
 }
@@ -867,6 +871,7 @@ void EditMeshRotationTransformTool::resetBtnClicked()
     AkUtil::TFunction("");
     //bool lockToPrintPlatform = m_lockToPrintPlatform;
     //std::vector<double> vecParams(3);
+
     resetSelectedRotate();
     refreshRotationFrame();
     curScene->refresh();
@@ -924,7 +929,7 @@ void EditMeshRotationTransformTool::submitToUI()
 {
     vector<float> params(3);
     QMatrix4x4 tran1, tran2, tran3, tran4, tran5, tran6;
-    qDebug() << "rotate: " << m_firstMesh->m_params[3] << ", " << m_firstMesh->m_params[4] << ", " << m_firstMesh->m_params[5];
+    //qDebug() << "rotate: " << m_firstMesh->m_params[3] << ", " << m_firstMesh->m_params[4] << ", " << m_firstMesh->m_params[5];
     if(m_editMeshModels.size() > 1)
     {
         tran1.rotate(m_initValues[0][0], QVector3D(1, 0, 0));
@@ -957,7 +962,7 @@ void EditMeshRotationTransformTool::submitToUI()
     vecParams[0] = params[0];
     vecParams[1] = params[1];
     vecParams[2] = params[2];
-    qDebug() << "vecParams:  " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
+    //qDebug() << "vecParams:  " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
     emit sendParamsToGui(vecParams);
 }
 
@@ -965,7 +970,14 @@ void EditMeshRotationTransformTool::resetSelectedRotate()
 {
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        (*it)->reset3x3Transform();
+        if(m_editMeshModels.size() == 1)
+        {
+            (*it)->reset3x3Transform();
+        }
+        else if(m_editMeshModels.size() > 1)
+        {
+           (*it)->resetTransform();
+        }
         adjustSingleAngle((*it)->m_params[3]);
         adjustSingleAngle((*it)->m_params[4]);
         adjustSingleAngle((*it)->m_params[5]);

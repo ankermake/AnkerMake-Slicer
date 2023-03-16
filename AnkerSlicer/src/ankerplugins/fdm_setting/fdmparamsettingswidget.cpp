@@ -21,8 +21,7 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     m_quickView->setFormat(format);
 #endif
     
-    //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
-    QString anker_expert = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/anker_expert.cfg");
+    QString anker_expert = ":/qml/back_logic/anker_expert.cfg"; //  @2023-02-23 by ChunLian
 
     reload(anker_expert);
     m_quickView->engine()->rootContext() ->setContextProperty("paramModel", model);
@@ -73,7 +72,6 @@ FdmParamSettingsWidget::~FdmParamSettingsWidget()
     }
 }
 
-//":/curadef/setting_visibility/anker_expert.cfg"
 void FdmParamSettingsWidget::reload(const QString &fileName)
 {
     QList<FdmParamNode *> configList = FdmQmlSourceTree::instance().loadParamList(fileName);
@@ -141,6 +139,7 @@ void FdmParamSettingsWidget::changeEvent(QEvent *event)
             connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeCurrentIndexChanged(QString)),parameter,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
         }
     }
+    QWidget::changeEvent(event);
 }
 
 void FdmParamSettingsWidget::openMachinePreference(const QString &name)

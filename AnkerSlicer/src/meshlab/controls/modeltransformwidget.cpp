@@ -17,15 +17,22 @@ ModelTransformWidget::ModelTransformWidget(QWidget *parent)
     this->setFixedSize(QSize(68,349));//409
 }
 
+//  change @2023-01-13 by ChunLian
 void ModelTransformWidget::addWidgetToTransForm(QWidget *widget, int actionIndex)
 {
     this->update();
     connect(widget,&QWidget::destroyed,this,&ModelTransformWidget::deleteCurrentWidget,Qt::UniqueConnection);
-    m_currentButton = m_toolMap.value(actionIndex);
-    if(!m_currentButton) {
-        return;
-    }
-    m_currentWidget = widget;
+    QToolButton *btn = m_toolMap.value(actionIndex);
+    Q_ASSERT(!!btn);
+    QAction *act = btn->defaultAction();
+    Q_ASSERT(!!act);
+
+    QObject::connect(act, &QAction::toggled, [this, btn, act, widget]() {
+        if (act->isChecked() ){
+            this->m_currentWidget = widget;
+            this->m_currentButton = btn;
+        }
+    });
 }
 
 void ModelTransformWidget:: addActionToTransform(QAction *action)

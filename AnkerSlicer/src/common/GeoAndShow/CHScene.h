@@ -17,9 +17,17 @@
 #include "../plugins/interfaces/edit_plugin.h"
 #include "../plugins/interfaces/anker_edit_plugin.h"
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-
-class CHScene
+class COMMONLIB_EXPORT CHScene
 {
 public:
     CHScene();
@@ -51,10 +59,10 @@ public:
 
 };
 
-extern ActionEditTool * currActionEdit;
-extern CHScene* curScene;
-extern CHPickOperationCommandPtr getGlobalPick();
-extern CHDocPtr getDoc();
+extern COMMONLIB_EXPORT ActionEditTool * currActionEdit;
+extern COMMONLIB_EXPORT CHScene*  curScene;
+extern COMMONLIB_EXPORT CHPickOperationCommandPtr getGlobalPick();
+extern COMMONLIB_EXPORT CHDocPtr getDoc();
 
 inline ActionEditTool * inAnkerEditMode(){
     return (currActionEdit && currActionEdit->isChecked()) ? currActionEdit : nullptr;

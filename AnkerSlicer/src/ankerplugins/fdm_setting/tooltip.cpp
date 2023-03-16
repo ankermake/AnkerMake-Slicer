@@ -57,8 +57,11 @@ void ToolTip::init()
     QVBoxLayout *mainlayout = new QVBoxLayout(this);
     mainlayout->setContentsMargins(12,12,12,12);
     m_title = new QLabel(this);
+    m_title->setWordWrap(true);
+    m_title->setFixedWidth(235);
+    m_title->adjustSize();
     m_title->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Minimum));
-    m_title->setMaximumHeight(30);
+    //m_title->setMaximumHeight(30);
     Line *line = new Line(this,QString("#565656"),QFrame::HLine);
 
     m_despction = new QLabel(this);

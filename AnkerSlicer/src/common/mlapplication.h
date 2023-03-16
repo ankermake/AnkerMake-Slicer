@@ -9,7 +9,7 @@
 #include <QFileOpenEvent>
 #include "utilities/tlogger.h"
 
-class MeshLabApplication : public QApplication
+class COMMONLIB_EXPORT MeshLabApplication : public QApplication
 {
     Q_OBJECT
 public:

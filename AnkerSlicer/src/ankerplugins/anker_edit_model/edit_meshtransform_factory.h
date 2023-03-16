@@ -65,7 +65,7 @@ private:
     ActionEditTool* m_scaleMeshTransform  {nullptr};
     ActionEditTool* m_mirrorMeshTransform {nullptr};
     ActionEditTool* m_manualSupport       {nullptr};
-    ActionEditTool* m_manualTreeSupport{ nullptr };
+    ActionEditTool* m_manualTreeSupport   {nullptr};
 
     ActionEditTool* m_currAction {nullptr};
     void *m_arg1 {nullptr};

@@ -797,7 +797,7 @@ private:
 
     //void refresh_render_paths_with_makeCurrent(bool keep_sequential_current_first, bool keep_sequential_current_last);
     std::vector<unsigned int>  genLoopVec();
-    QString  genSavePath(unsigned int layer);
+    QString  genSavePath(double layer);
     bool matchGcodeName();
     static GLModelInitializationData stilized_arrow(int resolution, float tip_radius, float tip_height, float stem_radius, float stem_height);
     bool isTRender = false;
@@ -815,6 +815,7 @@ public:
     void offRenderSingle();
     void load_toolpaths(const GCodeProcessor::Result& gcode_result);
     void reset();
+    void deleteGpuData(); // aden
     void resetGpu(bool needModel = false);
     // recalculate ranges in dependence of what is visible and sets tool/print colors
     
@@ -853,14 +854,14 @@ public:
     
     void setRoleVisible(ExtrusionRole role, bool isVisible);
     void getTimeAndPercent();
-    void setColorType(colorType vt){this->m_colortype = vt;};
+    void setColorType(colorType vt){this->m_colortype = vt;}
     void setIsTRender(bool tv){
         this->isTRender = tv;
-    };
+    }
     boundingBox m_boundingBox;
     std::string get_gcode_path(){
         return m_gcode_path;
-    };
+    }
     QString sendOriginalStlNamedFile(bool isNeedReplace);
     QString sendAcodeToPrintCtr();
     bool printMode = false;

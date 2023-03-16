@@ -43,6 +43,15 @@ EditMeshMirrorTransformTool::EditMeshMirrorTransformTool()
     m_paramUI = 0;
 }
 
+void EditMeshMirrorTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelMirrorTransformParamsSetUI();
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Mirror);
+    connect(m_paramUI, SIGNAL(sendWhichButtonClicked(int)), this, SLOT(receiveButtonClicked(int)));
+    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    m_paramUI->hide();
+}
+
 bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* arg1, void* arg2)
 {
     AkUtil::TFunction("");
@@ -63,10 +72,9 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
     }
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelMirrorTransformParamsSetUI();
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Mirror);
-    connect(m_paramUI, SIGNAL(sendWhichButtonClicked(int)), this, SLOT(receiveButtonClicked(int)));
-    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     //disconnect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), this, SLOT(reset()));
@@ -138,9 +146,7 @@ void EditMeshMirrorTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
                 }
             }
         }
-
-        delete m_paramUI;
-        m_paramUI = 0;
+        m_paramUI->hide();
     }
 
     emit getDoc()->modelCheckSceneInChanged();
@@ -340,7 +346,15 @@ void EditMeshMirrorTransformTool::reset()
         {
             continue;
         }
-        (*it)->reset3x3Transform();
+        if(m_editMeshModels.size() == 1)
+        {
+           (*it)->reset3x3Transform();
+        }
+        else if(m_editMeshModels.size() > 1)
+        {
+           (*it)->resetTransform();
+        }
+
         if (true/*m_lockToPrintPlatform*/)
         {
             aabb.add((*it)->calRealAABB());

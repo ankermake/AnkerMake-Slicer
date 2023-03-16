@@ -15,7 +15,7 @@
 #include <QTimer>
 #include "titlewidget.h"
 namespace  control{
-class MessageDialog : public QDialog
+class COMMONLIB_EXPORT MessageDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -88,7 +88,7 @@ private:
 
 };
 
-class TimerMessageDialog : public MessageDialog
+class COMMONLIB_EXPORT TimerMessageDialog : public MessageDialog
 {
 public:
     TimerMessageDialog(const QString &title, const QString &description, int time,

@@ -50,7 +50,7 @@
  *
  * See the documentation of every member function for details.
  */
-class RichParameterList
+class COMMONLIB_EXPORT RichParameterList
 {
 
 public:

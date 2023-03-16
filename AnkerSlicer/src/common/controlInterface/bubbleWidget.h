@@ -7,10 +7,20 @@
 #include <QToolButton>
 #include <QGridLayout>
 #include <QDebug>
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+
 namespace  control{
 
 
-class BubbleWidget : public QWidget
+class COMMONLIB_EXPORT BubbleWidget : public QWidget
 {
     Q_OBJECT
 public:

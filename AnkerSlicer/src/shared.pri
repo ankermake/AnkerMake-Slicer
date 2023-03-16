@@ -7,12 +7,29 @@ CONFIG += plugin
 QT += opengl
 QT += xml
 QT += network
+win32-g++{
+    DEP = $$PWD/ankerplugins/anker_plugin_network/OpenSSL/mingw_x64
+}
 
-win32-msvc:LIBS += $$MESHLAB_DISTRIB_DIRECTORY/lib/meshlab-common.lib	\
-					-lopengl32	\
-					-lGLU32 
+win32-msvc{
+    DEP = $$PWD/ankerplugins/anker_plugin_network/OpenSSL/msvc-win32_x64
+}
+CONFIG(debug, debug|release){
+    LIBS += -L$$DEP/debug/bin
+    LIBS += -L$$DEP/debug/lib
+}
+CONFIG(release, debug|release){
+    LIBS += -L$$DEP/release/bin
+    LIBS += -L$$DEP/release/lib
+}
+LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/lib/
+#win32-msvc:LIBS += $$MESHLAB_DISTRIB_DIRECTORY/lib/meshlab-common.lib	\
+win32-msvc:LIBS += -lmeshlab-common	\
+                    -lopengl32	\
+                    -lGLU32
 #win32-g++:LIBS += -lmeshlab-common -lopengl32 -lGLU32
-win32-g++:LIBS += $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.a	\
+#win32-g++:LIBS += $$MESHLAB_DISTRIB_DIRECTORY/lib/libmeshlab-common.a	\
+win32-g++:LIBS += -lmeshlab-common	\
                     -lopengl32	\
                     -lGLU32
 
@@ -26,7 +43,7 @@ macx:QMAKE_POST_LINK = " \ #every plugin needs to point to meshlab-common placed
 
 win32-msvc:DEFINES += GLEW_STATIC _USE_MATH_DEFINES
 
-INCLUDEPATH *= ../.. $$VCGDIR $$EIGENDIR
+INCLUDEPATH *= ../.. $$VCGDIR $$EIGENDIR ../../..
 !CONFIG(system_glew): INCLUDEPATH *=  $$GLEWDIR/include
 DEPENDPATH += ../.. $$VCGDIR
 

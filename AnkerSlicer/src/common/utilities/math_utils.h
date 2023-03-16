@@ -7,8 +7,16 @@
 AK_UTIL_NAME_SPACE_BEGIN
 #define FLOAT_ZERO 0.000001f
 using AkInt = qint64;
-
-class MathUtils
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT MathUtils
 {
     
     static const int scale = 1000;

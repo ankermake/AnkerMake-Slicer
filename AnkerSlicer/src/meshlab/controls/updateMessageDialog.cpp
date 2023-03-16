@@ -20,9 +20,8 @@ updateMessageDialog::updateMessageDialog(const QString &title, const QString &de
     m_description->setText(description);
     setButton(buttons);
     m_warning->setVisible(false);
-    //m_detail->setVisible(false);
     setOTAReleaseNoteVisible(false);
-    setFixedSize(400,171);
+   // setFixedSize(400,171);
 }
 
 
@@ -73,26 +72,13 @@ void updateMessageDialog::init()
          "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {width: 0px;height: 3px;background: grey;}"
           "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {background: none;}";
 
-
-    m_detail = new QLabel(this);
-    m_detail->setWordWrap(true);
-    m_detail->setAlignment(Qt::AlignLeft|Qt::AlignTop);
-
-    m_detail->setMinimumWidth(347);
-    m_detail->setMinimumHeight(200);
-
-
-    //QScrollArea *scrollArea = new QScrollArea(this);
-    m_scrollArea = new QScrollArea(this);
-    m_scrollArea->setSizePolicy(QSizePolicy::Fixed , QSizePolicy::Expanding );
-    m_scrollArea->setMinimumWidth(350);
-    m_scrollArea->setMaximumHeight(200);
-
-   m_scrollArea->verticalScrollBar()->setStyleSheet(ScrollBarVertical);
-  //  scrollArea->horizontalScrollBar()->setStyleSheet(ScrollBarHorizontal);
-
-    m_scrollArea->setWidget(m_detail);
-    layout->addWidget(m_scrollArea);
+    m_releaseNote = new QTextEdit(this);
+    m_releaseNote->setReadOnly(true);
+    m_releaseNote->setMinimumWidth(350);
+    m_releaseNote->setMinimumHeight(200);
+    m_releaseNote->verticalScrollBar()->setStyleSheet(ScrollBarVertical);
+    m_releaseNote->setStyleSheet("QTextEdit {background-color:rgba(100,100,100,0); color:white; border:0px;}");
+    layout->addWidget(m_releaseNote);
 
     m_edit = new QLineEdit(this);
     m_edit->setMaximumHeight(40);
@@ -282,10 +268,9 @@ QString updateMessageDialog::setLineFeed(const QString &text, const QFont &font,
 
 void updateMessageDialog::setDetailText(const QString &text)
 {
-    if (m_detail){
-        m_detail->clear();
-        m_detail->setText(text);
-        m_detail->adjustSize();
+    if (m_releaseNote){
+        m_releaseNote->clear();
+        m_releaseNote->setText(text);
     }
 }
 
@@ -297,23 +282,26 @@ void updateMessageDialog::setDetailTitleText(const QString &text)
     }
 }
 
+
 void updateMessageDialog::setOTAReleaseNoteVisible(bool show)
 {
-    if(m_detail){
+    if(m_releaseNote){
         m_detailTitle->setVisible(show);
-        m_detail->setVisible(show);
         if(show)
         {
-           m_scrollArea->setMinimumWidth(350);
-           m_scrollArea->setMaximumHeight(200);
+           m_releaseNote->setMinimumWidth(350);
+           m_releaseNote->setMinimumHeight(200);
+           m_releaseNote->setMaximumWidth(350);
+           m_releaseNote->setMaximumHeight(200);
         }
         else
         {
-            m_scrollArea->setMinimumWidth(0);
-            m_scrollArea->setMaximumHeight(0);
+            m_releaseNote->setMinimumWidth(0);
+            m_releaseNote->setMinimumHeight(0);
+            m_releaseNote->setMaximumWidth(0);
+            m_releaseNote->setMaximumHeight(0);
         }
-        m_scrollArea->setVisible(show);
-
+        m_releaseNote->setVisible(show);
     }
 }
 

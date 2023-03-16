@@ -3,8 +3,16 @@
 
 #include <QObject>
 #include <QFrame>
-
-class Line : public QFrame
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT Line : public QFrame
 {
     Q_OBJECT
 public:

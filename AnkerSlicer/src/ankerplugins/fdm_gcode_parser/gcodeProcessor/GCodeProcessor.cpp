@@ -143,6 +143,7 @@ float GCodeProcessor::Trapezoid::cruise_distance() const
     return decelerate_after - accelerate_until;
 }
 
+
 void GCodeProcessor::TimeBlock::calculate_trapezoid()
 {
     trapezoid.cruise_feedrate = feedrate_profile.cruise;
@@ -289,7 +290,7 @@ static void recalculate_trapezoids(std::vector<GCodeProcessor::TimeBlock>& block
             // Recalculate if current block entry or exit junction speed has changed.
             if (curr->flags.recalculate || next->flags.recalculate) {
                 // NOTE: Entry and exit factors always > 0 by all previous logic operations.
-                GCodeProcessor::TimeBlock& block = *curr;
+                GCodeProcessor::TimeBlock& block = *curr;                               
                 block.feedrate_profile.exit = next->feedrate_profile.entry;
                 block.calculate_trapezoid();
                 //curr->trapezoid = block.trapezoid;
@@ -307,6 +308,8 @@ static void recalculate_trapezoids(std::vector<GCodeProcessor::TimeBlock>& block
         next->flags.recalculate = false;
     }
 }
+
+
 
 void GCodeProcessor::TimeMachine::calculate_time(size_t keep_last_n_blocks)
 {
@@ -413,7 +416,7 @@ void GCodeProcessor::TimeMachine::calculate_time(size_t keep_last_n_blocks)
     }
 
     if (keep_last_n_blocks)
-        blocks.erase(blocks.begin(), blocks.begin() + n_blocks_process);
+        blocks.erase(blocks.begin(), blocks.begin() + n_blocks_process);  
     else
         blocks.clear();
 }
@@ -940,7 +943,7 @@ void GCodeProcessor::reset()
     m_origin = { 0.0f, 0.0f, 0.0f, 0.0f };
     m_cached_position.reset();
     m_wiping = false;
-
+    m_on_takepic = false;
     m_feedrate = 0.0f;
     m_width = 0.0f;
     m_height = 0.0f;
@@ -1350,7 +1353,8 @@ template<typename T>
     }
 
     void GCodeProcessor::process_tags(const std::string_view comment)
-    {
+    {   
+
         // producers tags
         if (m_producers_enabled && process_producers_tags(comment))
             return;
@@ -1560,10 +1564,33 @@ template<typename T>
         // layer
         tag = "LAYER:";
         pos = comment.find(tag);
-        if (pos != comment.npos) {
+        if (pos != comment.npos && pos < 2) {
             ++m_layer_id;
             return true;
         }
+
+        tag = "MAXSPEED:";
+        pos = comment.find(tag);
+        if (pos != comment.npos) {
+            const std::string_view MAXSPEED = comment.substr(pos + tag.length());
+            int maxSpeed;
+            auto result = std::from_chars(MAXSPEED.data(), MAXSPEED.data() + MAXSPEED.size(), maxSpeed);
+            m_result.MaxSpeed = maxSpeed / 60;
+            return true;
+        }
+
+        tag = "Z_TakePictureStart:";
+        pos = comment.find(tag);
+        if(pos != comment.npos){
+            m_on_takepic = true;
+        }
+
+        tag = "Z_TakePictureEnd:";
+        pos = comment.find(tag);
+        if(pos != comment.npos){
+            m_on_takepic = false;
+        }
+
 
         return false;
     }
@@ -1973,6 +2000,7 @@ template<typename T>
         process_G1(line);
     }
 
+    
     void GCodeProcessor::process_G1(const GCodeReader::GCodeLine& line)
     {
 #if ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
@@ -2049,6 +2077,11 @@ template<typename T>
         AxisCoords delta_pos;
         AxisCoords delta_abs_pos;   //  add @2022-09-07 by CL
         for (unsigned char a = X; a <= E; ++a) {
+            if(m_on_takepic && a == E){
+                
+                delta_abs_pos[a] = delta_pos[a] = 0;
+                continue;
+            }
             delta_pos[a] = m_end_position[a] - m_start_position[a];
             delta_abs_pos[a] = std::abs(delta_pos[a]);
             max_abs_delta = std::max(max_abs_delta, delta_abs_pos[a]);
@@ -2207,6 +2240,7 @@ template<typename T>
                         get_acceleration(static_cast<PrintEstimatedTimeStatistics::ETimeMode>(i));
 
             
+            
             do{
                 //  const uint32_t max_accel_steps_per_s2 = MAX_E_JERK(extruder) / (extruder_advance_K[active_extruder] * block->e_D_ratio) * steps_per_mm;
                 //  if (TERN0(LA_DEBUG, accel > max_accel_steps_per_s2))
@@ -2275,6 +2309,7 @@ template<typename T>
                         v_entry *= v_factor;
                     }
 
+                    
                     // Calculate the jerk depending on whether the axis is coasting in the same direction or reversing a direction.
                     double jerk =
                             (v_exit > v_entry) ?
@@ -2313,7 +2348,7 @@ template<typename T>
             block.feedrate_profile.entry = std::min(vmax_junction, v_allowable);
 
             block.max_entry_speed = vmax_junction;      
-            block.flags.nominal_length = (block.feedrate_profile.cruise <= v_allowable);
+            block.flags.nominal_length = (block.feedrate_profile.cruise <= v_allowable);    
             block.flags.recalculate = true;
             block.safe_feedrate = curr.safe_feedrate;   
             block.axis_feedrate = curr.axis_feedrate;   //  add @2022-05-29 by CL
@@ -2326,7 +2361,7 @@ template<typename T>
             // updates previous
             prev = curr;
 
-            blocks.push_back(block);
+            blocks.push_back(block);  
 
             if (blocks.size() > TimeProcessor::Planner::refresh_threshold)
                 machine.calculate_time(TimeProcessor::Planner::queue_size);
@@ -2892,14 +2927,12 @@ template<typename T>
     void GCodeProcessor::process_M1024(const GCodeReader::GCodeLine& line)
     {
         if (line.has('L')) {
-            int layerValue = -1;
+            double layerValue = -1;
             if (line.get_ai_layer(layerValue))
             {
-                m_result.ai_pic_Layer.push_back(layerValue);
+                m_result.ai_pic_Layer_d.push_back(layerValue);
                 m_result.layer_offset.push_back(this->m_end_position);
-
             }
-
         }
     }
 
@@ -3014,7 +3047,8 @@ template<typename T>
             m_bed_temperature,
             std::move(temTF),
             g1LineId,
-            m_layer_id
+            m_layer_id,
+            m_on_takepic
         };
         m_result.moves.emplace_back(vertex);
     }
@@ -3282,6 +3316,7 @@ MachineEnvelopeConfig::MachineEnvelopeConfig()
         std::vector<double> max_jerk;
     };
     std::vector<AxisDefault> axes{
+        
         // name, max_feedrate,  max_acceleration, max_jerk
         { "x", { 500., 500. }, {  2500., 2500. }, { 15. , 15.  } },
         { "y", { 500., 500. }, {  2500., 2500. }, { 15. , 15.  } },

@@ -20,8 +20,7 @@ ParametersWidget::ParametersWidget(PageWidget *parent)
     fdmsettings::ParamListModel *preferenceModel = new fdmsettings::ParamListModel();
 
     
-    //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
-    QString anker_expert = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/anker_expert.cfg");
+    QString anker_expert = ":/qml/back_logic/anker_expert.cfg"; //  @2023-02-23 by ChunLian
 
     QList<FdmParamNode *> configList = FdmQmlSourceTree::instance().loadParamListForPreference(anker_expert);
     if(!configList.isEmpty()) {
@@ -58,6 +57,11 @@ ParametersWidget::~ParametersWidget()
         delete  m_messageDialog;
         m_messageDialog = nullptr;
     }
+}
+
+void ParametersWidget::setControlmanager(ControlInterface *controlmanager)
+{
+     m_controlmanager = controlmanager;
 }
 
 void ParametersWidget::getDefaultNewName(const QStringList &list, const QString &name)
@@ -126,23 +130,30 @@ void ParametersWidget::importButtonClicked()
 {
     QString lastPath = QApplication::applicationDirPath();
     QString filePath= QFileDialog::getOpenFileName(this, tr("Import"), lastPath, "files (*.ini) ;; files(*)");
-
+    qDebug() << " importButtonClicked  filepath = " << filePath;
+    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Material);
+    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Parameter);
     if(filePath.isEmpty()) {
         return;
     }
-   // qDebug() << " importButtonClicked  filepath = " << filePath;
+
     emit importParameter(filePath);
+
+
 }
 
 void ParametersWidget::exportButtonClicked(QString name)
 {
     QString lastPath = QApplication::applicationDirPath() + "/" + name + ".ini";
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export"), lastPath, "files (*.ini) ;; files(*)");
+    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Material);
+    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Parameter);
     if(fileName.isEmpty()) {
         return;
     }
     //qDebug() << "exportButtonClicked  name ====  " << name  << " filepath = " << fileName;
     emit exportParameter(fileName);
+
 }
 
 void ParametersWidget::changeEvent(QEvent *e)
@@ -187,6 +198,7 @@ void ParametersWidget::changeEvent(QEvent *e)
 
         }
     }
+    QWidget::changeEvent(e);
 }
 
 }

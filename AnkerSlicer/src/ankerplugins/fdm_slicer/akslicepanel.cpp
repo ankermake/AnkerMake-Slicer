@@ -548,6 +548,7 @@ void AkSlicePanel::changeEvent(QEvent *e)
             exportBtn->setText(tr("Export"));
         }
     }
+    QWidget::changeEvent(e);
 }
 
 

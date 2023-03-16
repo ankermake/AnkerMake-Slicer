@@ -19,7 +19,7 @@ MessageDialog::MessageDialog(const QString &title, const QString &description,
     setButton(buttons);
     m_warning->setVisible(false);
     m_detail->setVisible(false);
-    setFixedSize(400,171);
+    setFixedSize(400,180);
 }
 
 void MessageDialog::init()

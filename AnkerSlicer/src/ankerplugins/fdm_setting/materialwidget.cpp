@@ -149,6 +149,7 @@ void MaterialWidget::changeEvent(QEvent *e)
             connect(this,SIGNAL(materialRename(QString,QString)),m_service,SLOT(renameCustomMaterial(QString,QString)), Qt::QueuedConnection);
         }
     }
+    QWidget::changeEvent(e);
 }
 
 
