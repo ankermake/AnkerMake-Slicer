@@ -68,6 +68,28 @@ void OperateLog::AddValueChangedSet(EProfileType profileType, QSet<QString> valu
 	}
 }
 
+
+void OperateLog::AddManuallyValueChangedSet(EProfileType profileType, QSet<QString> valueChangeSet)
+{
+	if (valueChangeSet.size() == 0)
+	{
+		return;
+	}
+	if (!operMap.contains(profileType))
+	{
+		operMap[profileType] = QMap<QString, QMap<EFileOperType, AkOperatePtr>>();
+	}
+	QSet<QString>::iterator iter = valueChangeSet.begin();
+	foreach(const QString & originName, valueChangeSet)
+	{
+		if (!operMap[profileType].contains(originName))
+		{
+			operMap[profileType][originName] = QMap<EFileOperType, AkOperatePtr>();
+		}
+		operMap[profileType][originName][EFileOperType::ValueChangeManually] = AkOperateValueChangePtr(new AkOperateValueChange);
+	}
+}
+
 bool OperateLog::constainsOper(EProfileType profileType, QString profileName)
 {
 	if (!operMap.contains(profileType))
@@ -114,6 +136,19 @@ bool OperateLog::constainsValueChangeOper(EProfileType profileType, QString prof
 		return false;
 	}
 	if (!operMap[profileType][profileName].contains(EFileOperType::ValueChange))
+	{
+		return false;
+	}
+	return true;
+}
+
+bool OperateLog::constainsManuallyValueChangeOper(EProfileType profileType, QString profileName)
+{
+	if (!constainsOper(profileType, profileName))
+	{
+		return false;
+	}
+	if (!operMap[profileType][profileName].contains(EFileOperType::ValueChangeManually))
 	{
 		return false;
 	}

@@ -31,6 +31,9 @@ enum EProfileStatus
     NodeValueChanged = 4,
     
     Renamed = 8,
+    
+    NodeValueChangedManually = 16, //0000 0000 0001 0000
+    //ClearNodeValueChangedManually = 0x7FEF,//0111 1111 1110 1111
 };
 
 class IFdmProfile {
@@ -39,6 +42,9 @@ public:
     virtual const QString getName() const = 0;
     virtual ProfileGroup getGroup() const = 0;
     virtual void setModifyTimeNow() = 0;
+    virtual int getStatus() const = 0;
+    virtual void addStatus(EProfileStatus newStatus) = 0;
+    virtual void setStatus(EProfileStatus newStatus) = 0;
 };
 
 //

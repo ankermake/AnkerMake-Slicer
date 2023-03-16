@@ -90,6 +90,7 @@ private:
     void clearFile(int second, QString folder, QStringList filter,QSet<QString> excludeSet);
     //void clearFolder(int second, QString folder, QStringList filter, QSet<QString> excludeSet);
     void clearFolder(int second, QString folder, QSet<QString> excludeSet);
+    QString toRelativePath(QString absPath);
 };
 
 #endif // AKSLICER_H

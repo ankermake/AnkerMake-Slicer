@@ -15,6 +15,8 @@
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLFramebufferObject>
 
+#include <QWaitCondition>
+
 #include "gcodeProcessor/GCodeProcessor.hpp"
 #include "scene3d.h"
 #include "glview/renderscene.h"
@@ -25,6 +27,7 @@
 #include <QProcess>
 #include "common/controlInterface/progressdialog.h"
 #include "common/utilities/tlogger.h"
+#include "common/controlInterface/messageDialog.h"
 #define ENABLE_SPLITTED_VERTEX_BUFFER true
 #define ENABLE_REDUCED_TOOLPATHS_SEGMENT_CAPS true
 #define ENABLE_TOOLPATHS_WIDTH_HEIGHT_FROM_GCODE true
@@ -58,6 +61,7 @@ class paramsStack
     std::array<unsigned int, 2> layer_z_range_saved ;
     std::vector<std::array<float, 3>>  Extrusion_Role_Colors_saved;
     double v_angle;
+    bool travelVisable;
     int w;
     int h;
 public:
@@ -159,10 +163,9 @@ private:
     QOpenGLShaderProgram shaderProgram_tr;//t render with a gs
     QOpenGLShaderProgram shaderProgram_point;
     //QOpenGLShaderProgram shaderProgram_old; // old 110 render
-    Scene3D* m_scene3d;
-    RenderDataPtr m_renderData;
+    Scene3D* m_scene3d  = nullptr;
+    RenderDataPtr m_renderData = nullptr;
     SceneParam m_sceneParam;
-    QProcess *pCmd;
     QImage offImage;
 #if ENABLE_SPLITTED_VERTEX_BUFFER
     using IBufferType = unsigned short;
@@ -791,28 +794,32 @@ private:
     std::string m_gcode_path;
     QString m_gcode_name;//only name  example : /a/b.gcode  = b
     ProgressDialog* mPdlg = nullptr;
-    QOffscreenSurface* m_offscreenSurface = nullptr;
-    bool m_orceShader1 = false;
-    QOpenGLContext* cnt = nullptr; //offerender context
+
     //void refresh_render_paths_with_makeCurrent(bool keep_sequential_current_first, bool keep_sequential_current_last);
     std::vector<unsigned int>  genLoopVec();
-    QString  genSavePath(unsigned int layer);
+    QString  genSavePath(double layer);
     bool matchGcodeName();
     static GLModelInitializationData stilized_arrow(int resolution, float tip_radius, float tip_height, float stem_radius, float stem_height);
     bool isTRender = false;
     QString originalStlName;
     QString originalGcodeName;
     QString akpicSave;
+    
+    QMutex  m_scene3d_init_mutex;
+    QWaitCondition m_scene3d_inited;
 public:
     GcodeViewer(QWidget* partent);
 
     ~GcodeViewer();
     void offPaint();
+    void offRenderSingle();
     void load_toolpaths(const GCodeProcessor::Result& gcode_result);
     void reset();
+    void deleteGpuData(); // aden
     void resetGpu(bool needModel = false);
     // recalculate ranges in dependence of what is visible and sets tool/print colors
-    void refresh(const GCodeProcessor::Result& gcode_result, const std::vector<std::string>& str_tool_colors);
+    
+    void refresh(const GCodeProcessor::Result& gcode_result, const std::vector<std::string>& str_tool_colors,bool runInOtherThread = false);
     void set_toolpath_move_type_visible(EMoveType type, bool visible);
     void refresh_render_paths(bool keep_sequential_current_first, bool keep_sequential_current_last);
     bool setGcodePath(const std::string& gcodePath);
@@ -847,24 +854,28 @@ public:
     
     void setRoleVisible(ExtrusionRole role, bool isVisible);
     void getTimeAndPercent();
-    void setColorType(colorType vt){this->m_colortype = vt;};
+    void setColorType(colorType vt){this->m_colortype = vt;}
     void setIsTRender(bool tv){
         this->isTRender = tv;
-    };
+    }
     boundingBox m_boundingBox;
     std::string get_gcode_path(){
         return m_gcode_path;
-    };
+    }
     QString sendOriginalStlNamedFile(bool isNeedReplace);
     QString sendAcodeToPrintCtr();
     bool printMode = false;
     bool innerMode = false;
     void clearGcodeSource();
     void loadGcode();
+    int waitForFileClose(QString filePath,qint64 fileSize);
     QString filterFileName(QString pathName);
     bool postGcodeHead(const QString &line,QString& reLine);
+    bool waitForSceneInit();
     bool isHighPerformance = true;
-
+    QOffscreenSurface* m_offscreenSurface = nullptr;
+    bool m_orceShader1 = false;
+    QOpenGLContext* cnt = nullptr; //offerender context
 };
 
 

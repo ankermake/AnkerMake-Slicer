@@ -6,8 +6,16 @@
 #include <QPainter>
 #include <QDebug>
 #include <QProgressBar>
-
-class ProgressBar : public QWidget
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT ProgressBar : public QWidget
 {
     Q_OBJECT
 public:
@@ -18,6 +26,7 @@ public:
     void setBackgroundColor(QColor color);
     void setProgressCheckedColor(QColor color);
     void setProgressUncheckedColor(QColor color);
+    void setProgressValueTextColor(QColor color);
     void setValuePointSize(int pointSize);
    // void reset();
 
@@ -35,6 +44,7 @@ private:
     QColor m_backgroundColor;
     QColor m_progressCheckedColor;
     QColor m_progressUncheckedColor;
+    QColor m_progressValueTextColor;
     int m_valuePointSize;
 };
 

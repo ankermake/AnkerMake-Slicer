@@ -453,8 +453,11 @@ namespace Anker {
             float layer_duration{ 0.0f }; // s
             float time{ 0.0f }; // s
             float temperature{ 0.0f }; // deg
+            float bed_temperature{ 0.0f }; //deg
             TrapezoidFeedrateProfile motor_process;
             unsigned int g1_line_id{ 0 };
+            unsigned int layerId{ 0 };
+            bool on_takepic{false};
             float volumetric_rate() const { return feedrate * mm3_per_mm; }
         };
 
@@ -481,11 +484,12 @@ namespace Anker {
             std::vector<std::string> extruder_colors;
             std::vector<std::string> filament_colors;
             PrintEstimatedTimeStatistics time_statistics;
-            std::vector<int> ai_pic_Layer;
+            std::vector<double> ai_pic_Layer_d;
             std::vector<std::array<double,4>> layer_offset;
 
             std::vector<float> freedrate_range;
             std::vector<float> flow_range;
+            float MaxSpeed;
 #if ENABLE_GCODE_VIEWER_STATISTICS
             int64_t time{ 0 };
             void reset()
@@ -508,10 +512,11 @@ namespace Anker {
                 settings_ids.reset();
                 freedrate_range = {-1.0f, -1.0f};
                 flow_range = {-1.0f,-1.0f};
-                std::vector<int>().swap(ai_pic_Layer);
+                MaxSpeed = 0.0f;
+                std::vector<double>().swap(ai_pic_Layer_d);
                 std::vector<std::array<double,4>>().swap(layer_offset);
 //                std::vector<double>().swap(layer_z_offset);
-//                ai_pic_Layer.swap();
+//                ai_pic_Layer_d.swap();
 //                layer_y_offset.swap(std::vector<double>());
             }
 #endif // ENABLE_GCODE_VIEWER_STATISTICS
@@ -600,7 +605,7 @@ namespace Anker {
         AxisCoords m_origin; // mm
         CachedPosition m_cached_position;
         bool m_wiping;
-
+        bool m_on_takepic;
         float m_feedrate; // mm/s
         float m_width; // mm
         float m_height; // mm
@@ -615,10 +620,12 @@ namespace Anker {
         ExtruderColors m_extruder_colors;
         std::vector<float> m_filament_diameters;
         double m_extruded_last_z;
+        unsigned int m_extrude_last_layer;
         unsigned int m_g1_line_id;
         unsigned int m_layer_id;
         CpColor m_cp_color;
         float m_temperature;
+        float m_bed_temperature;
 #if ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
         bool m_use_volumetric_e;
 #endif // ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
@@ -635,7 +642,7 @@ namespace Anker {
             CraftWare,
             ideaMaker,
             KissSlicer,
-            AnkerSlicer
+            AnkerMake
         };
 
         static const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> Producers;
@@ -756,6 +763,9 @@ namespace Anker {
 
         // Set tool (MakerWare)
         void process_M135(const GCodeReader::GCodeLine& line);
+
+        // Set bed temp
+        void process_M140(const GCodeReader::GCodeLine& line);
 
         // Set max printing acceleration
         void process_M201(const GCodeReader::GCodeLine& line);

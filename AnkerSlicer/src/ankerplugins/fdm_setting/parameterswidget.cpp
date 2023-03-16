@@ -8,39 +8,39 @@ ParametersWidget::ParametersWidget(PageWidget *parent)
       m_messageDialog(nullptr),
       m_newName(QString())
 {
-    m_displayName = tr("    Parameters");
-    QQuickView  *quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
+    m_displayName = QString("    ") + tr("Parameters");
+    m_quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
 
-    QWidget *widget = QWidget::createWindowContainer(quickView,this);
-    quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+    QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
+    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
 
     m_service = FdmParameterProfileService::instance();
-    quickView->rootContext()->setContextProperty("parameter",m_service);
+    m_quickView->rootContext()->setContextProperty("parameter",m_service);
 
     fdmsettings::ParamListModel *preferenceModel = new fdmsettings::ParamListModel();
 
     
-    //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
-    QString anker_expert = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/anker_expert.cfg");
+    QString anker_expert = ":/qml/back_logic/anker_expert.cfg"; //  @2023-02-23 by ChunLian
 
     QList<FdmParamNode *> configList = FdmQmlSourceTree::instance().loadParamListForPreference(anker_expert);
     if(!configList.isEmpty()) {
         preferenceModel->setListDatas(configList);
-         quickView->rootContext()->setContextProperty("preferenceModel",preferenceModel);
+         m_quickView->rootContext()->setContextProperty("preferenceModel",preferenceModel);
     }
 
-    quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/ParametersView.qml"));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlCurrentParameterChanged(QString)),m_service,SLOT(currentParameterChanged(QString)), Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlDeleteCustomParameter(QString)),m_service,SLOT(deleteCustomParameter(QString)), Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlCreateParameter(QString)),m_service,SLOT(createParameter(QString)),Qt::QueuedConnection);
+    m_quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/ParametersView.qml"));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentParameterChanged(QString)),m_service,SLOT(currentParameterChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomParameter(QString)),m_service,SLOT(deleteCustomParameter(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateParameter(QString)),m_service,SLOT(createParameter(QString)),Qt::QueuedConnection);
 
     //rename
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlRenameCustomParameter(QString)),this,SLOT(renameCustomParameter(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlImportButtonClicked()),this,SLOT(importButtonClicked()), Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlExportButtonClicked(QString)),this,SLOT(exportButtonClicked(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomParameter(QString)),this,SLOT(renameCustomParameter(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlImportButtonClicked()),this,SLOT(importButtonClicked()), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlExportButtonClicked(QString)),this,SLOT(exportButtonClicked(QString)), Qt::QueuedConnection);
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlMachineNameChanged(QString)),m_service,SLOT(onMachineNameChanged(QString)), Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlMaterialNameChanged(QString)),m_service,SLOT(onMaterialNameChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMachineNameChanged(QString)),m_service,SLOT(onMachineNameChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMaterialNameChanged(QString)),m_service,SLOT(onMaterialNameChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeChanged(QString)),m_service,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
 
     connect(this,SIGNAL(parameterRename(QString,QString)),m_service,SLOT(renameCustomParameter(QString,QString)));
     connect(this,SIGNAL(importParameter(QString)),m_service,SLOT(onImportBtnClicked(QString)));
@@ -59,6 +59,11 @@ ParametersWidget::~ParametersWidget()
     }
 }
 
+void ParametersWidget::setControlmanager(ControlInterface *controlmanager)
+{
+     m_controlmanager = controlmanager;
+}
+
 void ParametersWidget::getDefaultNewName(const QStringList &list, const QString &name)
 {
     //qDebug() << " getDefaultNewName list = " << list  << " name ==" << name;
@@ -75,7 +80,7 @@ void ParametersWidget::renameCustomParameter(const QString &oldName)
     if(!m_messageDialog) {
         m_messageDialog = new MessageDialog(tr("Name These Parameters"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&ParametersWidget::textValid);
-        QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+        QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
         m_messageDialog->setAutoClosed(false);
@@ -101,10 +106,11 @@ void ParametersWidget::textValid(int flag)
         m_messageDialog->setWarning(tr("Input a name."));
         return;
     }
-    QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+    QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
     auto pos = rx.indexIn(newname);
     if (pos < 0)
     {
+
         m_messageDialog->setWarning(tr("Name is longer than 128 characters. Create a shorter one."));
         return;
     }
@@ -124,30 +130,75 @@ void ParametersWidget::importButtonClicked()
 {
     QString lastPath = QApplication::applicationDirPath();
     QString filePath= QFileDialog::getOpenFileName(this, tr("Import"), lastPath, "files (*.ini) ;; files(*)");
-
+    qDebug() << " importButtonClicked  filepath = " << filePath;
+    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Material);
+    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Parameter);
     if(filePath.isEmpty()) {
         return;
     }
-   // qDebug() << " importButtonClicked  filepath = " << filePath;
+
     emit importParameter(filePath);
+
+
 }
 
 void ParametersWidget::exportButtonClicked(QString name)
 {
     QString lastPath = QApplication::applicationDirPath() + "/" + name + ".ini";
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export"), lastPath, "files (*.ini) ;; files(*)");
+    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Material);
+    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Parameter);
     if(fileName.isEmpty()) {
         return;
     }
     //qDebug() << "exportButtonClicked  name ====  " << name  << " filepath = " << fileName;
     emit exportParameter(fileName);
+
 }
 
 void ParametersWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
-        m_displayName = tr("    Parameters");
+        m_displayName = QString("    ") + tr("Parameters");
+        if (m_quickView) {
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentParameterChanged(QString)),m_service,SLOT(currentParameterChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomParameter(QString)),m_service,SLOT(deleteCustomParameter(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateParameter(QString)),m_service,SLOT(createParameter(QString)));
+
+            //rename
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomParameter(QString)),this,SLOT(renameCustomParameter(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlImportButtonClicked()),this,SLOT(importButtonClicked()));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlExportButtonClicked(QString)),this,SLOT(exportButtonClicked(QString)));
+
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMachineNameChanged(QString)),m_service,SLOT(onMachineNameChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMaterialNameChanged(QString)),m_service,SLOT(onMaterialNameChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeChanged(QString)),m_service,SLOT(onNozzleSizeChanged(QString)));
+
+            disconnect(this,SIGNAL(parameterRename(QString,QString)),m_service,SLOT(renameCustomParameter(QString,QString)));
+            disconnect(this,SIGNAL(importParameter(QString)),m_service,SLOT(onImportBtnClicked(QString)));
+            disconnect(this,SIGNAL(exportParameter(QString)),m_service,SLOT(onExportBtnClicked(QString)));
+            m_quickView->source().clear();
+            m_quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/ParametersView.qml"));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentParameterChanged(QString)),m_service,SLOT(currentParameterChanged(QString)), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomParameter(QString)),m_service,SLOT(deleteCustomParameter(QString)), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateParameter(QString)),m_service,SLOT(createParameter(QString)),Qt::QueuedConnection);
+
+            //rename
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomParameter(QString)),this,SLOT(renameCustomParameter(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlImportButtonClicked()),this,SLOT(importButtonClicked()), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlExportButtonClicked(QString)),this,SLOT(exportButtonClicked(QString)), Qt::QueuedConnection);
+
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMachineNameChanged(QString)),m_service,SLOT(onMachineNameChanged(QString)), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlMaterialNameChanged(QString)),m_service,SLOT(onMaterialNameChanged(QString)), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeChanged(QString)),m_service,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
+
+            connect(this,SIGNAL(parameterRename(QString,QString)),m_service,SLOT(renameCustomParameter(QString,QString)));
+            connect(this,SIGNAL(importParameter(QString)),m_service,SLOT(onImportBtnClicked(QString)));
+            connect(this,SIGNAL(exportParameter(QString)),m_service,SLOT(onExportBtnClicked(QString)));
+
+        }
     }
+    QWidget::changeEvent(e);
 }
 
 }

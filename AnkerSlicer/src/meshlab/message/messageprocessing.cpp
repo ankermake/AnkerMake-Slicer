@@ -1,5 +1,5 @@
 #include "messageprocessing.h"
-#include "../mainwindow.h"
+//#include "../mainwindow.h"
 #include "common/GeoAndShow/CHScene.h"
 #include <common/utilities/tlogger.h>
 
@@ -41,6 +41,15 @@ void MessageProcessing::recMsgfromManager(PluginMessageData metadata)
         emit sendMsg2Update(metadata);
     }
     if(AkConst::Msg::MANUAL_UPDATE == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
+    if(AkConst::Msg::CANCEL_AUTO_CHECK_SERVER_VERSION == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
+    if(AkConst::Msg::CHECK_UPDATE_TEXT == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
+    if(AkConst::Msg::HAVE_NEW_VERSION == metadata.msg){
         emit sendMsg2Update(metadata);
     }
     if(AkConst::Msg::A_KEY_PRINT == metadata.msg){
@@ -91,6 +100,30 @@ void MessageProcessing::receiveModelSupportNumberChangedFromDoc(int sptCount)
     data2.map.insert(AkConst::Param::SUPPORT_MESH_NUMBER, sptCount);
     emit sendMsg2Manager(data2);
 }
+
+
+void MessageProcessing::receiveModelSuspendStatusChangedFromDoc(bool susStatus)
+{
+
+    PluginMessageData data;
+    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    data.dest = AkConst::Plugin::FDM_SLICER;
+    data.msg = AkConst::Msg::MODEL_SUSPEND_STATUS;
+    data.map.insert(AkConst::Param::MODEL_SUSPEND_STATUS_RESULT, susStatus);
+    emit sendMsg2Manager(data);
+
+
+}
+
+
+//void MessageProcessing::receiveGenerateSupportButtonStatusFromDoc()
+//{
+//    PluginMessageData data;
+//    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+//    data.dest = AkConst::Plugin::FDM_SETTING;
+//    data.msg = AkConst::Msg::GET_GENERATE_SUPPORT_STATUS;
+//    emit sendMsg2Manager(data);
+//}
 
 void MessageProcessing::sendMsg2Preview()
 {
@@ -154,14 +187,14 @@ void MessageProcessing::receiveVisibleModelCountChangedFromDoc(int modelCount)
 
 bool MessageProcessing::processingWriteAllMeshModelsToStlFile(PluginMessageData& metadata)
 {
-    auto getMeshDoc = [this]() -> MeshDocument*
-    {
-        MainWindow * maiWindow = qobject_cast<MainWindow *>(parent());
-        if(!maiWindow){return nullptr;}
-        MultiViewer_Container *multiViewer_Container = maiWindow->currentViewContainer();
-        if(!multiViewer_Container){return nullptr;}
-        return &multiViewer_Container->meshDoc;
-    };
+//    auto getMeshDoc = [this]() -> MeshDocument*
+//    {
+//        MainWindow * maiWindow = qobject_cast<MainWindow *>(parent());
+//        if(!maiWindow){return nullptr;}
+//        MultiViewer_Container *multiViewer_Container = maiWindow->currentViewContainer();
+//        if(!multiViewer_Container){return nullptr;}
+//        return &multiViewer_Container->meshDoc;
+//    };
 
 //    auto writeAllMeshModelsToStlFile = [](MeshDocument* meshDocPtr, QString path, bool binary) ->bool
 //    {

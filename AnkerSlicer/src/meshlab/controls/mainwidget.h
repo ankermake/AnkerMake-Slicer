@@ -8,7 +8,7 @@
 #include <QDesktopServices>
 #include <QStackedLayout>
 #include <QButtonGroup>
-#include "glarea.h"
+//#include "glarea.h"
 #include "controls/controlmanager.h"
 #include "controls/preferencesdialog.h"
 #include "controls/generalwidget.h"
@@ -37,7 +37,7 @@ enum CURRENTPAGE {
 #endif
 
 namespace  control{
-class FdmMainWidget : public QWidget
+class FdmMainWidget : public BubbleWidget
 {
     Q_OBJECT
 public:
@@ -66,7 +66,11 @@ signals:
     void fdmSaveProject();
     void fdmSaveAsProject();
     void resizeWidget();
-
+    void unloadPlugins();
+    void pluginsUnloaded();
+    void closeMainWindow();
+    void otaNeedSaveProjectSignal(const QString &filePath);
+    void updateSoftware();
 public slots:
       void currentPageChanged(int index);
 
@@ -98,6 +102,7 @@ private slots:
 
     void setButtonEnableByPickStatus();
     void setButtonEnableByDocument();
+    void setButtonEnableByVisible(int visbleModelNumber);
 
     
     void viewChanged(bool checked);
@@ -115,7 +120,7 @@ private slots:
 
     void tabCurrentPageChanged(int index);
 
-
+    void visibleModelCountChanged(int count);
 private:
     QMenu* m_recentMenu;
     QMenu* m_exportMenu;
@@ -165,6 +170,15 @@ private:
     QWidget *m_netWorkWidget = nullptr;
     customTitle *m_titleBar = nullptr;
     QMenu *m_accoutMenu = nullptr;
+    QAction *m_viewAction = nullptr;
+    QAction *m_frontAction = nullptr;
+    QAction *m_rearAction = nullptr;
+    QAction *m_leftAction = nullptr;
+    QAction *m_rightAction = nullptr;
+    QAction *m_topAction = nullptr;
+    QAction *m_bottomAction = nullptr;
+    GeneralWidget *m_widget = nullptr;
+    QAction *m_logUpload = nullptr;
 };
 }
 #endif // MAINWIDGET_H

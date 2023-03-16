@@ -16,7 +16,7 @@ Revision 0.1  2022/01/07 9:38:03  Aden Hu
 #include <QXmlStreamAttributes>
 #include "../GeoAndShow/support/SupportMesh.h"
 
-class XmlStream : QObject
+class COMMONLIB_EXPORT XmlStream : QObject
 {
     Q_OBJECT
 public:

@@ -80,7 +80,7 @@ public:
         float z() const { return m_axis[Z]; }
         float e() const { return m_axis[E]; }
         float f() const { return m_axis[F]; }
-        bool get_ai_layer(int &value) const;
+        bool get_ai_layer(double &value) const;
 
     private:
         std::string      m_raw;

@@ -208,17 +208,46 @@ public:
 
         //Now that we have the segments of overlapping lines, and know in which order to print the segments, print segments in monotonic order.
         Point current_pos = this->start_point;
+        
+        //for (Path* line : starting_lines_monotonic)
+        //{
+        //    if (starting_lines_monotonic.size() == 11 && connections.size() == 25)
+        //    {
+        //        SVGHelper::appendPolygon(line->vertices);
+        //    }
+        //}
+
         for(Path* line : starting_lines_monotonic)
         {
             optimizeClosestStartPoint(*line, current_pos);
             reordered.push_back(*line); //Plan the start of the sequence to be printed next!
             auto connection = connections.find(line);
+            
+            std::unordered_set<Path*> joinedLineSet;
             while(connection != connections.end() && starting_lines.find(connection->second) == starting_lines.end()) //Stop if the sequence ends or if we hit another starting point.
             {
                 line = connection->second;
+                
+                
+                
+                if (joinedLineSet.find(line) != joinedLineSet.end())
+                {
+                    break;
+                }
+                else
+                {
+                    joinedLineSet.insert(line);
+                }
+                
+
                 optimizeClosestStartPoint(*line, current_pos);
                 reordered.push_back(*line); //Plan this line in, to be printed next!
                 connection = connections.find(line);
+                
+                //if (starting_lines_monotonic.size() == 11 && connections.size() == 25)
+                //{
+                //    SVGHelper::writePolygon(line->vertices);
+                //}
             }
         }
 

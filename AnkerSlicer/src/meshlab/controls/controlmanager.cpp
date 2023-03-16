@@ -77,6 +77,15 @@ void ControlManager::openPreferences(int index)
     m_preferDialog->exec();
 }
 
+QWidget* ControlManager::getPageWidgetFromPreferences(const int index)
+{
+    if (!m_preferDialog)
+    {
+        return nullptr;
+    }
+    return m_preferDialog -> getWidget(index);
+}
+
 void ControlManager::clickedToSwitchPreferencesPage(int index)
 {
     emit switchPreferencesPage(index);

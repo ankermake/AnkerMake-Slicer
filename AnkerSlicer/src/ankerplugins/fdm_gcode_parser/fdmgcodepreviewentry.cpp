@@ -38,19 +38,20 @@ struct OpenGLInfo{
 };
 
 bool isHighPerformance(const OpenGLInfo& _info_opengl_t){
+    AkUtil::TDebug("m_opengl_info.Vendorr " + _info_opengl_t.Vendor);
 #ifdef _WIN32
     
     if(_info_opengl_t.Vendor.contains("Intel",Qt::CaseSensitivity::CaseInsensitive)){
-     
+        
         AkUtil::TDebug("m_opengl_info.Vendorr Intel");
-        #ifdef USE_EXTRA_UI
-            return true;
-        #endif
+#ifdef USE_EXTRA_UI
+        return true;
+#endif
         return false;
     }else if(_info_opengl_t.Vendor.contains("NVIDIA",Qt::CaseSensitivity::CaseInsensitive)){
-     
-         AkUtil::TDebug("m_opengl_info.Vendorr NVIDIA");
-         return true;
+        
+        AkUtil::TDebug("m_opengl_info.Vendorr NVIDIA");
+        return true;
     }else if(_info_opengl_t.Vendor.contains("AMD",Qt::CaseSensitivity::CaseInsensitive)){
         AkUtil::TDebug("m_opengl_info.Vendorr AMD");
         return true;
@@ -59,7 +60,7 @@ bool isHighPerformance(const OpenGLInfo& _info_opengl_t){
     
     return true;
 #endif
-
+    return false;
 }
 
 FdmGcodePreviewEntry::FdmGcodePreviewEntry()
@@ -69,22 +70,12 @@ FdmGcodePreviewEntry::FdmGcodePreviewEntry()
 
 FdmGcodePreviewEntry::~FdmGcodePreviewEntry()
 {
-    if(this->ww != nullptr){
-        delete  ww;
-        ww = nullptr;
-    }
+    AkUtil::TFunction("");
+    
 }
 
-//void FdmGcodePreviewEntry::createView(int argc, char *argv[])
 void FdmGcodePreviewEntry::createView(QStringList& args)
 {
-    //QCoreApplication::setOrganizationName("AnkerSlicer");
-    //QString appName = QString("AnkerMake_%1bit_fp").arg(QString::number(QSysInfo::WordSize));
-    //QCoreApplication::setApplicationName(appName);
-
-    //QApplication a(argc, argv);
-    
-    
     QCommandLineParser parser;
     parser.setApplicationDescription("gcode helper");
     parser.addHelpOption();
@@ -105,10 +96,6 @@ void FdmGcodePreviewEntry::createView(QStringList& args)
 
     parser.process(args);
 
-    qDebug() << parser.isSet(aiMode);
-    qDebug() << parser.value(runtimes);
-    qDebug() << parser.value(gcodePath);
-
     std::string gcodePath_std = std::move(parser.value(gcodePath).toStdString());
     QString oStlName = parser.value(originalStlName);
     bool isAimode = parser.isSet(aiMode);
@@ -126,65 +113,44 @@ void FdmGcodePreviewEntry::createView(QStringList& args)
     {
         QOffscreenSurface surf;
         surf.create();
-
         QOpenGLContext ctx;
         ctx.create();
         ctx.makeCurrent(&surf);
         m_opengl_info.Vendor = QString::fromStdString((const char*)ctx.functions()->glGetString(GL_VENDOR));
         m_opengl_info.Render =  QString::fromStdString((const char*)ctx.functions()->glGetString(GL_RENDERER));
-        //(const char*)ctx.functions()->glGetString(GL_EXTENSIONS);
     }
     bool is_hight_performance = isHighPerformance(m_opengl_info);
     AkUtil::TDebug("m_opengl_info.vendor"+m_opengl_info.Vendor);
-        //#ifdef __APPLE__
-        QSurfaceFormat glFormat;
-        glFormat.setVersion(3, 3);
-if(is_hight_performance){
+    //#ifdef __APPLE__
+    QSurfaceFormat glFormat;
+    glFormat.setVersion(3, 3);
+    if(is_hight_performance){
         glFormat.setSamples(128);
-}else {
+    }else {
         AkUtil::TDebug("m_opengl_info.Vendor no sample");
         glDisable(GL_MULTISAMPLE);
-        
-}
-        glFormat.setProfile(QSurfaceFormat::CoreProfile);
-        QSurfaceFormat::setDefaultFormat(glFormat);
-        //#endif
-        //static viewWidget w(nullptr, iniSceneParam,isPmode, hostUrl, isImode);
-        
-//        if (nullptr != vw)
-//        {
-//            delete vw;
-//            vw = nullptr;
-//        }
-        ww = new viewWidget(nullptr, iniSceneParam, isPmode, hostUrl, isImode);
-        viewWidget& w = *ww;
-        w.setPerformance(is_hight_performance);
-        //add qss
-        QFile file(":/pic/ui/default.qss");
-        file.open(QFile::ReadOnly);
-        QString styleSheet = QString::fromLatin1(file.readAll());
-        //a.setStyleSheet(styleSheet);
-        
-        //font.setPixelSize(14);
-        //a.setFont(font);
+    }
+    glFormat.setProfile(QSurfaceFormat::CoreProfile);
+    QSurfaceFormat::setDefaultFormat(glFormat);
+    ww = new viewWidget(nullptr, iniSceneParam, isPmode, hostUrl, isImode);
+    viewWidget& w = *ww;
+    w.setPerformance(is_hight_performance);
+    //add qss
+    QFile file(":/pic/ui/default.qss");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QString::fromLatin1(file.readAll());
 
-        QTranslator translator;
-        translator.load(":/../language/tr_zh.qm");
-        qDebug() << " is empty =" << translator.isEmpty();
-        //a.installTranslator(&translator);
-        w.setOriginalStlName(oStlName);
-        if(isPmode | isImode)
-        {
-            w.setWindowFlags(Qt::FramelessWindowHint| Qt::CustomizeWindowHint | Qt::WindowTitleHint);
-        }
-        w.setToolPath(std::move(processor->extract_result()), gcodePath_std, isAimode,rts);
-//        if(isPmode){
-//            w.show();
-//            w.changeSlider();
-//        }
-        //a.processEvents();
+    QTranslator translator;
+    translator.load(":/../language/tr_zh.qm");
+    qDebug() << " is empty =" << translator.isEmpty();
+    //a.installTranslator(&translator);
+    w.setOriginalStlName(oStlName);
+    if(isPmode | isImode)
+    {
+        w.setWindowFlags(Qt::FramelessWindowHint| Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+    }
+    w.setToolPath(std::move(processor->extract_result()), gcodePath_std, isAimode,rts);
 
-        //return a.exec();
-        return ;
+    return ;
 
 }

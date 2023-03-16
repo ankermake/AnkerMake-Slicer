@@ -31,8 +31,10 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     //m_mirrorLabel->setStyleSheet("QLabel{ \n\tfont: roboto;\n\twidth: 39px; \n\theight: 16px; \n\ttop: 578px; \n\tleft: 109px; \n\tcolor: #333333; \n }");
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
+    m_resetButton->setIcon(xIcon);
     m_resetButton->setMaximumWidth(20);
     m_resetButton->setMaximumHeight(20);
     m_resetButton->setMinimumWidth(20);
@@ -56,6 +58,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     mainblaout->addLayout(hblaout2);
 
     m_xButton = new QToolButton;
+    m_xButton->setObjectName("m_xButton");
     QString xStr = X_STR + tr("Axis");
     m_xStrLabel = new QLabel;
     m_xStrLabel->setObjectName("m_xStrLabel");
@@ -78,12 +81,14 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     m_xButton->setMinimumWidth(120);
     m_xButton->setMinimumHeight(30);
     m_xButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
+
             "   background-color: #3A3B3F;\n"
             "   border-radius:4px;\n"
             "}\n"));
     mainblaout->addWidget(m_xButton);
 
     m_yButton = new QToolButton;
+    m_yButton->setObjectName("m_yButton");
     QString yStr = Y_STR + tr("Axis");
     m_yStrLabel = new QLabel;
     m_yStrLabel->setAlignment(Qt::AlignCenter);
@@ -111,6 +116,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     mainblaout->addWidget(m_yButton);
 
     m_zButton = new QToolButton;
+    m_zButton->setObjectName("m_zButton");
     QString zStr = Z_STR + tr("Axis");
     m_zStrLabel = new QLabel;
     m_zStrLabel->setAlignment(Qt::AlignCenter);
@@ -140,7 +146,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     connect(m_xButton, SIGNAL(clicked()), this, SLOT(xBtnClicked()));
     connect(m_yButton, SIGNAL(clicked()), this, SLOT(yBtnClicked()));
     connect(m_zButton, SIGNAL(clicked()), this, SLOT(zBtnClicked()));
-    connect(m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    //connect(m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
 }
 
 CHModelMirrorTransformParamsSetUI::~CHModelMirrorTransformParamsSetUI()
@@ -185,15 +191,16 @@ void CHModelMirrorTransformParamsSetUI::changeEvent(QEvent * event)
             m_mirrorLabel->setText(tr("Mirror"));
         }
         if (m_xStrLabel != nullptr) {
-            m_xStrLabel->setText(X_STR + tr(" Axis"));
+            m_xStrLabel->setText(X_STR + tr("Axis"));
         }
         if (m_yStrLabel != nullptr) {
-            m_yStrLabel->setText(Y_STR + tr(" Axis"));
+            m_yStrLabel->setText(Y_STR + tr("Axis"));
         }
         if (m_zStrLabel != nullptr) {
-            m_zStrLabel->setText(Z_STR + tr(" Axis"));
+            m_zStrLabel->setText(Z_STR + tr("Axis"));
         }
     }
+    QWidget::changeEvent(event);
 }
 
 

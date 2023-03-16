@@ -5,6 +5,7 @@
 #include <QList>
 #include <QVector>
 #include <QDebug>
+#include <common/utilities/tlogger.h>
 #include "filemanage/fdmparamdata.h"
 
 

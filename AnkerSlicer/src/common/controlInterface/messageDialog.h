@@ -12,9 +12,10 @@
 #include <QMessageBox>
 #include <QValidator>
 #include <QDebug>
+#include <QTimer>
 #include "titlewidget.h"
 namespace  control{
-class MessageDialog : public QDialog
+class COMMONLIB_EXPORT MessageDialog : public QDialog
 {
     Q_OBJECT
 public:
@@ -33,6 +34,13 @@ public:
                         int buttons, QWidget *parent = nullptr);
 
     
+    void setBottonText(BUTTONFLAG botton, const QString &string);
+    
+    void setDetailText(const QString &text);
+    
+    void setDetailVisible(bool show);
+    
+
     void setEditMode(bool edit);
     
     void setValidator(const QValidator *validator);
@@ -41,6 +49,10 @@ public:
     
     void setEditText(const QString &string);
     QString editText() const;
+
+    //aden add
+    void setAutoLevelText(const QString& leftText,  const QString &rightText);
+    void setDescriptionText(const QString &text);
 
     void setAutoClosed(bool ok);
    // void setCloseButtonIcon(QIcon icon);
@@ -62,6 +74,7 @@ private slots:
 private:
    QLabel *m_title;
    QLabel *m_description;
+   QLabel *m_detail;
    QLineEdit *m_edit;
    QLabel *m_warning;
    QPushButton *m_leftButton;
@@ -74,5 +87,18 @@ private:
    TitleWidget *m_titleWidget;
 
 };
+
+class COMMONLIB_EXPORT TimerMessageDialog : public MessageDialog
+{
+public:
+    TimerMessageDialog(const QString &title, const QString &description, int time,
+                       int buttons, QWidget *parent = nullptr);
+
+private:
+    QTimer *m_timer;
+    int m_totalSecs = 0;
+    QString m_description;
+};
+
 }
 #endif // MESSAGEBOXBOX_H

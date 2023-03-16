@@ -9,9 +9,17 @@
 #define CHObject_H
 
 #include "QString"
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-
-class CHObject
+class COMMONLIB_EXPORT CHObject
 {
 public:
 	CHObject();

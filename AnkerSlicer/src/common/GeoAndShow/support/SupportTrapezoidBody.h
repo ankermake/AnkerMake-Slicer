@@ -2,7 +2,7 @@
 #define SUPPORTTRAPEZOIDBODY_H
 #include "SupportMesh.h"
 
-class SupportTrapezoidBody :public SupportMesh
+class COMMONLIB_EXPORT SupportTrapezoidBody :public SupportMesh
 {
 public:
     SupportTrapezoidBody();

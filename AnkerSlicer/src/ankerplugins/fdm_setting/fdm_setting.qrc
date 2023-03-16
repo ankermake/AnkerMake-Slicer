@@ -29,31 +29,27 @@
         <file>images/fdm_delete_icon.png</file>
     </qresource>
     <qresource prefix="/">
-        <file>curadef/definitions/custom.def.json</file>
-        <file>curadef/definitions/fdmextruder.def.json</file>
-        <file>curadef/definitions/fdmprinter.def.json</file>
-        <file>curadef/definitions/ultimaker.def.json</file>
-        <file>curadef/definitions/ultimaker_s3.def.json</file>
-        <file>curadef/i18n/zh_CN/cura.po</file>
-        <file>curadef/i18n/zh_CN/fdmextruder.def.json.po</file>
-        <file>curadef/i18n/zh_CN/fdmprinter.def.json.po</file>
-        <file>curadef/i18n/cura.pot</file>
-        <file>curadef/i18n/fdmextruder.def.json.pot</file>
-        <file>curadef/i18n/fdmprinter.def.json.pot</file>
-        <file>curadef/setting_visibility/advanced.cfg</file>
-        <file>curadef/setting_visibility/basic.cfg</file>
-        <file>curadef/setting_visibility/expert.cfg</file>
-        <file>curadef/variants/ultimaker_s3_cc04.inst.cfg</file>
-        <file>curadef/definitions/anker_fdmextruder.def.json</file>
-        <file>curadef/definitions/anker_fdmprinter.def.json</file>
-        <file>curadef/setting_visibility/anker_expert.cfg</file>
-        <file>../../../distrib/setting/fdm/back_logic/anker_expert.cfg</file>
-        <file>../../../distrib/setting/fdm/back_logic/FdmJsonObjTree_All.qml</file>
-        <file>../../../distrib/setting/fdm/back_logic/FdmJsonObjTree_All_zh.qml</file>
-        <file>../../../distrib/setting/fdm/machine/default/AnkerMakeM5.ini</file>
-        <file>../../../distrib/setting/fdm/material/default/ABS.ini</file>
-        <file>../../../distrib/setting/fdm/material/default/PETG.ini</file>
-        <file>../../../distrib/setting/fdm/material/default/TPU.ini</file>
-        <file>../../../distrib/setting/fdm/material/default/PLA+.ini</file>
+        <file>fdm/parameter/support/treeSupport.ini</file>
+        <file>fdm/machine/default/AnkerMakeM5.ini</file>
+        <file>fdm/material/default/ABS.ini</file>
+        <file>fdm/material/default/PETG.ini</file>
+        <file>fdm/material/default/PLA+.ini</file>
+        <file>fdm/material/default/TPU.ini</file>
+        <file>fdm/parameter/default/M5_2_ABS.ini</file>
+        <file>fdm/parameter/default/M5_2_PETG.ini</file>
+        <file>fdm/parameter/default/M5_2_PLA+.ini</file>
+        <file>fdm/parameter/default/M5_2_TPU.ini</file>
+        <file>fdm/parameter/default/M5_4_ABS.ini</file>
+        <file>fdm/parameter/default/M5_4_PETG.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+.ini</file>
+        <file>fdm/parameter/default/M5_4_TPU.ini</file>
+        <file>fdm/parameter/default/M5_6_ABS.ini</file>
+        <file>fdm/parameter/default/M5_6_PETG.ini</file>
+        <file>fdm/parameter/default/M5_6_PLA+.ini</file>
+        <file>fdm/parameter/default/M5_6_TPU.ini</file>
+        <file>fdm/parameter/default/M5_8_ABS.ini</file>
+        <file>fdm/parameter/default/M5_8_PETG.ini</file>
+        <file>fdm/parameter/default/M5_8_PLA+.ini</file>
+        <file>fdm/parameter/default/M5_8_TPU.ini</file>
     </qresource>
 </RCC>

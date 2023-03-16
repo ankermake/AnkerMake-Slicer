@@ -29,7 +29,7 @@ void ExportModelThread::run()
     catch(...){
        successful =false;
         qDebug() << __FUNCTION__ << __LINE__;
-        emit  errorEncountered(0, QString::fromLocal8Bit("Other Error"));
+        emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
     }
 }
 

@@ -10,7 +10,7 @@ namespace cura
 //andrew 
 enum class EWallOverhangExtendType
 {
-    NONE,
+    INSTANT,
     GRADUALLY_XY,
     CIRCLE
 };

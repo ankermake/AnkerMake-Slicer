@@ -132,7 +132,7 @@ class CFaceO : public vcg::Face<  CUsedTypesO,
 
 typedef vcg::tri::TriMesh< vcg::vertex::vector_ocf<CVertexO>, vcg::face::vector_ocf<CFaceO> > vcgTriMesh;
 
-class CMeshO : public vcgTriMesh
+class COMMONLIB_EXPORT CMeshO : public vcgTriMesh
 {
 public:
 	CMeshO();
@@ -174,7 +174,7 @@ public:
 	
 	float m_rotCenter[3];
 	std::vector<float> m_params;
-
+    QMatrix4x4 m_trans;
 
 
 

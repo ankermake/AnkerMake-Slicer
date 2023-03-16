@@ -1,0 +1,412 @@
+void add_meshElement(MeshTypeElement meshtype, std::vector<void* >inputdatas, std::vector<TriangleMesh*>& triangleMeshes)
+{
+    size_t steps = CONTOUR_STEPS;//45;
+    switch (meshtype)
+    {
+    case MeshTypeElement::Head:
+    {
+        for (void* inputdata : inputdatas)
+        {
+            Head head = *(Head*)inputdata;
+            
+
+            Contour3D merged;
+            merged.merge(get_headmesh(head, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+
+
+    }
+    break;
+    case MeshTypeElement::Pillar:
+    {
+        for (void* inputdata : inputdatas)
+        {
+            Pillar& pill = *(Pillar*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(pill, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+    case MeshTypeElement::Junction:
+    {
+        for (void* inputdata : inputdatas)
+        {
+            Junction& j = *(Junction*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(j, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+
+    }
+    break;
+    case MeshTypeElement::Bridge:
+    {
+        for (void* inputdata : inputdatas)
+        {
+            Bridge& bs = *(Bridge*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(bs, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+    case MeshTypeElement::CrossBridge:
+    {
+        for (void* inputdata : inputdatas)
+        {
+            CrossBridge& bs = *(CrossBridge*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(bs, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+    case MeshTypeElement::DiffBridge:
+    {
+        for (void* inputdata : inputdatas)
+        {
+
+            DiffBridge& bs = *(DiffBridge*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(bs, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+    case MeshTypeElement::Pedestal:
+    {
+        for (void* inputdata : inputdatas)
+        {
+
+            Pedestal& pedest = *(Pedestal*)inputdata;
+
+            Contour3D merged;
+            merged.merge(get_mesh(pedest, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+
+    case MeshTypeElement::Anchor:
+    {
+        for (void* inputdata : inputdatas)
+        {
+
+            Anchor& anch = *(Anchor*)inputdata;
+            Contour3D merged;
+            merged.merge(get_mesh(anch, steps));
+            TriangleMesh meshcache = to_triangle_mesh(merged);
+
+            // The mesh will be passed by const-pointer to TriangleMeshSlicer,
+            // which will need this.
+            if (!meshcache.empty())
+            {
+                TriangleMesh* ptr = new TriangleMesh();
+
+                meshcache.require_shared_vertices();
+                *ptr = meshcache;
+                triangleMeshes.emplace_back(ptr);
+            }
+        }
+    }
+    break;
+    default:
+        std::cout << "error!!!unknow mesh type!" << std::endl;
+
+    }
+
+}
+
+void SupportTreeBuilder::cloneSupportTreeData( const SupportTree* srcPtr, const Slic3r::Transform3d transf3d)
+{
+    SupportTreeBuilder *srcBuilderPtr =(SupportTreeBuilder*)srcPtr;
+    SupportTreeBuildsteps* srcalgPtr = (SupportTreeBuildsteps*)srcBuilderPtr->m_supportTreeBuildstepsPtr;
+    SupportTreeBuildsteps* algPtr = (SupportTreeBuildsteps*)m_supportTreeBuildstepsPtr;
+   assert(algPtr != NULL|| srcalgPtr != NULL);
+   Matrix3d m;
+   for (int i = 0; i < 3; ++i)
+   {
+       for (int j = 0; j < 3; ++j)
+       {
+           m(i, j) = transf3d(i, j);
+       }
+   }
+
+    for (Head &obj : srcBuilderPtr->m_heads)
+    {
+        m_heads.emplace_back(obj);
+       // m_heads.back().pos= m * obj.pos;
+        m_heads.back().pos += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        //m_heads.back().setCreatedFlg(true);
+    }
+    for (size_t&obj : srcBuilderPtr->m_head_indices)
+    {
+        m_head_indices.emplace_back(obj);
+    }
+
+    for (Pillar&obj : srcBuilderPtr->m_pillars)
+    {
+        m_pillars.emplace_back(obj);
+        //m_pillars.back().endpt= m * obj.endpt;
+        m_pillars.back().endpt += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+
+        algPtr->m_pillar_index.guarded_insert(m_pillars.back().endpt, unsigned(m_pillars.back().id));
+        algPtr->m_pillar_index_start.guarded_insert(m_pillars.back().startpoint(), unsigned(m_pillars.back().id));
+
+        //m_pillars.back().setCreatedFlg(true);
+
+    }
+
+    for (Junction& obj : srcBuilderPtr->m_junctions)
+    {
+        m_junctions.emplace_back(obj);
+        //m_junctions.back().pos = m * obj.pos;
+        m_junctions.back().pos += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        //m_junctions.back().setCreatedFlg(true);
+    }
+    for (Bridge&obj : srcBuilderPtr->m_bridges)
+    {
+        m_bridges.emplace_back(obj);
+
+        //m_bridges.back().startp = m * obj.startp;
+        //m_bridges.back().endp = m * obj.endp;
+
+        m_bridges.back().startp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        m_bridges.back().endp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+       // m_bridges.back().setCreatedFlg(true);
+
+    }
+    for (CrossBridge&obj : srcBuilderPtr->m_crossbridges)
+    {
+        m_crossbridges.emplace_back(obj);
+        //m_crossbridges.back().startp = m * obj.startp;
+        //m_crossbridges.back().endp = m * obj.endp;
+
+        m_crossbridges.back().startp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        m_crossbridges.back().endp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        //m_crossbridges.back().setCreatedFlg(true);
+
+    }
+    for (DiffBridge&obj : srcBuilderPtr->m_diffbridges)
+    {
+        m_diffbridges.emplace_back(obj);
+        //m_diffbridges.back().startp = m * obj.startp;
+        //m_diffbridges.back().endp = m * obj.endp;
+
+        m_diffbridges.back().startp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        m_diffbridges.back().endp += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        //m_diffbridges.back().setCreatedFlg(true);
+
+    }
+    for (Pedestal& obj : srcBuilderPtr->m_pedestals)
+    {
+        m_pedestals.emplace_back(obj);
+        //m_pedestals.back().pos = m * obj.pos;
+
+        m_pedestals.back().pos += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+        //m_pedestals.back().setCreatedFlg(true);
+
+    }
+    for (Anchor& obj : srcBuilderPtr->m_anchors)
+    {
+        m_anchors.emplace_back(obj);
+        //m_anchors.back().pos = m * obj.pos;
+
+        m_anchors.back().pos  += Vec3d(transf3d.translation()(0), transf3d.translation()(1), transf3d.translation()(2));
+       // m_anchors.back().setCreatedFlg(true);
+
+    }
+
+    algPtr->m_iheads = srcalgPtr->m_iheads;
+    algPtr->m_iheads_onmodel = srcalgPtr->m_iheads_onmodel;
+    algPtr->m_iheadless = srcalgPtr->m_iheadless;
+    algPtr->m_addHeadsize = srcalgPtr->m_addHeadsize;
+    ground_level = srcBuilderPtr->ground_level;
+}
+
+bool SupportTreeBuilder::add_meshElement(MeshTypeElement meshtype, std::vector<void* >& inputdatas, int add_status, std::vector< SupportTreeNode2MeshLink>& meshlink)
+{
+    size_t steps = CONTOUR_STEPS;//45;
+    bool ret = false;
+    SupportTreeBuildsteps* algPtr = (SupportTreeBuildsteps*)m_supportTreeBuildstepsPtr;
+    if (algPtr == NULL)
+        false;
+    switch (meshtype)
+    {
+    case MeshTypeElement::Head:
+    {
+        HistoryData historyDataAdd;
+        for (void* inputdata : inputdatas)
+        {
+            Head& head = *(Head*)inputdata;
+            head.dir = head.dir.normalized();
+            //if (m_heads.size())
+            //{
+            //    head.r_back_mm = m_heads[0].r_back_mm;
+            //    head.r_pin_mm = m_heads[0].r_pin_mm;//0.5
+            //    head.width_mm = m_heads[0].width_mm;
+            //    head.penetration_mm = m_heads[0].penetration_mm;
+            //}
+            algPtr->m_addHeadsize += 1;
+
+            ret=algPtr->add_pinheadSupport(head, algPtr->m_addHeadsize);
+			if (add_status == 0)//临时增加
+			{
+				algPtr->m_addHeadsize -= 1;
+			}
+
+            if (ret)
+            {
+                long nearestID= SupportTreeNode::ID_UNSET;
+                for (int typeindex = (int)MeshTypeElement::BaseType; typeindex < (int)MeshTypeElement::TypeMax; typeindex++)
+                {
+                    std::vector< SupportTreeNode2MeshLink> newmeshlink;
+                    if (typeindex == (int)MeshTypeElement::BaseType || typeindex == (int)MeshTypeElement::Pad)                        
+                        continue;
+
+                    retrieve_meshLinkElements((MeshTypeElement) typeindex, newmeshlink);
+                    meshlink.insert(meshlink.end(), newmeshlink.begin(), newmeshlink.end());
+                }
+
+                for (SupportTreeNode2MeshLink &newlk : meshlink)
+                {
+                    if (newlk.type != MeshTypeElement::Pillar)
+                        continue;
+                    {
+                        unsigned neighbors = algPtr->m_cfg.pillar_cascade_neighbors;
+                        std::vector<SupportTreeNode2MeshLink> outintermeshlink;
+                        std::vector< SupportTreeNode2MeshLink> newmeshlink;
+
+                        Pillar& pillar = m_pillars[newlk.id];
+                        nearestID =searchNearObjInterconnect(pillar, outintermeshlink);
+
+                        retrieve_meshLinkElements(MeshTypeElement::CrossBridge, newmeshlink);
+                        meshlink.insert(meshlink.end(), newmeshlink.begin(), newmeshlink.end());
+                        
+                        newmeshlink.clear();
+                        retrieve_meshLinkElements(MeshTypeElement::DiffBridge, newmeshlink);
+                        meshlink.insert(meshlink.end(), newmeshlink.begin(), newmeshlink.end());
+
+                    }
+
+                }
+
+                if (add_status == 0)//临时增加
+                {
+                    invalidateLinkRelationShip(meshlink);
+                    invalidateMeshLinks(meshlink, true);
+                    m_meshPadCacheNew.clear();
+
+                    //std::cout << "m_heads size==" << m_heads.size() << std::endl;
+                    //std::cout << "m_head_indices size==" << m_head_indices.size() << std::endl;
+                    //std::cout << "m_pillars size==" << m_pillars.size() << std::endl;
+                    //std::cout << "m_junctions size==" << m_junctions.size() << std::endl;
+                    //std::cout << "m_bridges size==" << m_bridges.size() << std::endl;
+                    //std::cout << "m_crossbridges size==" << m_crossbridges.size() << std::endl;
+                    //std::cout << "m_diffbridges size==" << m_diffbridges.size() << std::endl;
+                    //std::cout << "m_pedestals size==" << m_pedestals.size() << std::endl;
+                    //std::cout << "m_anchors size==" << m_anchors.size() << std::endl;
+                }
+                else
+                {
+                   
+                    std::vector<HistoryData> srcdataV;
+                    std::vector < SUPPORT_AJUST_EVENT> eventV;
+                    for (SupportTreeNode2MeshLink& lk : meshlink)
+                    {
+                        extractSupportTreeNodeChanged(lk, historyDataAdd);
+                    }
+                    srcdataV.emplace_back(historyDataAdd);
+                    eventV.emplace_back(SUPPORT_AJUST_EVENT::EVENT_ADD);
+                    pushSupportTreeNodeChanged(srcdataV, eventV);
+                }
+
+            }
+        }
+
+    }
+    break;
+    default:
+        std::cout << "error!!!unknow mesh type!" << std::endl;
+
+    }
+    return ret;
+}

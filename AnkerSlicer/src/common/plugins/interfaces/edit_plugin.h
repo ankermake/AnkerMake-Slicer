@@ -48,20 +48,20 @@ public:
 	//should return a sentence describing what the editing tool does
 	static const QString info();
 
-	virtual void suggestedRenderingData(MeshModel &/*m*/, MLRenderingData& /*dt*/) {}
+    virtual void suggestedRenderingData(MeshModel &/*m*/) {}
 
 	// Called when the user press the first time the button
-	virtual bool startEdit(MeshModel &/*m*/, GLArea * /*parent*/, MLSceneGLSharedDataContext* /*cont*/) { return true; }
-	virtual bool startEdit(MeshDocument &md, GLArea *parent, MLSceneGLSharedDataContext* cont)
+    virtual bool startEdit(MeshModel &/*m*/) { return true; }
+    virtual bool startEdit(MeshDocument &md)
 	{
 		//assert(NULL != md.mm());
 		if (md.mm() != NULL)
-			return (startEdit(*(md.mm()), parent, cont));
+            return (startEdit(*(md.mm())));
 		else return false;
 	}
 	// Called when the user press the second time the button
-	virtual void endEdit(MeshModel &/*m*/, GLArea * /*parent*/, MLSceneGLSharedDataContext* /*cont*/) {}
-	virtual void endEdit(MeshDocument &/*m*/, GLArea * /*parent*/, MLSceneGLSharedDataContext* /*cont*/) {}
+    virtual void endEdit(MeshModel &/*m*/) {}
+    virtual void endEdit(MeshDocument &/*m*/) {}
 
 	// There are two classes of editing tools, the one that works on a single layer at a time
 	// and the ones that works on all layers and have to manage in a correct way the action of changing the current layer.
@@ -73,11 +73,11 @@ public:
 	//selected.  This ensures that plugins who don't support layers do not get sent pointers to meshes
 	//they are not expecting.
 	// If your editing plugins is not singleMesh you MUST reimplement this to correctly handle the change of layer.
-	virtual void layerChanged(MeshDocument &md, MeshModel &oldMeshModel, GLArea *parent, MLSceneGLSharedDataContext* cont)
+    virtual void layerChanged(MeshDocument &md, MeshModel &oldMeshModel)
 	{
 		assert(this->isSingleMeshEdit());
-		endEdit(oldMeshModel, parent, cont);
-		startEdit(md, parent, cont);
+        endEdit(oldMeshModel);
+        startEdit(md);
 	}
 
 	virtual void decorate(MeshModel &m, GLArea *parent, QPainter * /*p*/) { decorate(m, parent); }

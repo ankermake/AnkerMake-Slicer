@@ -1,4 +1,6 @@
 #include "settingmanager.h"
+#include "common/ak_const.h"
+#include "common/utilities/tlogger.h"
 
 namespace settings {
 SettingManager::SettingManager()
@@ -59,6 +61,21 @@ void SettingManager::clearRecent()
     m_settings.remove("recentList");
 }
 
+QString SettingManager::readExportRecent()
+{
+    if(m_settings.contains("exportRecent"))
+    {
+        return m_settings.value("exportRecent").toString();
+    }
+    return QString();
+}
+
+void SettingManager::writeExportRecent(const QString &fileName)
+{
+    m_settings.setValue("exportRecent", fileName);
+}
+
+
 void SettingManager::setAiMode(bool flag)
 {
      m_settings.setValue("AiMode",flag);
@@ -92,11 +109,36 @@ void SettingManager::setCurrentLanguage(int index)
     m_settings.setValue("CurrentLanguage",index);
 }
 
+//int SettingManager::getCurrentLanguage()
+//{
+//    QVariant var = m_settings.value("CurrentLanguage");
+//    if(!var.isValid()) {
+//        setCurrentLanguage(0);
+//    }
+//    return  m_settings.value("CurrentLanguage").toInt();
+//}
+
+
 int SettingManager::getCurrentLanguage()
 {
     QVariant var = m_settings.value("CurrentLanguage");
     if(!var.isValid()) {
-        setCurrentLanguage(0);
+        QLocale local = QLocale::system();
+        auto country = local.country();
+        qDebug() << "country is " << country;
+        AkUtil::TDebug("country index is " + QString::number(country));
+        if (country == QLocale::Country::China)
+        {
+            setCurrentLanguage(AkConst::ELanguage::Chinese);
+        }
+        else if (country == QLocale::Country::Japan)
+        {
+            setCurrentLanguage(AkConst::ELanguage::Japenese);
+        }
+        else
+        {
+            setCurrentLanguage(AkConst::ELanguage::English);
+        }
     }
     return  m_settings.value("CurrentLanguage").toInt();
 }
@@ -134,7 +176,7 @@ void SettingManager::setLanguageList(const QStringList &languageList)
 
 QStringList SettingManager::getLanguageList()
 {
-    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese"));
+    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese") << QObject::tr("Japanese"));
     return  m_settings.value("LanguageList").toStringList();
 }
 

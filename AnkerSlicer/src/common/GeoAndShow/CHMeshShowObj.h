@@ -37,7 +37,7 @@ struct MyTriangle
 
 
 DEF_PTR(CHMeshShowObj)
-class CHMeshShowObj :public CHShowObj
+class COMMONLIB_EXPORT CHMeshShowObj :public CHShowObj
 {
 public:
     CHMeshShowObj();
@@ -51,6 +51,7 @@ public:
 
     
     void resetTransform();
+    void reset3x3Transform();
     void resetMove();
     void resetRot();
     void resetZoom();
@@ -83,6 +84,10 @@ public:
     
     QVector3D m_rotCenter;
     std::vector<float> m_params;
+    float m_lastRotParams[3] = {-1}; 
+    bool m_lastMultiSelect = false; 
+    bool m_isRot = false; 
+    int m_mirrAxis[3] = {1, 1, 1};
 
     std::vector<float> m_initParams;
     QMatrix4x4 m_initTransform;

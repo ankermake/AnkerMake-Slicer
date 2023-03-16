@@ -10,8 +10,17 @@
 #include "QMatrix4x4"
 #include "QVector3D"
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
-class TransformPack
+class COMMONLIB_EXPORT TransformPack
 {
 public:
 

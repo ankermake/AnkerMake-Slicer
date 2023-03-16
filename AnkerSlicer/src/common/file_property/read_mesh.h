@@ -4,7 +4,16 @@
 #include <QFile>
 #include <iostream>
 #include <QString>
-class ReadMesh
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT ReadMesh
 {
 public:
     static bool checkMeshHeader(const QString &filename);

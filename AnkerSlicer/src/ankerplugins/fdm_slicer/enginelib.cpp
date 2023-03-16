@@ -6,7 +6,6 @@
 #endif
 #include "common/utilities/tlogger.h""
 
-
 EngineLibThread *pEngineLib = nullptr;
 void engineCallBack(const char *logData, int n){
     if(pEngineLib){
@@ -31,7 +30,6 @@ void EngineLibThread::run()
 {
 #ifdef DEBUG_BY_CL
     QStringList strList;
-
 
     strList = QProcess::splitCommand(m_cmd);
 

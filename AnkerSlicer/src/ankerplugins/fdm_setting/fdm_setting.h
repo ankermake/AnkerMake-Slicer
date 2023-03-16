@@ -36,7 +36,7 @@ public:
     FdmSettingPlugin(){
         initPlugin(nullptr, nullptr);
     }
-    ~FdmSettingPlugin(){}
+    ~FdmSettingPlugin();
 
 public:
     FdmParamSettingsWidget *fdmParamSettingsWidget{nullptr};
@@ -57,6 +57,8 @@ public:
 
 private slots:
     void slotOpenPreferenceIndex(int index) {if(m_controlmanager) m_controlmanager->openPreferences(index);}
+    
+    void doSupportEnabled(bool enable);
     
 private:
     ControlInterface *m_controlmanager = nullptr;

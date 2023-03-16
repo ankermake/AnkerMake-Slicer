@@ -12,7 +12,7 @@
 namespace cura
 {
 //AngleDegrees and AngleRadians classes defined together here interweaved, to resolve their interdependencies.
-class AngleRadians;
+struct AngleRadians;
 
 /*
  * \brief Represents an angle in degrees.

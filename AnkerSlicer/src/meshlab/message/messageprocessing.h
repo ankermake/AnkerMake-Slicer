@@ -21,6 +21,10 @@ public slots:
     void receiveVisibleModelCountChangedFromDoc(int modelCount);
     void receiveModelSupportNumberChangedFromDoc(int sptCount);
     
+    void receiveModelSuspendStatusChangedFromDoc(bool susStatus);
+    
+    //void receiveGenerateSupportButtonStatusFromDoc();
+    
     void sendMsg2Preview();
 
 signals:

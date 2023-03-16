@@ -435,7 +435,24 @@ bool CHAABB3D::intersectWithPlane(const CHPlanePtr& plane) const
 
 	float dis1 = QVector3D::dotProduct(ptmin - center, nor);
 	float dis2 = QVector3D::dotProduct(ptmax - center, nor);
-	return dis1 * dis2 <= 0;
+    return dis1 * dis2 <= 0;
+}
+
+CHAABB3D CHAABB3D::getTransformCHAABB3D(const QMatrix4x4 &trans)
+{
+    CHAABB3D aabb = *this;
+    QVector3D ptMin(aabb.m_Xmin, aabb.m_Ymin, aabb.m_Zmin);
+    QVector3D ptMax(aabb.m_Xmax, aabb.m_Ymax, aabb.m_Zmax);
+    ptMin = (trans * QVector4D(ptMin)).toVector3D();
+    ptMax = (trans * QVector4D(ptMax)).toVector3D();
+    aabb.m_Xmin = ptMin.x();
+    aabb.m_Ymin = ptMin.y();
+    aabb.m_Zmin = ptMin.z();
+
+    aabb.m_Xmax = ptMax.x();
+    aabb.m_Ymax = ptMax.y();
+    aabb.m_Zmax = ptMax.z();
+    return aabb;
 }
 
 CHAABB3D CHAABB3D::operator*(float d) const

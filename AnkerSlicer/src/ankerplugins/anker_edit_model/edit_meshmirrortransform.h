@@ -44,6 +44,7 @@ public:
 	EditMeshMirrorTransformTool();
 	virtual ~EditMeshMirrorTransformTool() {}
 
+    void initInMainUI  () override ; //  add  @2023-01-13 by ChunLian
     bool startAnkerEdit(ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
     void endAnkerEdit  (ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
 
@@ -54,19 +55,19 @@ public:
 
   public
 Q_SLOTS:
-	void receiveButtonClicked(int index);
+    void receiveButtonClicked(int index);
 	void reset();
 
 private:
 	void adjustSingleAngle(float& angle);
 
 private:
-	CHModelMirrorTransformParamsSetUI* m_paramUI;
+    CHModelMirrorTransformParamsSetUI* m_paramUI{nullptr};
 	std::set<CHMeshShowObjPtr> m_editMeshModels;
-	CHMeshShowObjPtr m_firstMesh;//???????????????
+    CHMeshShowObjPtr m_firstMesh;
 	QVector3D m_operationCenter;
 
-	std::vector<std::vector<float>> m_initValues;//?????????????
+    std::vector<std::vector<float>> m_initValues;
 
 	float m_operateMoveZ;
 };

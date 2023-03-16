@@ -73,7 +73,7 @@ public:
 
 
 
-	FilterPlugin() : MeshLabPluginLogger(), glContext(nullptr)
+    FilterPlugin() : MeshLabPluginLogger()
 	{
 	}
 	virtual ~FilterPlugin() {}
@@ -241,7 +241,7 @@ public:
 	 */
 	int previewOnCreatedAttributes(const QAction* act, const MeshModel& mm) const;
 
-	MLPluginGLContext* glContext;
+//	MLPluginGLContext* glContext;
 protected:
 	// Each plugins exposes a set of filtering possibilities.
 	// Each filtering procedure corresponds to a single QAction with a corresponding FilterIDType id.

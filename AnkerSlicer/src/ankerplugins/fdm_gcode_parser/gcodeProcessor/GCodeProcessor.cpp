@@ -143,6 +143,7 @@ float GCodeProcessor::Trapezoid::cruise_distance() const
     return decelerate_after - accelerate_until;
 }
 
+
 void GCodeProcessor::TimeBlock::calculate_trapezoid()
 {
     trapezoid.cruise_feedrate = feedrate_profile.cruise;
@@ -289,7 +290,7 @@ static void recalculate_trapezoids(std::vector<GCodeProcessor::TimeBlock>& block
             // Recalculate if current block entry or exit junction speed has changed.
             if (curr->flags.recalculate || next->flags.recalculate) {
                 // NOTE: Entry and exit factors always > 0 by all previous logic operations.
-                GCodeProcessor::TimeBlock& block = *curr;
+                GCodeProcessor::TimeBlock& block = *curr;                               
                 block.feedrate_profile.exit = next->feedrate_profile.entry;
                 block.calculate_trapezoid();
                 //curr->trapezoid = block.trapezoid;
@@ -307,6 +308,8 @@ static void recalculate_trapezoids(std::vector<GCodeProcessor::TimeBlock>& block
         next->flags.recalculate = false;
     }
 }
+
+
 
 void GCodeProcessor::TimeMachine::calculate_time(size_t keep_last_n_blocks)
 {
@@ -413,7 +416,7 @@ void GCodeProcessor::TimeMachine::calculate_time(size_t keep_last_n_blocks)
     }
 
     if (keep_last_n_blocks)
-        blocks.erase(blocks.begin(), blocks.begin() + n_blocks_process);
+        blocks.erase(blocks.begin(), blocks.begin() + n_blocks_process);  
     else
         blocks.clear();
 }
@@ -640,7 +643,7 @@ const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> GCodeProces
     { EProducer::CraftWare,   "CraftWare" },
     { EProducer::ideaMaker,   "ideaMaker" },
     { EProducer::KissSlicer,  "KISSlicer" },
-    { EProducer::AnkerSlicer,  "AnkerSlicer" } //
+    { EProducer::AnkerMake,  "AnkerMake" } //
 };
 
 unsigned int GCodeProcessor::s_result_id = 0;
@@ -940,7 +943,7 @@ void GCodeProcessor::reset()
     m_origin = { 0.0f, 0.0f, 0.0f, 0.0f };
     m_cached_position.reset();
     m_wiping = false;
-
+    m_on_takepic = false;
     m_feedrate = 0.0f;
     m_width = 0.0f;
     m_height = 0.0f;
@@ -951,6 +954,7 @@ void GCodeProcessor::reset()
     m_mm3_per_mm = 0.0f;
     m_fan_speed = 0.0f;
     m_temperature = 0.0f;
+    m_bed_temperature = 0.0f;
 
     m_extrusion_role = Anker::erNone;
     m_extruder_id = 0;
@@ -961,6 +965,8 @@ void GCodeProcessor::reset()
 
     m_filament_diameters = std::vector<float>(Min_Extruder_Count, 1.75f);
     m_extruded_last_z = 0.0;
+    //add by friva 221205
+    m_extrude_last_layer = 0;
     m_g1_line_id = 0;
     m_layer_id = 0;
     m_cp_color.reset();
@@ -1020,7 +1026,7 @@ void GCodeProcessor::process_file(const std::string& filename, bool apply_postpr
         // if the gcode was produced by this slicer,
         // extract the config from it
         try {
-            if (m_producer == EProducer::AnkerSlicer||m_producer == EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
+            if (m_producer == EProducer::AnkerMake||m_producer == EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3rPE || m_producer == EProducer::Slic3r) {
                 //TODO:
                 //DynamicPrintConfig config;
                 //config.apply(FullPrintConfig::defaults());
@@ -1213,7 +1219,10 @@ void GCodeProcessor::process_gcode_line(const GCodeReader::GCodeLine& line)
             std::string cmd_up =strTemp.toUpper().toStdString();
             //klipper extendt comands
             if (cmd_up == "TURN_OFF_HEATERS")
+            {
                 m_temperature = 0;
+                m_bed_temperature = 0;
+            }
             else if (cmd_up == "ACTIVATE_EXTRUDER")
                 process_klipper_ACTIVATE_EXTRUDER(line);
         }
@@ -1260,6 +1269,7 @@ void GCodeProcessor::process_gcode_line(const GCodeReader::GCodeLine& line)
             case 109: { process_M104_M109(line); break; } // Set extruder temp
             case 132: { process_M132(line); break; } // Recall stored home offsets
             case 135: { process_M135(line); break; } // Set tool (MakerWare)
+            case 140: { process_M140(line); break; } // Set bed temp
             case 201: { process_M201(line); break; } // Set max printing acceleration
             case 203: { process_M203(line); break; } // Set maximum feedrate
             case 204: { process_M204(line); break; } // Set default acceleration
@@ -1343,7 +1353,8 @@ template<typename T>
     }
 
     void GCodeProcessor::process_tags(const std::string_view comment)
-    {
+    {   
+
         // producers tags
         if (m_producers_enabled && process_producers_tags(comment))
             return;
@@ -1473,7 +1484,7 @@ template<typename T>
         case EProducer::CraftWare:   { return process_craftware_tags(comment); }
         case EProducer::ideaMaker:   { return process_ideamaker_tags(comment); }
         case EProducer::KissSlicer:  { return process_kissslicer_tags(comment); }
-        case EProducer::AnkerSlicer: { return process_cura_tags(comment); }
+        case EProducer::AnkerMake: { return process_cura_tags(comment); }
         default:                     { return false; }
         }
     }
@@ -1522,25 +1533,25 @@ template<typename T>
         pos = comment.find(tag);
         if (pos != comment.npos) {
             const std::string_view flavor = comment.substr(pos + tag.length());
-            if (flavor == "BFB")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Mach3")
+            if (flavor == "BFB")             
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Mach3")      
                 m_flavor = Anker::gcfMach3;
-            else if (flavor == "Makerbot")
+            else if (flavor == "Makerbot")    
                 m_flavor = Anker::gcfMakerWare;
-            else if (flavor == "UltiGCode")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Marlin(Volumetric)")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Griffin")
-                m_flavor = Anker::gcfMarlin; // << ???????????????????????
-            else if (flavor == "Repetier")
+            else if (flavor == "UltiGCode")   
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Marlin(Volumetric)")  
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Griffin")     
+                m_flavor = Anker::gcfMarlin;
+            else if (flavor == "Repetier")    
                 m_flavor = Anker::gcfRepetier;
-            else if (flavor == "RepRap")
+            else if (flavor == "RepRap")      
                 m_flavor = Anker::gcfRepRap;
-            else if (flavor == "Sprinter")
+            else if (flavor == "Sprinter")    
                 m_flavor = Anker::gcfSprinter;
-            else if (flavor == "Marlin")
+            else if (flavor == "Marlin")      
                 m_flavor = Anker::gcfMarlin;
             else
 
@@ -1553,10 +1564,33 @@ template<typename T>
         // layer
         tag = "LAYER:";
         pos = comment.find(tag);
-        if (pos != comment.npos) {
+        if (pos != comment.npos && pos < 2) {
             ++m_layer_id;
             return true;
         }
+
+        tag = "MAXSPEED:";
+        pos = comment.find(tag);
+        if (pos != comment.npos) {
+            const std::string_view MAXSPEED = comment.substr(pos + tag.length());
+            int maxSpeed;
+            auto result = std::from_chars(MAXSPEED.data(), MAXSPEED.data() + MAXSPEED.size(), maxSpeed);
+            m_result.MaxSpeed = maxSpeed / 60;
+            return true;
+        }
+
+        tag = "Z_TakePictureStart:";
+        pos = comment.find(tag);
+        if(pos != comment.npos){
+            m_on_takepic = true;
+        }
+
+        tag = "Z_TakePictureEnd:";
+        pos = comment.find(tag);
+        if(pos != comment.npos){
+            m_on_takepic = false;
+        }
+
 
         return false;
     }
@@ -1966,6 +2000,7 @@ template<typename T>
         process_G1(line);
     }
 
+    
     void GCodeProcessor::process_G1(const GCodeReader::GCodeLine& line)
     {
 #if ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
@@ -2042,6 +2077,11 @@ template<typename T>
         AxisCoords delta_pos;
         AxisCoords delta_abs_pos;   //  add @2022-09-07 by CL
         for (unsigned char a = X; a <= E; ++a) {
+            if(m_on_takepic && a == E){
+                
+                delta_abs_pos[a] = delta_pos[a] = 0;
+                continue;
+            }
             delta_pos[a] = m_end_position[a] - m_start_position[a];
             delta_abs_pos[a] = std::abs(delta_pos[a]);
             max_abs_delta = std::max(max_abs_delta, delta_abs_pos[a]);
@@ -2087,12 +2127,14 @@ template<typename T>
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
 #else
             if ((m_producers_enabled && m_producer != EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3r) || m_height == 0.0f) {
-                if (m_end_position[Z] > m_extruded_last_z + EPSILON) {
+                //if (m_end_position[Z] > m_extruded_last_z + EPSILON) {
+                if (m_layer_id > m_extrude_last_layer) {
                     m_height = float(m_end_position[Z] - m_extruded_last_z);
 #if ENABLE_GCODE_VIEWER_DATA_CHECKING
                     m_height_compare.update(m_height, m_extrusion_role);
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
                     m_extruded_last_z = m_end_position[Z];
+                    m_extrude_last_layer = m_layer_id;
                 }
             }
 #endif // ENABLE_TOOLPATHS_WIDTH_HEIGHT_FROM_GCODE
@@ -2198,6 +2240,7 @@ template<typename T>
                         get_acceleration(static_cast<PrintEstimatedTimeStatistics::ETimeMode>(i));
 
             
+            
             do{
                 //  const uint32_t max_accel_steps_per_s2 = MAX_E_JERK(extruder) / (extruder_advance_K[active_extruder] * block->e_D_ratio) * steps_per_mm;
                 //  if (TERN0(LA_DEBUG, accel > max_accel_steps_per_s2))
@@ -2266,6 +2309,7 @@ template<typename T>
                         v_entry *= v_factor;
                     }
 
+                    
                     // Calculate the jerk depending on whether the axis is coasting in the same direction or reversing a direction.
                     double jerk =
                             (v_exit > v_entry) ?
@@ -2304,7 +2348,7 @@ template<typename T>
             block.feedrate_profile.entry = std::min(vmax_junction, v_allowable);
 
             block.max_entry_speed = vmax_junction;      
-            block.flags.nominal_length = (block.feedrate_profile.cruise <= v_allowable);
+            block.flags.nominal_length = (block.feedrate_profile.cruise <= v_allowable);    
             block.flags.recalculate = true;
             block.safe_feedrate = curr.safe_feedrate;   
             block.axis_feedrate = curr.axis_feedrate;   //  add @2022-05-29 by CL
@@ -2317,7 +2361,7 @@ template<typename T>
             // updates previous
             prev = curr;
 
-            blocks.push_back(block);
+            blocks.push_back(block);  
 
             if (blocks.size() > TimeProcessor::Planner::refresh_threshold)
                 machine.calculate_time(TimeProcessor::Planner::queue_size);
@@ -2621,6 +2665,15 @@ template<typename T>
             process_T(cmd.substr(pos));
     }
 
+    void GCodeProcessor::process_M140(const GCodeReader::GCodeLine& line)
+    {
+        float new_temp;
+        if (line.has_value('S', new_temp))
+        {
+            m_bed_temperature = new_temp;
+        }
+    }
+
     void GCodeProcessor::process_M201(const GCodeReader::GCodeLine& line)
     {
         // see http://reprap.org/wiki/G-code#M201:_Set_max_printing_acceleration
@@ -2874,14 +2927,12 @@ template<typename T>
     void GCodeProcessor::process_M1024(const GCodeReader::GCodeLine& line)
     {
         if (line.has('L')) {
-            int layerValue = -1;
+            double layerValue = -1;
             if (line.get_ai_layer(layerValue))
             {
-                m_result.ai_pic_Layer.push_back(layerValue);
+                m_result.ai_pic_Layer_d.push_back(layerValue);
                 m_result.layer_offset.push_back(this->m_end_position);
-
             }
-
         }
     }
 
@@ -2993,8 +3044,11 @@ template<typename T>
             float(m_layer_id), //layer_duration: set later
             m_time_processor.machines[0].time, //time: set later
             m_temperature,
+            m_bed_temperature,
             std::move(temTF),
-            g1LineId
+            g1LineId,
+            m_layer_id,
+            m_on_takepic
         };
         m_result.moves.emplace_back(vertex);
     }
@@ -3262,6 +3316,7 @@ MachineEnvelopeConfig::MachineEnvelopeConfig()
         std::vector<double> max_jerk;
     };
     std::vector<AxisDefault> axes{
+        
         // name, max_feedrate,  max_acceleration, max_jerk
         { "x", { 500., 500. }, {  2500., 2500. }, { 15. , 15.  } },
         { "y", { 500., 500. }, {  2500., 2500. }, { 15. , 15.  } },

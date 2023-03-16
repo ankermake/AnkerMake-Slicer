@@ -1,4 +1,5 @@
 #include "meshinfowidget.h"
+#include <QTimer>
 namespace  control{
 
 class LineItem;
@@ -35,14 +36,13 @@ MeshInfoWidget::MeshInfoWidget(QWidget *parent)
     m_listWidget->installEventFilter(this);
     m_listWidget->setFocusPolicy(Qt::NoFocus);
  //   connect(m_listWidget,&QListWidget::clicked,this,&MeshInfoWidget::clickCurrentIndex);
-    connect(m_listWidget,&QListWidget::itemSelectionChanged,this,&MeshInfoWidget::selectedChanged);
+    connect(m_listWidget,&QListWidget::itemSelectionChanged, this, &MeshInfoWidget::selectedChanged);
+    //connect(m_listWidget,&QListWidget::currentItemChanged, this, &MeshInfoWidget::currentItemChanged);
+    connect(m_listWidget,&QListWidget::currentRowChanged, this, &MeshInfoWidget::currentRowChanged);
 
     m_listWidget->setFrameShape(QListWidget::NoFrame);
-    QString style = "QScrollBar:vertical { width:4px ; background:#FFFFFF ;margin:0px,0px,3px,0px;padding-top:0px; padding-bottom:0px;}"
-    "QScrollBar::handle:vertical {background-color: #D6D6D6 ; width: 1px; }"
-    "";
-    m_listWidget->verticalScrollBar()->setStyleSheet(style);
-
+    m_listWidget->verticalScrollBar()->setStyleSheet(AkConst::GlobalStyleSheet::ScrollBarVertical);
+    m_listWidget->horizontalScrollBar()->setStyleSheet(AkConst::GlobalStyleSheet::ScrollBarHorizontal);
     m_listWidget->setContentsMargins(0,0,0,0);
     m_listWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     layout->addWidget(m_listWidget);
@@ -90,7 +90,7 @@ void MeshInfoWidget::addItem(QString name,bool visble,bool selected,int index)
         meshId->setFont(font);
     }
     QFontMetrics metrics(meshId->font());
-    meshId->setText(metrics.elidedText(name,Qt::ElideRight,meshId->width()));
+    meshId->setText(metrics.elidedText(name,Qt::ElideMiddle,meshId->width()));
     hbox->addWidget(meshId);
     QToolButton *showButton = new QToolButton(widget);
     showButton->setProperty("index",index);
@@ -115,13 +115,16 @@ void MeshInfoWidget::addItem(QString name,bool visble,bool selected,int index)
     if(selected) {
         m_listWidget->setCurrentItem(item);
     }
+    m_listWidget->verticalScrollBar()->setValue(verticalScrollBarValue);
 }
 
 void MeshInfoWidget::init()
 {
+    //qDebug() << "init().";
     CHDocPtr docPtr = getDoc();
     auto  docs = docPtr->m_printObjs;
     for(auto i = 0 ; i <docs.size(); ++i) {
+        //qDebug() << "name: " << docs[i]->getObjectName() << ", status: " << docs[i]->getStatus();
         addItem(docs[i]->getObjectName(), docs[i]->getVisuable(), docs[i]->getStatus() == selected ? true : false, i);
     }
     int height = 0;
@@ -158,24 +161,17 @@ bool MeshInfoWidget::eventFilter(QObject *watched, QEvent *event)
 
 void MeshInfoWidget::showMesh()
 {
-//    QList<QListWidgetItem *> list = m_listWidget->selectedItems();
-//    if(list.size() == 1) {
-//        QListWidgetItem *item = list.at(0);
-//        item->setSelected(false);
-//    }
-
     QToolButton *button = qobject_cast<QToolButton *>(sender());
     QListWidgetItem *item = m_listWidget->itemAt(button->parentWidget()->pos());
    // item->setSelected(true);
     QVariant var = button->property("index");
     CHDocPtr docPtr = getDoc();
     std::vector<CH3DPrintModelPtr> ptrList;
-    CH3DPrintModelPtr  modelPtr = findCurrentModel(docPtr,var.toInt());
+    CH3DPrintModelPtr  modelPtr = findCurrentModel(docPtr,var.toInt());    
     if(modelPtr == 0) {
         return;
     }
-
-    bool visble = modelPtr->getVisuable();
+    bool visuable = modelPtr->getVisuable();
     ObjStatus status = modelPtr->getStatus();
     std::vector<CHMeshShowObjPtr>  meshes;
     //qDebug() <<" status ===" << status  << " name =" << modelPtr->getObjectName();
@@ -189,13 +185,24 @@ void MeshInfoWidget::showMesh()
         CHPickOperationCommandPtr pickPtr =  getGlobalPick();
         std::set<CHMeshShowObjPtr> ptr = pickPtr->m_selectedObjs;
         if(ptr.empty()) {
+
+            for(int i = 0; i < m_listWidget->count(); i++)
+            {
+                if(docPtr->m_printObjs[i] != nullptr && m_listWidget->item(i)->isSelected())
+                {
+                    meshes.push_back(docPtr->m_printObjs[i]);
+                    docPtr->m_printObjs[i]->setStatus(general);
+                }
+            }
+            getDoc()->setObjsVisuable(meshes, !visuable);
             return;
         }
+
         for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
             meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(*iter));
         }
     }
-    getDoc()->setObjsVisuable(meshes, !visble);
+    getDoc()->setObjsVisuable(meshes, !visuable);
 }
 
 void MeshInfoWidget::deleteMesh()
@@ -221,10 +228,13 @@ void MeshInfoWidget::deleteMesh()
         CHPickOperationCommandPtr pickPtr =  getGlobalPick();
         std::set<CHMeshShowObjPtr> ptr = pickPtr->m_selectedObjs;
         if(ptr.empty()) {
-            return;
+            meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(modelPtr));
         }
-        for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
-            meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*iter));
+        else
+        {
+            for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
+                meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*iter));
+            }
         }
     }
    // meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(modelPtr));
@@ -280,9 +290,35 @@ void MeshInfoWidget::updateItem()
     }else {
         flag = false;
     }
+    verticalScrollBarValue = m_listWidget->verticalScrollBar()->value();
     m_listWidget->clear();
 
     init();
+}
+
+void MeshInfoWidget::currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+    qDebug() << "currentItemChanged ." << current;
+}
+
+void MeshInfoWidget::currentRowChanged(int currentRow)
+{
+  //  qDebug() << "verticalScrollBar current index ==" << m_listWidget->verticalScrollBar()->value();
+
+    if(currentRow < 0)
+    {
+        return;
+    }
+
+    if(flag) {
+        flag = false;
+        return;
+    }
+
+    
+    if(docPtrStatusChanged(getDoc())) {
+        emit  currentChanged();
+    }
 }
 
 

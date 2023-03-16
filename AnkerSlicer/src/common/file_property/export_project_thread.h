@@ -42,7 +42,7 @@ signals:
     void exportModelSignal(int num, int totalsNum, const QString& str);
     void exitThreadSignal();
     void errorEncountered(int, const QString &);
-
+    void compressProject();
 private:
     QString m_proDir;
     int m_mask;

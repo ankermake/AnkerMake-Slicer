@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshmirrortransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -29,6 +29,7 @@
 #include "common/GeoAndShow/TransformPack.h"
 #include "common/GeoAndShow/CHLine3D.h"
 #include "common/GeoAndShow/CHBaseAlg.h"
+#include "common/GeoAndShow/CHScene.h"
 #include "QPalette"
 #include "edit_meshtransform_factory.h"
 #include "common/utilities/tlogger.h"
@@ -40,6 +41,15 @@ EditMeshMirrorTransformTool::EditMeshMirrorTransformTool()
     AkUtil::TFunction("");
     m_operateMoveZ = 0;
     m_paramUI = 0;
+}
+
+void EditMeshMirrorTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelMirrorTransformParamsSetUI();
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Mirror);
+    connect(m_paramUI, SIGNAL(sendWhichButtonClicked(int)), this, SLOT(receiveButtonClicked(int)));
+    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));
+    m_paramUI->hide();
 }
 
 bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* arg1, void* arg2)
@@ -62,14 +72,12 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
     }
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelMirrorTransformParamsSetUI();
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Mirror);
-    connect(m_paramUI, SIGNAL(sendWhichButtonClicked(int)), this, SLOT(receiveButtonClicked(int)));
-    connect(m_paramUI->m_resetButton, SIGNAL(clicked()), this, SLOT(reset()));//??
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     //disconnect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), this, SLOT(reset()));
-
     
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
@@ -80,8 +88,10 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
         m_initValues[p] = (*it)->m_params;
+//        (*it)->m_isRot = false;
         p++;
     }
+
 
     //    if(m_editMeshModels.size() == 1)
     //    {
@@ -112,9 +122,35 @@ void EditMeshMirrorTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     if (m_paramUI)
     {
-        delete m_paramUI;
-        m_paramUI = 0;
+        if(m_editMeshModels.size() == 1)
+        {
+
+            (*m_editMeshModels.begin())->m_lastMultiSelect = false;
+            (*m_editMeshModels.begin())->m_isRot = false;
+        }
+        else
+        {
+            int p = 0;
+            for(auto it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+            {
+                (*it)->m_lastMultiSelect = true;
+                if(m_initValues[p][3] != (*it)->m_params[3] ||
+                   m_initValues[p][4] != (*it)->m_params[4] ||
+                   m_initValues[p][5] != (*it)->m_params[5] )
+                {
+                    (*it)->m_isRot = true;
+                }
+                else
+                {
+                    (*it)->m_isRot = false;
+                }
+            }
+        }
+        m_paramUI->hide();
     }
+
+    emit getDoc()->modelCheckSceneInChanged();
+    curScene->refresh();
 }
 
 void EditMeshMirrorTransformTool::mousePressEvent(QMouseEvent* event, void*, void*)
@@ -140,40 +176,52 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
     int p = 0;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        (*it)->m_params[index] = -(*it)->m_params[index];
         //if (m_editMeshModels.size() > 1)
         {
-            float t1 = (*it)->m_rotCenter[index] + (*it)->m_params[index + 6];
-            (*it)->m_params[index + 6] += 2 * ((m_operationCenter + QVector3D(0, 0, m_operateMoveZ))[index] - t1);
+            //float t1 = (*it)->m_rotCenter[index] + (*it)->m_params[index + 6];
+            //(*it)->m_params[index + 6] += 2 * ((m_operationCenter + QVector3D(0, 0, m_operateMoveZ))[index] - t1);
 
             QVector3D curCenter = m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
             QMatrix4x4 tran1, tran2, tran3;
             tran1.translate(-curCenter);
             QVector3D scaleValue(1, 1, 1);
             scaleValue[index] = -1;
+            (*it)->m_mirrAxis[index] = -(*it)->m_mirrAxis[index];
+
             tran2.scale(scaleValue);
             tran3.translate(curCenter);
             QMatrix4x4 newSumMatrix = tran3 * tran2 * tran1 * (*it)->getTransform();
+            (*it)->setTransform(newSumMatrix);
+            QVector3D position, scale;
+            QQuaternion orientation;
+            double pitch, yaw, roll;
+            
+            AkTransformMath::decomposeQMatrix4x4(newSumMatrix, position, orientation, scale);
+            QMatrix4x4 tmpRotMat(orientation.toRotationMatrix());
+            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(tmpRotMat, pitch, yaw, roll);
+            
+            pitch = pitch / CH_PI * 180.0;
+            yaw = yaw / CH_PI * 180.0;
+            roll = roll / CH_PI * 180.0;
+            //qDebug() << "scale: " << scale[0] << ", " << scale[1] << ", " << scale[2];
+            (*it)->m_params[0] = scale[0];
+            (*it)->m_params[1] = scale[1];
+            (*it)->m_params[2] = scale[2];
+            (*it)->m_params[3] = pitch;
+            (*it)->m_params[4] = yaw;
+            (*it)->m_params[5] = roll;
 
-            QMatrix4x4 ttran1, ttran2, ttran3, ttran4;
-            ttran1.translate(-(*it)->m_rotCenter);
-            ttran2.scale((*it)->m_params[0], (*it)->m_params[1], (*it)->m_params[2]);
-            ttran3.translate(QVector3D((*it)->m_params[6], (*it)->m_params[7], (*it)->m_params[8]));
-            ttran4.translate((*it)->m_rotCenter);
-            QMatrix4x4 pureRotMatrix = (ttran4 * ttran3).inverted() * newSumMatrix * (ttran2 * ttran1).inverted();
-
-            double angleX, angleY, angleZ;
-            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(pureRotMatrix, angleX, angleY, angleZ);
-
-            (*it)->m_params[3] = angleX / CH_PI * 180.0;
-            (*it)->m_params[4] = angleY / CH_PI * 180.0;
-            (*it)->m_params[5] = angleZ / CH_PI * 180.0;
-            adjustSingleAngle((*it)->m_params[3]);
-            adjustSingleAngle((*it)->m_params[4]);
-            adjustSingleAngle((*it)->m_params[5]);
+            QVector3D newCenter = (*it)->getTransform() * (*it)->m_rotCenter;
+            QVector3D offset = newCenter - (*it)->m_rotCenter;
+            (*it)->m_params[6] = offset[0];
+            (*it)->m_params[7] = offset[1];
+            (*it)->m_params[8] = offset[2];
+            //qDebug() << "params rot: " << pitch << ", " << yaw << ", " << roll;
+            p++;
+           // qDebug() << "scale: " << scale;
         }
 
-        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
+        //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
         if(std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
         {
             SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
@@ -298,24 +346,14 @@ void EditMeshMirrorTransformTool::reset()
         {
             continue;
         }
-        if (m_editMeshModels.size() == 1)
+        if(m_editMeshModels.size() == 1)
         {
-//            for (int i = 0; i < 3; i++)
-//            {
-//                (*it)->m_params[i] = fabs((*it)->m_params[i]);
-//            }
-            (*it)->m_params = m_initValues[0];
+           (*it)->reset3x3Transform();
         }
-        else
+        else if(m_editMeshModels.size() > 1)
         {
-//            for(int i = 0; i < 3; i++)
-//            {
-//                (*it)->m_params[i] = fabs(m_initValues[p][i]);
-//            }
-            (*it)->m_params = m_initValues[p];
+           (*it)->resetTransform();
         }
-
-        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
 
         if (true/*m_lockToPrintPlatform*/)
         {
@@ -340,14 +378,7 @@ void EditMeshMirrorTransformTool::reset()
             (*it)->setTransform(sumtran1);
         }
     }
-    //    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-    //    {
-    //        CH3DPrintModelPtr meshPtr = dynamic_pointer_cast<CH3DPrintModel>(*it);
-    //        if (meshPtr != NULL)
-    //        {
-    //            meshPtr->isSceneIn(meshPtr->calRealAABB(), getDoc()->m_machineBox->getBaseAABB());
-    //        }
-    //    }
+
     emit getDoc()->modelCheckSceneInChanged();
     curScene->refresh();
 }

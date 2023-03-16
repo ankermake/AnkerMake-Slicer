@@ -26,6 +26,14 @@
 #include <stdio.h>
 #include <algorithm>
 #include <wrap/io_trimesh/io_mask.h>
+#include <QFile>
+#include <QString>
+#ifdef _MSC_VER
+#include<io.h>
+#else
+#include <unistd.h>
+#endif
+
 
 namespace vcg {
 namespace tri {
@@ -82,7 +90,7 @@ static const char *ErrorMsg(int error)
   else return stl_error_msg[error];
 }
 
-static bool LoadMask(const char * filename, int &mask)
+static bool LoadMask(QString filename, int &mask)
 {
   bool magicMode,colored;
   mask = Mask::IOM_VERTCOORD | Mask::IOM_FACEINDEX;
@@ -101,7 +109,7 @@ static bool LoadMask(const char * filename, int &mask)
  *
  * return false in case of malformed files
  */
-static bool IsSTLColored(const char * filename, bool &coloredFlag, bool &magicsMode)
+static bool IsSTLColored(QString filename, bool &coloredFlag, bool &magicsMode)
 {
   coloredFlag=false;
   magicsMode=false;
@@ -111,8 +119,14 @@ static bool IsSTLColored(const char * filename, bool &coloredFlag, bool &magicsM
   
   if(binaryFlag==false)
      return true; 
-   
-   FILE *fp = fopen(filename, "rb");
+    QString file(filename);
+   QFile qFile(file);
+    qFile.open(QIODevice::ReadOnly);
+    if (!qFile.isOpen()) {
+        return false;
+    }
+    int fd = qFile.handle();
+   FILE *fp = fdopen(dup(fd), "rb");
    char buf[STL_LABEL_SIZE+1];
    fread(buf,sizeof(char),STL_LABEL_SIZE,fp);
    std::string strInput(buf);
@@ -141,6 +155,7 @@ static bool IsSTLColored(const char * filename, bool &coloredFlag, bool &magicsM
    }
 
    fclose(fp);
+   qFile.close();
    return true;
 }
 
@@ -149,10 +164,17 @@ static bool IsSTLColored(const char * filename, bool &coloredFlag, bool &magicsM
  * Try to guess if a stl is in binary format, and sets
  * the binaryFlag accordingly
  */
-static bool IsSTLMalformed(const char * filename, bool &binaryFlag)
+static bool IsSTLMalformed(QString filename, bool &binaryFlag)
 {
   binaryFlag=false;
-  FILE *fp = fopen(filename, "rb");
+  QString file(filename);
+ QFile qFile(file);
+   qFile.open(QIODevice::ReadOnly);
+   if (!qFile.isOpen()) {
+       return false;
+   }
+   int fd = qFile.handle();
+  FILE *fp = fdopen(dup(fd), "rb");
   /* Find size of file */
   fseek(fp, 0, SEEK_END);
   std::size_t file_size = ftell(fp);
@@ -177,6 +199,7 @@ static bool IsSTLMalformed(const char * filename, bool &binaryFlag)
   std::size_t byte_to_read = std::min(sizeof(tmpbuf), (size_t)file_size - 80);
   fread(tmpbuf, byte_to_read,1,fp);
   fclose(fp);
+  qFile.close();
   for(std::size_t i = 0; i < byte_to_read; i++)
     {
       if(tmpbuf[i] > 127)
@@ -192,12 +215,22 @@ static bool IsSTLMalformed(const char * filename, bool &binaryFlag)
   return true;
 }
 
-static int Open( OpenMeshType &m, const char * filename, int &loadMask, CallBackPos *cb=0)
+static int Open( OpenMeshType &m, QString filename, int &loadMask, CallBackPos *cb=0)
 {
-  FILE *fp = fopen(filename, "r");
-  if(fp == NULL)
+    QString file(filename);
+   QFile qFile(file);
+     qFile.open(QIODevice::ReadOnly);
+     if (!qFile.isOpen()) {
+         return false;
+     }
+     int fd = qFile.handle();
+  FILE *fp = fdopen(dup(fd), "r");
+  if(fp == NULL) {
       return E_CANTOPEN;
+  }
+
   fclose(fp);
+  qFile.close();
   loadMask |= Mask::IOM_VERTCOORD | Mask::IOM_FACEINDEX;
   bool binaryFlag;
   if(!IsSTLMalformed(filename,binaryFlag))
@@ -207,10 +240,17 @@ static int Open( OpenMeshType &m, const char * filename, int &loadMask, CallBack
   else return OpenAscii(m,filename,cb);
 }
 
-static int OpenBinary( OpenMeshType &m, const char * filename, int &loadMask, CallBackPos *cb=0)
+static int OpenBinary( OpenMeshType &m, QString filename, int &loadMask, CallBackPos *cb=0)
 {
+    QString file(filename);
+   QFile qFile(file);
+     qFile.open(QIODevice::ReadOnly);
+     if (!qFile.isOpen()) {
+         return false;
+     }
+     int fd = qFile.handle();
   FILE *fp;
-  fp = fopen(filename, "rb");
+  fp = fdopen(dup(fd), "rb");
   if(fp == NULL)
   {
     return E_CANTOPEN;
@@ -257,10 +297,17 @@ static int OpenBinary( OpenMeshType &m, const char * filename, int &loadMask, Ca
   }
 
 
-  static int OpenAscii( OpenMeshType &m, const char * filename, CallBackPos *cb=0)
+  static int OpenAscii( OpenMeshType &m, QString filename, CallBackPos *cb=0)
   {
+      QString file(filename);
+     QFile qFile(file);
+       qFile.open(QIODevice::ReadOnly);
+       if (!qFile.isOpen()) {
+           return false;
+       }
+       int fd = qFile.handle();
     FILE *fp;
-    fp = fopen(filename, "r");
+    fp = fdopen(dup(fd), "r");
     if(fp == NULL)
     {
       return E_CANTOPEN;
@@ -280,11 +327,12 @@ static int OpenBinary( OpenMeshType &m, const char * filename, int &loadMask, Ca
         int lineCnt=0;
         int ret;
     /* Read a single facet from an ASCII .STL file */
+    char _facet[32], _normal[32];   
     while(!feof(fp))
     {
       if(cb && (++cnt)%1000)   cb( int(double(ftell(fp))*100.0/fileLen), "STL Mesh Loading");
-        ret=fscanf(fp, "%*s %*s %f %f %f\n", &f.n.X(), &f.n.Y(), &f.n.Z()); // --> "facet normal 0 0 0"
-            if(ret!=3)
+        ret=fscanf(fp, "%s %s %f %f %f\n",_facet, _normal, &f.n.X(), &f.n.Y(), &f.n.Z()); // --> "facet normal 0 0 0"
+            if(ret!=5)
             {
                 // we could be in the case of a multiple solid object, where after a endfaced instead of another facet we have to skip two lines:
                 //     endloop
@@ -293,6 +341,9 @@ static int OpenBinary( OpenMeshType &m, const char * filename, int &loadMask, Ca
                 //solid ascii  <- and this one.
                 //   facet normal 0.000000e+000 7.700727e-001 -6.379562e-001
                 lineCnt++;
+                continue;
+            }
+            if(strncmp(_facet, "facet", 5) ){
                 continue;
             }
       ret=fscanf(fp, "%*s %*s"); // --> "outer loop"

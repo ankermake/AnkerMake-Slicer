@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>logo_AnkerMake.ico</file>
+        <file>logo_AnkerMake.png</file>
+		<file>logo_AnkerMake.icns</file>
+    </qresource>
+</RCC>

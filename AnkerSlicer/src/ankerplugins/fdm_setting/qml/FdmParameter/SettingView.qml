@@ -31,27 +31,27 @@ Rectangle {
 
     signal qmlNozzleSizeCurrentIndexChanged(string currentText)
 
-    //ref ak_const.h
+    //与C++中的保持一致 参考ak_const.h
     enum EGlobalSupportState
     {
         Unactived = 0,
         Selected ,
         UnSelected
     }
-    //
+    //文案描述有4個
     enum EGlobalSupportTextCode
     {
-
+        //手动支撑禁用全局支撑
         GlobalSupportUnactived = 0,
-
+        //手动支撑没禁用全局支撑。全局支撑打开
         GlobalSupportAndManualSupport,
-
+        //场景中没手动支撑.仅仅全局支撑会生效
         GlobalSupportOnly,
-
+        //全局支撑关闭
         GlobalSupportUnSelected
     }
 
-
+    //按钮状态有2个
     enum EGenerateAdhesionState
     {
         GenAdhesionSelected = 0,
@@ -65,7 +65,6 @@ Rectangle {
         anchors.margins: 16
         anchors.topMargin: 13
         spacing: 16
-        objectName: "layut"
 
         FdmSetting.ComboxItem {
             id:printer
@@ -139,8 +138,6 @@ Rectangle {
         anchors.top: material.bottom
         anchors.topMargin: 20
         anchors.bottomMargin: 0
-       // anchors.bottomMargin: 16
-       // anchors.margins: 0
         color: "#383838"
         height: 1
     }
@@ -189,9 +186,6 @@ Rectangle {
         sourceComponent: parameterCombox.currentIndex == 0 ? simpleMode : expertMode
     }
 
-
-
-
     Component {
         id:simpleMode
         Column {
@@ -221,7 +215,6 @@ Rectangle {
                     onActivated: {
                        // console.log("currnt ==",layerHeightCombox.currentIndex,"index ==")
                         qmlLayerHeightCurrentIndexChanged(layerHeightCombox.currentIndex)
-                       //qmlMaterialNameChanged(materialCombox.currentText)
                     }
                 }
 
@@ -258,11 +251,6 @@ Rectangle {
 
             }
 
-
-            //            Rectangle { color: "red"; width: 50; height: 50 }
-            //            Rectangle { color: "green"; width: 20; height: 50 }
-            //            Rectangle { color: "blue"; width: 50; height: 20 }
-
             Rectangle {
                 id:globalSupport
                 implicitWidth: parent.width
@@ -293,8 +281,6 @@ Rectangle {
 
             Rectangle {
                 id:generateAdhesion
-                // Layout.fillWidth: true
-                //implicitHeight: 60
                 implicitWidth: parent.width
                 height: 20
                 color: "transparent"
@@ -317,26 +303,20 @@ Rectangle {
 
     Component {
         id: expertMode
-        ListView {
+        BaseControl.BaseListView {
             id: listView
             model : paramModel;
-            spacing: 0
-            ScrollBar.vertical:  ScrollBar{
-                policy: ScrollBar.AsNeeded
-                anchors.right: listView.right
-                width: 8
-                active: true
-                contentItem: Rectangle {
-                    radius: width/2
-                    color: '#D6D6D6'
-                }
-            }
+            currentIndex : -1
             delegate: Loader
             {
                 id:viewDelegate
-                width: listView.width
-                height: model.visible ? 42 : 0
+                anchors { left: parent.left; right: parent.right }
+               // height: model.visible ? column.implicitHeight + 4 : 0
+//                width: listView.width
+               height: model.visible ? 42 : 0
+               // Behavior on height { NumberAnimation { duration: 10 } }
                 opacity: model.visible ? 1 : 0
+                Behavior on opacity { NumberAnimation { duration: 100 } }
                 active: model.type !== undefined
 
                 source:

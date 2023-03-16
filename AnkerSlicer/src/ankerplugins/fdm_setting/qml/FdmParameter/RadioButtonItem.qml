@@ -32,7 +32,7 @@ Rectangle {
     }
 
     Label {
-        text: qsTr("Layer Height ")
+        text: qsTr("Layer Height")
         anchors.right: valueLabel.left
         verticalAlignment: Text.AlignVCenter
         color: "#999999"

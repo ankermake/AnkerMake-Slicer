@@ -29,7 +29,6 @@ void postProcessGcode::read_file(const std::string &file,callback_q callback)
 const char* postProcessGcode::parse_line_internal(const char *ptr, GCodeLine &gline, std::pair<const char*, const char*> &command)
 {
     //PROFILE_FUNC();
-
     // command and args
     const char *c = ptr;
     {

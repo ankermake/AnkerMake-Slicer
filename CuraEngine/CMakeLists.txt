@@ -1,526 +1,71 @@
-#Copyright (c) 2020 Ultimaker B.V.
-#CuraEngine is released under the terms of the AGPLv3 or higher.
-
 cmake_minimum_required(VERSION 3.8.0)
 
+project(AnkerEngine)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+include(ConfigureAllModules)  
+
 if(APPLE)
+    set(OPENMP_ROOT "/opt/homebrew/Cellar/libomp/14.0.6/")
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.14")
-    set(COMPILE_INTEL_ON_M1 false)
-    if (COMPILE_INTEL_ON_M1)
+    if (M1)
         set(CMAKE_OSX_ARCHITECTURES "x86_64")
+		set(OPENMP_ROOT "/Users/anker/mac_x64_86/libomp/14.0.0/")
     endif()
 endif()
 
+option (ENABLE_VLD    "Enable VLD to check memory" OFF)
+option (ENABLE_OPENMP "Enable OPENMP multithreading acceleration" ON)
 
-project(CuraEngine)
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-
-option(ENABLE_ARCUS "Enable support for ARCUS" OFF) # set OFF @2022-02-21 by CL
-
-if (MSVC)
-    option(MSVC_STATIC_RUNTIME "Link the MSVC runtime statically" OFF)
-endif()
-
-if(ENABLE_ARCUS)
-    message(STATUS "Building with Arcus")
-    # We want to have access to protobuf_generate_cpp and other FindProtobuf features.
-    # However, if ProtobufConfig is used instead, there is a CMake option that controls
-    # this, which defaults to OFF. We need to force this option to ON instead.
-    set(protobuf_MODULE_COMPATIBLE ON CACHE INTERNAL "" FORCE)
-    find_package(Protobuf 3.0.0 REQUIRED)
-    find_package(Arcus REQUIRED)
-    add_definitions(-DARCUS)
-    find_program(PROTOC "protoc")
-    if(${PROTOC} STREQUAL "PROTOC-NOTFOUND")
-        message(FATAL_ERROR "Protobuf compiler missing")
-    endif()
-endif()
-
-option(USE_SYSTEM_LIBS "Use the system libraries if available" OFF)
-
-#For reading image files.
-if(USE_SYSTEM_LIBS)
-    include_directories(${Polyclipping_INCLUDE_DIRS} "${CMAKE_BINARY_DIR}" ${RAPIDJSON_INCLUDE_DIRS})
-else()
-    set(Stb_INCLUDE_DIRS "${CMAKE_CURRENT_BINARY_DIR}/libs/stb") # add for Qt Creator @2022-02-21 by CL
-    include_directories("${CMAKE_CURRENT_BINARY_DIR}" libs libs/stb)
-    find_package(Stb REQUIRED)
-endif()
-
-if(USE_SYSTEM_LIBS)
-    find_package(RapidJSON CONFIG REQUIRED)
-    find_package(Polyclipping REQUIRED)
-endif()
-
-if(USE_SYSTEM_LIBS)
-    include_directories(${Polyclipping_INCLUDE_DIRS} "${CMAKE_BINARY_DIR}" ${RAPIDJSON_INCLUDE_DIRS})
-else()
-    include_directories("${CMAKE_CURRENT_BINARY_DIR}" libs libs/clipper)
-    add_library(clipper STATIC libs/clipper/clipper.cpp)
-endif()
-
-# convert build type to upper case letters
-if(CMAKE_BUILD_TYPE)
-    string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UPPER)
-endif()
-
-if(CMAKE_BUILD_TYPE_UPPER MATCHES "DEBUG")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_DEBUG_INIT}")
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_RELEASE_INIT}")
-endif()
+if(ENABLE_VLD)
+    __enable_vld()
+endif ()
+if(ENABLE_OPENMP)
+    __enable_openmp()
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 
-if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-endif()
+add_subdirectory(libs/clipper)
+set(RAPIDJSON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/rapidjson)
+set(EIGEN_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/eigen)
+set(STB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/stb)
+set(BOOST_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
+set(BOOST_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
 
-if(NOT DEFINED LIB_SUFFIX)
-    set(LIB_SUFFIX "")
-endif()
-set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+add_subdirectory(src)
 
-set(CURA_ENGINE_VERSION "4.11" CACHE STRING "Version name of Cura")
 
-option(BUILD_TESTS OFF)
+#add_definitions(-DBOOST_ALL_NO_LIB)
+#add_definitions(-DBOOST_FILESYSTEM_SOURCE)
+#add_subdirectory(libs/boost/libs/nowide)
+#add_subdirectory(libs/boost/libs/file_system)
+#add_subdirectory(libs/boost/libs/regex)
+#add_subdirectory(libs/boost/libs/thread)
+#add_subdirectory(libs/boost/libs/system)
+#
+#add_subdirectory(libs/tbb)
+#add_subdirectory(libs/clipperz)
+#add_subdirectory(libs/nlopt)
+#add_subdirectory(libs/qhull)
+#add_subdirectory(libs/libnest2d)
+#add_subdirectory(libs/libslic3r)
 
-# Add a compiler flag to check the output for insane values if we are in debug mode.
-if(CMAKE_BUILD_TYPE_UPPER MATCHES "DEBUG" OR CMAKE_BUILD_TYPE_UPPER MATCHES "RELWITHDEBINFO")
-    message(STATUS "Building debug release of CuraEngine.")
-    if (NOT MSVC)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -O0 -g -fno-omit-frame-pointer")
-    endif()
-    add_definitions(-DASSERT_INSANE_OUTPUT)
-    add_definitions(-DUSE_CPU_TIME)
-    add_definitions(-DDEBUG)
-endif()
+#__set_folder_targets(slice3r TARGET libnest2d nlopt libslic3r slic3rapi clipper3r generate-cpp qhullcpp qhullstatic_r tbb tbb_def_files)
+#__set_folder_targets(boost TARGET boost_nowide boost_file_system boost_regex boost_thread boost_system)
 
-if (MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /permissive- /Zc:twoPhase- /EHsc /W3")
-    if (MSVC_STATIC_RUNTIME)
-        foreach(flag_var
-            CMAKE_CXX_FLAGS
-            CMAKE_CXX_FLAGS_DEBUG
-            CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL
-            CMAKE_CXX_FLAGS_RELWITHDEBINFO
-            )
-            if(${flag_var} MATCHES "/MD")
-                string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-            endif()
-        endforeach()
-    endif()
-else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall") # Add warnings
-endif()
-
-option (ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS
-    "Enable more optimization flags" ON)
-if (ENABLE_MORE_COMPILER_OPTIMIZATION_FLAGS AND NOT (CMAKE_BUILD_TYPE_UPPER MATCHES "DEBUG"))
-    message (STATUS "Compile with more optimization flags")
-    if (MSVC)
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} /fp:fast")
-    else()
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -Ofast -funroll-loops")
-    endif()
-endif ()
-
-if(NOT APPLE AND NOT WIN32)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libstdc++")
-endif()
+set(LIBS _CuraEngine)
+set(INCS ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 if (WIN32)
-    add_definitions(-DNOMINMAX)
+    set(LIBS _CuraEngine DbgHelp.lib)
 endif()
-message("begin openmp")
-option (ENABLE_OPENMP "Use OpenMP for parallel code" ON)
+__add_real_target(CuraEngine exe SOURCE main.cpp dbgcrash.cpp LIB ${LIBS} INC ${INCS} OPENMP)
 
-if (ENABLE_OPENMP)
-    FIND_PACKAGE( OpenMP REQUIRED)
-    if( OPENMP_FOUND )
-        message("open mp found")
-        if(APPLE)
-        endif()
 
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  ${OpenMP_CXX_FLAGS}" )
-#        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Xpreprocessor -fopenmp  -I/usr/local/Cellar/libomp/14.0.0/include/" )
-#        set(OpenMP_CXX_LIB_NAMES "omp")
-#        set(OpenMP_omp_LIBRARY "/usr/local/Cellar/libomp/14.0.0/lib/libomp.dylib")
-#        if (CMAKE_C_COMPILER_ID MATCHES "Clang")
-#          set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lomp")
-#        endif()
-
-        #for apple
-        if(APPLE)
-            if (COMPILE_INTEL_ON_M1)
-                message("enter COMPILE_INTEL_ON_M1")
-                include_directories("/Users/anker/mac_x64_86/libomp/14.0.0/include/")
-                add_library(omp STATIC IMPORTED )
-                set_property(TARGET omp PROPERTY IMPORTED_LOCATION "/Users/anker/mac_x64_86/libomp/14.0.0/lib/libomp.a")
-            else()
-                message("enter else COMPILE_INTEL_ON_M1")
-                include_directories("/opt/homebrew/Cellar/libomp/14.0.6/include/")
-                add_library(omp STATIC IMPORTED )
-                set_property(TARGET omp PROPERTY IMPORTED_LOCATION "/opt/homebrew/Cellar/libomp/14.0.6/lib/libomp.a")
-            endif()
-        endif()
-    endif()
+option (TEST_CL "Static library test engine" OFF)
+if(TEST_CL AND WIN32)
+    include(TestLibCL)
+    __test_lib_cl()
 endif()
 
-FILE(GLOB_RECURSE EngineLibHeaderFiles "src/*.h*")
-add_custom_target(headers SOURCES ${EngineLibHeaderFiles})
-
-set(engine_SRCS # Except main.cpp.
-    src/Application.cpp
-    src/bridge.cpp
-    src/ConicalOverhang.cpp
-    src/ExtruderTrain.cpp
-    src/FffGcodeWriter.cpp
-    src/FffPolygonGenerator.cpp
-    src/FffProcessor.cpp
-    src/gcodeExport.cpp
-    src/GCodePathConfig.cpp
-    src/infill.cpp
-    src/InsetOrderOptimizer.cpp
-    src/layerPart.cpp
-    src/LayerPlan.cpp
-    src/LayerPlanBuffer.cpp
-    src/MergeInfillLines.cpp
-    src/mesh.cpp
-    src/MeshGroup.cpp
-    src/Mold.cpp
-    src/multiVolumes.cpp
-    src/PathOrder.cpp
-    src/pathOrderOptimizer.cpp
-    src/Preheat.cpp
-    src/PrimeTower.cpp
-    src/raft.cpp
-    src/Scene.cpp
-    src/skin.cpp
-    src/SkirtBrim.cpp
-    src/SupportInfillPart.cpp
-    src/Slice.cpp
-    src/sliceDataStorage.cpp
-    src/slicer.cpp
-    src/support.cpp
-    src/timeEstimate.cpp
-    src/TopSurface.cpp
-    src/TreeSupport.cpp
-    src/WallsComputation.cpp
-    src/wallOverlap.cpp
-    src/Weaver.cpp
-    src/Wireframe2gcode.cpp
-
-    src/AnkerGcode/gcodeExport_CL.cpp
-    src/AnkerGcode/gcodeExportOptimize_CL.cpp
-
-    src/communication/ArcusCommunication.cpp
-    src/communication/ArcusCommunicationPrivate.cpp
-    src/communication/CommandLine.cpp
-    src/communication/Listener.cpp
-
-    src/infill/ImageBasedDensityProvider.cpp
-    src/infill/NoZigZagConnectorProcessor.cpp
-    src/infill/ZigzagConnectorProcessor.cpp
-    src/infill/SierpinskiFill.cpp
-    src/infill/SierpinskiFillProvider.cpp
-    src/infill/SubDivCube.cpp
-    src/infill/GyroidInfill.cpp
-
-    src/pathPlanning/Comb.cpp
-    src/pathPlanning/GCodePath.cpp
-    src/pathPlanning/LinePolygonsCrossings.cpp
-    src/pathPlanning/NozzleTempInsert.cpp
-    src/pathPlanning/TimeMaterialEstimates.cpp
-
-    src/progress/Progress.cpp
-    src/progress/ProgressStageEstimator.cpp
-
-    src/settings/AdaptiveLayerHeights.cpp
-    src/settings/FlowTempGraph.cpp
-    src/settings/PathConfigStorage.cpp
-    src/settings/Settings.cpp
-    src/settings/ZSeamConfig.cpp
-
-    src/utils/AABB.cpp
-    src/utils/AABB3D.cpp
-    src/utils/Date.cpp
-    src/utils/FMatrix4x3.cpp
-    src/utils/gettime.cpp
-    src/utils/getpath.cpp
-    src/utils/LinearAlg2D.cpp
-    src/utils/ListPolyIt.cpp
-    src/utils/logoutput.cpp
-    src/utils/MinimumSpanningTree.cpp
-    src/utils/Point3.cpp
-    src/utils/PolygonConnector.cpp
-    src/utils/PolygonsPointIndex.cpp
-    src/utils/PolygonProximityLinker.cpp
-    src/utils/polygonUtils.cpp
-    src/utils/polygon.cpp
-    src/utils/ProximityPointLink.cpp
-    src/utils/SVG.cpp
-    src/utils/socket.cpp
-)
-
-# List of tests. For each test there must be a file tests/${NAME}.cpp.
-set(engine_TEST
-    GCodeExportTest
-    InfillTest
-    LayerPlanTest
-    MergeInfillLinesTest
-    PathOrderMonotonicTest
-    TimeEstimateCalculatorTest
-)
-set(engine_TEST_INTEGRATION
-    SlicePhaseTest
-)
-set(engine_TEST_SETTINGS
-    SettingsTest
-)
-if (ENABLE_ARCUS)
-    set(engine_TEST_ARCUS
-        ArcusCommunicationTest
-        ArcusCommunicationPrivateTest
-    )
-endif ()
-set(engine_TEST_UTILS
-    AABBTest
-    AABB3DTest
-    IntPointTest
-    LinearAlg2DTest
-    MinimumSpanningTreeTest
-    PolygonConnectorTest
-    PolygonTest
-    PolygonUtilsTest
-    SparseGridTest
-    StringTest
-    UnionFindTest
-)
-
-# Helper classes for some tests.
-set(engine_TEST_ARCUS_HELPERS
-    tests/arcus/MockSocket.cpp
-)
-set(engine_TEST_HELPERS
-    tests/ReadTestPolygons.cpp
-)
-
-# Generating ProtoBuf protocol
-if (ENABLE_ARCUS)
-    protobuf_generate_cpp(engine_PB_SRCS engine_PB_HEADERS Cura.proto)
-endif ()
-
-# Compiling CuraEngine itself.
-add_library(_CuraEngine STATIC ${engine_SRCS} ${engine_PB_SRCS}) #First compile all of CuraEngine as library, allowing this to be re-used for tests.
-
-if (CuraEngine_Download_Stb)
-    add_dependencies(_CuraEngine stb)
-endif()
-if(USE_SYSTEM_LIBS)
-    target_link_libraries(_CuraEngine ${Polyclipping_LIBRARIES})
-else()
-    target_link_libraries(_CuraEngine clipper)
-endif()
-
-if (ENABLE_ARCUS)
-    target_link_libraries(_CuraEngine Arcus)
-endif ()
-
-set_target_properties(_CuraEngine PROPERTIES COMPILE_DEFINITIONS "VERSION=\"${CURA_ENGINE_VERSION}\"")
-
-if(WIN32)
-  message(STATUS "Using windres")
-  set(RES_FILES "CuraEngine.rc")
-  ENABLE_LANGUAGE(RC)
-  if(NOT MSVC)
-    SET(CMAKE_RC_COMPILER_INIT windres)
-    SET(CMAKE_RC_COMPILE_OBJECT
-        "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>"
-        )
- endif()
-endif(WIN32)
-
-if (UNIX)
-    target_link_libraries(_CuraEngine pthread)
-endif()
-
-if (NOT WIN32)
-  add_executable(CuraEngine src/main.cpp) # Then compile main.cpp as separate executable, and link the library to it.
-else()
-  add_executable(CuraEngine src/main.cpp ${RES_FILES}) # ..., but don't forget the glitter!
-endif(NOT WIN32)
-
-if(APPLE)
-    target_link_libraries(CuraEngine _CuraEngine omp)
-else()
-    target_link_libraries(CuraEngine _CuraEngine)
-endif()
-
-set_target_properties(CuraEngine PROPERTIES COMPILE_DEFINITIONS "VERSION=\"${CURA_ENGINE_VERSION}\"")
-
-# Compiling the test environment.
-if (BUILD_TESTS)
-    include(CTest)
-
-    message(STATUS "Building tests...")
-    set(GTEST_USE_STATIC_LIBS true)
-    set(GMOCK_ROOT "${CMAKE_CURRENT_BINARY_DIR}/gmock")
-    set(GMOCK_VER "1.8.0")
-    find_package(GMock REQUIRED)
-    include_directories(${GTEST_INCLUDE_DIRS})
-    include_directories(${GMOCK_INCLUDE_DIRS})
-    add_dependencies(_CuraEngine GTest::GTest GTest::Main GMock::GMock GMock::Main)
-    add_definitions(-DBUILD_TESTS)
-
-    target_compile_definitions(_CuraEngine PUBLIC BUILD_TESTS=1)
-
-    #To make sure that the tests are built before running them, add the building of these tests as an additional test.
-    add_custom_target(build_all_tests)
-    add_test(BuildTests "${CMAKE_COMMAND}" --build "${CMAKE_CURRENT_BINARY_DIR}" --target build_all_tests)
-
-    foreach (test ${engine_TEST})
-        add_executable(${test} tests/main.cpp ${engine_TEST_HELPERS} tests/${test}.cpp)
-        target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-        add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-    endforeach()
-    foreach (test ${engine_TEST_INFILL})
-        add_executable(${test} tests/main.cpp tests/infill/${test}.cpp)
-        target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-        add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-    endforeach()
-    foreach (test ${engine_TEST_INTEGRATION})
-        add_executable(${test} tests/main.cpp tests/integration/${test}.cpp)
-        target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-        add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-    endforeach()
-    foreach (test ${engine_TEST_SETTINGS})
-        add_executable(${test} tests/main.cpp tests/settings/${test}.cpp)
-        target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-        add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-    endforeach()
-    if (ENABLE_ARCUS)
-        foreach (test ${engine_TEST_ARCUS})
-            add_executable(${test} tests/main.cpp ${engine_TEST_ARCUS_HELPERS} tests/arcus/${test}.cpp)
-            target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-            add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-            add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-        endforeach()
-    endif ()
-    foreach (test ${engine_TEST_UTILS})
-        add_executable(${test} tests/main.cpp tests/utils/${test}.cpp)
-        target_link_libraries(${test} _CuraEngine ${GTEST_BOTH_LIBRARIES} ${GMOCK_BOTH_LIBRARIES})
-        add_test(NAME ${test} COMMAND "${test}" WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/")
-        add_dependencies(build_all_tests ${test}) #Make sure that this gets built as part of the build_all_tests target.
-    endforeach()
-endif()
-
-# Installing CuraEngine.
-include(GNUInstallDirs)
-install(TARGETS CuraEngine DESTINATION "${CMAKE_INSTALL_BINDIR}")
-# For MinGW64 cross compiling on Debian, we create a ZIP package instead of a DEB
-# Because it's the Windows build system that should install the files.
-if (CMAKE_CROSSCOMPILING AND CMAKE_SYSTEM_NAME MATCHES "Windows")
-    message(STATUS "Include MinGW64 posix DLLs for installation.")
-    install(FILES
-            /usr/lib/gcc/x86_64-w64-mingw32/8.3-posix/libgcc_s_seh-1.dll
-            /usr/lib/gcc/x86_64-w64-mingw32/8.3-posix/libgomp-1.dll
-            /usr/lib/gcc/x86_64-w64-mingw32/8.3-posix/libstdc++-6.dll
-            DESTINATION bin
-            COMPONENT runtime)
-endif ()
-include(CPackConfig.cmake)
-
-option (TEST_BY_CL "For CL's test only" OFF)
-if(TEST_BY_CL)
-    set(MSVC64 false)
-    set(MSVC32 false)
-    set(GNU64 false)
-    set(GNU32 false)
-
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(MSVC64 true)
-        else()
-            set(MSVC32 true)
-        endif()
-    endif()
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-            set(GNU64 true)
-        else()
-            set(GNU32 true)
-        endif()
-    endif()
-
-    message(STATUS "MSVC64    : " ${MSVC64})
-    message(STATUS "MSVC32    : " ${MSVC32})
-    message(STATUS "GNU64     : " ${GNU64})
-    message(STATUS "GNU32     : " ${GNU32})
-
-
-
-    message(STATUS "TEST_BY_CL")
-    message(STATUS "\n\n\n\n========TEST_BY_CL========\n")
-    message(STATUS "PROJECT_NAME               : "  ${PROJECT_NAME})
-    message(STATUS "CMAKE_COMMAND              : " ${CMAKE_COMMAND})
-    message(STATUS "CMAKE_CURRENT_BINARY_DIR   : " ${CMAKE_CURRENT_BINARY_DIR})
-    message(STATUS "SlicerSrcLibDir            : " ${SlicerSrcLibDir})
-    message(STATUS "SlicerBuildExeDir_InDistrib: " ${SlicerBuildExeDir_InDistrib})
-
-    if (WIN32)
-        # copy CuraEngine.exe to 3rd/SliceEngine
-        if      (MSVC64)
-            set(SlicerBuildExeDir_In3rd "../../AnkerSlicer/Local_Feature/3rd/SliceEngine/SliceEngine_msvc_x64")
-        elseif  (MSVC32)
-            set(SlicerBuildExeDir_In3rd "../../AnkerSlicer/Local_Feature/3rd/SliceEngine/SliceEngine_msvc_x32")
-        elseif  (GNU64)
-            set(SlicerBuildExeDir_In3rd "../../AnkerSlicer/Local_Feature/3rd/SliceEngine/SliceEngine_gcc_x64")
-        elseif  (GNU32)
-            set(SlicerBuildExeDir_In3rd "../../AnkerSlicer/Local_Feature/3rd/SliceEngine/SliceEngine_gcc_x32")
-        endif()
-        message(STATUS "SlicerBuildExeDir_In3rd    : " ${SlicerBuildExeDir_In3rd})
-        add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CuraEngine.exe ${SlicerBuildExeDir_In3rd})
-
-        # copy CuraEngine.exe to distrib/SliceEngine
-        set(SlicerBuildExeDir_InDistrib  "../../AnkerSlicer/Local_Feature/distrib/SliceEngine")
-        message(STATUS "SlicerBuildExeDir_InDistrib    : " ${SlicerBuildExeDir_InDistrib})
-        add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CuraEngine.exe ${SlicerBuildExeDir_InDistrib})
-    endif() # WIN32
-
-    if (WIN32)
-        # copy Application.h _CuraEngine.lib _CuraEngine.a to ankerplugins/fdm_slicer/lib
-        set(SlicerSrcLibDir              "../../AnkerSlicer/Local_Feature/src/ankerplugins/fdm_slicer/lib")
-
-        if(MSVC64)
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/src/Application.h ${SlicerSrcLibDir})
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/_CuraEngine.lib ${SlicerSrcLibDir})
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/clipper.lib ${SlicerSrcLibDir})
-        endif()
-        if(GNU64)
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/src/Application.h ${SlicerSrcLibDir})
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/lib_CuraEngine.a ${SlicerSrcLibDir})
-            add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/libclipper.a ${SlicerSrcLibDir})
-        endif()
-
-    endif() # WIN32
-
-
-    # only test CL
-    if (GNU64)
-        set(OnlyTestCL "T:/Code/AnkerSlicer/Local_Feature/build-AnkerSlicer-Qt5_15_2_MinGW_x64-Release/distrib/SliceEngine")
-        message(STATUS "OnlyTestCL = " ${OnlyTestCL})
-        add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CuraEngine.exe ${OnlyTestCL})
-
-        set(OnlyTestCL "T:/Code/AnkerSlicer/Local_FixBugs/build-AnkerSlicer-Qt5_15_2_VS_2019_x64_OnlyDebug-Debug/distrib/SliceEngine")
-        message(STATUS "OnlyTestCL = " ${OnlyTestCL})
-        add_custom_command( TARGET ${PROJECT_NAME}  POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_BINARY_DIR}/CuraEngine.exe ${OnlyTestCL})
-    endif()
-
-endif ()

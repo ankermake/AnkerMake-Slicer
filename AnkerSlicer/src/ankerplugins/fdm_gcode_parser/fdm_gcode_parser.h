@@ -46,7 +46,7 @@ public:
 public:
     void recMsgfromManager(PluginMessageData) override final;
 signals:
-    void sendMsg2Manager(PluginMessageData)override final;
+    void sendMsg2Manager(PluginMessageData) override final;
 
 public:
     void messageProcessing(PluginMessageData msgBody);
@@ -55,7 +55,8 @@ public:
     void openGcodePreviewInnetwork(const QString& file,const QString& m_hostAdress);
     
     bool checkOpenFile(QString gcodePath);
-
+    void queryLoggingStatus();
+    QVariant getSceneParams();
 //    void exportMessageProcessing(PluginMessageData msgBody);  //no need
 
     fdmRpcWrapper *m_rpc = nullptr;
@@ -72,11 +73,12 @@ private:
 //    QList<QProcess *> pInList;
     ProgressDialog* m_pDlg;
     QString CurrentShowFile;
-
+    qint64 CurrentShowFileSize;
     FdmGcodePreviewEntry* preview = nullptr;
     QList<FdmGcodePreviewEntry *> previewNetworkList;
 private slots:
     void setUseTimes(int ut);
+    void loggingStausChange(bool status);
 };
 
 

@@ -20,6 +20,16 @@ void CopyRightWidget::paintEvent(QPaintEvent *event)
     QWidget::paintEvent(event);
 }
 
+void CopyRightWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        if (m_titleWidget) {
+            m_titleWidget->setTitle(tr("Copyright Information"));
+        }
+    }
+    return QWidget::changeEvent(event);
+}
+
 void CopyRightWidget::initUi()
 {
     this->setFixedSize(400,362);
@@ -28,12 +38,12 @@ void CopyRightWidget::initUi()
     QGridLayout *mainLayout = new QGridLayout(this);
     mainLayout->setContentsMargins(0,0,0,0);
     mainLayout->setSpacing(0);
-    TitleWidget *titleWidget = new TitleWidget(this);
-    titleWidget->setCloseButtonIcon(QIcon(":/images/icon/fdm_title_close_icon.png"));
-    titleWidget->setBackgroundColor("#404249");
-    titleWidget->setTitle("Copyright Information");
-    connect(titleWidget,&TitleWidget::closeCurrentWidget,this,&CopyRightWidget::close);
-    mainLayout->addWidget(titleWidget,0,0);
+    m_titleWidget = new TitleWidget(this);
+    m_titleWidget->setCloseButtonIcon(QIcon(":/images/icon/fdm_title_close_icon.png"));
+    m_titleWidget->setBackgroundColor("#404249");
+    m_titleWidget->setTitle(tr("Copyright Information"));
+    connect(m_titleWidget,&TitleWidget::closeCurrentWidget,this,&CopyRightWidget::close);
+    mainLayout->addWidget(m_titleWidget,0,0);
 
     QGridLayout *layout = new QGridLayout();
     layout->setContentsMargins(16,16,16,16);
@@ -153,10 +163,10 @@ QList<CopyRightInforMation *> CopyRightWidget::initData()
 
     CopyRightInforMation *opensslInformation = new CopyRightInforMation();
     opensslInformation->name = QString("OpenSSL");
-    opensslInformation->nameLink = QString("GitHub - openssl/openssl: TLS/SSL and crypto library");
+    opensslInformation->nameLink = QString("https://github.com/openssl/openssl");
     opensslInformation->isModified = false;
     opensslInformation->licenseType = QString("GPL-3.0");
-    opensslInformation->licenseLink = QString("openssl/LICENSE.txt at master · openssl/openssl");
+    opensslInformation->licenseLink = QString("https://github.com/openssl/openssl/blob/master/LICENSE.txt");
     list.append(opensslInformation);
 
     return list;

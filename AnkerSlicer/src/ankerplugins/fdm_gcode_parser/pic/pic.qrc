@@ -4,7 +4,6 @@
         <file>fdm_time_icon_u.png</file>
         <file>fdm_ai_icon_n.png</file>
         <file>fdm_ai_icon_s.png</file>
-        <file>fdm_back_icon_n.png</file>
         <file>fdm_back_icon_s.png</file>
         <file>fdm_full_icon_n.png</file>
         <file>fdm_full_icon_s.png</file>
@@ -21,7 +20,8 @@
         <file>fdm_play_icon_n.png</file>
         <file>fdm_suspended_icon_n.png</file>
         <file>default.qss</file>
-        <file>logo_ankerslicer.ico</file>
+        <file>logo_AnkerMake.ico</file>
+        <file>fdm_back_icon_n.png</file>
     </qresource>
     <qresource prefix="/"/>
 </RCC>

@@ -23,7 +23,7 @@ namespace  control {
 		const char M_SCENE[] = "Menu.Scene";
 	}
 
-	class ControlId {
+    class COMMONLIB_EXPORT ControlId {
 	public:
 		ControlId(const char key[]) { m_id = QString(key); }
 		ControlId(const QString& key) { m_id = key; }
@@ -33,7 +33,7 @@ namespace  control {
 		QString m_id;
 	};
 
-	class ControlInterface :public QObject
+    class COMMONLIB_EXPORT ControlInterface :public QObject
 	{
 		Q_OBJECT
 	public:

@@ -65,7 +65,22 @@ CHAABB3D CHPointShowObj::calRealAABB()
 
 void CHPointShowObj::setSize(double tsize)
 {
-	m_size = tsize;
+    m_size = tsize;
+}
+
+QVector3D CHPointShowObj::getOriginCoord() const
+{
+    return m_coord;
+}
+
+QVector3D CHPointShowObj::getCurrentCoord() const
+{
+    return (m_tran * QVector4D(m_coord)).toVector3D();
+}
+
+QMatrix4x4 CHPointShowObj::getTransform() const
+{
+    return m_tran;
 }
 
 

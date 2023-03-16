@@ -36,12 +36,11 @@
 #endif
 #include <vcg/space/color4.h>
 
-
 #include <fstream>
 #include <string>
 #include <vector>
-
-
+#include <QFile>
+#include <QTextStream>
 namespace vcg {
 namespace tri {
 namespace io {
@@ -210,7 +209,7 @@ public:
   * \param filename The name of the file to be opened
   * \param oi A structure containing infos about the object to be opened
   */
-  static int Open( OpenMeshType &m, const char * filename, Info &oi)
+  static int Open( OpenMeshType &m, QString fileName, Info &oi)
   {
     int result = E_NOERROR;
 
@@ -219,21 +218,20 @@ public:
 
     // if LoadMask has not been called yet, we call it here
     if (oi.mask == 0)
-      LoadMask(filename, oi);
+      LoadMask(fileName, oi);
 
     const int inputMask = oi.mask;
     Mask::ClampMask<OpenMeshType>(m,oi.mask);
 
     if (oi.numVertices == 0)
       return E_NO_VERTEX;
-
-    std::ifstream stream(filename);
-    if (stream.fail())
-    {
-      stream.close();
-      return E_CANTOPEN;
+    auto filename = fileName.toStdString().c_str();
+    QFile qFile(fileName);
+    qFile.open(QIODevice::ReadOnly);
+    if (!qFile.isOpen()) {
+        return E_CANTOPEN;
     }
-
+    QTextStream stream(&qFile);
     typename OpenMeshType::template PerMeshAttributeHandle<std::vector<Material> > materialsHandle =
         vcg::tri::Allocator<OpenMeshType>:: template GetPerMeshAttribute<std::vector<Material> >(m, std::string("materialVector"));
     typename OpenMeshType::template PerFaceAttributeHandle<int> mIndHandle =
@@ -270,7 +268,7 @@ public:
     std::vector<Color4b> vertexColorVector;
     ObjIndexedFace	ff;
     const char *loadingStr = "Loading";
-    while (!stream.eof())
+    while (!stream.atEnd())
     {
       tokens.clear();
       TokenizeNextLine(stream, tokens, line, &vertexColorVector);
@@ -284,7 +282,7 @@ public:
         // callback invocation, abort loading process if the call returns false
         if ((cb !=NULL) && (((numTriangles + numVertices)%100)==0) && !(*cb)((100*(numTriangles + numVertices))/numVerticesPlusFaces, loadingStr))
         {
-          stream.close();
+          qFile.close();
           return E_ABORTED;
         }
         if (header.compare("v")==0)	// vertex
@@ -292,7 +290,7 @@ public:
           loadingStr="Vertex Loading";
           if (numTokens < 4)
           {
-            stream.close();
+            qFile.close();
             return E_BAD_VERTEX_STATEMENT;
           }
           (*vi).P()[0] = (ScalarType) atof(tokens[1].c_str());
@@ -329,7 +327,7 @@ public:
 
           if (numTokens < 3)
           {
-            stream.close();
+            qFile.close();
             return E_BAD_VERT_TEX_STATEMENT;
           }
           ObjTexCoord t;
@@ -345,7 +343,7 @@ public:
 
           if (numTokens != 4)
           {
-            stream.close();
+            qFile.close();
             return E_BAD_VERT_NORMAL_STATEMENT;
           }
           CoordType n;
@@ -382,7 +380,7 @@ public:
           if(header.compare("q")==0) {
             QuadFlag=true;
             if (vertexesPerFace != 4) {
-              stream.close();
+              qFile.close();
               return E_LESS_THAN_4_VERT_IN_QUAD;
             }
           }
@@ -410,7 +408,7 @@ public:
               for(int i=0;i<vertexesPerFace;i++)
                 if(!GoodObjIndex(ff.t[i],oi.numTexCoords))
                 {
-                  stream.close();
+                  qFile.close();
                   return E_BAD_VERT_TEX_INDEX;
                 }
               ff.tInd=materials[currentMaterialIdx].index;
@@ -429,7 +427,7 @@ public:
             for(int i=0;i<vertexesPerFace;i++)
               if(!GoodObjIndex(ff.v[i],numVertices))
               {
-                stream.close();
+                qFile.close();
                 return E_BAD_VERT_INDEX;
               }
 
@@ -440,7 +438,7 @@ public:
               for(int i=0;i<vertexesPerFace;i++)
                 if(!GoodObjIndex(ff.n[i],numVNormals))
                 {
-                  stream.close();
+                  qFile.close();
                   return E_BAD_VERT_NORMAL_INDEX;
                 }
             }
@@ -468,9 +466,17 @@ public:
             {
               SplitToken(tokens[pi+1], indexVVect[pi],indexNVect[pi],indexTVect[pi], inputMask);
               if(QuadFlag) indexVVect[pi]++; // NOTE THAT THE STUPID QOBJ FORMAT IS ZERO INDEXED!!!!
-              GoodObjIndex(indexVVect[pi],numVertices);
+              bool checkOK = GoodObjIndex(indexVVect[pi],numVertices);
               GoodObjIndex(indexTVect[pi],oi.numTexCoords);
-              polygonVect[0][pi].Import(m.vert[indexVVect[pi]].cP());
+
+              if(checkOK)
+              {
+                polygonVect[0][pi].Import(m.vert[indexVVect[pi]].cP());
+              }
+              else
+              {
+                  throw std::out_of_range("fail to open file: face vertex index > numVertices");
+              }
             }
             if(vertexesPerFace>3)
               oi.mask |= Mask::IOM_BITPOLYGONAL;
@@ -579,7 +585,8 @@ public:
 
           }  //_END  ___ if you are filling a vcg mesh with TRIANGLES
         }
-        else if ((header.compare("mtllib")==0) && (tokens.size() > 1))	// material library
+        //  delete mtllib usemtlc  @2023-01-06 by ChunLian
+        else if ((header.compare("mtllib")==0) && (tokens.size() > 1) && false)	// material library
         {
           // obtain the name of the file containing materials library
           std::string materialFileName;
@@ -591,7 +598,7 @@ public:
           if (!LoadMaterials( materialFileName.c_str(), materials, m.textures))
             result = E_MATERIAL_FILE_NOT_FOUND;
         }
-        else if ((header.compare("usemtl")==0) && (tokens.size() > 1))	// material usage
+        else if ((header.compare("usemtl")==0) && (tokens.size() > 1) && false)	// material usage
         {
           // emergency check. If there are no materials, the material library failed to load or was not specified
           // but there are tools that save the material library with the same name of the file, but do not add the
@@ -733,7 +740,7 @@ public:
         m.vert[i].C()=vertexColorVector[i];
       }
     }
-    stream.close();
+    qFile.close();
     return result;
   } // end of Open
 
@@ -744,19 +751,20 @@ public:
   *  \param stream  The object providing the input stream
   *  \param tokens  The "tokens" in the next line
   */
-  inline static void TokenizeNextLine(std::ifstream &stream, std::vector< std::string > &tokens, std::string &line, std::vector<Color4b> *colVec)
+  inline static void TokenizeNextLine(QTextStream &stream, std::vector< std::string > &tokens, std::string &line, std::vector<Color4b> *colVec)
   {
-    if(stream.eof()) return;
+    if(stream.atEnd()) return;
 
     do
     {
-      std::getline(stream, line);
+        line = stream.readLine().toStdString();
+     // std::getline(stream, line);
       // We have to manage backspace terminated lines,
       // joining them together before parsing them
       if(!line.empty() && line.back()==13) line.pop_back();
       while(!line.empty() && line.back()=='\\') {
         std::string tmpLine;
-        std::getline(stream, tmpLine);
+        tmpLine = stream.readLine().toStdString();
         if(tmpLine.back()==13) line.pop_back();
         line.pop_back();
         line.append(tmpLine);
@@ -787,7 +795,7 @@ public:
         }
       }
     }
-    while (( line.length()==0 || line[0] == '#') && !stream.eof());  // skip comments and empty lines
+    while (( line.length()==0 || line[0] == '#') && !stream.atEnd());  // skip comments and empty lines
 
     if ( (line.length() == 0)||(line[0] == '#') )  // can be true only on last line of file
       return;
@@ -856,20 +864,14 @@ public:
   * \param oi       A structure which will be filled with infos about the object to be opened
   */
 
-  static bool LoadMask(const char * filename, Info &oi)
+  static bool LoadMask(QString fileName, Info &oi)
   {
-
-    std::ifstream stream(filename);
-    if (stream.fail())
-    {
-      stream.close();
-      return false;
+    QFile qFile(fileName);
+    qFile.open(QIODevice::ReadOnly);
+    if (!qFile.isOpen()) {
+        return false;
     }
-    // obtain length of file:
-    stream.seekg (0, std::ios::end);
-    int length = stream.tellg();
-    stream.seekg (0, std::ios::beg);
-
+    int length = qFile.size();
     if (length == 0) return false;
 
     bool bHasPerFaceColor = false;
@@ -885,10 +887,11 @@ public:
     int totRead=0;
     bool firstV = true;
     std::string line;
-    while (!stream.eof())
+    QTextStream stream(&qFile);
+    while (!stream.atEnd())
     {
       lineCount++;
-      std::getline(stream, line);
+      line = stream.readLine().toStdString();
       totRead+=line.size();
       if(oi.cb && (lineCount%1000)==0)
         (*oi.cb)( (int)(100.0*(float(totRead))/float(length)), "Loading mask...");
@@ -947,12 +950,11 @@ public:
     if (oi.numEdges)
       oi.mask |= vcg::tri::io::Mask::IOM_EDGEINDEX;
 
-    stream.close();
-
+    qFile.close();
     return true;
   }
 
-  static bool LoadMask(const char * filename, int &mask)
+  static bool LoadMask(QString filename, int &mask)
   {
     Info oi;
     bool ret=LoadMask(filename, oi);
@@ -960,14 +962,15 @@ public:
     return ret;
   }
 
-    static bool LoadMaterials(const char * filename, std::vector<Material> &materials, std::vector<std::string> &textures)
+    static bool LoadMaterials(QString fileName, std::vector<Material> &materials, std::vector<std::string> &textures)
     {
         // assumes we are in the right directory
-
-        std::ifstream stream(filename);
-        if (stream.fail())
+        QFile qFile(fileName);
+        qFile.open(QIODevice::ReadOnly);
+        if (!qFile.isOpen()) {
             return false;
-
+        }
+        QTextStream stream(&qFile);
         std::vector< std::string > tokens;
         std::string line;
         std::string	header;
@@ -985,7 +988,7 @@ public:
         currentMaterial.illum = 2;
 
         bool first = true;
-        while (!stream.eof())
+        while (!stream.atEnd())
         {
             tokens.clear();
             TokenizeNextLine(stream, tokens, line, 0);
@@ -1071,7 +1074,7 @@ public:
         }
         materials.push_back(currentMaterial);  // add last read material
 
-        stream.close();
+        qFile.close();
         // Sometimes some materials have texture and no texture
         // in this case for sake of uniformity we just use the first texture.
         if(!textures.empty())

@@ -97,14 +97,30 @@ void CHMeshShowObj::resetTransform()
 {
     setTransform(m_initTransform);
     //m_realAABB = m_baseAABB;
-
-    //?????
     m_rotCenter = getBaseAABB().getCenterPoint();
     m_params.resize(9);
     for (int i = 0; i < 9; i++)
     {
         m_params[i] = m_initParams[i];
     }
+    m_lastRotParams[0] = m_lastRotParams[1] = m_lastRotParams[2] = {-1}; 
+    m_mirrAxis[0] = m_mirrAxis[1] = m_mirrAxis[2] = 1;
+}
+
+void CHMeshShowObj::reset3x3Transform()
+{
+    float pos[3] = { 0.0 };
+    pos[0] = m_params[6];
+    pos[1] = m_params[7];
+    pos[2] = m_params[8];
+    resetTransform();
+    m_params[6] = pos[0];
+    m_params[7] = pos[1];
+    m_params[8] = pos[2];
+
+    QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D(m_rotCenter[0],
+        m_rotCenter[1], m_rotCenter[2]), m_params);
+    setTransform(sumtran1);
 }
 void CHMeshShowObj::resetMove()
 {
@@ -122,9 +138,11 @@ void CHMeshShowObj::resetRot()
 }
 void CHMeshShowObj::resetZoom()
 {
+    int value[3] = {1};
     for (int i = 0; i < 3; i++)
     {
-        m_params[i] = m_initParams[i];
+        value[i] = (m_params[i] > 0 ? 1 : -1);
+        m_params[i] = m_initParams[i] * value[i];
     }
 }
 void CHMeshShowObj::resetMirr()
@@ -165,21 +183,47 @@ void CHMeshShowObj::copy(CHShowObjPtr& obj)
         return;
     }
     out->setObjectName(m_name);
-    out->m_baseAABB = m_baseAABB;
-    out->m_realAABB = m_realAABB;
+    //out->m_baseAABB = m_baseAABB;
+    //out->m_realAABB = m_realAABB;
     out->setColor(m_color);
+    out->setVisuable(m_visuable);
+    out->setDelete(m_delete);
+    out->setDirty(m_dirty);
     out->setLightTest(m_lightTest);
     out->setCalLight(m_calLight);
-    out->setTransform(m_tran);
+    //out->setTransform(m_tran);
+//    out->m_vertices = m_vertices;
+//    out->m_nors = m_nors;
+//    out->m_uvs = m_uvs;
+//    out->m_trians = m_trians;
+    out->setTransform(QMatrix4x4());
+    out->m_vertices.resize(m_vertices.size());
+    out->m_nors.resize(m_nors.size());
+    out->m_uvs.resize(m_uvs.size());
+    out->m_trians.resize(m_trians.size());
 
-    out->m_vertices = m_vertices;
-    out->m_nors = m_nors;
+    QMatrix4x4 tmpMatrix = getTransform();
+    
+    for(int i = 0; i < m_vertices.size(); i++)
+    {
+        out->m_vertices[i] = (tmpMatrix * QVector4D(m_vertices[i], 1)).toVector3D();
+    }
+
+    
+    for(int i = 0; i < m_nors.size(); i++)
+    {
+        out->m_nors[i] = (tmpMatrix.inverted().transposed() * QVector4D(m_nors[i], 1)).toVector3D();
+    }
+
     out->m_uvs = m_uvs;
     out->m_trians = m_trians;
-    out->m_rotCenter[0] = m_rotCenter[0];
-    out->m_rotCenter[1] = m_rotCenter[1];
-    out->m_rotCenter[2] = m_rotCenter[2];
-    out->m_params = m_params;
+//    out->calBaseAABB();
+//    out->calRealAABB();
+
+//    out->m_rotCenter[0] = m_rotCenter[0];
+//    out->m_rotCenter[1] = m_rotCenter[1];
+//    out->m_rotCenter[2] = m_rotCenter[2];
+//    out->m_params = m_params;
 }
 
 void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
@@ -258,7 +302,7 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
             QVector3D upVertex0(findUpFaceIt->V(0)->P().X(), findUpFaceIt->V(0)->P().Y(), findUpFaceIt->V(0)->P().Z());
             QVector3D upVertex1(findUpFaceIt->V(1)->P().X(), findUpFaceIt->V(1)->P().Y(), findUpFaceIt->V(1)->P().Z());
             QVector3D upVertex2(findUpFaceIt->V(2)->P().X(), findUpFaceIt->V(2)->P().Y(), findUpFaceIt->V(2)->P().Z());
-            QVector3D refP1(findUpFaceIt->V(0)->P().X(), findUpFaceIt->V(0)->P().Y(), 10000); 
+            QVector3D refP1(findUpFaceIt->V(1)->P().X(), findUpFaceIt->V(1)->P().Y(), 10000); 
             QVector3D upN = QVector3D::crossProduct(upVertex1 - upVertex0, upVertex2 - upVertex0).normalized();
             float upD =  QVector3D::dotProduct(-upN, upVertex0);
             dir1 = QVector3D::dotProduct(upN, refP1) + upD;
@@ -270,13 +314,13 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
             QVector3D bottomVertex0(findBottomFaceIt->V(0)->P().X(), findBottomFaceIt->V(0)->P().Y(), findBottomFaceIt->V(0)->P().Z());
             QVector3D bottomVertex1(findBottomFaceIt->V(1)->P().X(), findBottomFaceIt->V(1)->P().Y(), findBottomFaceIt->V(1)->P().Z());
             QVector3D bottomVertex2(findBottomFaceIt->V(2)->P().X(), findBottomFaceIt->V(2)->P().Y(), findBottomFaceIt->V(2)->P().Z());
-            QVector3D refP2(findBottomFaceIt->V(0)->P().X(), findBottomFaceIt->V(0)->P().Y(), -10000); 
+            QVector3D refP2(findBottomFaceIt->V(1)->P().X(), findBottomFaceIt->V(1)->P().Y(), -10000); 
             QVector3D bottomN = QVector3D::crossProduct(bottomVertex1 - bottomVertex0, bottomVertex2 - bottomVertex0).normalized();
             float bottomD =  QVector3D::dotProduct(-bottomN, bottomVertex0);
             dir2 = QVector3D::dotProduct(bottomN, refP2) + bottomD;
         }
-
-        if(dir1 < 0 && dir2 < 0)
+        qDebug() << "dir1: " << dir1 << ", dir2: " << dir2;
+        if(dir1 < 0 &&  dir2 < 0 && fabs(dir1) > 0.000001 && fabs(dir2) > 0.000001)
         {
             
             reverse = -reverse;
@@ -289,29 +333,30 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
                 QVector3D rightVertex0(findRightFaceIt->V(0)->P().X(), findRightFaceIt->V(0)->P().Y(), findRightFaceIt->V(0)->P().Z());
                 QVector3D rightVertex1(findRightFaceIt->V(1)->P().X(), findRightFaceIt->V(1)->P().Y(), findRightFaceIt->V(1)->P().Z());
                 QVector3D rightVertex2(findRightFaceIt->V(2)->P().X(), findRightFaceIt->V(2)->P().Y(), findRightFaceIt->V(2)->P().Z());
-                QVector3D refP3(10000, findRightFaceIt->V(0)->P().Y(), findRightFaceIt->V(0)->P().Z()); 
+                QVector3D refP3(10000, findRightFaceIt->V(1)->P().Y(), findRightFaceIt->V(1)->P().Z()); 
                 QVector3D rightN = QVector3D::crossProduct(rightVertex1 - rightVertex0, rightVertex2 - rightVertex0).normalized();
                 float rightD =  QVector3D::dotProduct(-rightN, rightVertex0);
                 dir3 = QVector3D::dotProduct(rightN, refP3) + rightD;
             }
-
+            qDebug() << "dir3: " << dir3;
             float dir4 = 0.0;
             if(findLeftFaceIt != mesh.face.end())
             {
                 QVector3D leftVertex0(findLeftFaceIt->V(0)->P().X(), findLeftFaceIt->V(0)->P().Y(), findLeftFaceIt->V(0)->P().Z());
                 QVector3D leftVertex1(findLeftFaceIt->V(1)->P().X(), findLeftFaceIt->V(1)->P().Y(), findLeftFaceIt->V(1)->P().Z());
                 QVector3D leftVertex2(findLeftFaceIt->V(2)->P().X(), findLeftFaceIt->V(2)->P().Y(), findLeftFaceIt->V(2)->P().Z());
-                QVector3D refP4(-10000, findLeftFaceIt->V(0)->P().Y(), findLeftFaceIt->V(0)->P().Z()); 
+                QVector3D refP4(-10000, findLeftFaceIt->V(1)->P().Y(), findLeftFaceIt->V(1)->P().Z()); 
                 QVector3D leftN = QVector3D::crossProduct(leftVertex1 - leftVertex0, leftVertex2 - leftVertex0).normalized();
                 float leftD =  QVector3D::dotProduct(-leftN, leftVertex0);
                 dir4 = QVector3D::dotProduct(leftN, refP4) + leftD;
             }
-
-            if(dir3 < 0/* && dir4 < 0*/)
+            qDebug() << "dir4: " << dir4;
+            if(dir3  < 0 &&  dir4 < 0 && fabs(dir1) > 0.000001 && fabs(dir2) > 0.000001)
             {
                 reverse = -reverse;
             }
         }
+        qDebug() << "reverse: " << reverse;
         
 
         for (auto it = mesh.face.begin(); it != mesh.face.end(); it++)

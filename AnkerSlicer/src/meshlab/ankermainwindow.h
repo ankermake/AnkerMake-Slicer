@@ -2,7 +2,7 @@
 #define ANKERMAINWINDOW_H
 
 #include <QMainWindow>
-#include "mainwindow.h"
+//#include "mainwindow.h"
 
 #include <QVBoxLayout>
 #include <QGridLayout>
@@ -17,7 +17,7 @@
 #include <QThread>
 #include <QProcess>
 #include <QDir>
-
+#include <QEvent>
 #include "controls/controlmanager.h"
 #include "controls/toolBar.h"
 #include "settingmanager.h"
@@ -33,6 +33,43 @@
 using namespace control;
 using namespace settings;
 
+class AkMainWindowPre : public QMainWindow
+{
+    Q_OBJECT
+public:
+    AkMainWindowPre():
+        //gpumeminfo(NULL),
+        defaultGlobalParams(meshlab::defaultGlobalParameterList()),
+        lastUsedDirectory(QDir::home()),
+        PM(meshlab::pluginManagerInstance()),
+        messageProcessing(new MessageProcessing(this))
+    {}
+
+public:
+    QMdiArea *mdiarea;
+    GLArea* glarea;
+    MessageProcessing * messageProcessing;
+
+    RichParameterList currentGlobalParams;
+    RichParameterList& defaultGlobalParams;
+    QDir lastUsedDirectory;  //This will hold the last directory that was used to load/save a file/project in
+    PluginManager& PM;
+
+    MeshDocument meshDocument;
+    MeshDocument *meshDoc() {
+        return &meshDocument;
+    }
+
+    void updateTexture(int meshid){}
+//    void computeRenderingDataOnLoading(MeshModel* mm,bool isareload, MLRenderingData* rendOpt){}
+};
+
+enum USB_STATE
+{
+   USB_STATE_KNOWN = -1,
+   USB_STATE_COME_IN = 0,
+   USB_STATE_COME_OUT = 1,
+};
 
 //class AnkerMainWindow : public MainWindow
 class AnkerMainWindow : public AkMainWindowPre
@@ -52,7 +89,7 @@ private:
     void initFdmWidget();
     void initEditTool(); 
 
-
+    void changeEvent(QEvent *e);
 private:
     QString openFilter(QString projectSuffix, QStringList meshSuffixList, QString gcodeSuffix, QString acodeSuffix);
     bool pathIsValid(QStringList pathList, QStringList suffixList);
@@ -67,20 +104,22 @@ private:
 
     static bool QCallBack_ak(const int pos, const char* str);
     //bool importMesh_ak(QString fileName=QString());
-    bool exportMesh_ak(QString fileName, MeshModel* mod, const bool saveAllPossibleAttributes);
+//    bool exportMesh_ak(QString fileName, MeshModel* mod, const bool saveAllPossibleAttributes);
     bool exportMesh_ak(const QString& fileName, CMeshO& cm);
     void getMask(int& mask, const CMeshO& cm);
 
     bool importMeshWithLayerManagement_ak(QString fileName = QString());
-    bool save_ak(const bool saveAllPossibleAttributes = false);
-    bool saveAs_ak(QString fileName = QString(), const bool saveAllPossibleAttributes = false);
+//    bool save_ak(const bool saveAllPossibleAttributes = false);
+//    bool saveAs_ak(QString fileName = QString(), const bool saveAllPossibleAttributes = false);
     void paintEvent(QPaintEvent *e);
     
     void mainWindowInitFinished();
 signals:
     void openFileSucessful(QStringList fileList);
-    void uDiskCome();
-    void uDiskRemove();
+    void usbStateChanged(int);
+
+    
+    void pluginsUnloaded();
 
 //signals:
 //    void resizeChildWidget();
@@ -88,7 +127,9 @@ signals:
 //    virtual void resizeEvent(QResizeEvent *event) override;
 
 public slots:
+    void openFileFromAppRaram(const QString &fileName);
     void openFileList(QStringList fileNameList);
+    void otaNeedSaveProject(const QString &filePath);
 
 private slots:
     void slotSaveProject();
@@ -102,7 +143,7 @@ private slots:
 
     void open();
 
-    void importMesh_ak(QString fileName = QString());
+//    void importMesh_ak(QString fileName = QString());
     void importMesh(QString fileName = QString());
 
     void importModelProgress(int pos, const QString& str);
@@ -122,11 +163,16 @@ private slots:
     void onButtonRestoreClicked();
     void onButtonMaxClicked();
     void onButtonCloseClicked();
+
+    void unloadPluginsSlot();
+
+
 private:
     bool processIsRun(const QString &exeName);
     bool removeAcodeFile(QString const &path);
     void initTitleBar();
-private:
+    void showNormalWin();
+    void showMaximizedWin();
 private:
     QFramelessHelper *m_framelessHelper = nullptr;
     ControlManager* m_controlManager;
@@ -140,6 +186,7 @@ private:
     QStringList m_meshPath = QStringList();
     QString m_acodePath;
     QProcess  *m_pCmd;
+    QString m_cmdErrorData;
 
     ProgressDialog *m_importProgress;
     QThread loadThread;
@@ -178,6 +225,7 @@ private:
     bool pressedRightBottom = false;
 
     bool mousePressedStatus = false;
+    bool m_ota = false;
 protected:
     
     void closeEvent(QCloseEvent* event) override;

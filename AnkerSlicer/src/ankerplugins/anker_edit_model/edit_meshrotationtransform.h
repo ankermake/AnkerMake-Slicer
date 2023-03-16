@@ -34,6 +34,7 @@
 #include "common/GeoAndShow/CHPointShowObj.h"
 #include "CHModelRotationTransformParamsSetUI.h"
 #include "common/GeoAndShow/CHAssembly.h"
+#include "common/GeoAndShow/CHScene.h"
 
 
 DEF_PTR(CHLocalCoordinateAxis)
@@ -63,7 +64,8 @@ public:
 
 public:
     void create(QVector3D center, double rad, QVector3D nor, QVector3D refVec);
-
+    QVector3D getOriginCenter() const;
+    QVector3D getCurrentCenter() const;
 
 public:
     
@@ -82,6 +84,7 @@ public:
     EditMeshRotationTransformTool();
     virtual ~EditMeshRotationTransformTool() {}
 
+    void initInMainUI  () override ; //  add  @2023-01-13 by ChunLian
     bool startAnkerEdit(ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
     void endAnkerEdit  (ActionEditTool * action, void * arg1=nullptr, void *arg2=nullptr) override;
 
@@ -108,10 +111,14 @@ private:
     void refreshRotationFrame();
 
     void submitToUI();
+    void resetSelectedRotate();
+
+    void checkOnBottom();
+
 
 
 private:
-    CHModelRotationTransformParamsSetUI* m_paramUI;
+    CHModelRotationTransformParamsSetUI* m_paramUI{nullptr};
     std::set<CHMeshShowObjPtr> m_editMeshModels;
     CHMeshShowObjPtr m_firstMesh;//???????????????
     QVector3D m_operationCenter;
@@ -133,7 +140,7 @@ private:
     std::vector<std::vector<float>> m_values;
     std::vector<std::vector<float>> m_initValues;
 
-    float m_operateMoveZ;//???????????z????
+    float m_operateMoveZ;
 
     CHLineSegment3DShowObjPtr m_adjustShowCurve;
 

@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshrotationtransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -97,12 +97,33 @@ void CHAdjustCircle::create(QVector3D center, double rad, QVector3D nor, QVector
     m_baseShowObjs.push_back(m_adjustPointBody);
 }
 
+QVector3D CHAdjustCircle::getOriginCenter() const
+{
+    return m_circleBody->m_center;
+}
+
+QVector3D CHAdjustCircle::getCurrentCenter() const
+{
+    return (m_tran * QVector4D(m_circleBody->m_center)).toVector3D();
+}
+
 EditMeshRotationTransformTool::EditMeshRotationTransformTool()
 {
     m_paramUI = 0;
     m_stepFlag = 0;
     m_adjustShowCurve = 0;
     m_operateMoveZ = 0;
+}
+
+void EditMeshRotationTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelRotationTransformParamsSetUI();
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Rotate);
+    connect(this, &EditMeshRotationTransformTool::sendParamsToGui, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParams);
+    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::sendParams, this, &EditMeshRotationTransformTool::receiveParamsFromGui);
+    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::reset, this, &EditMeshRotationTransformTool::resetBtnClicked);
+    connect(this, &EditMeshRotationTransformTool::sendParam, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParam);
+    m_paramUI->hide();
 }
 
 bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void * arg1, void *arg2)
@@ -126,12 +147,9 @@ bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void
     m_pickedObj = 0;
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelRotationTransformParamsSetUI();
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Rotate);
-    connect(this, &EditMeshRotationTransformTool::sendParamsToGui, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParams);
-    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::sendParams, this, &EditMeshRotationTransformTool::receiveParamsFromGui);
-    connect(m_paramUI, &CHModelRotationTransformParamsSetUI::reset, this, &EditMeshRotationTransformTool::resetBtnClicked);
-    connect(this, &EditMeshRotationTransformTool::sendParam, m_paramUI, &CHModelRotationTransformParamsSetUI::receiveParam);
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
@@ -144,14 +162,26 @@ bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void
     {
         m_values[p].resize(6);
         m_initValues[p].resize(6);
-        m_initValues[p][0] = (*it)->m_params[3];
-        m_initValues[p][1] = (*it)->m_params[4];
-        m_initValues[p][2] = (*it)->m_params[5];
+       // qDebug() << "init: " << (*it)->getObjectName() << ", m_lastMultiSelect: " <<  m_lastMultiSelect;
+
+        if(m_editMeshModels.size() == 1 && !(*it)->m_lastMultiSelect)
+        {
+            m_initValues[p][0] = 0;
+            m_initValues[p][1] = 0;
+            m_initValues[p][2] = 0;
+        }
+        else
+        {
+            m_initValues[p][0] = (*it)->m_params[3];
+            m_initValues[p][1] = (*it)->m_params[4];
+            m_initValues[p][2] = (*it)->m_params[5];
+        }
+
         m_initValues[p][3] = (*it)->m_params[6];
         m_initValues[p][4] = (*it)->m_params[7];
         m_initValues[p][5] = (*it)->m_params[8];
 
-        qDebug() << "initValues: " << (*it)->m_params[3] << ", " << (*it)->m_params[4] << ", " <<(*it)->m_params[5];
+       // qDebug() << "initValues: " << m_initValues[p][0] << ", " << m_initValues[p][1] << ", " << m_initValues[p][2];
         p++;
     }
 
@@ -169,7 +199,40 @@ bool EditMeshRotationTransformTool::startAnkerEdit(ActionEditTool * action, void
         }
     }
     m_operationCenter = aabb.getCenterPoint();
-    submitToUI();
+    qDebug() << "m_lastRotParams: " << (*m_editMeshModels.begin())->m_lastRotParams[0] <<
+                (*m_editMeshModels.begin())->m_lastRotParams[1] <<
+                (*m_editMeshModels.begin())->m_lastRotParams[2] <<
+                ", isRot: " << (*m_editMeshModels.begin())->m_isRot <<
+                ", m_lastMultiSelect: " << (*m_editMeshModels.begin())->m_lastMultiSelect;
+
+
+    if((*m_editMeshModels.begin())->m_lastMultiSelect && m_editMeshModels.size() == 1 &&
+            (*m_editMeshModels.begin())->m_lastRotParams[0] != -1 &&
+            (*m_editMeshModels.begin())->m_lastRotParams[1] != -1 &&
+            (*m_editMeshModels.begin())->m_lastRotParams[2] != -1)
+    {
+        std::vector<double> params(3);
+        if((*m_editMeshModels.begin())->m_isRot)
+        {
+            //params[0] = (*m_editMeshModels.begin())->m_params[0];
+            //params[1] = (*m_editMeshModels.begin())->m_params[1];
+            //params[2] = (*m_editMeshModels.begin())->m_params[2];
+            submitToUI();
+        }
+        else
+        {
+            params[0] = (*m_editMeshModels.begin())->m_lastRotParams[0];
+            params[1] = (*m_editMeshModels.begin())->m_lastRotParams[1];
+            params[2] = (*m_editMeshModels.begin())->m_lastRotParams[2];
+            m_paramUI->setOnlyRotateDoubleSpinBox(params[0], params[1], params[2]);
+            receiveParamsFromGui(params, RotateChangedType_BoxRotate);
+        }
+    }
+    else
+    {
+        submitToUI();
+    }
+
 
 
     
@@ -225,11 +288,40 @@ void EditMeshRotationTransformTool::endAnkerEdit  (ActionEditTool *, void *, voi
     AkUtil::TFunction("");
     if(!m_isActivated){return;}
     m_isActivated = false;
-
     if (m_paramUI)
     {
-        delete m_paramUI;
-        m_paramUI = 0;
+        if(m_editMeshModels.size() == 1)
+        {
+
+            (*m_editMeshModels.begin())->m_lastMultiSelect = false;
+            (*m_editMeshModels.begin())->m_isRot = false;
+            double x, y, z;
+            m_paramUI->getBoxEditValue(x, y, z);
+            (*m_editMeshModels.begin())->m_lastRotParams[0] = x;
+            (*m_editMeshModels.begin())->m_lastRotParams[1] = y;
+            (*m_editMeshModels.begin())->m_lastRotParams[2] = z;
+        }
+        else
+        {
+            int p = 0;
+            for(auto it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+            {
+
+                if((*it)->m_lastMultiSelect || (m_initValues[p][0] != (*it)->m_params[3] ||
+                   m_initValues[p][1] != (*it)->m_params[4] ||
+                   m_initValues[p][2] != (*it)->m_params[5]) )
+                {
+                    (*it)->m_isRot = true;
+                }
+                else
+                {
+                    (*it)->m_isRot = false;
+                }
+                (*it)->m_lastMultiSelect = true;
+                p++;
+            }
+        }
+        m_paramUI->hide();
     }
 
     for (int i = 0; i < m_allShowObjs.size(); i++)
@@ -334,6 +426,14 @@ void EditMeshRotationTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, 
     else if (m_stepFlag == 1) 
     {
         event->accept();
+
+        bool isWidget = curScene->getCurMouseInWidget(event->pos().x(), event->pos().y());
+        if(!isWidget)
+        {
+            m_stepFlag = 0;
+            m_pickedObj = 0;
+            return;
+        }
         CHAdjustCirclePtr pickObj = dynamic_pointer_cast<CHAdjustCircle>(m_pickedObj);
 
         /*QVector3D realCenter = pickObj->m_circleBody->m_center + QVector3D(m_meshModel->m_params[6],
@@ -358,7 +458,6 @@ void EditMeshRotationTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, 
             {
                 angle = -angle;
             }
-            qDebug() << "angle: " << angle;
 
             
             QMatrix4x4 stran = TransformPack::rotMat(realCenter, pickObj->m_circleBody->m_nor, angle);
@@ -509,50 +608,7 @@ void EditMeshRotationTransformTool::mouseReleaseEvent(QMouseEvent  *event, void 
     AkUtil::TFunction("");
     if (event->button() == Qt::LeftButton && m_pickedObj)
     {
-        //???????????????????????????????????pick??????
-        CHAABB3D aabb;
-        for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-        {
-            aabb.add((*it)->calRealAABB());
-        }
-        
-        if (m_lockToPrintPlatform && !std::dynamic_pointer_cast<SupportMesh>(*m_editMeshModels.begin()))
-        {
-            //CHAABB3D aabb;//?????????
-            //for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-            //{
-            //	aabb.add((*it)->calRealAABB());
-            //}
-            float moveZ = -aabb.m_Zmin;
-            m_operateMoveZ += moveZ;
-
-            for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-            {
-                (*it)->m_params[8] = (*it)->m_params[8] + moveZ;
-
-                //?????????
-                (*it)->m_realAABB.m_Zmin += moveZ;
-                (*it)->m_realAABB.m_Zmax += moveZ;
-
-                
-                QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
-                    (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
-
-                
-                (*it)->setTransform(sumtran1);
-                if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
-                {
-                    SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
-                    supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
-                }
-            }
-
-            
-            //m_CoordAxis2->setTransform(sumtran1);
-
-            refreshRotationFrame();
-        }
-
+        checkOnBottom();
         m_stepFlag = 0;
         m_pickedObj = 0;
         for (int i = 0; i < m_allPickObjs.size(); i++)
@@ -610,6 +666,48 @@ void EditMeshRotationTransformTool::mouseReleaseEvent(QMouseEvent  *event, void 
     //BoxBorder::getInstancePtr()->setParam(gla, meshmodel);
 }
 
+
+void EditMeshRotationTransformTool::checkOnBottom()
+{
+    CHAABB3D aabb;
+    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        aabb.add((*it)->calRealAABB());
+    }
+    
+    if (m_lockToPrintPlatform && !std::dynamic_pointer_cast<SupportMesh>(*m_editMeshModels.begin()))
+    {
+        float moveZ = -aabb.m_Zmin;
+        m_operateMoveZ += moveZ;
+
+        for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+        {
+            (*it)->m_params[8] = (*it)->m_params[8] + moveZ;
+
+            //?????????
+            (*it)->m_realAABB.m_Zmin += moveZ;
+            (*it)->m_realAABB.m_Zmax += moveZ;
+
+            
+            QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
+                (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
+
+            
+            (*it)->setTransform(sumtran1);
+            if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+            {
+                SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+                supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+            }
+        }
+
+        
+        //m_CoordAxis2->setTransform(sumtran1);
+
+        refreshRotationFrame();
+    }
+}
+
 void EditMeshRotationTransformTool::showAxis(bool showed)
 {
     m_CoordAxis1->setVisuable(showed);
@@ -620,16 +718,11 @@ void EditMeshRotationTransformTool::showAxis(bool showed)
 
 void EditMeshRotationTransformTool::receiveParams(vector<float> params)
 {
-    CHAABB3D aabb;//?????????
+    CHAABB3D aabb;
     int i = 0;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        
-
         {
-            
-            
-            
             QMatrix4x4 tran1, tran2, tran3, tran4, tran5, tran6;
             tran1.rotate(m_initValues[i][0], QVector3D(1, 0, 0));
             tran2.rotate(m_initValues[i][1], QVector3D(0, 1, 0));
@@ -646,7 +739,6 @@ void EditMeshRotationTransformTool::receiveParams(vector<float> params)
             (*it)->m_params[4] = angleY / CH_PI * 180.0;
             (*it)->m_params[5] = angleZ / CH_PI * 180.0;
 
-            qDebug() << "real params: " << (*it)->m_params[3] << ", " << (*it)->m_params[4] << ", " << (*it)->m_params[5];
             adjustSingleAngle((*it)->m_params[3]);
             adjustSingleAngle((*it)->m_params[4]);
             adjustSingleAngle((*it)->m_params[5]);
@@ -673,10 +765,7 @@ void EditMeshRotationTransformTool::receiveParams(vector<float> params)
             supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
         }
 
-        if (true/*m_lockToPrintPlatform*/)//??????????????????????????
-        {
-            aabb.add((*it)->calRealAABB());
-        }
+        aabb.add((*it)->calRealAABB());
         i++;
     }
     
@@ -772,6 +861,7 @@ void EditMeshRotationTransformTool::receiveParamsFromGui(std::vector<double> par
             vecParams[1] = params[1];
             vecParams[2] = params[2];
         }
+        //qDebug() << "vecParams: " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
         receiveParams(vecParams);
     }
 }
@@ -779,54 +869,19 @@ void EditMeshRotationTransformTool::receiveParamsFromGui(std::vector<double> par
 void EditMeshRotationTransformTool::resetBtnClicked()
 {
     AkUtil::TFunction("");
-    auto bIt = getGlobalPick()->m_selectedObjs.begin();
-    auto eIt = getGlobalPick()->m_selectedObjs.end();
-    for (bIt; bIt != eIt; bIt++)
-    {
-        if (std::dynamic_pointer_cast<SupportMesh>(*bIt) != nullptr)
-        {
-            continue;
-        }
-        (*bIt)->resetRot();
-    }
-    vector<float> params(3);
-    QMatrix4x4 tran1, tran2, tran3, tran4, tran5, tran6;
-    tran1.rotate(m_initValues[0][0], QVector3D(1, 0, 0));
-    tran2.rotate(m_initValues[0][1], QVector3D(0, 1, 0));
-    tran3.rotate(m_initValues[0][2], QVector3D(0, 0, 1));
-    tran4.rotate(m_firstMesh->m_params[3], QVector3D(1, 0, 0));
-    tran5.rotate(m_firstMesh->m_params[4], QVector3D(0, 1, 0));
-    tran6.rotate(m_firstMesh->m_params[5], QVector3D(0, 0, 1));
-    
-    QMatrix4x4 rotTran = tran6 * tran5 * tran4 * (tran3 * tran2 * tran1).inverted();
+    //bool lockToPrintPlatform = m_lockToPrintPlatform;
+    //std::vector<double> vecParams(3);
 
-    double angleX, angleY, angleZ;
-    CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(rotTran, angleX, angleY, angleZ);
+    resetSelectedRotate();
+    refreshRotationFrame();
+    curScene->refresh();
+    submitToUI();
+    checkOnBottom();
 
-    
-    params[0] = angleX / CH_PI * 180.0;
-    params[1] = angleY / CH_PI * 180.0;
-    params[2] = angleZ / CH_PI * 180.0;
-    adjustSingleAngle(params[0]);
-    adjustSingleAngle(params[1]);
-    adjustSingleAngle(params[2]);
 
-    std::vector<double> vecParams(3);
-    if(m_editMeshModels.size() > 1)
-    {
-        vecParams[0] = params[0];
-        vecParams[1] = params[1];
-        vecParams[2] = params[2];
-    }
-    else if(m_editMeshModels.size() == 1)
-    {
-        vecParams[0] = params[0] + m_initValues[0][0];
-        vecParams[1] = params[1] + m_initValues[0][1];
-        vecParams[2] = params[2] + m_initValues[0][2];
-    }
-
-    qDebug() << "reset params: " << vecParams;
-    emit sendParamsToGui(vecParams, RotateChangedType_ResetRotate);
+    emit getDoc()->modelCheckSceneInChanged();
+    emit getDoc()->modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
+   // m_lockToPrintPlatform = lockToPrintPlatform;
 }
 
 void EditMeshRotationTransformTool::resetSelectedObjsClicked()
@@ -850,8 +905,18 @@ void EditMeshRotationTransformTool::refreshRotationFrame()
 {
     if (m_adjustCircleX == nullptr || m_adjustCircleY == nullptr || m_adjustCircleZ == nullptr)
         return;
+    CHAABB3D aabb;
+    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        aabb.add((*it)->m_realAABB);
+    }
+    QVector3D center = aabb.getCenterPoint();
+    QVector3D currentOrigin = m_adjustCircleX->getCurrentCenter();
+    QVector3D offset = center - currentOrigin;
+
     QMatrix4x4 tran;
-    tran.translate(QVector3D(0, 0, m_operateMoveZ));
+    //tran.translate(QVector3D(0, 0, m_operateMoveZ));
+    tran.translate(offset);
     m_adjustCircleX->setTransform(tran);
     //m_adjustCircleX->injectPropertiesToChildren();
     m_adjustCircleY->setTransform(tran);
@@ -864,7 +929,7 @@ void EditMeshRotationTransformTool::submitToUI()
 {
     vector<float> params(3);
     QMatrix4x4 tran1, tran2, tran3, tran4, tran5, tran6;
-
+    //qDebug() << "rotate: " << m_firstMesh->m_params[3] << ", " << m_firstMesh->m_params[4] << ", " << m_firstMesh->m_params[5];
     if(m_editMeshModels.size() > 1)
     {
         tran1.rotate(m_initValues[0][0], QVector3D(1, 0, 0));
@@ -897,7 +962,26 @@ void EditMeshRotationTransformTool::submitToUI()
     vecParams[0] = params[0];
     vecParams[1] = params[1];
     vecParams[2] = params[2];
+    //qDebug() << "vecParams:  " << vecParams[0] << ", " << vecParams[1] << ", " << vecParams[2];
     emit sendParamsToGui(vecParams);
+}
+
+void EditMeshRotationTransformTool::resetSelectedRotate()
+{
+    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        if(m_editMeshModels.size() == 1)
+        {
+            (*it)->reset3x3Transform();
+        }
+        else if(m_editMeshModels.size() > 1)
+        {
+           (*it)->resetTransform();
+        }
+        adjustSingleAngle((*it)->m_params[3]);
+        adjustSingleAngle((*it)->m_params[4]);
+        adjustSingleAngle((*it)->m_params[5]);
+    }
 }
 
 

@@ -13,7 +13,7 @@
 
 
 DEF_PTR(CHCircleShowObj)
-class CHCircleShowObj :public CHCurveShowObj
+class COMMONLIB_EXPORT CHCircleShowObj :public CHCurveShowObj
 {
 public:
 	CHCircleShowObj();

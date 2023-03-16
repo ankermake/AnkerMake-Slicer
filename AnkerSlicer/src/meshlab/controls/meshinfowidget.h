@@ -46,8 +46,9 @@ private slots:
     void hideList();
     //void clickCurrentIndex(const QModelIndex &index);
     void selectedChanged() ;
-
     void updateItem();
+    void currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+    void currentRowChanged(int currentRow);
 
 private:
    CH3DPrintModelPtr findCurrentModel(CHDocPtr docPtr,int index);
@@ -59,6 +60,7 @@ private:
 
     bool flag = false;
     QLabel *m_title = nullptr;
+    int verticalScrollBarValue = 0;
 };
 
 

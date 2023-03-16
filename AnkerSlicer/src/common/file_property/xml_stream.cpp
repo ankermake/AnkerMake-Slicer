@@ -303,7 +303,7 @@ bool XmlStream::readSupportParamsXml(CH3DPrintModelPtr& printModel, const QStrin
     QFile file(pathName);
     if (!file.open(QFile::ReadOnly | QFile::Text))
     {
-        qDebug() << "Can't Open the File: " << pathName;
+        qDebug() << "Can't open the support file: " << pathName;
         return false;
     }
     QXmlStreamReader reader;
@@ -413,6 +413,7 @@ void XmlStream::writeDocumentXmlElement()
         m_writer.writeAttribute(QString("meshColor"), QString("%1 %2 %3 %4").
             arg((*it)->getColor().red()).arg((*it)->getColor().green()).arg((*it)->getColor().blue()).arg((*it)->getColor().alpha()));
 
+        qDebug() << "Write Transform: " << (*it)->getTransform();
         const float* data = (*it)->getTransform().data();
         QString tmpMatStr = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 %16").
             arg(data[0]).arg(data[4]).arg(data[8]).arg(data[12]).
@@ -420,6 +421,14 @@ void XmlStream::writeDocumentXmlElement()
             arg(data[2]).arg(data[6]).arg(data[10]).arg(data[14]).
             arg(data[3]).arg(data[7]).arg(data[11]).arg(data[15]);
         m_writer.writeAttribute(QString("matrix44"), tmpMatStr);
+
+        const float* iniData = (*it)->m_initTransform.data();
+        QString tmpInitMatStr = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 %16").
+                arg(iniData[0]).arg(iniData[4]).arg(iniData[8]).arg(iniData[12]).
+                arg(iniData[1]).arg(iniData[5]).arg(iniData[9]).arg(iniData[13]).
+                arg(iniData[2]).arg(iniData[6]).arg(iniData[10]).arg(iniData[14]).
+                arg(iniData[3]).arg(iniData[7]).arg(iniData[11]).arg(iniData[15]);
+            m_writer.writeAttribute(QString("iniMatrix44"), tmpInitMatStr);
 
         m_writer.writeAttribute(QString("showMode"), QString::number((int)(*it)->m_showMode));
 
@@ -434,6 +443,16 @@ void XmlStream::writeDocumentXmlElement()
                 arg(tmpParams[3]).arg(tmpParams[4]).arg(tmpParams[5]).
                 arg(tmpParams[6]).arg(tmpParams[7]).arg(tmpParams[8]);
             m_writer.writeAttribute(QString("params"), tmpParamsStr);
+        }
+
+        std::vector<float> initParams = (*it)->m_initParams;
+        if (initParams.size() == 9)
+        {
+            QString tmpIniParamsStr = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9").
+                arg(initParams[0]).arg(initParams[1]).arg(initParams[2]).
+                arg(initParams[3]).arg(initParams[4]).arg(initParams[5]).
+                arg(initParams[6]).arg(initParams[7]).arg(initParams[8]);
+            m_writer.writeAttribute(QString("iniParams"), tmpIniParamsStr);
         }
 
         QString allSupportsName = "";
@@ -471,7 +490,7 @@ bool XmlStream::readDocumentXmlElement()
             }
 
 
-            if (attributes.hasAttribute(QString("meshName")))
+            if(attributes.hasAttribute(QString("meshName")))
             {
                 CH3DPrintModelPtr meshObjPtr = CH3DPrintModelPtr(new CH3DPrintModel);
                 meshObjPtr->setObjectName(attributes.value(QString("meshName")).toString());
@@ -491,7 +510,20 @@ bool XmlStream::readDocumentXmlElement()
                     tmpMatrix.setRow(3, QVector4D(matList[12].toDouble(), matList[13].toDouble(), matList[14].toDouble(), matList[15].toDouble()));
                 }
                 meshObjPtr->setTransform(tmpMatrix);
-                meshObjPtr->m_initTransform = tmpMatrix;
+                qDebug() << "Read Matrix: " << tmpMatrix;
+
+                QMatrix4x4 tmpIniMatrix;
+                QStringList intMatList = attributes.value(QString("iniMatrix44")).toString().trimmed().split(QString(" "));
+                if (intMatList.size() == 16)
+                {
+                    tmpIniMatrix.setRow(0, QVector4D(intMatList[0].toDouble(), intMatList[1].toDouble(), intMatList[2].toDouble(), intMatList[3].toDouble()));
+                    tmpIniMatrix.setRow(1, QVector4D(intMatList[4].toDouble(), intMatList[5].toDouble(), intMatList[6].toDouble(), intMatList[7].toDouble()));
+                    tmpIniMatrix.setRow(2, QVector4D(intMatList[8].toDouble(), intMatList[9].toDouble(), intMatList[10].toDouble(), intMatList[11].toDouble()));
+                    tmpIniMatrix.setRow(3, QVector4D(intMatList[12].toDouble(), intMatList[13].toDouble(), intMatList[14].toDouble(), intMatList[15].toDouble()));
+                }
+                meshObjPtr->m_initTransform = tmpIniMatrix;
+
+
                 int tmp = attributes.value(QString("showMode")).toInt();
                 meshObjPtr->m_showMode = ShowMode(tmp);
 
@@ -507,14 +539,24 @@ bool XmlStream::readDocumentXmlElement()
                 if (paramsList.size() == 9)
                 {
                     meshObjPtr->m_params.clear();
-                    meshObjPtr->m_initParams.clear();
 
                     for (int i = 0; i < 9; i++)
                     {
                         meshObjPtr->m_params.push_back(paramsList[i].toFloat());
-                        meshObjPtr->m_initParams.push_back(paramsList[i].toFloat());
                     }
                 }
+
+                QStringList iniParamsList = attributes.value(QString("iniParams")).toString().trimmed().split(QString(" "));
+                if (iniParamsList.size() == 9)
+                {
+                    meshObjPtr->m_initParams.clear();
+
+                    for (int i = 0; i < 9; i++)
+                    {
+                        meshObjPtr->m_initParams.push_back(iniParamsList[i].toFloat());
+                    }
+                }
+
 
                 /*QStringList allSupportNamesList = attributes.value(QString("support")).toString().trimmed().split(QString(" "));
                 if (allSupportNamesList.size() > 0)
@@ -691,7 +733,7 @@ bool XmlStream::readFile()
     bool result = false;
     if (m_file_prop == NULL)
     {
-        qDebug() << tr("Get File Property Failed.");
+        qDebug() << "Get File Property Failed.";
         return result;
     }
     QFile file(m_fileName);
@@ -750,7 +792,7 @@ bool XmlStream::writeFile()
 {
     if (m_file_prop == NULL)
     {
-        qDebug() << tr("Get File Property Failed.");
+        qDebug() << "Get File Property Failed.";
         return false;
     }
     QFile file(m_fileName);

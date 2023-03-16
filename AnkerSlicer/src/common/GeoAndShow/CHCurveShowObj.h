@@ -13,7 +13,7 @@
 
 
 DEF_PTR(CHCurveShowObj)
-class CHCurveShowObj :public CHShowObj
+class COMMONLIB_EXPORT CHCurveShowObj :public CHShowObj
 {
 public:
 	CHCurveShowObj();

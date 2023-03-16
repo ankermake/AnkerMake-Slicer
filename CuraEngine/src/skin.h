@@ -186,7 +186,7 @@ protected:
     const coord_t wall_line_width_0; //!< The line width of the outer wall
     const coord_t wall_line_width_x; //!< The line width of the inner most wall
     const coord_t innermost_wall_line_width; //!< width of the innermost wall lines
-    const size_t skin_inset_count; //!< The number of perimeters to surround the skin
+    size_t skin_inset_count; //!< The number of perimeters to surround the skin
     const bool no_small_gaps_heuristic; //!< A heuristic which assumes there will be no small gaps between bottom and top skin with a z size smaller than the skin size itself
     const bool process_infill; //!< Whether to process infill, i.e. whether there's a positive infill density or there are infill meshes modifying this mesh.
 

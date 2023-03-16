@@ -5,5 +5,7 @@
         <file>language/tr_en.qm</file>
         <file>language/tr_zh.qm</file>
         <file>language/tr_zh.ts</file>
+        <file>language/tr_ja.qm</file>
+        <file>language/tr_ja.ts</file>
     </qresource>
 </RCC>

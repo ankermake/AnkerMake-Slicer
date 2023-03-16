@@ -46,7 +46,7 @@ struct PickResult
 	CHShowObjPtr m_pickObj;
 };
 
-class CHShowObj :public CHObject, virtual public std::enable_shared_from_this<CHShowObj>
+class COMMONLIB_EXPORT CHShowObj :public CHObject, virtual public std::enable_shared_from_this<CHShowObj>
 {
 public:
 	CHShowObj();
@@ -98,6 +98,7 @@ public:
 	virtual void setStatus(ObjStatus status);
 	ObjStatus getStatus();
 
+    virtual void setPickPriority(PickPriority priority);
 	PickPriority getPickPriority();
 
 public:

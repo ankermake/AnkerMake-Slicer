@@ -17,7 +17,6 @@ Rectangle {
         anchors.fill :parent
         anchors.verticalCenter: parent.verticalCenter
         textRole: "value"
-      //  Font.pointSize: 12
         model:  ListModel {
             id:listModel
             Component.onCompleted: {

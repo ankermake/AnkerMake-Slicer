@@ -3,6 +3,7 @@
 #include "QBoxLayout"
 #include "QValidator"
 #include <QSignalMapper>
+#include <QKeyEvent>
 #include <cmath>
 #include "../common/utilities/tlogger.h"
 
@@ -30,8 +31,10 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
-    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
+    static QIcon xIcon = QIcon(":/images/fdm_remakes_small_icon_n.png");
+    m_resetButton->setIcon(xIcon);
     m_resetButton->setMaximumWidth(20);
     m_resetButton->setMaximumHeight(20);
     m_resetButton->setMinimumWidth(20);
@@ -49,7 +52,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     mainblaout->addWidget(line);
 
     QLabel* xLogo = new QLabel;
-    QPixmap xLogoPixmap(":/images/fdm_rotate_x_icon_u.png");
+    static QPixmap xLogoPixmap(":/images/fdm_rotate_x_icon_u.png");
     xLogo->setPixmap(xLogoPixmap);
     xLogo->setScaledContents(true);
     xLogo->setMaximumWidth(30);
@@ -65,13 +68,14 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     xlabel->setMinimumHeight(16);
 
     m_xRotBox = new RotateDoubleSpinBox;
+
     m_xRotBox->setMaximumWidth(90);
     m_xRotBox->setMaximumHeight(30);
     m_xRotBox->setMinimumWidth(90);
     m_xRotBox->setMinimumHeight(30);
     m_xRotBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
     m_xRotBox->setAutoFillBackground(true);
-    m_xRotBox->setSuffix("°");
+    m_xRotBox->setSuffix(" °");
     m_xRotBox->setDecimals(2);
     m_xRotBox->setMaximum(MAXNUM);
     m_xRotBox->setMinimum(MINNUM);
@@ -89,7 +93,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     QLabel* yLogo = new QLabel;
-    QPixmap yLogoPixmap(":/images/fdm_rotate_y_icon_u.png");
+    static QPixmap yLogoPixmap(":/images/fdm_rotate_y_icon_u.png");
     yLogo->setPixmap(yLogoPixmap);
     yLogo->setScaledContents(true);
     yLogo->setMaximumWidth(30);
@@ -104,13 +108,14 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     ylabel->setMinimumWidth(10);
     ylabel->setMinimumHeight(16);
     m_yRotBox = new RotateDoubleSpinBox;
+
     m_yRotBox->setMaximumWidth(90);
     m_yRotBox->setMaximumHeight(30);
     m_yRotBox->setMinimumWidth(90);
     m_yRotBox->setMinimumHeight(30);
     m_yRotBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
     m_yRotBox->setAutoFillBackground(true);
-    m_yRotBox->setSuffix("°");
+    m_yRotBox->setSuffix(" °");
     m_yRotBox->setDecimals(2);
     m_yRotBox->setMaximum(MAXNUM);
     m_yRotBox->setMinimum(MINNUM);
@@ -128,7 +133,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     QLabel* zLogo = new QLabel;
-    QPixmap zLogoPixmap(":/images/fdm_rotate_z_icon_u.png");
+    static QPixmap zLogoPixmap(":/images/fdm_rotate_z_icon_u.png");
     zLogo->setPixmap(zLogoPixmap);
     zLogo->setScaledContents(true);
     zLogo->setMaximumWidth(30);
@@ -142,13 +147,14 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
     zlabel->setMinimumWidth(10);
     zlabel->setMinimumHeight(16);
     m_zRotBox = new RotateDoubleSpinBox;
+
     m_zRotBox->setMaximumWidth(90);
     m_zRotBox->setMaximumHeight(30);
     m_zRotBox->setMinimumWidth(90);
     m_zRotBox->setMinimumHeight(30);
     m_zRotBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
     m_zRotBox->setAutoFillBackground(true);
-    m_zRotBox->setSuffix("°");
+    m_zRotBox->setSuffix(" °");
     m_zRotBox->setDecimals(2);
     m_zRotBox->setMaximum(MAXNUM);
     m_zRotBox->setMinimum(MINNUM);
@@ -244,6 +250,14 @@ void CHModelRotationTransformParamsSetUI::setOnlyRotateDoubleSpinBox(double x, d
     m_zRotBox->setOnlyValue(z);
 }
 
+void CHModelRotationTransformParamsSetUI::getBoxEditValue(double &x, double &y, double &z)
+{
+    x = m_xRotBox->value();
+    y = m_yRotBox->value();
+    z = m_zRotBox->value();
+}
+
+
 void CHModelRotationTransformParamsSetUI::rotateValuesChangedSlot(double value, RotateChangedType type)
 {
     if(type == RotateChangedType_BoxRotate)
@@ -322,6 +336,18 @@ void RotateDoubleSpinBox::setOnlyValue(double value)
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(rotateValueChangedSlot(double)));
 }
 
+void RotateDoubleSpinBox::keyPressEvent(QKeyEvent *event)
+{
+    if((event->key() == Qt::Key_Plus) || (event->key() == Qt::Key_Minus)){
+        event->ignore();
+    }
+    else
+    {
+        QDoubleSpinBox::keyPressEvent(event);
+    }
+}
+
+
 void RotateDoubleSpinBox::rotateValueChangedSlot(double value, RotateChangedType type)
 {
     if(type == RotateChangedType_BoxRotate)
@@ -341,6 +367,7 @@ void CHModelRotationTransformParamsSetUI::changeEvent(QEvent *e)
             m_rotateLabel->setText(tr("Rotate"));
         }
     }
+    QWidget::changeEvent(e);
 }
 
 bool CHModelRotationTransformParamsSetUI::equalTo180(float value)

@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshmovetransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -33,9 +33,12 @@
 #include "edit_meshtransform_factory.h"
 
 #include "QOpenGLFramebufferObject"
+#include "common/support/supportdata.h"
+#include "common/support/supportmeshfactory.h"
 #include "common/GeoAndShow/AkTransformMath.h"
 #include "common/GeoAndShow/support/SupportAssemblyMeshes.h"
 #include "common/utilities/tlogger.h"
+#include <QTimer>
 
 using namespace vcg;
 
@@ -88,6 +91,17 @@ EditMeshMoveTransformTool::EditMeshMoveTransformTool()
     //m_CoordZToZero = true;
 }
 
+void EditMeshMoveTransformTool::initInMainUI()
+{
+    this->m_paramUI = new CHModelMoveTransformParamsSetUI();
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(this->m_paramUI, AkConst::FDMMeshTransForm::Move);
+    connect(this, &EditMeshMoveTransformTool::sendParamsToGui, this->m_paramUI, &CHModelMoveTransformParamsSetUI::receiveParams);
+    connect(this->m_paramUI, &CHModelMoveTransformParamsSetUI::sendParams, this, &EditMeshMoveTransformTool::receiveParamsFormGui);
+    connect(this->m_paramUI, &CHModelMoveTransformParamsSetUI::reset, this, &EditMeshMoveTransformTool::resetBtnClicked);
+    connect(this->m_paramUI, &CHModelMoveTransformParamsSetUI::lockToPrintPlatformStatusChanged, this, &EditMeshMoveTransformTool::lockToPrintPlatformStatusChanged);
+    m_paramUI->hide();
+}
+
 bool EditMeshMoveTransformTool::startAnkerEdit(ActionEditTool * action, void * arg1, void *arg2)
 {
     AkUtil::TFunction("");
@@ -116,12 +130,11 @@ bool EditMeshMoveTransformTool::startAnkerEdit(ActionEditTool * action, void * a
     m_stepFlag = 0;
     m_pickedObj = 0;
 
-    m_paramUI = new CHModelMoveTransformParamsSetUI();
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Move);
-    connect(this, &EditMeshMoveTransformTool::sendParamsToGui, m_paramUI, &CHModelMoveTransformParamsSetUI::receiveParams);
-    connect(m_paramUI, &CHModelMoveTransformParamsSetUI::sendParams, this, &EditMeshMoveTransformTool::receiveParamsFormGui);
-    connect(m_paramUI, &CHModelMoveTransformParamsSetUI::reset, this, &EditMeshMoveTransformTool::resetBtnClicked);
-    connect(m_paramUI, &CHModelMoveTransformParamsSetUI::lockToPrintPlatformStatusChanged, this, &EditMeshMoveTransformTool::lockToPrintPlatformStatusChanged);
+
+    if(m_paramUI){
+        m_paramUI->show();
+    }
+
     
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
@@ -227,10 +240,9 @@ void EditMeshMoveTransformTool::endAnkerEdit  (ActionEditTool *, void *, void *)
     if(!m_isActivated){return;}
     m_isActivated = false;
 
-    if (m_paramUI)
+    if (this->m_paramUI)
     {
-        delete m_paramUI;
-        m_paramUI = 0;
+        this->m_paramUI->hide();
     }
 
     for (int i = 0; i < m_allPickObjs.size(); i++)
@@ -336,6 +348,14 @@ void EditMeshMoveTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, void
     else if (m_stepFlag == 1) 
     {
         event->accept();
+        bool isWidget = curScene->getCurMouseInWidget(event->pos().x(), event->pos().y());
+        if(!isWidget)
+        {
+            m_stepFlag = 0;
+            m_pickedObj = 0;
+            return;
+        }
+
         QVector3D np, fp;
         curScene->getCurNearFarPoint(event->pos().x(), event->pos().y(), np, fp);
         CHLine3DPtr ray(new CHLine3D);
@@ -389,9 +409,10 @@ void EditMeshMoveTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, void
             
             QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
                 (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
-            qDebug() << "move params: " << (*it)->m_params[6] << ", " << (*it)->m_params[7] << ", " << (*it)->m_params[8];
+
             
             (*it)->setTransform(sumtran1);
+            (*it)->calRealAABB();
             if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
             {
                 operateType = 1;
@@ -446,7 +467,7 @@ void EditMeshMoveTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, void
 void EditMeshMoveTransformTool::mouseReleaseEvent(QMouseEvent  *event, void *, void *)
 {
     AkUtil::TFunction("");
-    if (event->button() == Qt::LeftButton && m_pickedObj)
+    if (event->button() == Qt::LeftButton /*&& m_pickedObj*/)
     {
         CHAABB3D aabb;
         for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
@@ -456,18 +477,12 @@ void EditMeshMoveTransformTool::mouseReleaseEvent(QMouseEvent  *event, void *, v
         
         if (m_lockToPrintPlatform && !std::dynamic_pointer_cast<SupportMesh>(*m_editMeshModels.begin()))
         {
-            
-            //for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-            //{
-            //	aabb.add((*it)->calRealAABB());
-            //}
             float moveZ = -aabb.m_Zmin;
 
             for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
             {
                 (*it)->m_params[8] = (*it)->m_params[8] + moveZ;
 
-                //?????????
                 (*it)->m_realAABB.m_Zmin += moveZ;
                 (*it)->m_realAABB.m_Zmax += moveZ;
 
@@ -494,10 +509,6 @@ void EditMeshMoveTransformTool::mouseReleaseEvent(QMouseEvent  *event, void *, v
         for (int i = 0; i < m_allPickObjs.size(); i++)
         {
             m_allPickObjs[i]->setStatus(general);
-            /*if (dynamic_pointer_cast<CHAssembly>(m_allPickObjs[i]))
-            {
-                dynamic_pointer_cast<CHAssembly>(m_allPickObjs[i])->injectPropertiesToChildren();
-            }*/
         }
         for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
         {
@@ -534,14 +545,12 @@ void EditMeshMoveTransformTool::mouseReleaseEvent(QMouseEvent  *event, void *, v
                         supportMesh->m_params[7] = offset[1];
                         supportMesh->m_params[8] = offset[2];
                     }
-                }
-                //printModel->isSceneIn(printModel->getRealAABB(), getDoc()->m_machineBox->getBaseAABB());
+                }               
             }
         }
         emit getDoc()->modelCheckSceneInChanged();
         curScene->refresh();
     }
-
 }
 
 void EditMeshMoveTransformTool::resetBtnClicked()
@@ -555,7 +564,7 @@ void EditMeshMoveTransformTool::resetBtnClicked()
         }
         (*bIt)->resetMove();
     }
-
+    bool lockToPrintPlatform = m_lockToPrintPlatform;
     std::vector<double> params(3);
     if(m_editMeshModels.size() == 1)
     {
@@ -565,14 +574,22 @@ void EditMeshMoveTransformTool::resetBtnClicked()
         params[1] = m_firstMesh->m_params[7] + m_firstMesh->m_rotCenter[1];
         params[2] = m_firstMesh->m_params[8] + m_firstMesh->m_rotCenter[2] - m_firstMesh->m_baseAABB.getLenZ() / 2;
         qDebug() << "params: " << params[0] << ",  " << params[1] << ",  " << params[2];
+        //m_lockToPrintPlatform = true;
+        emit sendParamsToGui(params, MoveChangedType_ResetMove);
+        //m_lockToPrintPlatform = lockToPrintPlatform;
     }
     else if(m_editMeshModels.size() > 1)
     {
-        params[0] = m_firstMesh->m_params[6] - m_initValues[0][0];
-        params[1] = m_firstMesh->m_params[7] - m_initValues[0][1];
-        params[2] = m_firstMesh->m_params[8] - m_initValues[0][2];
+//        params[0] = m_firstMesh->m_params[6] - m_initValues[0][0];
+//        params[1] = m_firstMesh->m_params[7] - m_initValues[0][1];
+//        params[2] = m_firstMesh->m_params[8] - m_initValues[0][2];
+        m_lockToPrintPlatform = true;
+        resetSelectedMoveObjsClicked();
+        curScene->refresh();
+        submitToUI();
+        m_lockToPrintPlatform = lockToPrintPlatform;
     }
-    emit sendParamsToGui(params, MoveChangedType_ResetMove);
+
 }
 
 void EditMeshMoveTransformTool::resetSelectedObjsClicked()
@@ -587,6 +604,29 @@ void EditMeshMoveTransformTool::lockToPrintPlatformStatusChanged()
     AkUtil::TFunction("");
     if (m_lockToPrintPlatform)
     {
+        for(auto it = getDoc()->m_printObjs.begin(); it != getDoc()->m_printObjs.end(); it++)
+        {
+            if((*it)->getStatus() != selected)
+            {
+                CHAABB3D tmpAABB = (*it)->calRealAABB();
+                float tmpZ = -tmpAABB.getLeftDownPoint().z();
+                (*it)->m_params[8] = (*it)->m_params[8] + tmpZ;
+                (*it)->m_realAABB.m_Zmin += tmpZ;
+                (*it)->m_realAABB.m_Zmax += tmpZ;
+                
+                QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
+                                                                                    (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
+
+                
+                (*it)->setTransform(sumtran1);
+                if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+                {
+                    SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+                    supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+                }
+            }
+        }
+
         CHAABB3D aabb;
         for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
         {
@@ -765,13 +805,27 @@ void EditMeshMoveTransformTool::refreshMoveFrame()
     {
         return;
     }
-    QMatrix4x4 tran;
-    tran.translate(QVector3D(m_firstMesh->m_params[6], m_firstMesh->m_params[7], m_firstMesh->m_params[8]) -
-        QVector3D(m_initValues[0][0], m_initValues[0][1], m_initValues[0][2]));
-    m_adjustAxisX->setTransform(tran);
-    m_adjustAxisY->setTransform(tran);
-    m_adjustAxisZ->setTransform(tran);
-    m_adjustOrigin->setTransform(tran);
+    CHAABB3D aabb;
+    for(std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        aabb.add((*it)->m_realAABB);
+    }
+    QVector3D center = aabb.getCenterPoint();
+    QVector3D curOrigin = m_adjustOrigin->getCurrentCoord();
+    QVector3D offset = center - curOrigin;
+
+    QMatrix4x4 trans;
+//    tran.translate(QVector3D(m_firstMesh->m_params[6], m_firstMesh->m_params[7], m_firstMesh->m_params[8]) -
+//        QVector3D(m_initValues[0][0], m_initValues[0][1], m_initValues[0][2]));
+//    m_adjustAxisX->setTransform(tran);
+//    m_adjustAxisY->setTransform(tran);
+//    m_adjustAxisZ->setTransform(tran);
+//    m_adjustOrigin->setTransform(tran);
+    trans.translate(offset);
+    m_adjustAxisX->setTransform(trans);
+    m_adjustAxisY->setTransform(trans);
+    m_adjustAxisZ->setTransform(trans);
+    m_adjustOrigin->setTransform(trans);
 }
 
 void EditMeshMoveTransformTool::submitToUI()
@@ -790,6 +844,61 @@ void EditMeshMoveTransformTool::submitToUI()
         params[2] = m_firstMesh->m_params[8] - m_initValues[0][2];
     }
     emit sendParamsToGui(params);
+}
+
+void EditMeshMoveTransformTool::resetSelectedMoveObjsClicked()
+{
+    for(std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        (*it)->resetMove();
+        
+        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
+            (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params));
+        if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+        {
+            SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+            supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+        }
+        CH3DPrintModelPtr printModel = std::dynamic_pointer_cast<CH3DPrintModel>((*it));
+        if (printModel != nullptr)
+        {
+            QVector3D position, scale;
+            QQuaternion orientation;
+            double pitch, yaw, roll;
+            for (int i = 0; i < printModel->m_supportMeshes.size(); i++)
+            {
+                SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(printModel->m_supportMeshes[i]);
+                if (supportMesh != nullptr)
+                {
+                    supportMesh->setTransform(printModel->getTransform() * supportMesh->getLocalTransform());
+                    
+                    AkTransformMath::decomposeQMatrix4x4(supportMesh->getTransform(), position, orientation, scale);
+                    QMatrix4x4 tmpRotMat(orientation.toRotationMatrix());
+                    CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(tmpRotMat, pitch, yaw, roll);
+                    
+                    pitch = pitch / CH_PI * 180.0;
+                    yaw = yaw / CH_PI * 180.0;
+                    roll = roll / CH_PI * 180.0;
+                    supportMesh->m_params[0] = scale[0];
+                    supportMesh->m_params[1] = scale[1];
+                    supportMesh->m_params[2] = scale[2];
+                    supportMesh->m_params[3] = pitch;
+                    supportMesh->m_params[4] = yaw;
+                    supportMesh->m_params[5] = roll;
+
+                    QVector3D newCenter = supportMesh->getTransform() * supportMesh->m_rotCenter;
+                    QVector3D offset = newCenter - supportMesh->m_rotCenter;
+                    supportMesh->m_params[6] = offset[0];
+                    supportMesh->m_params[7] = offset[1];
+                    supportMesh->m_params[8] = offset[2];
+                }
+            }
+        }
+        (*it)->calRealAABB();
+    }
+    refreshMoveFrame();
+    emit getDoc()->modelCheckSceneInChanged();
+    emit getDoc()->modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
 }
 
 

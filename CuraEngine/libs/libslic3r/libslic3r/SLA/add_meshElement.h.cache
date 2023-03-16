@@ -1,0 +1,2 @@
+void add_meshElement(MeshTypeElement meshtype, std::vector<void* >inputdatas, std::vector<TriangleMesh*>& triangleMeshes);
+/// The class containing mesh data for the generated supports.

@@ -8,55 +8,57 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     QWidget(parent),
     model(new ParamListModel),
     treeModel(new FdmSettingsTreeModel),
-    m_toolTip(new ToolTip()),
+    m_toolTip(nullptr),
     m_timer(new QTimer(this))
 {
     connect(m_timer,&QTimer::timeout,this,&FdmParamSettingsWidget::showBubbleTip);
-    //QQuickView  *quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
 
-    QQuickWidget  *quickView = new QQuickWidget(FdmQmlEngine::instance(),this);
-   // QWidget *widget = QWidget::createWindowContainer(quickView,this);
-    quickView->setResizeMode(QQuickWidget::SizeRootObjectToView);
-
+    m_quickView = new QQuickWidget(FdmQmlEngine::instance(),nullptr);
+    m_quickView->setResizeMode(QQuickWidget::SizeRootObjectToView);
+#ifdef Q_OS_WIN
+    QSurfaceFormat format;
+    format.setSamples(16);
+    m_quickView->setFormat(format);
+#endif
     
-    //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
-    QString anker_expert = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/anker_expert.cfg");
+    QString anker_expert = ":/qml/back_logic/anker_expert.cfg"; //  @2023-02-23 by ChunLian
 
     reload(anker_expert);
-    quickView->engine()->rootContext() ->setContextProperty("paramModel", model);
-    quickView->engine()->rootContext() ->setContextProperty("FdmParamSettingsWidget", this);
+    m_quickView->engine()->rootContext() ->setContextProperty("paramModel", model);
+    m_quickView->engine()->rootContext() ->setContextProperty("FdmParamSettingsWidget", this);
     auto  parameter = FdmRightParameterService::instance();
 
-    quickView->engine()->rootContext() ->setContextProperty("rightParameter", parameter);
+    m_quickView->engine()->rootContext() ->setContextProperty("rightParameter", parameter);
 
-    quickView->setSource(QUrl::fromLocalFile(":/qml/FdmParameter/SettingView.qml"));
+    m_quickView->setSource(QUrl::fromLocalFile(":/qml/FdmParameter/SettingView.qml"));
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlSettingCurrentMachineChanged(QString)),parameter,SLOT(onMachineNameChanged(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlSettingCurrentMaterialChanged(QString)),parameter,SLOT(onMaterialNameChanged(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlSettingCurrentParameterChanged(QString)),parameter,SLOT(onCurrentSelectedNameChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMachineChanged(QString)),parameter,SLOT(onMachineNameChanged(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMaterialChanged(QString)),parameter,SLOT(onMaterialNameChanged(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentParameterChanged(QString)),parameter,SLOT(onCurrentSelectedNameChanged(QString)), Qt::QueuedConnection);
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlOpenMachinePreference(QString)),this,SLOT(openMachinePreference(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlOpenMaterialPreference(QString)),this,SLOT(openMaterialPreference(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlOpenParameterPreference(QString)),this,SLOT(openParameterPreference(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMachinePreference(QString)),this,SLOT(openMachinePreference(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMaterialPreference(QString)),this,SLOT(openMaterialPreference(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenParameterPreference(QString)),this,SLOT(openParameterPreference(QString)), Qt::QueuedConnection);
 
     connect(this,SIGNAL(currentIndexClicked(AkConst::EWidgetType,QString)),parameter,SLOT(onSetBtnClicked(AkConst::EWidgetType,QString)));
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlResetParameter()),this,SLOT(resertButtonClicked()));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlResetParameter()),this,SLOT(resertButtonClicked()));
 
-     connect(this,SIGNAL(resertParameter()),parameter,SLOT(onResetBtnClicked()));
+    connect(this,SIGNAL(resertParameter()),parameter,SLOT(onResetBtnClicked()));
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlAiQualityCurrentIdxChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlLayerHeightCurrentIndexChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlInfillCurrentIndexChanged(int)),parameter,SLOT(onAiInfillDensityIdxChanged(int)));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlGlobalSupportChanged(int)),parameter,SLOT(onGlobalSupportStateChanged(int)));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlGenerateAdhesionChanged(int)),parameter,SLOT(onGenerateAdhesionStateChanged(int)));
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlNozzleSizeCurrentIndexChanged(QString)),parameter,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlAiQualityCurrentIdxChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlLayerHeightCurrentIndexChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlInfillCurrentIndexChanged(int)),parameter,SLOT(onAiInfillDensityIdxChanged(int)));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGlobalSupportChanged(int)),parameter,SLOT(onGlobalSupportStateChanged(int)));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGenerateAdhesionChanged(int)),parameter,SLOT(onGenerateAdhesionStateChanged(int)));
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeCurrentIndexChanged(QString)),parameter,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
     //layout->setc(0);
     this->setLayout(layout);
-    layout->addWidget(quickView);
+    //QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
+    layout->addWidget(m_quickView);
 }
 
 FdmParamSettingsWidget::~FdmParamSettingsWidget()
@@ -65,9 +67,11 @@ FdmParamSettingsWidget::~FdmParamSettingsWidget()
         delete  model;
         model = nullptr;
     }
+    if(m_toolTip) {
+        delete   m_toolTip ;
+    }
 }
 
-//":/curadef/setting_visibility/anker_expert.cfg"
 void FdmParamSettingsWidget::reload(const QString &fileName)
 {
     QList<FdmParamNode *> configList = FdmQmlSourceTree::instance().loadParamList(fileName);
@@ -79,18 +83,64 @@ void FdmParamSettingsWidget::reload(const QString &fileName)
 
 void FdmParamSettingsWidget::showToolTip(const QString &titlte, const QString &description, const QString &affects, const QString &affectedBy, QPoint point)
 {
-   // qDebug() << "description == " << description << "affects ==" << affects << "affectedBy ==" << affectedBy << "point =" << point;
+   //qDebug() << "description == " << description << "affects ==" << affects << "affectedBy ==" << affectedBy << "point =" << point;
     m_timer->start(1000);
     m_point = point;
-    m_toolTip->setDescription(titlte, description, affects, affectedBy);
+    m_titlte =titlte;
+    m_description = description;
+    m_affects = affects;
+    m_affectedBy = m_affectedBy;
 }
 
 void FdmParamSettingsWidget::hideToolTip()
 {
     m_timer->stop();
-    m_toolTip->hide();
+    if(m_toolTip) {
+        m_toolTip->hide();
+        delete m_toolTip;
+        m_toolTip = nullptr;
+    }
 }
 
+void FdmParamSettingsWidget::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::LanguageChange) {
+        if (m_quickView) {
+            auto parameter = FdmRightParameterService::instance();
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMachineChanged(QString)),parameter,SLOT(onMachineNameChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMaterialChanged(QString)),parameter,SLOT(onMaterialNameChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentParameterChanged(QString)),parameter,SLOT(onCurrentSelectedNameChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMachinePreference(QString)),this,SLOT(openMachinePreference(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMaterialPreference(QString)),this,SLOT(openMaterialPreference(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenParameterPreference(QString)),this,SLOT(openParameterPreference(QString)));
+            disconnect(this,SIGNAL(currentIndexClicked(AkConst::EWidgetType,QString)),parameter,SLOT(onSetBtnClicked(AkConst::EWidgetType,QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlResetParameter()),this,SLOT(resertButtonClicked()));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlAiQualityCurrentIdxChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlLayerHeightCurrentIndexChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlInfillCurrentIndexChanged(int)),parameter,SLOT(onAiInfillDensityIdxChanged(int)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGlobalSupportChanged(int)),parameter,SLOT(onGlobalSupportStateChanged(int)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGenerateAdhesionChanged(int)),parameter,SLOT(onGenerateAdhesionStateChanged(int)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeCurrentIndexChanged(QString)),parameter,SLOT(onNozzleSizeChanged(QString)));
+            m_quickView->source().clear();
+            m_quickView->setSource(QUrl::fromLocalFile(":/qml/FdmParameter/SettingView.qml"));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMachineChanged(QString)),parameter,SLOT(onMachineNameChanged(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentMaterialChanged(QString)),parameter,SLOT(onMaterialNameChanged(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlSettingCurrentParameterChanged(QString)),parameter,SLOT(onCurrentSelectedNameChanged(QString)), Qt::QueuedConnection);
+
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMachinePreference(QString)),this,SLOT(openMachinePreference(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenMaterialPreference(QString)),this,SLOT(openMaterialPreference(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlOpenParameterPreference(QString)),this,SLOT(openParameterPreference(QString)), Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlResetParameter()),this,SLOT(resertButtonClicked()));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlAiQualityCurrentIdxChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlLayerHeightCurrentIndexChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlInfillCurrentIndexChanged(int)),parameter,SLOT(onAiInfillDensityIdxChanged(int)));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGlobalSupportChanged(int)),parameter,SLOT(onGlobalSupportStateChanged(int)));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlGenerateAdhesionChanged(int)),parameter,SLOT(onGenerateAdhesionStateChanged(int)));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlNozzleSizeCurrentIndexChanged(QString)),parameter,SLOT(onNozzleSizeChanged(QString)), Qt::QueuedConnection);
+        }
+    }
+    QWidget::changeEvent(event);
+}
 
 void FdmParamSettingsWidget::openMachinePreference(const QString &name)
 {
@@ -127,9 +177,10 @@ void FdmParamSettingsWidget::resertButtonClicked()
 
 void FdmParamSettingsWidget::showBubbleTip()
 {
-    if(!m_toolTip->isHidden()) {
-        return;
+    if(!m_toolTip) {
+        m_toolTip = new ToolTip();
     }
+    m_toolTip->setDescription(m_titlte, m_description, m_affects, m_affectedBy);
     QPoint globalP =  mapToGlobal(QPoint( 0,0));
     int maxY = this->parentWidget()->height() + globalP.y();
     m_toolTip->setPoint(m_point,maxY);

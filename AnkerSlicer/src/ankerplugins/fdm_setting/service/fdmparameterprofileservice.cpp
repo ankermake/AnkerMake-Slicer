@@ -74,7 +74,14 @@ QStringList FdmParameterProfileService::getMachineList()
 
 QStringList FdmParameterProfileService::getMaterialList() 
 {
-    return FdmMaterialProfileManager::Instance().getAllProfileNameList();
+    QStringList resultList;
+    QStringList list =  FdmMaterialProfileManager::Instance().getAllProfileNameList();
+    resultList << list;
+    if (getNozzleSize() == AkConst::NozzleSizeName::SIZE8)
+    {
+        resultList.removeOne(AkConst::MaterialName::TPU);
+    }
+    return resultList;
 }
 
 
@@ -131,7 +138,9 @@ void FdmParameterProfileService::onMachineNameChanged(const QString name)
     {
         return;
     }
-    m_currentProfile->setStatus(EProfileStatus::NodeValueChanged);
+    //m_currentProfile->setStatus(EProfileStatus::NodeValueChanged);
+    m_currentProfile->setModifyTimeNow();
+    m_currentProfile->addStatus(EProfileStatus::NodeValueChangedManually);
     
     if (m_currentProfileName != AkConst::ProfileName::EXPERT_MODE)
     {
@@ -152,7 +161,9 @@ void FdmParameterProfileService::onMaterialNameChanged(const QString name)
     {
         return;
     }
-    m_currentProfile->setStatus(EProfileStatus::NodeValueChanged);
+    //m_currentProfile->setStatus(EProfileStatus::NodeValueChanged);
+    m_currentProfile->setModifyTimeNow();
+    m_currentProfile->addStatus(EProfileStatus::NodeValueChangedManually);
 
     
     if (m_currentProfileName != AkConst::ProfileName::EXPERT_MODE)
@@ -165,6 +176,7 @@ void FdmParameterProfileService::onMaterialNameChanged(const QString name)
         m_currentMaterialName = name;
         selectProfile(m_currentProfileName);
     }
+    emit nozzleSizeListChanged();
 }
 
 void FdmParameterProfileService::deleteCustomParameter(QString parameterName)
@@ -234,14 +246,34 @@ void FdmParameterProfileService::onImportBtnClicked(QString profileFullName)
     auto newProfile = FdmParameterProfileManager::Instance().createProfile(vaildName, rawContent);
 
     
-    auto meterialName = newProfile->getMaterialName();
-    auto meterialProfile = FdmMaterialProfileManager::Instance().getProfileByName(meterialName);
-    if (!meterialName.isEmpty() && meterialProfile == nullptr)
+    auto materialName = newProfile->getMaterialName();
+    auto meterialProfile = FdmMaterialProfileManager::Instance().getProfileByName(materialName);
+    if (!materialName.isEmpty() && meterialProfile == nullptr)
     {
         QList<FdmProfileCategory> categories;
         auto pCategory = newProfile->getCategory(AkConst::Category::MATERIAL);
-        if (pCategory != nullptr) { categories.push_back(*pCategory); }
-        auto newMateiralProfile = FdmMaterialProfileManager::Instance().createProfile(meterialName, categories);
+        
+        
+        //if (pCategory != nullptr) { categories.push_back(*pCategory); }
+        auto materialProfileTemplate = FdmMaterialProfileManager::Instance().getProfileByName(AkConst::MaterialName::PLAPLUS);
+        if (pCategory != nullptr) {
+            FdmProfileCategory materialCategory;
+            materialCategory.name = pCategory->name;
+            const QList<FdmSettingItem>& items = pCategory->getItems();
+            for (size_t i = 0; i < items.size(); i++)
+            {
+                
+                if (materialProfileTemplate->getSetting(pCategory->name, items[i].name).isValid())
+                {
+                    materialCategory.set(items[i].name,items[i].value);
+                }
+            }
+            categories.push_back(materialCategory);
+        }
+
+        //materialProfileTemplate->getSetting(AkConst::Category::MATERIAL,)
+        //if (pCategory != nullptr) { categories.push_back(*pCategory); }
+        auto newMateiralProfile = FdmMaterialProfileManager::Instance().createProfile(materialName, categories);
         newMateiralProfile->setVisible(true);
     }
 
@@ -252,9 +284,28 @@ void FdmParameterProfileService::onImportBtnClicked(QString profileFullName)
     {
         QList<FdmProfileCategory> categories;
         auto pCategory = newProfile->getCategory(AkConst::Category::MACHINE_SETTINGS);
-        if (pCategory != nullptr) { categories.push_back(*pCategory); }
-        auto pExtruderCategory = newProfile->getCategory(AkConst::Category::EXTRUDER_SETTINGS);
-        if (pExtruderCategory != nullptr) { categories.push_back(*pExtruderCategory); }
+
+        
+        
+        //if (pCategory != nullptr) { categories.push_back(*pCategory); }
+        //auto pExtruderCategory = newProfile->getCategory(AkConst::Category::EXTRUDER_SETTINGS);
+        //if (pExtruderCategory != nullptr) { categories.push_back(*pExtruderCategory); }
+        auto machineProfileTemplate = FdmMachineProfileManager::Instance().getProfileByName(AkConst::MachineName::M5);
+        if (pCategory != nullptr) {
+            FdmProfileCategory machineCategory;
+            machineCategory.name = pCategory->name;
+            const QList<FdmSettingItem>& items = pCategory->getItems();
+            for (size_t i = 0; i < items.size(); i++)
+            {
+                
+                if (machineProfileTemplate->getSetting(pCategory->name, items[i].name).isValid())
+                {
+                    machineCategory.set(items[i].name,items[i].value);
+                }
+            }
+            categories.push_back(machineCategory);
+        }
+
         auto newMahchineProfile = FdmMachineProfileManager::Instance().createProfile(machineName, categories);
         newMahchineProfile->setVisible(true);
     }
@@ -399,6 +450,11 @@ void FdmParameterProfileService::setCurrentMaterial(QString name)
     m_currentMaterialName = name;
 }
 
+void FdmParameterProfileService::setNozzleSize(double nozzleSize)
+{
+    m_nozzleSize = nozzleSize;
+}
+
 
 void FdmParameterProfileService::currentParameterChanged(QString parameterName)
 {
@@ -433,6 +489,7 @@ void FdmParameterProfileService::selectProfile(QString name)
     {
         return;
     }
+    bool getExpertSuccess = false;
     
     if (m_currentProfileName == AkConst::ProfileName::EXPERT_MODE
         || m_currentProfileName == AkConst::ProfileName::SIMPLE_MODE)
@@ -446,10 +503,7 @@ void FdmParameterProfileService::selectProfile(QString name)
         {
             m_currentMaterialName = AkConst::MaterialName::PLAPLUS;
         }
-
-        
-
-        m_currentProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_currentMachineName, m_currentMaterialName);
+        m_currentProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_currentMachineName, m_currentMaterialName, m_nozzleSize,getExpertSuccess);
     }
     else
     {
@@ -464,6 +518,7 @@ void FdmParameterProfileService::selectProfile(QString name)
     
     m_currentMachineName = m_currentProfile->getMachineName();
     m_currentMaterialName = m_currentProfile->getMaterialName();
+    m_nozzleSize = m_currentProfile->getNozzleSize();
 
     
     emit ParameterSelected(name);
@@ -507,6 +562,14 @@ void FdmParameterProfileService::selectProfile(QString name)
     
 
     
+    if ((m_currentProfileName == AkConst::ProfileName::EXPERT_MODE
+             || m_currentProfileName == AkConst::ProfileName::SIMPLE_MODE)
+         && !getExpertSuccess)
+    {
+        selectNozzle(m_nozzleSize);
+    }
+
+    
     refreshUI();
 }
 
@@ -534,6 +597,24 @@ void FdmParameterProfileService::selectMachine(QString name)
     emit machineNameChanged();
     emit extruderCountChanged();
 }
+
+
+void FdmParameterProfileService::selectNozzle(double nozzleSize)
+{
+    m_nozzleSize = nozzleSize;
+
+    
+    FdmQmlTreeApi& preferenceTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Preference();
+    QList<FdmProfileCategory> categorys;
+    FdmProfileCategory category;
+    category.name = AkConst::Category::EXTRUDER_SETTINGS;
+    category.set(AkConst::SettingKey::MACHINE_NOZZLE_SIZE, m_nozzleSize);
+    categorys.append(category);
+    preferenceTree.setAny(categorys);
+
+    emit nozzleSizeChanged();
+}
+
 
 void FdmParameterProfileService::selectMaterial(QString name)
 {
@@ -606,6 +687,31 @@ void FdmParameterProfileService::onExtruderSwitched(int extruderIdx)
 //}
 
 
+void FdmParameterProfileService::allProfileDoMachineRenamed(QString oldName, QString newName)
+{
+    auto profiles = FdmParameterProfileManager::Instance().getVisiableCustomProfiles();
+    foreach(const auto profile, profiles)
+    {
+        if (profile->getMachineName() == oldName)
+        {
+            profile->setMachineName(newName);
+        }
+    }
+}
+
+void FdmParameterProfileService::allProfileDoMaterialRenamed(QString oldName, QString newName)
+{
+    auto profiles = FdmParameterProfileManager::Instance().getVisiableCustomProfiles();
+    foreach(const auto profile, profiles)
+    {
+        if (profile->getMaterialName() == oldName)
+        {
+            profile->setMaterialName(newName);
+        }
+    }
+}
+
+
 void FdmParameterProfileService::doCustomMachineRenamed(QString oldName, QString newName)
 {
     if (m_currentMachineName != oldName)
@@ -614,6 +720,7 @@ void FdmParameterProfileService::doCustomMachineRenamed(QString oldName, QString
     }
     m_currentMachineName = newName;
     emit machineNameChanged();
+    allProfileDoMachineRenamed(oldName,newName);
 }
 
 void FdmParameterProfileService::doCustomMachineDeleted(QString name)
@@ -634,6 +741,7 @@ void FdmParameterProfileService::doCustomMaterialRenamed(QString oldName, QStrin
     }
     m_currentMaterialName = newName;
     emit materialNameChanged();
+    allProfileDoMaterialRenamed(oldName,newName);
 }
 
 void FdmParameterProfileService::doCustomMaterialDeleted(QString name)
@@ -654,6 +762,83 @@ void FdmParameterProfileService::doOperateComplete()
     emit allParameterListChanged();
 }
 
+
+
+QString FdmParameterProfileService::getNozzleSize()
+{
+    //QString defaultValue = AkConst::NozzleSizeName::SIZE4;
+    ////auto realtimeProfile = FdmParameterProfileManager::Instance().getRightRealTimeProfile();
+    //auto machineNozzleSize = m_currentProfile->getSetting(AkConst::Category::EXTRUDER_SETTINGS, AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
+    //if (machineNozzleSize.isNull())
+    //{
+    //    return defaultValue;
+
+    int nozzleSize = (int)(m_nozzleSize * 10);
+    switch (nozzleSize) {
+        case 2: return AkConst::NozzleSizeName::SIZE2;
+        case 4: return AkConst::NozzleSizeName::SIZE4;
+        case 6: return AkConst::NozzleSizeName::SIZE6;
+        case 8: return AkConst::NozzleSizeName::SIZE8;
+        default: return AkConst::NozzleSizeName::SIZE4;
+    }
+}
+
+
+QStringList FdmParameterProfileService::getNozzleSizeList()
+{
+//    QStringList resultList;
+//    resultList << AkConst::NozzleSizeName::SIZE4;
+//    return resultList;
+//    QStringList resultList;
+//    resultList << AkConst::NozzleSizeName::SIZE2;
+//    resultList << AkConst::NozzleSizeName::SIZE4;
+//    resultList << AkConst::NozzleSizeName::SIZE6;
+//    resultList << AkConst::NozzleSizeName::SIZE8;
+//    return resultList;
+
+    QStringList resultList;
+    resultList << AkConst::NozzleSizeName::SIZE2;
+    resultList << AkConst::NozzleSizeName::SIZE4;
+    resultList << AkConst::NozzleSizeName::SIZE6;
+    
+    if (getMaterialName() != AkConst::MaterialName::TPU)
+    {
+         resultList << AkConst::NozzleSizeName::SIZE8;
+    }
+    return resultList;
+}
+
+
+void FdmParameterProfileService::onNozzleSizeChanged(const QString name)
+{
+    //qDebug() << " FdmParameterProfileService ==" <<name;
+    QString nozzleSizeStr  =name;
+    if (nozzleSizeStr.isEmpty())
+    {
+        nozzleSizeStr = AkConst::NozzleSizeName::SIZE4;
+    }
+    
+    auto valueList = nozzleSizeStr.split(" ");
+    if (valueList[0].isEmpty())
+    {
+        return;
+    }
+    m_nozzleSize = valueList[0].toDouble();
+
+    
+    if (m_currentProfileName != AkConst::ProfileName::EXPERT_MODE
+        && m_currentProfileName != AkConst::ProfileName::SIMPLE_MODE)
+    {
+        selectNozzle(m_nozzleSize);
+    }
+    
+    else
+    {
+        selectProfile(m_currentProfileName);
+    }
+    
+    emit materialListChanged();
+}
 //
 //void FdmParameterProfileService::onExtruderSwitched(int extruderIdx, FdmQmlTreeApi & treeApi)
 //{
@@ -695,4 +880,6 @@ void FdmParameterProfileService::refreshUI()
     emit materialListChanged();
     emit extruderCountChanged();
     emit allParameterListChanged();
+    emit nozzleSizeChanged();
+    emit nozzleSizeListChanged();
 }

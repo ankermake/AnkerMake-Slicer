@@ -11,10 +11,18 @@
 #include "CHBase.h"
 #include "QVector3D"
 
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 DEF_PTR(CHLine3D)
-class CHLine3D
+class COMMONLIB_EXPORT CHLine3D
 {
 public:
 	CHLine3D();

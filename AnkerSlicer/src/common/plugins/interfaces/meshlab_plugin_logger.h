@@ -41,7 +41,7 @@
  * that should be able to log, but the EditTool class (the EditPlugin class is a
  * "container" of EditTools).
  */
-class MeshLabPluginLogger
+class COMMONLIB_EXPORT MeshLabPluginLogger
 {
 public:
 	MeshLabPluginLogger();

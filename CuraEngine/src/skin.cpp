@@ -14,7 +14,9 @@
 #include "utils/math.h"
 #include "utils/polygonUtils.h"
 
+
 #define MIN_AREA_SIZE (0.4 * 0.4)
+#define MIN_TOP_SURFACE_SIZE (5*5)
 
 namespace cura
 {
@@ -338,6 +340,59 @@ void SkinInfillAreaComputation::applySkinExpansion(const Polygons& original_outl
  */
 void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerPart* part)
 {
+    if (mesh.settings.get<bool>("top_surface_one_wall"))
+    {
+        //SkinPart skin_part_union;
+        SkinPart skin_polygons_union;
+        for (auto it = part->skin_parts.begin(); it != part->skin_parts.end();)
+        {   
+            //2022/11/07 top_surface Binary: Top skin not need insets,
+            auto poly = Polygons();
+            auto uplaye_part_wall = Polygons();
+
+            if (layer_nr < mesh.layers.size() - 1)
+            {
+                uplaye_part_wall = getWalls(*part, layer_nr + 1, 2).offset(-2*mesh.settings.get<coord_t>("wall_line_width_0"));
+                uplaye_part_wall = uplaye_part_wall.offset(2 * mesh.settings.get<coord_t>("wall_line_width_0"));//
+
+                poly = it->outline.difference(mesh.layers[layer_nr + 1].getOutlines());
+            }
+            if ((poly.size() > 0 || layer_nr == mesh.layers.size() - 1))
+            {
+                auto surfacePoly = part->outline.difference(uplaye_part_wall).offset(-mesh.settings.get<coord_t>("wall_line_width_0"));
+                //surfacePoly = surfacePoly.offset(-mesh.settings.get<coord_t>("wall_line_width_0"));
+
+                surfacePoly.removeSmallAreas(MIN_TOP_SURFACE_SIZE);
+
+                
+                skin_polygons_union.outline.add(surfacePoly);
+                it = part->skin_parts.erase(it);
+
+                
+                size_t wall_count = mesh.settings.get<size_t>("wall_line_count");
+                for (size_t wall_no = 1; wall_no < wall_count; ++wall_no)
+                {
+                    //inner wall cut the skin_part areas
+                   // auto polys = part->insets[wall_no].difference(skin_part.outline.offset(skin_outline_offset));
+                    auto polys = part->insets[wall_no].difference(surfacePoly.offset(wall_no*(mesh.settings.get<coord_t>("wall_line_width_x"))));
+                    polys.removeSmallAreas(MIN_AREA_SIZE);                   
+                    part->insets[wall_no].clear();
+                    part->insets[wall_no].add(polys);
+                }
+                continue;
+            }
+            ++it;
+        }
+        //skin_part_union.outline.unionPolygons();
+        if (skin_polygons_union.outline.size() > 0)
+        {
+            SkinPart pp;
+            
+            pp.outline.add(skin_polygons_union.outline.unionPolygons());
+            part->skin_parts.push_back(pp);
+        }
+
+    }
     for (SkinPart& skin_part : part->skin_parts)
     {
         // Do not generate insets if the Bottom Pattern Initial Layer (for layer 0) and the Top/Bottom Layer Pattern
@@ -345,7 +400,18 @@ void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerP
         if ((layer_nr == 0 && mesh.settings.get<EFillMethod>("top_bottom_pattern_0") != EFillMethod::CONCENTRIC)
             || (layer_nr > 0 && mesh.settings.get<EFillMethod>("top_bottom_pattern") != EFillMethod::CONCENTRIC))
         {
-            generateSkinInsets(skin_part);
+            //2022/11/07 top_surface Binary: Top skin not need insets,
+            auto poly = Polygons();
+            if (layer_nr < mesh.layers.size() - 1)
+            {
+                poly = skin_part.outline.difference(mesh.layers[layer_nr+1].getOutlines());
+            }
+            //if((layer_nr<mesh.layers.size() && (poly.size()==0))
+            //    ||!mesh.settings.get<bool>("top_surface_one_wall"))
+            if (!(mesh.settings.get<bool>("top_surface_one_wall") && (poly.size() > 0 || layer_nr == mesh.layers.size() - 1)))
+            {
+                generateSkinInsets(skin_part);
+            }
         }
         generateInnerSkinInfill(skin_part);
     }

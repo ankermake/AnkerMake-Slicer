@@ -2,7 +2,7 @@
 #define SUPPORTSPHERE_H
 #include "SupportMesh.h"
 
-class SupportSphere : public SupportMesh
+class COMMONLIB_EXPORT SupportSphere : public SupportMesh
 {
 public:
     SupportSphere();

@@ -119,7 +119,12 @@ void CHShowObj::setStatus(ObjStatus status)
 
 ObjStatus CHShowObj::getStatus()
 {
-	return m_status;
+    return m_status;
+}
+
+void CHShowObj::setPickPriority(PickPriority priority)
+{
+    m_priority = priority;
 }
 
 PickPriority CHShowObj::getPickPriority()

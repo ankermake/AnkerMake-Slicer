@@ -26,7 +26,7 @@
 
 #include "meshlab_plugin_logger.h"
 #include "meshlab_plugin.h"
-#include "../../ml_shared_data_context/ml_scene_gl_shared_data_context.h"
+//#include "../../ml_shared_data_context/ml_scene_gl_shared_data_context.h"
 
 /**
  * @brief The RenderPlugin class is used to customize the rendering 
@@ -48,7 +48,6 @@
  * }
  */
 
-class GLArea;
 
 class RenderPlugin : virtual public MeshLabPlugin, virtual public MeshLabPluginLogger
 {
@@ -59,9 +58,9 @@ public:
 	virtual bool isSupported() = 0;
 	virtual QList<QAction *> actions() = 0;
 
-	virtual void init(QAction *, MeshDocument &, MLSceneGLSharedDataContext::PerMeshRenderingDataMap& /*mp*/, GLArea *) {}
-	virtual void render(QAction *, MeshDocument &, MLSceneGLSharedDataContext::PerMeshRenderingDataMap& mp, GLArea *) = 0;
-	virtual void finalize(QAction *, MeshDocument *, GLArea *) {}
+    virtual void init(QAction *, MeshDocument &) {}
+    virtual void render(QAction *, MeshDocument &) = 0;
+    virtual void finalize(QAction *, MeshDocument *) {}
 
 	/** 
 	 * this function is called whenever MeshLab should update GUI's menus filled

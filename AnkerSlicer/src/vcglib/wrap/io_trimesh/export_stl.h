@@ -60,7 +60,12 @@ Edited Comments and GPL license
 
 #include <stdio.h>
 #include <vcg/complex/base.h>
-
+#include <QFile>
+#ifdef _MSC_VER
+#include<io.h>
+#else
+#include <unistd.h>
+#endif
 namespace vcg {
 namespace tri {
 namespace io {
@@ -76,20 +81,127 @@ public:
 typedef typename SaveMeshType::FaceType FaceType;
 typedef unsigned short CallBackSTLFaceAttribute(const SaveMeshType &m, const FaceType &f);
 
-static int Save(const SaveMeshType &m, const char * filename, const int &mask, CallBackPos *)
+//static int Save(const SaveMeshType &m, QString filename, bool binary =true, const int &mask, CallBackPos *cb = NULL)
+//{
+//    return Save(m,filename,true,mask);
+//}
+
+static int MySave(const SaveMeshType &m, QString filename , bool binary =true, int mask=0, CallBackPos *cb = NULL, const char * objectname=0, bool magicsMode=0)
 {
- return Save(m,filename,true,mask);
+    typedef typename SaveMeshType::ConstFaceIterator FaceIterator;
+      QFile qFile(filename);
+      qFile.open(QIODevice::WriteOnly);
+      if (!qFile.isOpen()) {
+          return 1;
+      }
+      int fd = qFile.handle();
+      FILE *fp = fdopen(dup(fd), "wb");
+      if (fp == nullptr) {
+          return 1;
+      }
+      if(binary)
+      {
+          // Write Header
+          char header[128]="VCG                                                                                                  ";
+          if(objectname)	strncpy(header,objectname,80);
+          if(magicsMode)
+          {
+            strncpy(header,"COLOR=XXX MATERIAL=AAA BBB CCC                                                                       ",80);
+            for(int i=0;i<3;++i)
+            {
+              header[0x06+i]=0x7f;
+              header[0x13+i]=0x7f;
+              header[0x17+i]=0x7f;
+              header[0x1b+i]=0x7f;
+            }
+          }
+          fwrite(header,80,1,fp);
+          // write number of facets
+          fwrite(&m.fn,1,sizeof(int),fp);
+          Point3f p;
+          unsigned short attributes=0;
+          int totalPrimitives = m.face.size();
+          int current = 0;
+          for(FaceIterator fi=m.face.begin(); fi!=m.face.end(); ++fi) if( !(*fi).IsD() )
+          {
+              // For each triangle write the normal, the three coords and a short set to zero
+              p.Import(vcg::TriangleNormal(*fi).Normalize());
+              fwrite(p.V(),3,sizeof(float),fp);
+
+              for(int k=0;k<3;++k){
+                  p.Import((*fi).V(k)->P());
+                  fwrite(p.V(),3,sizeof(float),fp);
+              }
+              if(cb != NULL)
+              {
+                  if(!(*cb)((100*++current)/totalPrimitives, "Writing vertices"))
+                  {
+                      fclose(fp);
+                      qFile.close();
+                      return -1;
+                  }
+              }
+              if ((mask & Mask::IOM_FACECOLOR) && tri::HasPerFaceColor(m))
+              {
+                if(magicsMode) attributes = 32768 | vcg::Color4b::ToUnsignedR5G5B5(fi->C());
+                          else attributes = 32768 | vcg::Color4b::ToUnsignedB5G5R5(fi->C());
+              }
+              fwrite(&attributes,1,sizeof(short),fp);
+          }
+      }
+      else
+      {
+          if(objectname) fprintf(fp,"solid %s\n",objectname);
+          else fprintf(fp,"solid vcg\n");
+
+          Point3f p;
+          FaceIterator fi;
+          int totalPrimitives = m.face.size();
+          int current = 0;
+          for(fi=m.face.begin(); fi!=m.face.end(); ++fi) if( !(*fi).IsD() )
+          {
+          // For each triangle write the normal, the three coords and a short set to zero
+              p.Import(TriangleNormal(*fi).Normalize());
+              fprintf(fp,"  facet normal %13e %13e %13e\n",p[0],p[1],p[2]);
+              fprintf(fp,"    outer loop\n");
+              for(int k=0;k<3;++k){
+                  p.Import((*fi).V(k)->P());
+                  fprintf(fp,"      vertex  %13e %13e %13e\n",p[0],p[1],p[2]);
+              }
+              fprintf(fp,"    endloop\n");
+              fprintf(fp,"  endfacet\n");
+              if(cb != NULL)
+              {
+                  if(!(*cb)((100*++current)/totalPrimitives, "Writing vertices"))
+                  {
+                      fclose(fp);
+                      qFile.close();
+                      return -1;
+                  }
+              }
+          }
+          fprintf(fp,"endsolid vcg\n");
+      }
+      int result = 0;
+      if (ferror(fp)) result = 2;
+      fclose(fp);
+      qFile.close();
+      return result;
 }
 
-static int Save(const SaveMeshType &m, const char * filename , bool binary =true, int mask=0, const char *objectname=0, bool magicsMode=0)
+static int Save(const SaveMeshType &m, QString filename , bool binary =true, int mask=0, const char * objectname=0, bool magicsMode=0)
 {
   typedef typename SaveMeshType::ConstFaceIterator FaceIterator;
-    FILE *fp;
-
-    fp = fopen(filename,"wb");
-    if(fp==0)
+    QFile qFile(filename);
+    qFile.open(QIODevice::WriteOnly);
+    if (!qFile.isOpen()) {
         return 1;
-
+    }
+    int fd = qFile.handle();
+    FILE *fp = fdopen(dup(fd), "wb");
+    if (fp == nullptr) {
+        return 1;
+    }
     if(binary)
     {
         // Write Header
@@ -154,6 +266,7 @@ static int Save(const SaveMeshType &m, const char * filename , bool binary =true
 	int result = 0;
 	if (ferror(fp)) result = 2;
     fclose(fp);
+    qFile.close();
 	return result;
 }
 static const char *ErrorMsg(int error)

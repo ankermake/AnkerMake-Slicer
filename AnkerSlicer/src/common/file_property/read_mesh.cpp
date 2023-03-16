@@ -2,10 +2,11 @@
 #include <fstream>
 #include <QDebug>
 #include <QIODevice>
-
+#include <QFileInfo>
 
 bool ReadMesh::checkMeshHeader(const QString &filename)
 {
+    QFileInfo fileInfo(filename);
     int index = filename.lastIndexOf(".");
     QString suffix = filename.mid(index, filename.length() - index);
     if(suffix.toLower().contains("stl"))

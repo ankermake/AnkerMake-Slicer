@@ -2,6 +2,8 @@
 #include <QRegularExpression>
 #include <QDebug>
 #include "../filemanage/fdmqmlsourcetree.h"
+#include "common/utilities/tlogger.h"
+#include "common/ak_const.h"
 //FdmProfileCategory::FdmProfileCategory()
 //{
 
@@ -46,7 +48,19 @@ void FdmProfileCategory::set(const QList<QString> &items, const QSettings &setti
     {
         const QString & item = items[i];
         int equalIdx = item.indexOf('=');
+        
+        if (equalIdx <= 0)
+        {
+            AkUtil::TWarning("skip unexpected line " + item);
+            continue;
+        }
         QString settingName = item.mid(0,equalIdx).trimmed();
+        
+        if (settingName.length() > AkConst::SettingKey::MAX_NAME_SIZE)
+        {
+            AkUtil::TWarning("skip unexpected line " + item);
+            continue;
+        }
         //if (settingName == "support_zag_skip_count")
         //{
         //    int x = 0;

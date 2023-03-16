@@ -94,6 +94,7 @@ public:
     Velocity getJerk() const;
 
     coord_t getLineWidth() const;
+    void setLineWidth(const coord_t& width) { line_width = width; };
 
     bool isTravelPath() const;
 

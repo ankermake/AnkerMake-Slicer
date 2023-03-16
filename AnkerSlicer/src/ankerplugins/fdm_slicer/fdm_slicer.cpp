@@ -18,6 +18,9 @@
 #include <QStandardPaths>
 #include <QThreadPool>
 #include <QCoreApplication>
+#include "common/mlapplication.h"
+#include <QRegularExpression>
+#include "../common/controlInterface/messageDialog.h"
 
 using namespace AkUtil;
 
@@ -30,6 +33,7 @@ FdmSlicer::FdmSlicer()
 
 FdmSlicer::~FdmSlicer()
 {
+    TFunction("");
     if (NULL != slicer)
     {
         delete slicer;
@@ -40,21 +44,22 @@ FdmSlicer::~FdmSlicer()
 void FdmSlicer::initialize(ControlInterface *controlmanager, RichParameterList *globalParameterList)
 {
     this->ctrlmanager = controlmanager;
-    AkSlicePanel* panel = new AkSlicePanel();
-
+    //AkSlicePanel* panel = new AkSlicePanel();
+    panel = new AkSlicePanel();
+    
 
     panel->sliceEnable(false);
-
+    
 
     ctrlmanager->addWidgetToRightSettings(AkConst::EFdmRightWidgetIndex::SlicePanel, panel);
 
-
+    
 
     connect(panel,&AkSlicePanel::slice,this,&FdmSlicer::doSlice);
     connect(panel,&AkSlicePanel::save,this,&FdmSlicer::doSave);
     connect(panel,&AkSlicePanel::preview,this,&FdmSlicer::doPreview);
     connect(panel,&AkSlicePanel::previewBtnClicked,this,&FdmSlicer::doPreview);//change doPreviewBtnClicked to doPreview
-
+    
 
     connect(this,&FdmSlicer::sliceSucess,panel,&AkSlicePanel::doSliceSuccess);
     connect(this,&FdmSlicer::sliceFailed,panel,&AkSlicePanel::doSliceFailed);
@@ -63,7 +68,7 @@ void FdmSlicer::initialize(ControlInterface *controlmanager, RichParameterList *
 
     //connect(this,&FdmSlicer::sliceEnable,panel,&AkSlicePanel::sliceEnable);
 
-
+    
 
     //connect(panel,&AkSlicePanel::quit,this,&FdmSlicer::quit);
 
@@ -72,6 +77,7 @@ void FdmSlicer::initialize(ControlInterface *controlmanager, RichParameterList *
     connect(this->slicer, &AkSlicer::sliceFailed, this, &FdmSlicer::doSliceFailed);
 }
 
+
 void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
 {
     this->sliceResult = sliceInfo;
@@ -79,82 +85,171 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
     {
         progressBar->setValue(100);
     }
+    bool fileOperEnd = false;
+    QThreadPool::globalInstance()->start([&,this]()->void{
+        //sliceBtn->setText("save");
+        
 
-    //sliceBtn->setText("save");
+        //if (NULL != progressBar){
+        //    delete progressBar;
+        //    progressBar = NULL;
+        //};
+
+        
+
+        
+
+        QString realtimeProfilePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/parameter/realtime/realtimeprofile.ini");
+        QString content = IoApi::readAll(realtimeProfilePath);
+    //    QStringList paramList;
+    //    paramList << ";;paramBegin";
+    //    paramList << content.toUtf8().toBase64();
+    //    paramList << ";;paramEnd";
+    //
+        
+
+        auto gcodeContent = IoApi::readAll(sliceResult.gcodeFile);
+        int count = 100;
+        while (count > 0 && gcodeContent.indexOf(";End of Gcode") < 0)
+        {
+            QThread::msleep(100);
+            gcodeContent = IoApi::readAll(sliceResult.gcodeFile);
+            count--;
+        }
+        
+
+        auto getMaxSpeed = [&]()->float{
+            float maxSpeed = -99;
+            
+
+            auto lines = gcodeContent.split("\r",Qt::SkipEmptyParts);
+            for(int i = 0; i< lines.size();i++)
+            {
+                QString line = lines[i];
+                
+
+                if (line.trimmed().startsWith(";")
+                    || !line.trimmed().startsWith("G")
+                    || line.indexOf("E") < 0
+                    || line.indexOf("F") < 0)
+                {
+                     continue;
+                }
+                auto words = line.split(" ",Qt::SkipEmptyParts);
+                for(int j = 0; j< words.size();j++)
+                {
+                    if (!words[j].startsWith("F"))
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        float speed = words[j].mid(1).toFloat();
+                        maxSpeed = (maxSpeed < speed) ? speed : maxSpeed;
+                    }
+                    catch(...){}
+                }
+            }
+            return maxSpeed;
+        };
+        
+
+        if (gcodeContent.indexOf(";MAXSPEED:") > 0)
+        {
+            float maxPrintSpeed = getMaxSpeed();
+            
+
+            if (maxPrintSpeed > 0)
+            {
+                gcodeContent = gcodeContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
+            }
+            
+
+            IoApi::write(sliceResult.gcodeFile, gcodeContent.toUtf8());
+        }
+
+        
+
+    //    QStringList paramList;
+    //    paramList << ";paramBegin";
+    //    paramList << content.toUtf8().toBase64();
+    //    paramList << ";paramEnd";
+    //    IoApi::append(sliceInfo.gcodeFile, paramList.join(""));
+
+        QStringList paramList;
+        paramList << ";paramBegin";
+        //paramList << content.toUtf8().toBase64();
+        auto paramContent = content.toUtf8().toBase64();
+        auto subList = IoApi::splite(paramContent, 200);
+        for (int i = 0; i < subList.size(); i++)
+        {
+            paramList << ";" + subList[i];
+        }
+        paramList << ";paramEnd";
+        paramList << ";AnkerMake version: " + MeshLabApplication::appVer();
+        
+
+        paramList << ";End of Gcode";
+        auto data = paramList.join("\r\n").toUtf8();
+        IoApi::append(sliceResult.gcodeFile, data);
+        fileOperEnd = true;
+        //IoApi::append(sliceInfo.gcodeFile, QString(";paramBegin").toLocal8Bit());
+        //auto realtimeBase64 = content.toLocal8Bit().toBase64();
+        //IoApi::append(sliceInfo.gcodeFile, realtimeBase64);
+        //IoApi::append(sliceInfo.gcodeFile, ";paramEnd");
 
 
-    //if (NULL != progressBar){
-    //    delete progressBar;
-    //    progressBar = NULL;
-    //};
+
+
+
+//        PluginMessageData data;
+//        data.from = AkConst::Plugin::FDM_SLICER;
+//        data.dest = AkConst::Plugin::FDM_SETTING;
+//        data.msg = AkConst::Msg::SLICE_SUCCESS;
+//        emit sendMsg2Manager(data);
+
+
+//        emit this->sliceSucess();
+
+//        emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
 
 
 
 
+    });
+    //emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
 
-    QString realtimeProfilePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/parameter/realtime/realtimeprofile.ini");
-    QString content = IoApi::readAll(realtimeProfilePath);
-//    QStringList paramList;
-//    paramList << ";;paramBegin";
-//    paramList << content.toUtf8().toBase64();
-//    paramList << ";;paramEnd";
-//
+    
 
-
-    auto gcodeContent = IoApi::readAll(sliceInfo.gcodeFile);
-    int count = 100;
-    while (count > 0 && gcodeContent.indexOf(";End of Gcode") < 0)
+    int count = 500;
+    while(!fileOperEnd && count>0)
     {
-        QThread::msleep(100);
-        gcodeContent = IoApi::readAll(sliceInfo.gcodeFile);
         count--;
+        QThread::msleep(20);
+        QCoreApplication::processEvents();
     }
-
-
-
-//    QStringList paramList;
-//    paramList << ";paramBegin";
-//    paramList << content.toUtf8().toBase64();
-//    paramList << ";paramEnd";
-//    IoApi::append(sliceInfo.gcodeFile, paramList.join(""));
-
-    QStringList paramList;
-    paramList << ";paramBegin";
-    //paramList << content.toUtf8().toBase64();
-    auto paramContent = content.toUtf8().toBase64();
-    auto subList = IoApi::splite(paramContent, 200);
-    for (int i =0;i<subList.size();i++)
-    {
-        paramList << ";" + subList[i];
-    }
-    paramList << ";paramEnd";
-    IoApi::append(sliceInfo.gcodeFile, paramList.join("\r\n"));
-
-
-    //IoApi::append(sliceInfo.gcodeFile, QString(";paramBegin").toLocal8Bit());
-    //auto realtimeBase64 = content.toLocal8Bit().toBase64();
-    //IoApi::append(sliceInfo.gcodeFile, realtimeBase64);
-    //IoApi::append(sliceInfo.gcodeFile, ";paramEnd");
-
-
+    
 
     PluginMessageData data;
     data.from = AkConst::Plugin::FDM_SLICER;
     data.dest = AkConst::Plugin::FDM_SETTING;
     data.msg = AkConst::Msg::SLICE_SUCCESS;
     emit sendMsg2Manager(data);
+    
 
-    emit sliceSucess();
-    emit appendSliceBtnStat(ESliceBtnStat::SLICE_END);
+    emit this->sliceSucess();
+    
+
+    emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
 }
 
 void FdmSlicer::doSliceFailed(AkSliceInfo sliceInfo)
 {
     this->sliceResult = sliceInfo;
     qDebug() << sliceInfo.sliceCmd;
-    qDebug() << QString("enter doSliceFailed emit sliceFailed %1").arg((long long)(progressBar))  ;
+    qDebug() << QString("enter doSliceFailed emit sliceFailed %1").arg((long long)(progressBar));
     //sliceBtn->setText("slice");
-
+    
 
     //if (NULL != progressBar){
     //    delete progressBar;
@@ -163,7 +258,7 @@ void FdmSlicer::doSliceFailed(AkSliceInfo sliceInfo)
 
 
 
-
+    
 
     PluginMessageData data;
     data.from = AkConst::Plugin::FDM_SLICER;
@@ -190,7 +285,7 @@ void FdmSlicer::getGlobalSupportStatus()
 
 void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus status, float percent, QString msg)
 {
-
+    
 
     if (progressBar == nullptr)
     {
@@ -198,9 +293,9 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
     }
     if (status == AkSlicer::Doing)
     {
+        
 
-
-
+        
 
         if (slicePercent<30)
         {
@@ -209,7 +304,7 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
                 slicePercent = percent;
             }
         }
-
+        
 
         else
         {
@@ -223,30 +318,45 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
         {
             slicePercent = 99.9;
         }
-        progressBar->setText(tr("is Slicing..."));
+        progressBar->setText(tr("Slicing"));
         progressBar->setValue(slicePercent);
         return;
     }
-
+    
 
     else
     {
-        progressBar->setText(tr("is Slicing..."));
+        progressBar->setText(tr("Slicing"));
     }
 }
 
 void FdmSlicer::doSlice()
 {
+    
+
+    
+
+    int buttonState = panel->getButtonState();
+    if ((buttonState & ESliceBtnStat::MODEL_IS_SUSPEND_STATUS)
+       && !(buttonState & ESliceBtnStat::GENERATE_SUPPORT_RESULT_T))
+    {
+        control::MessageDialog messageDialog(tr("Notice"), tr("The model is hovering in the air. Please generate support or switch on [place on bed]."),
+            control::MessageDialog::OK);
+        messageDialog.exec();
+        return;
+    }
+
+
     emit appendSliceBtnStat(ESliceBtnStat::SLICE_BEING);
     //emit sliceSucess();
     //return;
 
-
+    
 
     slicer->resetParam();
     progressBar = nullptr;
     slicePercent = 0;
-
+    
 
     //sliceBtn->setText("cancel");
 
@@ -254,32 +364,32 @@ void FdmSlicer::doSlice()
 //    connect(progressBar, &AkProgressBar::cancel, slicer, &AkSlicer::cancel);
 //    ctrlmanager->addProgressBar(progressBar);
 
+    
 
 
-
-
+    
 
     QTimer::singleShot(5, [&]{
-
+        
 
         progressBar = new ProgressDialog();
-        progressBar->setText(tr("is Slicing..."));
+        progressBar->setText(tr("Slicing"));
         connect(progressBar, &ProgressDialog::cancel, slicer, &AkSlicer::cancel);
         //connect(progressBar, &ProgressDialog::progressClosed, slicer, &AkSlicer::cancel);
-
+        
 
         connect(progressBar, &ProgressDialog::destroyed, slicer, [&]()->void { progressBar = nullptr; });
         progressBar->exec();
     });
 
     QTimer::singleShot(50, [&]{
-
+        
 
         saveStlFile();
         getCustomSetting();
     });
 
-
+    
 
     QTimer::singleShot(100, [&] {
 
@@ -291,7 +401,7 @@ void FdmSlicer::doSlice()
         setProgressBar(AkSlicer::SliceStep::FileLoad, AkSlicer::SliceStatus::Doing, 1, "");
         int maxCycle =20;
         int cycleTime  = 0;
-
+        
 
         QString stlFile = slicer->getStlFile();
         while (stlFile.isEmpty())
@@ -310,7 +420,7 @@ void FdmSlicer::doSlice()
         qint64 currentFileSize = -2;
         while (1)
         {
-
+            
 
             QFileInfo fi(stlFile);
             currentFileSize = fi.size();
@@ -343,11 +453,11 @@ void FdmSlicer::doSlice()
 //            QThread::msleep(timePerStep);
 
 //        }
-
+        
 
         fileLoadPercent = 0;
         connect(timer,&QTimer::timeout,[&](){
-
+            
 
             timer->stop();
             fileLoadPercent++;
@@ -361,11 +471,11 @@ void FdmSlicer::doSlice()
 
     });
 
-
+    
 
     //progressBar = new ProgressDialog();
     //connect(progressBar, &ProgressDialog::cancel, slicer, &AkSlicer::cancel);
-
+    
 
     //connect(progressBar, &ProgressDialog::destroyed, slicer, [&]()->void { progressBar = NULL; });
     //progressBar->exec();
@@ -374,12 +484,12 @@ void FdmSlicer::doSlice()
 void FdmSlicer::doSave()
 {
     QString srcGcodeFile = this->sliceResult.gcodeFile;
-
+    
 
     //    QString savePath = QFileDialog::getSaveFileName(NULL,"save","","*.gcode");
     //    QFile::copy(srcGcodeFile, savePath);
 
-
+    
 
     PluginMessageData data;
     data.from = AkConst::Plugin::FDM_SLICER;
@@ -396,7 +506,7 @@ void FdmSlicer::doPreviewBtnClicked()
     data.from = AkConst::Plugin::FDM_GCODE_PARSER;
     data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
     data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
-    data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false);
+    data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false); 
 
     emit sendMsg2Manager(data);
 
@@ -418,9 +528,9 @@ void FdmSlicer::doPreview()
 //    QFileInfo gcodeInfo(gcodeFile);
 //    excludeSet.insert(gcodeInfo.fileName());
 
+    
 
-
-
+    
 
     //slicer->clearGcode(excludeSet, 5*AkConst::Time::MINUTE_SECOND);
 
@@ -430,7 +540,7 @@ void FdmSlicer::doPreview()
     data.msg = AkConst::Msg::PREVIEW_GCODE;
     data.map.insert(AkConst::Param::GCODE_FILE, gcodeFile);
     data.map.insert(AkConst::Param::ORIGINAL_STL_NAME, originalStlName);
-
+    
 
     emit sendMsg2Manager(data);
 }
@@ -439,11 +549,11 @@ void FdmSlicer::doPreview()
 
 void FdmSlicer::saveStlFile()
 {
-
+    
 
     QSet<QString> excludeSet;
     slicer->clearStl(excludeSet, 10*AkConst::Time::MINUTE_SECOND);
-
+    
 
 
 #if defined(__APPLE__) || defined (__GNUG__)
@@ -469,7 +579,7 @@ void FdmSlicer::saveStlFile()
     QDir destDir = IoApi::createTimestampFolderUnderPath(stlPath);
 
     QString stlFile = destDir.absoluteFilePath(QString("mesh%1.stl").arg(threadId));
-
+    
 
     if (QFileInfo::exists(stlFile))
     {
@@ -482,7 +592,7 @@ void FdmSlicer::saveStlFile()
     data.msg = AkConst::Msg::SAVE_STL_FILE;
     data.map.insert(AkConst::Param::STL_FILE, stlFile);
 
-
+    
 
     emit sendMsg2Manager(data);
 }
@@ -495,7 +605,7 @@ void FdmSlicer::getCustomSetting()
     data.msg = AkConst::Msg::GET_CUSTOM_SETTING;
     //data.map.insert(AkConst::Param::STL_FILE, stlPath);
 
-
+    
 
     emit sendMsg2Manager(data);
 }
@@ -513,7 +623,7 @@ void FdmSlicer::trySlice(){
         return;
     }
 
-
+    
 
     PluginMessageData data;
     data.from = AkConst::Plugin::FDM_SLICER;
@@ -551,7 +661,7 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
 
         slicer->setStlFile(stlPath);
         slicer->setOriginalStlName(OStlName);
-
+        
 
         QStringList filter;
         filter << "sptMesh*.stl";
@@ -561,12 +671,11 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
         for(int i =0;i<fInfos.size();i++)
         {
             supportMeshes.append(fInfos[i].absoluteFilePath());
-
         }
         slicer->setSupportMeshes(supportMeshes);
         trySlice();
     }
-
+    
 
     if (metaData.from == AkConst::Plugin::FDM_SETTING
             && metaData.msg == AkConst::Msg::GET_CUSTOM_SETTING){
@@ -575,14 +684,14 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
         trySlice();
     }
 
-
+    
 
     if (metaData.msg == AkConst::Msg::MODEL_STATUS_CHANGED
         || metaData.msg == AkConst::Msg::MODEL_TRANSFROM_CHANGED
         || metaData.msg == AkConst::Msg::MODEL_SUPPORT_NUMBER_CHANGED
         || metaData.msg == AkConst::Msg::PARAMETER_CHANGED){
 
-
+        
 
         if (metaData.msg == AkConst::Msg::MODEL_STATUS_CHANGED){emit appendSliceBtnStat(ESliceBtnStat::MODEL_STATUS_CHANGED);}
         else if (metaData.msg == AkConst::Msg::MODEL_TRANSFROM_CHANGED){emit appendSliceBtnStat(ESliceBtnStat::MODEL_TRANSFROM_CHANGED);}
@@ -594,6 +703,47 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
         data.dest = AkConst::Plugin::FDM_SETTING;
         data.msg = AkConst::Msg::SLICE_RESET;
         emit sendMsg2Manager(data);
+    }
+
+    bool generateSuppoteResult = metaData.map.value(AkConst::Param::GENERATE_SUPPORT_RESULT, false).toBool();
+    bool modelSuspendResult = metaData.map.value(AkConst::Param::MODEL_SUSPEND_STATUS_RESULT, false).toBool();
+
+    
+
+    if (metaData.from == AkConst::Plugin::FDM_SETTING
+        && metaData.msg == AkConst::Msg::GET_GENERATE_SUPPORT_STATUS_RESULT)
+    {
+        
+
+        if (generateSuppoteResult)
+        {
+            
+
+            emit appendSliceBtnStat(ESliceBtnStat::GENERATE_SUPPORT_RESULT_T);
+        }
+        else
+        {
+
+            emit appendSliceBtnStat(ESliceBtnStat::GENERATE_SUPPORT_RESULT_N);
+        }
+    }
+
+    
+
+    if (metaData.msg == AkConst::Msg::MODEL_SUSPEND_STATUS)
+    {
+        
+
+        if (modelSuspendResult)
+        {
+            
+
+            emit appendSliceBtnStat(ESliceBtnStat::MODEL_IS_SUSPEND_STATUS);
+        }
+        else
+        {
+            emit appendSliceBtnStat(ESliceBtnStat::MODEL_NOT_SUSPEND_STATUS);
+        }
     }
 
     if (metaData.msg == AkConst::Msg::VISIBLE_MODEL_COUNT_CHANGED){

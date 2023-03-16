@@ -2,15 +2,15 @@ import QtQuick 2.2
 import FdmQml 1.0
 // qrc:/Settings/FdmJsonObjTree_All.qml
 FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_All.qml"
-    property string name: "FDM Printer Base Description"
+    property string name: "FDM打印机基础描述"
     property int version: 2
     FdmQml_Settings{ id:settings; objectName: "settings"
         FdmQml_Category{ id:anker_fdm_setting; objectName: "anker_fdm_setting"
-            fdmLabel: "安克实验性参数"
-            fdmDescription: "﻿安克实验性调优参数"
+            fdmLabel: "安克参数"
+            fdmDescription: "安克调优参数"
             FdmQml_Param{ id:international_language; objectName: "international_language"
-                fdmLabel: "International Language"
-                fdmDescription: "International Language Switch for FDM"
+                fdmLabel: "国际语言"
+                fdmDescription: "FDM国际语言开关"
             }
             FdmQml_Param{ id:anker_param_ai_camera; objectName: "anker_param_ai_camera"
                 fdmLabel: "AI摄像头"
@@ -176,7 +176,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "微小特征将按正常打印速度的百分比进行打印。缓慢打印有助于粘合和提高准确性。"
                 }
                 FdmQml_Param{ id:small_feature_speed_factor_0; objectName: "small_feature_speed_factor_0"
-                    fdmLabel: "第一层速度"
+                    fdmLabel: "微小特征初始层速度"
                     fdmDescription: "第一层的微小特征将按正常打印速度的百分比进行打印。缓慢打印有助于粘合和提高准确性。"
                 }
             }
@@ -196,10 +196,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "﻿悬垂参数应用到整圈"
                 }
                 FdmQml_Param{ id:wall_overhang_extend_type; objectName: "wall_overhang_extend_type"
-                    fdmLabel: "悬垂区域影响扩展类型"
-                    fdmDescription: "﻿设置悬垂区域影响范围,使得打印时能更加平滑"
+                    fdmLabel: "悬垂降速类型"
+                    fdmDescription: "﻿设置打印悬垂时的降速策略,使得打印时能更加平滑"
                     fdmOptions:{
-                        "none": "无",
+                        "instant": "悬垂直接降速",
                         "gradually_xy": "悬垂逐渐降速",
                         "circle": "﻿悬垂整圈降速"
                     }
@@ -219,6 +219,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmLabel: "悬垂内墙收缩距离"
                         fdmDescription: "收缩内墙以获得更宽的外墙"
                     }
+                }
+                FdmQml_Param{ id:overhang_related_inner_wall_slow_down; objectName: "overhang_related_inner_wall_slow_down"
+                    fdmLabel: "对悬垂内壁降速"
+                    fdmDescription: "对悬垂壁相关的内壁使用降速"
                 }
                 FdmQml_Param{ id:wall_overhang_speed_factor; objectName: "wall_overhang_speed_factor"
                     fdmLabel: "悬垂壁速度"
@@ -288,6 +292,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:bridge_settings_enabled; objectName: "bridge_settings_enabled"
                 fdmLabel: "启用连桥设置"
                 fdmDescription: "在打印连桥时，检测连桥并修改打印速度、流量和风扇设置。"
+                FdmQml_Param{ id:bridge_split_min_length; objectName: "bridge_split_min_length"
+                    fdmLabel: "桥壁拆分最小长度"
+                    fdmDescription: "桥壁长于此长度时，可以进行拆分使用多段速度打印"
+                }
+                FdmQml_Param{ id:bridge_shrink_length; objectName: "bridge_shrink_length"
+                    fdmLabel: "桥面收缩长度"
+                    fdmDescription: "从桥的起始点偏移多少开始应用桥设置"
+                }
                 FdmQml_Param{ id:bridge_wall_min_length; objectName: "bridge_wall_min_length"
                     fdmLabel: "最小桥壁长度"
                     fdmDescription: "将使用正常壁设置打印短于此长度且没有支撑的壁。将使用桥壁设置打印长于此长度且没有支撑的壁。"
@@ -366,24 +378,28 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:machine_index_name; objectName: "machine_index_name"
-                fdmLabel: "MachineIndexName"
-                fdmDescription: "The name of machine index."
+                fdmLabel: "机器索引名称"
+                fdmDescription: "机器索引名称"
             }
             FdmQml_Param{ id:extruder_index_name; objectName: "extruder_index_name"
-                fdmLabel: "ExtruderIndexName"
-                fdmDescription: "The name of extruder index."
+                fdmLabel: "挤出机索引名称"
+                fdmDescription: "挤出机索引名称"
             }
             FdmQml_Param{ id:material_index_name; objectName: "material_index_name"
-                fdmLabel: "MaterialIndexName"
-                fdmDescription: "The name of material index."
+                fdmLabel: "挤出机索引名称"
+                fdmDescription: "挤出机索引名称"
             }
             FdmQml_Param{ id:parameter_index_name; objectName: "parameter_index_name"
-                fdmLabel: "ParameterIndexName"
-                fdmDescription: "The name of parameter index."
+                fdmLabel: "参数索引的名称"
+                fdmDescription: "参数索引的名称"
             }
             FdmQml_Param{ id:extract_param_from_gcode; objectName: "extract_param_from_gcode"
                 fdmLabel: "预览ankerMake gcode时展示其用到的参数"
                 fdmDescription: "预览使用ankerMake生成的gcode时，将生成gcode时用到的参数展现在右侧栏参数设置界面."
+            }
+            FdmQml_Param{ id:check_param_lost_interval; objectName: "check_param_lost_interval"
+                fdmLabel: "多少秒检查一次参数"
+                fdmDescription: "检查参数状况, 看是否丢失."
             }
             FdmQml_Param{ id:coasting_enable; objectName: "coasting_enable"
                 fdmLabel: "启用滑行"
@@ -414,32 +430,32 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "这台打印机是否需要显示它在不同的 JSON 文件中所描述的不同变化。"
             }
             FdmQml_Param{ id:machine_start_gcode; objectName: "machine_start_gcode"
-                fdmLabel: "﻿GCode 开始部分"
-                fdmDescription: ""
+                fdmLabel: "开始 G-code"
+                fdmDescription: "G代码命令要在最开始执行--用\\n分隔。"
             }
             FdmQml_Param{ id:machine_end_gcode; objectName: "machine_end_gcode"
-                fdmLabel: "﻿GCode 结束部分"
-                fdmDescription: ""
+                fdmLabel: "结束 G-code"
+                fdmDescription: "在最后要执行的G代码命令--用\\n分隔。"
             }
             FdmQml_Param{ id:material_guid; objectName: "material_guid"
                 fdmLabel: "材料 GUID"
                 fdmDescription: "材料 GUID，此项为自动设置。 "
             }
             FdmQml_Param{ id:material_bed_temp_wait; objectName: "material_bed_temp_wait"
-                fdmLabel: "﻿等待热床升温"
+                fdmLabel: "等待打印平台加热"
                 fdmDescription: "是否插入一条命令，等待开始时达到打印平台温度。"
             }
             FdmQml_Param{ id:material_print_temp_wait; objectName: "material_print_temp_wait"
-                fdmLabel: "﻿等待热床升温"
+                fdmLabel: "等待喷嘴加热"
                 fdmDescription: "是否等待开始时达到喷嘴温度。"
             }
             FdmQml_Param{ id:material_print_temp_prepend; objectName: "material_print_temp_prepend"
                 fdmLabel: "包含材料温度"
-                fdmDescription: "是否在 gcode 开始部分包含喷嘴温度命令。 当 start_gcode 已包含喷嘴温度命令时，Cura 前端将自动禁用此设置。"
+                fdmDescription: "是否在 gcode 开始部分包含喷嘴温度命令。 当 start_gcode 已包含喷嘴温度命令时，AnkerMake 前端将自动禁用此设置。"
             }
             FdmQml_Param{ id:material_bed_temp_prepend; objectName: "material_bed_temp_prepend"
-                fdmLabel: "包含热床温度"
-                fdmDescription: "是否需要在 G-code 开始部分包含检查热床温度的命令。当 start_gcode 包含热床温度命令时，Cura 前端将自动禁用此设置。"
+                fdmLabel: "包含打印平台温度"
+                fdmDescription: "是否需要在 G-code 开始部分包含检查热床温度的命令。当 start_gcode 包含热床温度命令时，AnkerMake 前端将自动禁用此设置。"
             }
             FdmQml_Param{ id:machine_width; objectName: "machine_width"
                 fdmLabel: "机器宽度"
@@ -477,7 +493,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "机器是否能够稳定构建体积温度。"
                 FdmQml_Param{ id:build_volume_temperature; objectName: "build_volume_temperature"
                     fdmLabel: "打印体积温度"
-                    fdmDescription: "用于打印体积的温度。如果该值为 0，将不会调整打印体积温度。"
+                    fdmDescription: "打印环境温度。若为 0，将不会调整构建体积温度。"
                 }
             }
             FdmQml_Param{ id:machine_always_write_active_tool; objectName: "machine_always_write_active_tool"
@@ -493,7 +509,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "挤出机组数目。 挤出机组是指进料装置、鲍登管和喷嘴的组合。"
                 fdmDefaultValue: 1
                 fdmMinimumValue: 1
-                fdmMaximumValue: 2
+                fdmMaximumValue: 1
                 fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
                 fdmSettablePerMesh: false
@@ -523,7 +539,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_temp_enabled; objectName: "machine_nozzle_temp_enabled"
                 fdmLabel: "启用喷嘴温度控制"
-                fdmDescription: "是否从 Cura 控制温度。 关闭此选项，从 Cura 外部控制喷嘴温度。"
+                fdmDescription: "是否从AnkerMake控制温度。 关闭此选项，从AnkerMake外部控制喷嘴温度。"
             }
             FdmQml_Param{ id:machine_nozzle_heat_up_speed; objectName: "machine_nozzle_heat_up_speed"
                 fdmLabel: "升温速度"
@@ -538,16 +554,13 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "挤出机必须保持不活动以便喷嘴冷却的最短时间。 挤出机必须不使用此时间以上，才可以冷却到待机温度。"
             }
             FdmQml_Param{ id:machine_gcode_flavor; objectName: "machine_gcode_flavor"
-                fdmLabel: "G-code 代码风格"
-                fdmDescription: "需要生成的 G-code 代码类型"
+                fdmLabel: "G-code 风格"
+                fdmDescription: "需要生成的 G-code 类型。"
                 fdmOptions:{
-                    "RepRap (Marlin/Sprinter)": "RepRap (Marlin/Sprinter)",
-                    "RepRap (Volumetric)": "Marlin（容积）",
+                    "RepRap (Marlin/Sprinter)": "Marlin",
                     "RepRap (RepRap)": "RepRap",
-                    "UltiGCode": "Ultimaker 2",
                     "Griffin": "Griffin",
-                    "Makerbot": "Makerbot",
-                    "BFB": "Bits from Bytes"
+                    "Makerbot": "Makerbot"
                 }
             }
             FdmQml_Param{ id:machine_firmware_retract; objectName: "machine_firmware_retract"
@@ -580,7 +593,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_use_extruder_offset_to_offset_coords; objectName: "machine_use_extruder_offset_to_offset_coords"
                 fdmLabel: "挤出机偏移量"
-                fdmDescription: "将挤出机偏移量应用到坐标轴系统。"
+                fdmDescription: "将挤出器偏移量应用到坐标轴系统。影响所有挤出器。"
             }
             FdmQml_Param{ id:extruder_prime_pos_abs; objectName: "extruder_prime_pos_abs"
                 fdmLabel: "绝对挤出机主要位置"
@@ -636,7 +649,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_steps_per_mm_e; objectName: "machine_steps_per_mm_e"
                 fdmLabel: "每毫米步数 (E)"
-                fdmDescription: "步进电机前进多少步将导致挤出一毫米。"
+                fdmDescription: "步进电机前进多少步将导致进料器轮绕其周长移动一毫米。"
             }
             FdmQml_Param{ id:machine_endstop_positive_direction_x; objectName: "machine_endstop_positive_direction_x"
                 fdmLabel: "正向 X 限位开关"
@@ -660,8 +673,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
         }
         FdmQml_Category{ id:extruder_settings; objectName: "extruder_settings"
-            fdmLabel: "Extruder"
-            fdmDescription: "Extruder specific settings"
+            fdmLabel: "挤出机"
+            fdmDescription: "挤出机设置"
             FdmQml_Param{ id:extruder_nr; objectName: "extruder_nr"
                 fdmLabel: "挤出机"
                 fdmDescription: "用于打印的挤出机，在多挤出机情况下适用。"
@@ -684,7 +697,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_start_code; objectName: "machine_extruder_start_code"
                 fdmLabel: "挤出机的开始 G-code"
-                fdmDescription: "打开挤出机将执行此段 G-code。"
+                fdmDescription: "在切换到此挤出机时执行的开始 G-code。"
             }
             FdmQml_Param{ id:machine_extruder_start_pos_abs; objectName: "machine_extruder_start_pos_abs"
                 fdmLabel: "挤出机起点绝对位置"
@@ -700,7 +713,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_end_code; objectName: "machine_extruder_end_code"
                 fdmLabel: "挤出机的结束 G-code"
-                fdmDescription: "在关闭挤出机时，执行结束 G-code。"
+                fdmDescription: "在切离此挤出机时执行的结束 G-code。"
             }
             FdmQml_Param{ id:machine_extruder_end_pos_abs; objectName: "machine_extruder_end_pos_abs"
                 fdmLabel: "挤出机终点绝对位置"
@@ -748,6 +761,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmLabel: "走线宽度（外壁）"
                         fdmDescription: "最外壁线宽度。 降低此值，可打印出更高水平的细节。"
                     }
+                    FdmQml_Param{ id:thin_wall_line_width_0; objectName: "thin_wall_line_width_0"
+                        fdmLabel: "薄壁走线宽度（外壁）"
+                        fdmDescription: "薄壁线宽度。 有一些比较薄的无法生成一个正常壁的部分，可以用这个参数生成一个薄壁，只是针对部分不是某区域线段。"
+                    }
+
                     FdmQml_Param{ id:wall_line_width_x; objectName: "wall_line_width_x"
                         fdmLabel: "走线宽度（内壁）"
                         fdmDescription: "适用于所有壁线（最外壁线除外）的单一壁线宽度。"
@@ -916,7 +934,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:z_seam_corner; objectName: "z_seam_corner"
                 fdmLabel: "缝隙角偏好设置"
-                fdmDescription: "控制模型轮廓上的各个角是否影响缝隙的位置。 “无”意味着各个角不影响缝隙位置。 “隐藏缝隙”会使缝隙更可能出现在内侧角上。 “外露缝隙”会使缝隙更可能出现在外侧角上。 “隐藏或外露缝隙”会使缝隙更可能出现在内侧或外侧角上。"
+                fdmDescription: "控制模型轮廓上的角是否影响缝隙的位置。“无”表示各个角不影响缝隙位置。“隐藏缝隙”会使缝隙更可能出现在内侧角上。“外露缝隙”会使缝隙更可能出现在外侧角上。“隐藏或外露缝隙”会使缝隙更可能出现在内侧或外侧角上。“智能隐藏”允许缝隙出现在内侧和外侧角上，如适当，会更多地出现在内侧角上。"
                 fdmOptions:{
                     "z_seam_corner_none": "无",
                     "z_seam_corner_inner": "隐藏缝隙",
@@ -928,6 +946,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:z_seam_relative; objectName: "z_seam_relative"
                 fdmLabel: "Z 缝相对"
                 fdmDescription: "启用时，Z 缝坐标为相对于各个部分中心的值。 禁用时，坐标定义打印平台上的一个绝对位置。"
+            }
+            FdmQml_Param{ id:z_seam_min_angle_diff; objectName: "z_seam_min_angle_diff"
+                fdmLabel: "Z缝最大角度差"
+                fdmDescription: "启用时，当最尖角小于此值时，选用最短原则。"
+            }
+            FdmQml_Param{ id:z_seam_max_angle; objectName: "z_seam_max_angle"
+                fdmLabel: "Z缝最大尖角"
+                fdmDescription: "小于此值时才认为是有尖角，大于此值时启用最短原则。"
             }
         }
         FdmQml_Category{ id:top_bottom; objectName: "top_bottom"
@@ -989,7 +1015,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:connect_skin_polygons; objectName: "connect_skin_polygons"
                 fdmLabel: "连接顶部/底部多边形"
-                fdmDescription: "在顶部/底部皮肤路径互相紧靠运行的地方连接它们。对于同心图案，启用此设置可大大减少空驶时间，但因为连接可在填充中途发生，此功能可能会降低顶部表面质量。"
+                fdmDescription: "在顶部/底部皮肤路径互相紧靠运行的地方连接它们。对于同心图案，启用此设置可大大减少空驶时间，但由于连接可在填充中途发生，此功能可能会降低顶部表面质量。"
             }
             FdmQml_Param{ id:skin_monotonic; objectName: "skin_monotonic"
                 fdmLabel: "单调顶部/底部顺序"
@@ -1000,16 +1026,24 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "当顶层/底层采用线条或锯齿状图案时使用的整数走线方向的列表。 列表中的元素随层的进度依次使用，当达到列表末尾时，它将从头开始。 列表项以逗号分隔，整个列表包含在方括号中。 默认是一个空列表，即意味着使用传统的默认角度（45 和 135 度）。"
             }
             FdmQml_Param{ id:skin_no_small_gaps_heuristic; objectName: "skin_no_small_gaps_heuristic"
-                fdmLabel: "忽略小 Z 间隙"
-                fdmDescription: "当模型具有小的垂直间隙时，可能会花费大约 5％ 的额外计算时间来生成这些狭窄空间中的顶部和底部皮肤。 这种情况下，禁用该设置。"
+                fdmLabel: "Z 间隙内无表层"
+                fdmDescription: "当模型中只有几个分层有微小垂直间隙时，通常狭窄空间的分层周围应有表层。如果垂直间隙非常小，则启用此设置不生成表层。这缩短了打印时间和切片时间，但从技术方面看，会使填充物暴露在空气中。"
             }
             FdmQml_Param{ id:skin_outline_count; objectName: "skin_outline_count"
                 fdmLabel: "额外皮肤壁计数"
                 fdmDescription: "用多个同心线代替顶部/底部图案的最外面部分。 使用一条或两条线改善从填充材料开始的顶板。"
             }
+            FdmQml_Param{ id:top_skin_density; objectName: "top_skin_density"
+                fdmLabel: "顶部皮肤层密度"
+                fdmDescription: "可以调整顶部皮肤层密度，最低100"
+            }
+            FdmQml_Param{ id:top_surface_one_wall; objectName: "top_surface_one_wall"
+                fdmLabel: "顶部使用单层墙"
+                fdmDescription: "顶部使用单层墙，以使顶部留取更多的空间来填充图案"
+            }
             FdmQml_Param{ id:ironing_enabled; objectName: "ironing_enabled"
                 fdmLabel: "启用熨平"
-                fdmDescription: "再一次经过顶部表面，但不挤出材料。 这是为了进一步融化顶部的塑料，打造更平滑的表面。"
+                fdmDescription: "再次经过顶部表面，但这次挤出的材料非常少。这意味着将进一步熔化顶部的塑料，形成更平滑的表面。喷嘴室中的压力保持很高，确保表面折痕中也能填充材料，以保证细节。"
             }
             FdmQml_Param{ id:ironing_only_highest_layer; objectName: "ironing_only_highest_layer"
                 fdmLabel: "仅熨平最高层"
@@ -1073,7 +1107,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:expand_skins_expand_distance; objectName: "expand_skins_expand_distance"
                 fdmLabel: "皮肤扩展距离"
-                fdmDescription: "皮肤扩展到填充物中的距离。 默认距离足以弥合填充线之间的间隙，并且在填充密度低时，可以防止在皮肤与壁接触的位置出现孔洞。 通常较小的距离就足够了。"
+                fdmDescription: "皮肤扩展到填充物中的距离。 值越大会让皮肤与填充图案更好地附着，并让相邻层的层壁与皮肤更好地粘着。 较低的值将节省所用的材料量。"
                 FdmQml_Param{ id:top_skin_expand_distance; objectName: "top_skin_expand_distance"
                     fdmLabel: "顶部皮肤扩展距离"
                     fdmDescription: "顶部皮肤扩展到填充物中的距离。 值越大会让皮肤与填充图案更好地附着，并让上方层的层壁与皮肤更好地粘着。 较低的值将节省所用的材料量。"
@@ -1109,7 +1143,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_pattern; objectName: "infill_pattern"
                 fdmLabel: "填充图案"
-                fdmDescription: "打印填充材料的图案。 线条和锯齿形填充在交替层上的交换方向，从而降低材料成本。 网格、三角形、立方体、四面体和同心图案在每层完整打印。 立方体和四面体填充随每层变化，以在各个方向提供更均衡的强度分布。"
+                fdmDescription: "打印填充材料的图案。线条和锯齿形填充在交替层上交换方向，从而降低材料成本。网格、三角形、内六角、立方体、八角形、四面体、交叉和同心图案在每层完整打印。螺旋二十四面体、立方体、四面体和八角形填充随每层变化，以在各个方向提供更均衡的强度分布。"
                 fdmOptions:{
                     "grid": "网格",
                     "lines": "直线",
@@ -1117,7 +1151,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     "trihexagon": "内六角",
                     "cubic": "立方体",
                     "cubicsubdiv": "立方体分区",
-                    "tetrahedral": "正四面体",
+                    "tetrahedral": "八角形",
                     "quarter_cubic": "四面体",
                     "concentric": "同心圆",
                     "zigzag": "锯齿状",
@@ -1140,11 +1174,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_offset_x; objectName: "infill_offset_x"
                 fdmLabel: "填充 X 轴偏移量"
-                fdmDescription: "填充图案沿 X 轴偏移此距离。"
+                fdmDescription: "填充图案沿 X 轴移动此距离。"
             }
             FdmQml_Param{ id:infill_offset_y; objectName: "infill_offset_y"
                 fdmLabel: "填充 Y 轴偏移量"
-                fdmDescription: "填充图案沿 Y 轴偏移此距离。"
+                fdmDescription: "填充图案沿 Y 轴移动此距离。"
             }
             FdmQml_Param{ id:infill_randomize_start_location; objectName: "infill_randomize_start_location"
                 fdmLabel: "开始随机化填充"
@@ -1164,7 +1198,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_overlap; objectName: "infill_overlap"
                 fdmLabel: "填充重叠百分比"
-                fdmDescription: "填充物和壁之间的重叠量。 稍微重叠可让各个壁与填充物牢固连接。"
+                fdmDescription: "填充物和壁之间的重叠量占填充走线宽度的百分比。稍微重叠可让各个壁与填充物牢固连接。"
                 FdmQml_Param{ id:infill_overlap_mm; objectName: "infill_overlap_mm"
                     fdmLabel: "填充重叠"
                     fdmDescription: "填充物和壁之间的重叠量。 稍微重叠可让各个壁与填充物牢固连接。"
@@ -1255,11 +1289,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:material_bed_temperature; objectName: "material_bed_temperature"
                     fdmLabel: "打印平台温度"
-                    fdmDescription: "用于加热打印平台的温度。 如果打印平台温度为 0，则热床将不会为此次打印加热。"
+                    fdmDescription: "用于加热构建板的温度。如果此项为 0，则保持不加热构建板。"
                 }
                 FdmQml_Param{ id:material_bed_temperature_layer_0; objectName: "material_bed_temperature_layer_0"
                     fdmLabel: "打印平台温度起始层"
-                    fdmDescription: "用于第一层加热打印平台的温度。"
+                    fdmDescription: "打印第一层时用于加热构建板的温度。如果此项为 0，则在打印第一层期间保持不加热构建板。"
                 }
             }
             FdmQml_Param{ id:material_extrusion_cool_down_speed; objectName: "material_extrusion_cool_down_speed"
@@ -1275,8 +1309,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "表面能。"
             }
             FdmQml_Param{ id:material_shrinkage_percentage; objectName: "material_shrinkage_percentage"
-                fdmLabel: "收缩率"
-                fdmDescription: "百分比收缩率。"
+                fdmLabel: "缩放因子收缩补偿"
+                fdmDescription: "为了补偿材料在冷却时的收缩，将用此因子缩放模型。"
             }
             FdmQml_Param{ id:material_crystallinity; objectName: "material_crystallinity"
                 fdmLabel: "晶体材料"
@@ -1316,27 +1350,27 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_flush_purge_speed; objectName: "material_flush_purge_speed"
                 fdmLabel: "冲洗清除速度"
-                fdmDescription: "Material Station 内部值"
+                fdmDescription: "切换到其他材料后，装填材料的速度如何。"
             }
             FdmQml_Param{ id:material_flush_purge_length; objectName: "material_flush_purge_length"
                 fdmLabel: "冲洗清除长度"
-                fdmDescription: "Material Station 内部值"
+                fdmDescription: "切换到其他材料时，需要使用多少材料从喷嘴中清除之前的材料（以长丝长度计）。"
             }
             FdmQml_Param{ id:material_end_of_filament_purge_speed; objectName: "material_end_of_filament_purge_speed"
-                fdmLabel: "线末清除速度"
-                fdmDescription: "Material Station 内部值"
+                fdmLabel: "耗材末端清除速度"
+                fdmDescription: "将空线轴替换为使用相同材料的新线轴后，装填材料的速度如何。"
             }
             FdmQml_Param{ id:material_end_of_filament_purge_length; objectName: "material_end_of_filament_purge_length"
-                fdmLabel: "线末清除长度"
-                fdmDescription: "Material Station 内部值"
+                fdmLabel: "耗材末端清除长度"
+                fdmDescription: "将空线轴替换为使用相同材料的新线轴后，需要使用多少材料从喷嘴中清除之前的材料（以长丝长度计）。"
             }
             FdmQml_Param{ id:material_maximum_park_duration; objectName: "material_maximum_park_duration"
                 fdmLabel: "最长停放持续时间"
-                fdmDescription: "Material Station 内部值"
+                fdmDescription: "材料能在干燥存储区之外安全存放多长时间。"
             }
             FdmQml_Param{ id:material_no_load_move_factor; objectName: "material_no_load_move_factor"
                 fdmLabel: "空载移动系数"
-                fdmDescription: "Material Station 内部值"
+                fdmDescription: "表示长丝在进料器和喷嘴室之间被压缩多少的系数，用于确定针对长丝开关将材料移动的距离。"
             }
             FdmQml_Param{ id:material_flow; objectName: "material_flow"
                 fdmLabel: "流量"
@@ -1387,7 +1421,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:prime_tower_flow; objectName: "prime_tower_flow"
                     fdmLabel: "装填塔流量"
-                    fdmDescription: "流量补偿：挤出的材料量乘以此值。"
+                    fdmDescription: "装填塔走线的流量补偿。"
                 }
             }
             FdmQml_Param{ id:material_flow_layer_0; objectName: "material_flow_layer_0"
@@ -1460,7 +1494,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_layer_0; objectName: "speed_layer_0"
                 fdmLabel: "起始层速度"
-                fdmDescription: "起始层的速度。 建议采用较低的值以便改善与打印平台的粘着。"
+                fdmDescription: "起始层的速度。建议采用较低的值以便改善与构建板的粘着。不会影响构建板自身的粘着结构，如边沿和筏。"
                 FdmQml_Param{ id:speed_print_layer_0; objectName: "speed_print_layer_0"
                     fdmLabel: "起始层打印速度"
                     fdmDescription: "打印起始层的速度。 建议采用较低的值以便改善与打印平台的粘着。"
@@ -1674,6 +1708,12 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "回抽额外装填量"
                 fdmDescription: "有些材料可能会在空驶过程中渗出，可以在这里对其进行补偿。"
             }
+            FdmQml_Param{ id:retraction_prime_min_travel; objectName: "retraction_prime_min_travel"
+                fdmLabel: "回抽额外装填量最小空走距离"
+                fdmDescription: "有些材料可能会在空驶一定距离时，才会过程中渗出，这个是设置最空驶距离。"
+            }
+						
+			
             FdmQml_Param{ id:retraction_min_travel; objectName: "retraction_min_travel"
                 fdmLabel: "回抽最小空驶"
                 fdmDescription: "回抽发生所需的最小空驶距离。 这有助于在较小区域内实现更少的回抽。"
@@ -1687,8 +1727,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "执行最大回抽计数的范围。 该值应与回抽距离大致相同，以便一次回抽通过同一块材料的次数得到有效限制。"
             }
             FdmQml_Param{ id:limit_support_retractions; objectName: "limit_support_retractions"
-                fdmLabel: "支撑限制被撤销"
-                fdmDescription: "当从支撑移动到支撑直线时，省略撤回。启用这个设置可以节省打印时间，但是可以在支撑结构中产生出色的字符串。"
+                fdmLabel: "支撑不回抽"
+                fdmDescription: "当在各个支撑间直线移动时，省略回抽。启用这个设置可以节省打印时间，但会在支撑结构中产生过多穿线。"
             }
             FdmQml_Param{ id:retraction_combing; objectName: "retraction_combing"
                 fdmLabel: "梳理模式"
@@ -1696,13 +1736,13 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmOptions:{
                     "off": "关",
                     "all": "所有",
-                    "noskin": "无皮肤",
+                    "noskin": "除了皮肤",
                     "infill": "在填充物内"
                 }
             }
             FdmQml_Param{ id:retraction_combing_max_distance; objectName: "retraction_combing_max_distance"
                 fdmLabel: "最大梳距，无收缩"
-                fdmDescription: "当非零的时候，梳理比这段距离更长的旅行移动将会使用撤回。"
+                fdmDescription: "当大于零时，比这段距离更长的梳理空驶将会使用回抽。如果设置为零，则没有最大值，梳理空驶将不会使用回抽。"
             }
             FdmQml_Param{ id:travel_retract_before_outer_wall; objectName: "travel_retract_before_outer_wall"
                 fdmLabel: "在外壁前回抽"
@@ -1911,7 +1951,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:support_infill_angles; objectName: "support_infill_angles"
                 fdmLabel: "支撑填充走线方向"
-                fdmDescription: "用于支撑的填充图案的方向。支撑填充图案在水平面中旋转。"
+                fdmDescription: "要使用的整数走线方向列表。列表中的元素随层的进度依次使用，当达到列表末尾时将从头开始。列表项以逗号分隔，整个列表包含在方括号中。“默认“是一个空列表，即意味着使用默认角度 0 度。"
             }
             FdmQml_Param{ id:support_brim_enable; objectName: "support_brim_enable"
                 fdmLabel: "启用支撑 Brim"
@@ -1967,7 +2007,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:support_join_distance; objectName: "support_join_distance"
                 fdmLabel: "支撑结合部距离"
-                fdmDescription: "支撑结构间在 X/Y 方向的最大距离。 当分离结构之间的距离小于此值时，这些结构将合并为一个。"
+                fdmDescription: "支撑结构间在 X/Y 方向的最大距离。当分离结构之间的距离小于此值时，这些结构将合并为一体。"
             }
             FdmQml_Param{ id:support_offset; objectName: "support_offset"
                 fdmLabel: "支撑水平扩展"
@@ -2072,14 +2112,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:minimum_interface_area; objectName: "minimum_interface_area"
                 fdmLabel: "最小支撑接触面面积"
-                fdmDescription: "支撑接触面多边形的最小面积。将不会生成面积小于此值的多边形。"
+                fdmDescription: "支撑接触面多边形的最小面积。面积小于此值的多边形将打印为一般支撑。"
                 FdmQml_Param{ id:minimum_roof_area; objectName: "minimum_roof_area"
                     fdmLabel: "最小支撑顶板面积"
-                    fdmDescription: "支撑顶板的最小面积。将不会生成面积小于此值的多边形。"
+                    fdmDescription: "支撑顶板的最小面积。面积小于此值的多边形将打印为一般支撑。"
                 }
                 FdmQml_Param{ id:minimum_bottom_area; objectName: "minimum_bottom_area"
                     fdmLabel: "最小支撑底板面积"
-                    fdmDescription: "支撑底板的最小面积。将不会生成面积小于此值的多边形。"
+                    fdmDescription: "支撑底板的最小面积。面积小于此值的多边形将打印为一般支撑。"
                 }
             }
             FdmQml_Param{ id:support_interface_offset; objectName: "support_interface_offset"
@@ -2136,7 +2176,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:support_meshes_present; objectName: "support_meshes_present"
                 fdmLabel: "场景具有支撑网格"
-                fdmDescription: "场景中存在支撑网格。此设置受 Cura 控制。"
+                fdmDescription: "场景中存在支撑网格。此设置受AnkerMake控制。"
             }
         }
         FdmQml_Category{ id:platform_adhesion; objectName: "platform_adhesion"
@@ -2174,7 +2214,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skirt_gap; objectName: "skirt_gap"
                 fdmLabel: "Skirt 距离"
-                fdmDescription: ""
+                fdmDescription: "裙子和第一层印花之间的水平距离。\n这是最小的距离。多条裙边线将从这个距离向外延伸。"
             }
             FdmQml_Param{ id:skirt_brim_minimal_length; objectName: "skirt_brim_minimal_length"
                 fdmLabel: "Skirt/Brim 最小长度"
@@ -2253,7 +2293,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "基础 Raft 层的走线宽度。 这些走线应该是粗线，以便协助打印平台附着。"
             }
             FdmQml_Param{ id:raft_base_line_spacing; objectName: "raft_base_line_spacing"
-                fdmLabel: "Raft 走线间距"
+                fdmLabel: "Raft 基础走线间距"
                 fdmDescription: "基础 Raft 层的 Raft 走线之间的距离。 宽间距方便将 Raft 从打印平台移除。"
             }
             FdmQml_Param{ id:raft_speed; objectName: "raft_speed"
@@ -2366,7 +2406,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:switch_extruder_retraction_amount; objectName: "switch_extruder_retraction_amount"
                 fdmLabel: "喷嘴切换回抽距离"
-                fdmDescription: "回抽量： 设为 0，不进行任何回抽。 该值通常应与加热区的长度相同。"
+                fdmDescription: "切换挤出机时的回抽量。设为 0，不进行任何回抽。该值通常应与加热区的长度相同。"
             }
             FdmQml_Param{ id:switch_extruder_retraction_speeds; objectName: "switch_extruder_retraction_speeds"
                 fdmLabel: "喷嘴切换回抽速度"
@@ -2387,7 +2427,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         }
         FdmQml_Category{ id:meshfix; objectName: "meshfix"
             fdmLabel: "网格修复"
-            fdmDescription: "category_fixes"
+            fdmDescription: "使网格更适合 3D 打印。"
             FdmQml_Param{ id:meshfix_union_all; objectName: "meshfix_union_all"
                 fdmLabel: "联合覆盖体积"
                 fdmDescription: "忽略由网格内的重叠体积产生的内部几何，并将多个部分作为一个打印。 这可能会导致意外的内部孔洞消失。"
@@ -2402,7 +2442,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:meshfix_keep_open_polygons; objectName: "meshfix_keep_open_polygons"
                 fdmLabel: "保留断开连接的面"
-                fdmDescription: "一般情况下，Cura 会尝试缝合网格中的小孔，并移除有大孔的部分层。 启用此选项将保留那些无法缝合的部分。 当其他所有方法都无法产生正确的 GCode 时，该选项应该被用作最后手段。"
+                fdmDescription: "一般情况下，AnkerMake会尝试缝合网格中的小孔，并移除层中有大孔的部分。启用此选项将保留那些无法缝合的部分。当其他所有方法都无法产生正确的 G-code 时，最后才应考虑该选项。"
             }
             FdmQml_Param{ id:multiple_mesh_overlap; objectName: "multiple_mesh_overlap"
                 fdmLabel: "合并网格重叠"
@@ -2423,10 +2463,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         }
         FdmQml_Category{ id:blackmagic; objectName: "blackmagic"
             fdmLabel: "特殊模式"
-            fdmDescription: "category_blackmagic"
+            fdmDescription: "打印模型的非传统方式。"
             FdmQml_Param{ id:print_sequence; objectName: "print_sequence"
                 fdmLabel: "打印序列"
-                fdmDescription: "是否一次打印一层中的所有模型或等待一个模型完成后再转到下一个模型。 排队模式只有在所有模型以一种整个打印头可以在各个模型之间移动的方式分隔开，且所有模型都低于喷嘴和 X / Y 轴之间距离的情况下可用。"
+                fdmDescription: "是要一次一层地打印所有模型，还是要等待打印完一个模型后再继续打印下一个。如果 a) 仅启用了一个挤出器，并且 b) 分离所有模型的方式使得整个打印头可在这些模型间移动，并且所有模型都低于喷嘴与 X/Y 轴之间的距离，则可使用排队打印模式。"
                 fdmOptions:{
                     "all_at_once": "同时打印",
                     "one_at_a_time": "排队打印"
@@ -2437,8 +2477,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "使用此网格修改与其重叠的其他网格的填充物。 利用此网格的区域替换其他网格的填充区域。 建议仅为此网格打印一个壁，而不打印顶部/底部皮肤。"
             }
             FdmQml_Param{ id:infill_mesh_order; objectName: "infill_mesh_order"
-                fdmLabel: "填充网格顺序"
-                fdmDescription: "确定哪个填充网格在另一个填充网格的填充物内。 顺序较高的填充网格将修改顺序较低的填充网格以及普通网格的填充物。"
+                fdmLabel: "网格处理等级"
+                fdmDescription: "在考虑多个重叠的填充网格时确定此网格的优先级。其中有多个填充网格重叠的区域将采用等级最高的网格的设置。具有较高等级的填充网格将修改具有较低等级的填充网格和普通网格的填充。"
             }
             FdmQml_Param{ id:cutting_mesh; objectName: "cutting_mesh"
                 fdmLabel: "切割网格"
@@ -2478,20 +2518,24 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:magic_spiralize; objectName: "magic_spiralize"
-                fdmLabel: "螺旋打印外轮廓"
+                fdmLabel: "螺旋打印外轮廓（花瓶）"
                 fdmDescription: "螺旋打印实现外部边缘的平滑 Z 移动。 这会在整个打印上建立一个稳定的 Z 增量。 该功能会将一个实心模型转变为具有实体底部的单壁打印。 只有在当每一层仅包含一个部分时才应启用此功能。"
-            }
-            FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
-                fdmLabel: "平滑螺旋轮廓"
-                fdmDescription: "平滑螺旋轮廓以减少 Z 缝的可见性（Z 缝应在打印品上几乎看不到，但在层视图中仍然可见）。 请注意，平滑操作将倾向于模糊精细的表面细节。"
+                FdmQml_Param{ id:magic_spiralize_print_speed; objectName: "magic_spiralize_print_speed"
+                    fdmLabel: "螺旋打印的速度"
+                    fdmDescription: "螺旋打印的速度"
+                }
+                FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
+                    fdmLabel: "平滑螺旋轮廓"
+                    fdmDescription: "平滑螺旋轮廓以减少 Z 缝的可见性（Z 缝应在打印品上几乎看不到，但在层视图中仍然可见）。 请注意，平滑操作将倾向于模糊精细的表面细节。"
+                }
             }
         }
         FdmQml_Category{ id:experimental; objectName: "experimental"
             fdmLabel: "实验性"
-            fdmDescription: "实验性！"
+            fdmDescription: "尚未完全充实的功能。"
             FdmQml_Param{ id:slicing_tolerance; objectName: "slicing_tolerance"
                 fdmLabel: "切片公差"
-                fdmDescription: "如何对带有对角线表面的层进行切片。层面积可以根据层的中心与表面 (Middle) 相交的位置生成。或者每一层的面积可以为落在整个层高度中成形体积内的面积 (Exclusive)，或者为落在层中任何位置的面积 (Inclusive)。Exclusive 保留大部分细节，Inclusive 可实现最佳匹配，而 Middle 需要的处理时间最少。"
+                fdmDescription: "切片层的垂直公差。一般通过穿过每层厚度的中间截取横截面而产生该层的轮廓（中间）。此外，每层均可有一些区域，这些区域落入体积内部并遍布该层的整个厚度（排除），或层具有一些区域，这些区域落入该层内的任意位置（包含）。“包含”保留最多的细节，“排除”有利于最佳贴合，而“中间”保持最接近原始表面。"
                 fdmOptions:{
                     "middle": "Middle",
                     "exclusive": "Exclusive",
@@ -2536,15 +2580,15 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "切片层中周长小于此数值的多边形将被滤除。以切片时间为代价，较低的值可实现较高分辨率的网格。它主要用于高分辨率 SLA 打印机和包含大量细节的极小 3D 模型。"
             }
             FdmQml_Param{ id:support_skip_some_zags; objectName: "support_skip_some_zags"
-                fdmLabel: "跳过部分锯齿形连接"
-                fdmDescription: "跳过部分锯齿形连接，让支撑结构更容易打破。"
+                fdmLabel: "将支撑结构分拆成块状"
+                fdmDescription: "跳过部分支撑线连接，让支撑结构更容易脱离。 此设置适用于锯齿形支撑结构填充图案。"
             }
             FdmQml_Param{ id:support_skip_zag_per_mm; objectName: "support_skip_zag_per_mm"
                 fdmLabel: "支撑块大小"
                 fdmDescription: "每隔 N 毫米在支撑线之间略去一个连接,让支撑结构更容易脱离。"
                 FdmQml_Param{ id:support_zag_skip_count; objectName: "support_zag_skip_count"
-                    fdmLabel: "锯齿形连接跳过计数"
-                    fdmDescription: "每隔 N 个连接线跳过一次，让支撑结构更容易打破。"
+                    fdmLabel: "支撑块走线数"
+                    fdmDescription: "每隔 N 个连接线跳过一个连接，让支撑结构更容易脱离。"
                 }
             }
             FdmQml_Param{ id:draft_shield_enabled; objectName: "draft_shield_enabled"
@@ -2593,7 +2637,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:support_conical_enabled; objectName: "support_conical_enabled"
                 fdmLabel: "启用锥形支撑"
-                fdmDescription: "实验性功能： 让底部的支撑区域小于悬垂处的支撑区域。"
+                fdmDescription: "使底部的支撑区域小于悬垂处的支撑区域。"
             }
             FdmQml_Param{ id:support_conical_angle; objectName: "support_conical_angle"
                 fdmLabel: "锥形支撑角度"
@@ -2625,11 +2669,11 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:flow_rate_max_extrusion_offset; objectName: "flow_rate_max_extrusion_offset"
                 fdmLabel: "流量补偿最大挤出偏移值"
-                fdmDescription: "以毫米为单位的最大补偿距离。"
+                fdmDescription: "移动线材以补偿流量变化的最大距离（以毫米为单位）。"
             }
             FdmQml_Param{ id:flow_rate_extrusion_offset_factor; objectName: "flow_rate_extrusion_offset_factor"
                 fdmLabel: "流量补偿因子"
-                fdmDescription: "流量的倍增因子-> 距离转换。"
+                fdmDescription: "为补偿流量变化而将线材移动的距离，在挤出一秒钟的情况下占线材移动距离的百分比。"
             }
             FdmQml_Param{ id:wireframe_enabled; objectName: "wireframe_enabled"
                 fdmLabel: "单线打印（以下简称 WP）"
@@ -2689,7 +2733,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wireframe_up_half_speed; objectName: "wireframe_up_half_speed"
                 fdmLabel: "WP 轻松上行"
-                fdmDescription: ""
+                fdmDescription: "这是一个以半速挤压的向上移动的距离。\n这可以导致更好地粘附到前几层，同时不会对这些层的材料加热太多"
             }
             FdmQml_Param{ id:wireframe_top_jump; objectName: "wireframe_top_jump"
                 fdmLabel: "WP 纽结大小"
@@ -2738,23 +2782,23 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:adaptive_layer_height_variation; objectName: "adaptive_layer_height_variation"
                 fdmLabel: "自适应图层最大变化"
-                fdmDescription: "相比底层高度所允许的最大高度（单位：毫米）。"
+                fdmDescription: "最大允许高度与基层高度不同。"
             }
             FdmQml_Param{ id:adaptive_layer_height_variation_step; objectName: "adaptive_layer_height_variation_step"
                 fdmLabel: "自适应图层变化步长"
                 fdmDescription: "下一层与前一层的高度差。"
             }
             FdmQml_Param{ id:adaptive_layer_height_threshold; objectName: "adaptive_layer_height_threshold"
-                fdmLabel: "自适应图层阈值"
-                fdmDescription: "决定是否使用较小图层的阈值。该数字相当于一层中最大坡度的切线。"
+                fdmLabel: "自适应图层地形尺寸"
+                fdmDescription: "两个相邻图层之间的目标水平距离。减小此设置的值会使要使用的图层变薄，从而使图层的边缘距离更近。"
             }
             FdmQml_Param{ id:clean_between_layers; objectName: "clean_between_layers"
                 fdmLabel: "图层切换后擦拭喷嘴"
-                fdmDescription: "是否包括图层切换后擦拭喷嘴的 G-Code。启用此设置可能会影响图层变化时的回抽。请使用“擦拭回抽”设置来控制擦拭脚本将在其中工作的图层回抽。"
+                fdmDescription: "是否包括图层切换后擦拭喷嘴的 G-Code（每层最多 1 个）。启用此设置可能会影响图层变化时的回抽。请使用“擦拭回抽”设置来控制擦拭脚本将在其中工作的图层回抽。"
             }
             FdmQml_Param{ id:max_extrusion_before_wipe; objectName: "max_extrusion_before_wipe"
                 fdmLabel: "擦拭之间的材料量"
-                fdmDescription: "开始下一轮喷嘴擦拭前，可挤出的最大材料量。"
+                fdmDescription: "在开始下一轮喷嘴擦拭之前可挤出的最大材料量。如果此值小于层中所需的材料量，则该设置在此层中无效，即每层仅限擦拭一次。"
             }
             FdmQml_Param{ id:wipe_retraction_enable; objectName: "wipe_retraction_enable"
                 fdmLabel: "启用擦拭回抽"
@@ -2776,7 +2820,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "擦拭回抽移动期间耗材回抽的速度。"
                 }
                 FdmQml_Param{ id:wipe_retraction_prime_speed; objectName: "wipe_retraction_prime_speed"
-                    fdmLabel: "回抽装填速度"
+                    fdmLabel: "擦拭回抽装填速度"
                     fdmDescription: "擦拭回抽移动期间耗材装填的速度。"
                 }
             }
@@ -2785,8 +2829,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "在未回抽后暂停。"
             }
             FdmQml_Param{ id:wipe_hop_enable; objectName: "wipe_hop_enable"
-                fdmLabel: "回抽后擦拭 Z 抬升"
-                fdmDescription: "回抽完成时，打印平台会下降以便在喷嘴和打印品之间形成空隙。进而防止喷嘴在空驶过程中撞到打印品，降低打印品滑出打印平台的几率。"
+                fdmLabel: "擦拭 Z 抬升"
+                fdmDescription: "在擦拭时，构建板会降低以在喷嘴与打印件之间形成间隙。这样可防止喷嘴在行程中撞击打印件，降低从构建板上撞掉打印件的可能性。"
             }
             FdmQml_Param{ id:wipe_hop_amount; objectName: "wipe_hop_amount"
                 fdmLabel: "擦拭 Z 抬升高度"
@@ -2811,22 +2855,22 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         }
         FdmQml_Category{ id:command_line_settings; objectName: "command_line_settings"
             fdmLabel: "命令行设置"
-            fdmDescription: "未从 Cura 前端调用 CuraEngine 时使用的设置。"
+            fdmDescription: "未从AnkerMake前端调用AnkerMake Engine 时使用的设置。"
             FdmQml_Param{ id:center_object; objectName: "center_object"
                 fdmDescription: "是否将模型放置在打印平台中心 (0,0)，而不是使用模型在其中保存的坐标系统。"
-                fdmLabel: "中心模型"
+                fdmLabel: "中心点"
             }
             FdmQml_Param{ id:mesh_position_x; objectName: "mesh_position_x"
                 fdmDescription: "应用在模型 x 方向上的偏移量。"
-                fdmLabel: "网格位置 x"
+                fdmLabel: "网格X位置"
             }
             FdmQml_Param{ id:mesh_position_y; objectName: "mesh_position_y"
                 fdmDescription: "应用在模型 y 方向上的偏移量。"
-                fdmLabel: "网格位置 y"
+                fdmLabel: "网格Y位置"
             }
             FdmQml_Param{ id:mesh_position_z; objectName: "mesh_position_z"
                 fdmDescription: "应用在模型 z 方向上的偏移量。 利用此选项，您可以执行过去被称为“模型沉降”的操作。"
-                fdmLabel: "网格位置 z"
+                fdmLabel: "网格Z位置"
             }
             FdmQml_Param{ id:mesh_rotation_matrix; objectName: "mesh_rotation_matrix"
                 fdmLabel: "网格旋转矩阵"

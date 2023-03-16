@@ -43,7 +43,7 @@
  * @brief The PluginManager class provides the basic tools for managing all the plugins.
  */
 
-class PluginManager : public QObject
+class COMMONLIB_EXPORT PluginManager : public QObject
 {
     Q_OBJECT
 public:
@@ -175,7 +175,7 @@ private:
 	static QStringList outputProjectFormatListDialog(RangeIterator iterator);
 };
 
-class PluginManager::PluginRangeIterator
+class COMMONLIB_EXPORT PluginManager::PluginRangeIterator
 {
 	friend class PluginManager;
 public:

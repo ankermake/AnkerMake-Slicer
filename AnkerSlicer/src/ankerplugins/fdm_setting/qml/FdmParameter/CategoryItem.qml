@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.12
 Rectangle {
     id: root
-    //width: parent.width
     implicitHeight:30
     implicitWidth: 400
     color: "transparent"
@@ -23,7 +22,6 @@ Rectangle {
         anchors.leftMargin: 16
         color: "#FFFFFF"
         text: model.label
-        //font.bold: true
         font.weight: Font.Bold
     }
 

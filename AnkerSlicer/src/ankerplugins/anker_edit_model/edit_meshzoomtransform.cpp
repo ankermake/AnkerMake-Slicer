@@ -21,7 +21,7 @@
  *                                                                           *
  ****************************************************************************/
 
-#include <meshlab/glarea.h>
+//#include <meshlab/glarea.h>
 #include "edit_meshzoomtransform.h"
 #include <wrap/qt/gl_label.h>
 #include <wrap/gui/trackball.h>
@@ -33,7 +33,7 @@
 //#include <minwindef.h>
 #include "edit_meshtransform_factory.h"
 #include "common/GeoAndShow/support/SupportAssemblyMeshes.h"
-#include "BoxBorder.h"
+//#include "BoxBorder.h"
 #include "common/utilities/tlogger.h"
 
 using namespace vcg;
@@ -46,10 +46,22 @@ EditMeshZoomTransformTool::EditMeshZoomTransformTool()
     m_operateMoveZ = 0;
 
     originMove[0] = originMove[1] = originMove[2] = 0.0;
-    lastParams.clear();
-    lastParams.push_back(1.0);
-    lastParams.push_back(1.0);
-    lastParams.push_back(1.0);
+}
+
+void EditMeshZoomTransformTool::initInMainUI()
+{
+    m_paramUI = new CHModelZoomTransformParamsSetUI();
+
+    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Zoom);
+
+    connect(this, &EditMeshZoomTransformTool::boxSizeParamsChanged,     m_paramUI, &CHModelZoomTransformParamsSetUI::boxSizeValuesChanged);
+    connect(this, &EditMeshZoomTransformTool::scaleParamsChanged,       m_paramUI, &CHModelZoomTransformParamsSetUI::scaleValuesChanged);
+
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::viewValuesChanged, this, &EditMeshZoomTransformTool::viewValuesChanged);
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::scaleToFitSignal,  this, &EditMeshZoomTransformTool::scaleToFitClicked);
+    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::resetSignal,       this, &EditMeshZoomTransformTool::resetBtnClicked);
+    //connect(m_paramUI, &CHModelZoomTransformParamsSetUI::stateChanged,    this, &EditMeshZoomTransformTool::updateLock);
+    m_paramUI->hide();
 }
 
 bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg1, void* arg2)
@@ -71,25 +83,10 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     m_pickedObj = 0;
     m_operateMoveZ = 0;
 
-    m_paramUI = new CHModelZoomTransformParamsSetUI();
 
-    EditMeshTransformFactory::m_conInt->addWidgetToModelTransForm(m_paramUI, AkConst::FDMMeshTransForm::Zoom);
-
-    connect(this, &EditMeshZoomTransformTool::boxSizeParamsChanged,
-            m_paramUI, &CHModelZoomTransformParamsSetUI::boxSizeValuesChanged);
-    connect(this, &EditMeshZoomTransformTool::scaleParamsChanged,
-            m_paramUI, &CHModelZoomTransformParamsSetUI::scaleValuesChanged);
-
-
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::viewValuesChanged,
-            this, &EditMeshZoomTransformTool::viewValuesChanged);
-
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::scaleToFitSignal,
-            this, &EditMeshZoomTransformTool::scaleToFitClicked);
-    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::resetSignal,
-            this, &EditMeshZoomTransformTool::resetBtnClicked);
-//    connect(m_paramUI, &CHModelZoomTransformParamsSetUI::stateChanged,
-//            this, &EditMeshZoomTransformTool::updateLock);
+    if(m_paramUI){
+        m_paramUI->show();
+    }
 
     m_currentType = ZoomChangedType_View;
     
@@ -119,14 +116,7 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     CHAABB3D aabb;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        if (std::dynamic_pointer_cast<SupportAssemblyMeshes>(*it) != nullptr)
-        {
-            aabb.add((*it)->calRealAABB());
-        }
-        else
-        {
-            aabb.add((*it)->calSimilarAABB());
-        }
+        aabb.add((*it)->calRealAABB());
     }
     m_operationCenter = aabb.getCenterPoint();
 
@@ -148,7 +138,6 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
         m_paramUI->initBoxSize(aabb.getLenX(), aabb.getLenY(), aabb.getLenZ());
     }
 
-    qDebug() << "m_initBox: " << m_initBox[0] << ", " << m_initBox[1] << ", " << m_initBox[2];
     emit boxSizeParamsChanged(m_initBox, ZoomChangedType_Init);
 
     
@@ -159,8 +148,8 @@ bool EditMeshZoomTransformTool::startAnkerEdit(ActionEditTool* action, void* arg
     QColor zcolor(0, 0, 125);
     double marksize = 4;
     double adjustsize = 8;
-    int len = (aabb.getLenX() > aabb.getLenY() ? aabb.getLenX() : aabb.getLenY());
-    len = (len > aabb.getLenZ() ? len : aabb.getLenZ()) * 0.5;
+
+    int len = (m_initBox[0] + m_initBox[1] + m_initBox[2]) / 3.0;//(aabb.getLenX() > aabb.getLenY() ? aabb.getLenX() : aabb.getLenY());
     m_adjustAxisX = CHLineSegment3DShowObjPtr(new CHLineSegment3DShowObj);
     m_adjustAxisX->create(originCreateCenter, originCreateCenter + QVector3D(len, 0, 0));
     m_adjustAxisX->setColor(xcolor);
@@ -246,8 +235,7 @@ void EditMeshZoomTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
 
     if (m_paramUI)
     {
-        delete m_paramUI;
-        m_paramUI = 0;
+        m_paramUI->hide();
     }
     for (int i = 0; i < m_allShowObjs.size(); i++)
     {
@@ -275,7 +263,7 @@ void EditMeshZoomTransformTool::scaleToFitClicked()
         }
 
         QVector3D modelCenter = aabb1.getCenterPoint();
-        modelCenter.setZ(0.0);
+        modelCenter.setZ(modelCenter.z() - aabb1.getLenZ() / 2.0);
         QVector3D modelOffset = platformCenter - modelCenter;
         CHAABB3D aabb2;
         int p = 0;
@@ -305,22 +293,17 @@ void EditMeshZoomTransformTool::scaleToFitClicked()
         ratio = getTimes(aabb2, platformAabb);
         if(ratio == 1.0)
         {
-            return;
+//            emit getDoc()->modelCheckSceneInChanged();
+//            return;
         }
-        bool tmplockToPrintPlatform = m_lockToPrintPlatform;
-        m_lockToPrintPlatform = true;
-        static float lastRatio = 1.0;
-        if(fabs(lastRatio - ratio) <= 0.1)
+        else
         {
-            ratio = lastRatio;
+            params[0] = ratio;
+            params[1] = ratio;
+            params[2] = ratio;
+            m_currentType = ZoomChangedType_ScaleToFit;
+            receiveParams(params, ZoomAxisType_X);
         }
-        lastRatio = ratio;
-        params[0] = ratio;
-        params[1] = ratio;
-        params[2] = ratio;
-        m_currentType = ZoomChangedType_ScaleToFit;
-        receiveParams(params);
-
         CHAABB3D aabb3;
         for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
         {
@@ -328,8 +311,28 @@ void EditMeshZoomTransformTool::scaleToFitClicked()
             (*it)->updateToScene();
             aabb3.add((*it)->m_realAABB);
         }
+
+        float moveZ = -aabb3.m_Zmin;
+        m_operationCenter[2] += moveZ;
+        for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+        {
+            (*it)->m_params[8] += moveZ;
+
+            
+            (*it)->m_realAABB.m_Zmin += moveZ;
+            (*it)->m_realAABB.m_Zmax += moveZ;
+
+            
+            QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
+                (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
+
+            
+            (*it)->setTransform(sumtran1);
+        }
+
         //m_operationCenter = platformAabb.getCenterPoint();
         QVector3D originCreateCenter = aabb3.getCenterPoint();
+        originCreateCenter[2] += moveZ;
         m_initBox.clear();
         m_initBox.push_back(aabb3.getLenX());
         m_initBox.push_back(aabb3.getLenY());
@@ -342,11 +345,8 @@ void EditMeshZoomTransformTool::scaleToFitClicked()
             m_initValues[p][2] = (*it)->m_params[2];
             m_initValues[p][3] = (*it)->m_params[6];
             m_initValues[p][4] = (*it)->m_params[7];
-            m_initValues[p][5] = (*it)->m_params[8];
             p++;
         }
-        float minZ = -aabb3.m_Zmin;
-        originCreateCenter[2] += minZ;
         float len = (aabb3.getLenX() > aabb3.getLenY() ? aabb3.getLenX() : aabb3.getLenY());
         len = (len > aabb3.getLenZ() ? len : aabb3.getLenZ()) * 0.5;
         m_adjustAxisX->create(originCreateCenter, originCreateCenter + QVector3D(len , 0, 0));
@@ -387,9 +387,8 @@ void EditMeshZoomTransformTool::scaleToFitClicked()
         m_adjustXYZPoint->updateToScene();
 
         //createFrame(m_operationCenter, m_originAABB.getLenX() * 0.5, m_originAABB.getLenY() * 0.5, m_originAABB.getLenZ() * 0.5);
-
-        m_lockToPrintPlatform = tmplockToPrintPlatform;
         emit getDoc()->modelCheckSceneInChanged();
+        emit restartEditToolSignal();
     }
 }
 
@@ -420,19 +419,39 @@ void EditMeshZoomTransformTool::updateLock(bool check)
 void EditMeshZoomTransformTool::resetBtnClicked()
 {
     AkUtil::TFunction("");
-    int p = 0;
-    CHAABB3D /*realAABB,*/ baseAABB;
-    for(auto it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    //bool lockToPrintPlatform = m_lockToPrintPlatform;
+    if(m_editMeshModels.size() == 1)
     {
-        baseAABB.add((*it)->m_baseAABB);
-        p++;
+        CHAABB3D baseAABB;
+        baseAABB.add((*m_editMeshModels.begin())->m_baseAABB);
+        //(*m_editMeshModels.begin())->resetZoom();
+        (*m_editMeshModels.begin())->reset3x3Transform();
+        //m_lockToPrintPlatform = true;
+        int dir[3] = {1};
+        dir[0] = ((*m_editMeshModels.begin())->m_params[0] > 0 ? 1: -1);
+        dir[1] = ((*m_editMeshModels.begin())->m_params[1] > 0 ? 1: -1);
+        dir[2] = ((*m_editMeshModels.begin())->m_params[2] > 0 ? 1: -1);
+        vector<double> params(3);
+        params[0] = baseAABB.getLenX() * dir[0];
+        params[1] = baseAABB.getLenY() * dir[1];
+        params[2] = baseAABB.getLenZ() * dir[2];
+
+        emit boxSizeParamsChanged(params, ZoomChangedType_Reset);
+        //m_lockToPrintPlatform = lockToPrintPlatform;
+    }
+    else if(m_editMeshModels.size() > 1)
+    {
+        //m_lockToPrintPlatform = true;
+        resetSelectedScale();
+        submitToUI();
+        refreshScaleFrame();
+        curScene->refresh();
+        emit getDoc()->modelCheckSceneInChanged();
+        emit getDoc()->modelObjsStatusChanged(ModelStatusChangedType::ResetMesh);
+        emit restartEditToolSignal();
+        //m_lockToPrintPlatform = lockToPrintPlatform;
     }
 
-    vector<double> params(3);
-    params[0] = baseAABB.getLenX();
-    params[1] = baseAABB.getLenY();
-    params[2] = baseAABB.getLenZ();
-    emit boxSizeParamsChanged(params, ZoomChangedType_Reset);
 }
 
 float EditMeshZoomTransformTool::getRadio(const CHAABB3D& aabb, const CHAABB3D& platformAabb)
@@ -469,9 +488,9 @@ float EditMeshZoomTransformTool::getRadio(const CHAABB3D& aabb, const CHAABB3D& 
 float EditMeshZoomTransformTool::getTimes(const CHAABB3D &aabb, const CHAABB3D &platformAabb)
 {
     float ratio = 1.0;
-    float ratioX = platformAabb.getLenX() / aabb.getLenX() - 0.01; 
-    float ratioY = platformAabb.getLenY() / aabb.getLenY() - 0.01;
-    float ratioZ = platformAabb.getLenZ() / aabb.getLenZ() - 0.01;
+    float ratioX = (platformAabb.getLenX() * 0.99)/ aabb.getLenX(); 
+    float ratioY = (platformAabb.getLenY() * 0.99)/ aabb.getLenY();
+    float ratioZ = (platformAabb.getLenZ() * 0.99)/ aabb.getLenZ();
     ratio = ((ratioX < ratioY) ? ratioX : ratioY);
     ratio = ((ratio < ratioZ) ? ratio : ratioZ);
     if(fabs(ratio - 1.0) < 0.01)
@@ -570,6 +589,13 @@ void EditMeshZoomTransformTool::mouseMoveEvent(QMouseEvent* event, void*, void*)
     else if (m_stepFlag == 1) 
     {
         event->accept();
+        bool isWidget = curScene->getCurMouseInWidget(event->pos().x(), event->pos().y());
+        if(!isWidget)
+        {
+            m_stepFlag = 0;
+            m_pickedObj = 0;
+            return;
+        }
         QVector3D np, fp;
         curScene->getCurNearFarPoint(event->pos().x(), event->pos().y(), np, fp);
         CHLine3DPtr ray(new CHLine3D);
@@ -629,10 +655,21 @@ void EditMeshZoomTransformTool::mouseMoveEvent(QMouseEvent* event, void*, void*)
                 {
                     (*it)->m_params[index] = m_values[i][index] * result.m_u1;
                 }
-
+//                if(index == 3)
+//                {
+//                    index = 0;
+//                }
                 
                 QVector3D vecDir = (*it)->m_rotCenter + QVector3D(m_initValues[i][3], m_initValues[i][4], m_initValues[i][5]) - m_operationCenter;
-                QVector3D newCenter = vecDir * fabs((*it)->m_params[0] / m_initValues[i][0]) + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                QVector3D newCenter;
+                if(index == 3)
+                {
+                    newCenter = vecDir /** fabs((*it)->m_params[0] / m_initValues[i][0])*/ + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                }
+                else
+                {
+                    newCenter = vecDir /** fabs((*it)->m_params[index] / m_initValues[i][index]) */+ m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+                }
                 (*it)->m_params[6] = newCenter[0] - (*it)->m_rotCenter[0];
                 (*it)->m_params[7] = newCenter[1] - (*it)->m_rotCenter[1];
                 (*it)->m_params[8] = newCenter[2] - (*it)->m_rotCenter[2];
@@ -717,7 +754,7 @@ void EditMeshZoomTransformTool::mouseReleaseEvent(QMouseEvent* event, void*, voi
     }
 }
 
-void EditMeshZoomTransformTool::receiveBoxParams(std::vector<float> params)
+void EditMeshZoomTransformTool::receiveBoxParams(std::vector<float> params, ZoomAxisType axisType)
 {
     vector<float> scaleParams(3);
     for (int i = 0; i < scaleParams.size(); i++)
@@ -725,17 +762,17 @@ void EditMeshZoomTransformTool::receiveBoxParams(std::vector<float> params)
         scaleParams[i] = params[i] / m_initBox[i];
     }
 
-    receiveParams(scaleParams);
+    receiveParams(scaleParams, axisType);
 }
 
-void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
+void EditMeshZoomTransformTool::receiveParams(std::vector<float> params, ZoomAxisType axisType)
 {
     if (m_stepFlag == 1)
     {
         return;
     }
 
-    qDebug() << "receive params: (" << params[0] << ", " << params[1] << ", " << params[2] << ")";
+    //qDebug() << "axisType: " << axisType << ", m_operationCenter: " << m_operationCenter << ", m_operateMoveZ: " << m_operateMoveZ;
     CHAABB3D aabb;
     CHAABB3D baseAabb; 
     int k = 0;
@@ -748,7 +785,7 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
         
         QVector3D vecDir = QVector3D((*it)->m_rotCenter[0], (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]) +
             QVector3D(m_initValues[k][3], m_initValues[k][4], m_initValues[k][5]) - m_operationCenter;
-        QVector3D newCenter = vecDir * params[0] + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
+        QVector3D newCenter = vecDir  + m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
         (*it)->m_params[6] = newCenter[0] - (*it)->m_rotCenter[0];
         (*it)->m_params[7] = newCenter[1] - (*it)->m_rotCenter[1];
         (*it)->m_params[8] = newCenter[2] - (*it)->m_rotCenter[2];
@@ -870,20 +907,37 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
 
 
     AkUtil::TDebug("Calc Current: (" + QString::number(aabb.getLenX()) + ", " +
-                   QString::number(aabb.getLenY()) + ", " + QString::number(aabb.getLenX()));
+                   QString::number(aabb.getLenY()) + ", " + QString::number(aabb.getLenZ()));
     if(m_currentType == ZoomChangedType_Scale || m_currentType == ZoomChangedType_ScaleToFit)
     {
-        CHAABB3D realAABB;
-        for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-        {
-            realAABB.add((*it)->calRealAABB());
-        }
         vector<double > boxSize(3);
-        boxSize[0] = realAABB.getLenX() * ((*m_editMeshModels.begin())->m_params[0] > 0 ? 1 : -1);
-        boxSize[1] = realAABB.getLenY() * ((*m_editMeshModels.begin())->m_params[1] > 0 ? 1 : -1);
-        boxSize[2] = realAABB.getLenZ() * ((*m_editMeshModels.begin())->m_params[2] > 0 ? 1 : -1);
-        emit boxSizeParamsChanged(boxSize, m_currentType);
+        if(m_editMeshModels.size() > 1)
+        {
+            CHAABB3D realAABB;
+            for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+            {
+                realAABB.add((*it)->calRealAABB());
+            }
 
+            boxSize[0] = realAABB.getLenX() * ((*m_editMeshModels.begin())->m_params[0] > 0 ? 1 : -1);
+            boxSize[1] = realAABB.getLenY() * ((*m_editMeshModels.begin())->m_params[1] > 0 ? 1 : -1);
+            boxSize[2] = realAABB.getLenZ() * ((*m_editMeshModels.begin())->m_params[2] > 0 ? 1 : -1);
+        }
+        else if(m_editMeshModels.size() == 1)
+        {
+//            std::vector<double> tmpParams(3);
+//            for(int i = 0; i < 3; i++)
+//            {
+//                double tmp = (*m_editMeshModels.begin())->m_params[i];
+//                tmpParams[i] = tmp > 0 ? tmp : -tmp;
+//            }
+
+            boxSize[0] = (*m_editMeshModels.begin())->m_baseAABB.getLenX() * (*m_editMeshModels.begin())->m_params[0];
+            boxSize[1] = (*m_editMeshModels.begin())->m_baseAABB.getLenY() * (*m_editMeshModels.begin())->m_params[1];
+            boxSize[2] = (*m_editMeshModels.begin())->m_baseAABB.getLenZ() * (*m_editMeshModels.begin())->m_params[2];
+        }
+        //qDebug() << "boxSize: " << boxSize[0] << ", " << boxSize[1] << ", " << boxSize[2];
+        emit boxSizeParamsChanged(boxSize, m_currentType);
 
         if(m_currentType == ZoomChangedType_ScaleToFit)
         {
@@ -911,10 +965,9 @@ void EditMeshZoomTransformTool::receiveParams(std::vector<float> params)
     
     refreshScaleFrame();
     curScene->refresh();
-
 }
 
-void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, ZoomChangedType type)
+void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, ZoomChangedType type, ZoomAxisType axisType)
 {
     m_currentType = type;
     if(params.size() == 3)
@@ -922,7 +975,6 @@ void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, Zo
         std::vector<float> values(3);
         if(m_editMeshModels.size() == 1)
         {
-            qDebug() << "viewValuesChanged: " << params[0] << ", " << params[1] << ", " << params[2];
             values[0] = params[0] / m_initValues[0][0];
             values[1] = params[1] / m_initValues[0][1];
             values[2] = params[2] / m_initValues[0][2];
@@ -933,8 +985,9 @@ void EditMeshZoomTransformTool::viewValuesChanged(std::vector<double> params, Zo
             values[1] = params[1];
             values[2] = params[2];
         }
-
-        receiveParams(values);
+        //qDebug() << "m_currentType: " << m_currentType << ", params: " << params[0] << " " << params[1] << " " << params[2] <<
+        //            ", values: " << values[0] << " " << values[1] << " " << values[2];
+        receiveParams(values, axisType);
     }
 }
 
@@ -1064,6 +1117,59 @@ void EditMeshZoomTransformTool::stickOnBottom()
     curScene->refresh();
 }
 
+void EditMeshZoomTransformTool::resetSelectedScale()
+{
+    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+    {
+        //(*it)->resetZoom();
+        (*it)->resetTransform();
+        
+        //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
+
+        if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+        {
+            SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+            supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+        }
+        CH3DPrintModelPtr printModel = std::dynamic_pointer_cast<CH3DPrintModel>((*it));
+        if (printModel != nullptr)
+        {
+            for (int i = 0; i < printModel->m_supportMeshes.size(); i++)
+            {
+                SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(printModel->m_supportMeshes[i]);
+                QVector3D position, scale;
+                QQuaternion orientation;
+                double pitch, yaw, roll;
+                if (supportMesh != nullptr)
+                {
+                    supportMesh->setTransform(printModel->getTransform() * supportMesh->getLocalTransform());
+                    
+                    AkTransformMath::decomposeQMatrix4x4(supportMesh->getTransform(), position, orientation, scale);
+                    QMatrix4x4 tmpRotMat(orientation.toRotationMatrix());
+                    CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(tmpRotMat, pitch, yaw, roll);
+                    
+                    pitch = pitch / CH_PI * 180.0;
+                    yaw = yaw / CH_PI * 180.0;
+                    roll = roll / CH_PI * 180.0;
+                    supportMesh->m_params[0] = scale[0];
+                    supportMesh->m_params[1] = scale[1];
+                    supportMesh->m_params[2] = scale[2];
+                    supportMesh->m_params[3] = pitch;
+                    supportMesh->m_params[4] = yaw;
+                    supportMesh->m_params[5] = roll;
+
+                    QVector3D newCenter = supportMesh->getTransform() * supportMesh->m_rotCenter;
+                    QVector3D offset = newCenter - supportMesh->m_rotCenter;
+                    supportMesh->m_params[6] = offset[0];
+                    supportMesh->m_params[7] = offset[1];
+                    supportMesh->m_params[8] = offset[2];
+                }
+            }
+        }
+        (*it)->calRealAABB();
+    }
+}
+
 void EditMeshZoomTransformTool::refreshScaleFrame()
 {
     if (m_adjustXPoint == nullptr || m_adjustYPoint == nullptr || m_adjustZPoint == nullptr)
@@ -1080,14 +1186,28 @@ void EditMeshZoomTransformTool::refreshScaleFrame()
         float ratioY = realAABB.getLenY() / m_initBox[1];
         float ratioZ = realAABB.getLenZ() / m_initBox[2];
 
+        float ratio = 1.0;
+        ratio = (ratioX * ratioY * ratioZ) * 3.0;
+        double zoomXValue = m_adjustAxisX->getLineLength() * ratio;
+        double zoomYValue = m_adjustAxisY->getLineLength() * ratio;
+        double zoomZValue = m_adjustAxisZ->getLineLength() * ratio;
+        double machineBoxX = getDoc()->m_machineBox->m_realAABB.getLenX();
+        double machineBoxY = getDoc()->m_machineBox->m_realAABB.getLenY();
+        double machineBoxZ = getDoc()->m_machineBox->m_realAABB.getLenZ();
+        if(fabs(zoomXValue) > machineBoxX ||
+                fabs(zoomYValue) > machineBoxY ||
+                fabs(zoomZValue) > machineBoxZ)
+        {
+            ratio = machineBoxX / m_adjustAxisX->getLineLength();
+        }
         QVector3D position, scale;
         QQuaternion orientation;
         AkTransformMath::decomposeQMatrix4x4(m_firstMesh->getTransform(), position, orientation, scale);
         QVector3D center = realAABB.getCenterPoint();
         QMatrix4x4 tran1, tran2, tran3, tran4, tran5;
         tran1.translate(-center);
-        tran2.scale(ratioX,  ratioY, ratioZ);
-        tran3.rotate(orientation);
+        tran2.scale(ratio, ratio, ratio);
+         tran3.rotate(orientation);
         tran4.translate(center);
         QMatrix4x4 tmpTransform = tran4 * tran3  * tran2 * tran1;
 

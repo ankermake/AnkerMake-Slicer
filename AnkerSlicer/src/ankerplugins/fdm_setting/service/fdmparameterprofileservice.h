@@ -43,6 +43,11 @@ class FdmParameterProfileService : public QObject
 
     Q_PROPERTY(int extruderCount READ getExtruderCount NOTIFY extruderCountChanged)
 
+
+    
+    Q_PROPERTY(QString nozzleSize READ getNozzleSize NOTIFY nozzleSizeChanged)
+    Q_PROPERTY(QStringList nozzleSizeList READ getNozzleSizeList NOTIFY nozzleSizeListChanged)
+
 public:
     static FdmParameterProfileService* instance()
     {
@@ -78,6 +83,7 @@ public:
     void setCurrentProfile(QString name);
     void setCurrentMachine(QString name);
     void setCurrentMaterial(QString name);
+    void setNozzleSize(double nozzleSize);
 
     //QString &getExportProperName() ;
 
@@ -91,10 +97,16 @@ public:
     void selectProfile(QString name);
     void selectMachine(QString name);
     void selectMaterial(QString name);
+    void selectNozzle(double nozzleSize);
     //void setCurrentProfileName(QString name);
     void refreshCurrentPage();
 
     void clearCookie();
+
+
+    
+    QString getNozzleSize() ;
+    QStringList getNozzleSizeList() ;
 
 
 
@@ -125,6 +137,10 @@ public slots:
     void doCustomMaterialDeleted(QString name);
 
     void doOperateComplete();
+
+    
+    void onNozzleSizeChanged(const QString name);
+
 signals:
     void defaultParameterListChanged();
     void customParameterListChanged();
@@ -147,6 +163,9 @@ signals:
 
     void customItemListChanged();
 
+    void nozzleSizeChanged();
+    void nozzleSizeListChanged();
+
 
 private:
     //void onExtruderSwitched(int extruderIdx, FdmQmlTreeApi & treeApi);
@@ -159,6 +178,8 @@ private:
     
     QString m_currentMachineName;
     QString m_currentMaterialName;
+    
+    double m_nozzleSize;
 
     
     QMap<QString, int> machineActiveTabIdxMap;
@@ -166,6 +187,9 @@ private:
     
 
     
+
+    void allProfileDoMachineRenamed(QString oldName, QString newName);
+    void allProfileDoMaterialRenamed(QString oldName, QString newName);
 };
 
 

@@ -42,7 +42,7 @@ void LocalServer::socketReadyReadHandler()
 
         
         QStringList fileNameList;
-        fileNameList.append(recvMsg.toLocal8Bit().data());
+        fileNameList.append(recvMsg);
         emit processArgvfileNameMsg(fileNameList);
 
         qDebug() << m_server->serverName()<< " receive msg:"<< recvMsg.toLocal8Bit().data() ;
@@ -81,7 +81,7 @@ bool LocalClient::ConnectToServer(const QString &strServerName)
 
 void LocalClient::sendMessage(const QString &msg)
 {
-    m_socket->write(msg.toStdString().c_str());
+    m_socket->write(msg.toLocal8Bit());
     m_socket->flush();
 }
 

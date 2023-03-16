@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>logo_ankerslicer.ico</file>
-        <file>logo_ankerslicer.png</file>
-    </qresource>
-</RCC>

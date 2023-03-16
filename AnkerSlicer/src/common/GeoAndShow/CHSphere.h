@@ -11,7 +11,7 @@
 
 
 DEF_PTR(CHSphere)
-class CHSphere :public CHMeshShowObj
+class COMMONLIB_EXPORT CHSphere :public CHMeshShowObj
 {
 public:
 	CHSphere();

@@ -2,43 +2,11 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN">
 <context>
-    <name>AboutDialog</name>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="14"/>
-        <source>About MeshLab</source>
-        <translation>关于MeshLab</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="26"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright(C) 2005-2021&lt;/p&gt;&lt;p&gt;Paolo Cignoni&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it/%7Ecignoni&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it/~cignoni&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Visual Computing Lab&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;ISTI - CNR&lt;br/&gt;&lt;a href=&quot;http://www.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://www.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright(C) 2005-2021&lt;/p&gt;&lt;p&gt;Paolo Cignoni&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it/%7Ecignoni&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it/~cignoni&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Visual Computing Lab&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;ISTI - CNR&lt;br/&gt;&lt;a href=&quot;http://www.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://www.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="103"/>
-        <source>MESHLAB VERSION BUILT ON XXX</source>
-        <translation>基于XXX的MESHLAB版本</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="113"/>
-        <source>&lt;p&gt;&lt;strong&gt;Contacts&lt;/strong&gt;&lt;br /&gt;For detailed bug reports, meaningful feature requests and grounded technical issues please use the &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/issues&quot;&gt;GitHub services&lt;/a&gt;.&lt;br /&gt;For any other high-level question about MeshLab (&lt;em&gt;no bugs or feature requests, please&lt;/em&gt;) contact:&lt;br /&gt;- Paolo Cignoni (&lt;a href=&quot;mailto:p.cignoni@isti.cnr.it?subject=%5BMeshLab%5D%20Info%20request&quot;&gt;paolo.cignoni@isti.cnr.it&lt;/a&gt;)&lt;br /&gt;The complete list of contributors is available &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/graphs/contributors&quot;&gt;here&lt;/a&gt;.&lt;br /&gt;Some of the contributors of MeshLab have received financial support from various projects, acknowledged &lt;a href=&quot;http://vcg.isti.cnr.it/projects.php&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;strong&gt;联系人&lt;/strong&gt;&lt;br/&gt;有关详细的错误报告、有意义的功能请求和有根据的技术问题，请使用&lt;a href=”https://github.com/cnr-isti-vclab/meshlab/issues“&gt;GitHub services&lt;/a&gt;&lt;br/&gt;有关MeshLab的任何其他高级问题（&lt;em&gt;无漏洞或功能请求，请&lt;/em&gt;）请联系：&lt;br/&gt;-Paolo Cignoni（&lt;a href=“mailto:p。cignoni@isti.cnr.it?主题=%5BMeshLab%5D%20Info%20request“&gt;保罗。cignoni@isti.cnr.it&lt;/a&gt;）&lt;br/&gt;完整的贡献者列表可用&lt;a href=”https://github.com/cnr-isti-vclab/meshlab/graphs/contributors“&gt;这里&lt;/a&gt;&lt;br/&gt;MeshLab的一些贡献者已经从各种项目中获得了资金支持，这是公认的&lt;a href=”http://vcg.isti.cnr.it/projects.php“&gt;这里&lt;/a&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="138"/>
-        <source>&lt;p&gt;&lt;strong&gt;General Info:&amp;nbsp;&lt;a href=&quot;http://www.meshlab.net&quot;&gt;www.meshlab.net&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;MeshLab is the most used open source system for processing and editing 3D triangular meshes. It provides a set of tools for editing, cleaning, healing, inspecting, rendering, texturing and converting meshes. It offers features for processing raw data produced by 3D digitization tools/devices and for preparing models for 3D printing. The system is heavily based on the &lt;a href=&quot;http://www.vcglib.net&quot;&gt;VCG library&lt;/a&gt;. &lt;br /&gt;Source code is available on &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab&quot;&gt;GitHub &lt;/a&gt;(protected by GPL).&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;br /&gt;Remember that the simplest way to show your appreciation of the MeshLab system is to cite it whenever you have used some of its functionality. Please check the &lt;a href=&quot;http://www.meshlab.net/#references&quot;&gt;list of the many publications&lt;/a&gt; related with MeshLab.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;strong&gt;一般信息：&lt;a href=”http://www.meshlab.net“&gt;www.meshlab.net&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;MeshLab是处理和编辑3D三角网格最常用的开源系统。它提供了一套用于编辑、清理、修复、检查、渲染、纹理和转换网格的工具。它提供了处理3D数字化工具/设备生成的原始数据以及为3D打印准备模型的功能。该系统主要基于&lt;a href=”http://www.vcglib.net“&gt;VCG库&lt;/a&gt;&lt;br/&gt;源代码可在&lt;a href=”上找到https://github.com/cnr-isti-vclab/meshlab“&gt;GitHub&lt;/a&gt;（受GPL保护）&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;参考资料&lt;/strong&gt;&lt;br/&gt;请记住，表达您对MeshLab系统的欣赏的最简单方式是在您使用其某些功能时引用它。请查看&lt;a href=”http://www.meshlab.net/#references“&gt;与MeshLab相关的许多出版物的列表&lt;/a&gt;&lt;/p&gt;</translation>
-    </message>
-</context>
-<context>
     <name>AkProgressBar</name>
     <message>
         <location filename="../../ankerplugins/fdm_slicer/akprogressbar.cpp" line="37"/>
         <source>Form</source>
-        <translation>表格</translation>
+        <translation>格式</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_slicer/akprogressbar.cpp" line="38"/>
@@ -49,20 +17,20 @@
 <context>
     <name>AkSlicePanel</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="27"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="233"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="28"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="542"/>
         <source>Slice</source>
         <translation>切片</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="34"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="236"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="37"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="545"/>
         <source>Preview</source>
         <translation>预览</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="46"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="239"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="50"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="548"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
@@ -70,210 +38,168 @@
 <context>
     <name>AkSlicer</name>
     <message>
-        <source>Slice engine error!</source>
-        <translation type="vanished">切片引擎错误！</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="398"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="527"/>
         <source>Slice Engine Error</source>
-        <translation type="unfinished"></translation>
+        <translation>切片引擎错误！</translation>
     </message>
 </context>
 <context>
     <name>AnkerMainWindow</name>
     <message>
-        <location filename="../ankermainwindow.cpp" line="440"/>
-        <source>The file  is damaged, please try again.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="445"/>
-        <location filename="../ankermainwindow.cpp" line="458"/>
-        <location filename="../ankermainwindow.cpp" line="1394"/>
-        <source>Notice</source>
-        <translation>注意</translation>
-    </message>
-    <message>
-        <source>This operation will overrwrite the current file, do you want to save the current file ?</source>
-        <translation type="vanished">此操作将重写当前文件，是否保存当前文件？</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="609"/>
-        <location filename="../ankermainwindow.cpp" line="617"/>
-        <source>Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="222"/>
+        <location filename="../ankermainwindow.cpp" line="228"/>
         <source>Plugin Loading Error</source>
-        <translation type="unfinished"></translation>
+        <translation>加载插件时出错</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="438"/>
+        <location filename="../ankermainwindow.cpp" line="460"/>
         <source>Tip: Open files one at a time.</source>
-        <translation type="unfinished"></translation>
+        <translation>提示：请不要同时打开多个文件。</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="442"/>
+        <location filename="../ankermainwindow.cpp" line="462"/>
+        <location filename="../ankermainwindow.cpp" line="678"/>
+        <source>The file is damaged. Try again.</source>
+        <translation>文件已损坏，请再试。</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="464"/>
         <source>Only a single project file can be opened at a time.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="458"/>
-        <source>This will overwrite the file. Do you want to continue?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="609"/>
-        <source>The file is damaged. Try again.
-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="617"/>
-        <source>Export File Error</source>
-        <translation type="unfinished"></translation>
+        <translation>同时仅可打开一个项目文件</translation>
     </message>
     <message>
         <location filename="../ankermainwindow.cpp" line="467"/>
-        <location filename="../ankermainwindow.cpp" line="807"/>
-        <location filename="../ankermainwindow.cpp" line="888"/>
+        <location filename="../ankermainwindow.cpp" line="480"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
+        <source>Notice</source>
+        <translation>通知</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="480"/>
+        <source>This will overwrite the file. Do you want to continue?</source>
+        <translation>此操作将覆盖当前文件，是否继续？</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="489"/>
+        <location filename="../ankermainwindow.cpp" line="899"/>
+        <location filename="../ankermainwindow.cpp" line="984"/>
         <source>Save File</source>
         <translation>保存文件</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="842"/>
-        <location filename="../ankermainwindow.cpp" line="869"/>
-        <location filename="../ankermainwindow.cpp" line="1064"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
+        <source>Your changes will be lost without saving. Do you want to save now?</source>
+        <translation>如不保存，所做变更将丢失。是否要保存这个项目？</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="678"/>
+        <location filename="../ankermainwindow.cpp" line="686"/>
+        <location filename="../ankermainwindow.cpp" line="847"/>
+        <source>Error</source>
+        <translation>错误</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="686"/>
+        <source>Export File Error</source>
+        <translation>导出文件错误</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="847"/>
+        <source>acode file name too long</source>
+        <translation>acode文件名太长</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="842"/>
-        <location filename="../ankermainwindow.cpp" line="869"/>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
         <source>Model Not Detected</source>
-        <translation type="unfinished"></translation>
+        <translation>找不到模型！</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1050"/>
-        <location filename="../ankermainwindow.cpp" line="1057"/>
-        <location filename="../ankermainwindow.cpp" line="1163"/>
-        <location filename="../ankermainwindow.cpp" line="1209"/>
-        <location filename="../ankermainwindow.cpp" line="1217"/>
-        <location filename="../ankermainwindow.cpp" line="1229"/>
-        <location filename="../ankermainwindow.cpp" line="1297"/>
-        <location filename="../ankermainwindow.cpp" line="1308"/>
-        <source>Error While Opening</source>
-        <translation type="unfinished"></translation>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1064"/>
-        <source>Model File Error</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1394"/>
-        <source>Your changes will be lost without saving. Do you want to save now?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1543"/>
-        <location filename="../ankermainwindow.cpp" line="1595"/>
-        <location filename="../ankermainwindow.cpp" line="1687"/>
-        <source>Error While Saving</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1614"/>
-        <source>Unknown File Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1614"/>
-        <source>File extension not supported.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="922"/>
+        <location filename="../ankermainwindow.cpp" line="1033"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1023"/>
-        <location filename="../ankermainwindow.cpp" line="1179"/>
+        <location filename="../ankermainwindow.cpp" line="1154"/>
         <source>Import Mesh</source>
         <translation>导入网格</translation>
     </message>
     <message>
-        <source>AnkerMake Opening Error</source>
-        <translation type="vanished">AnkerMake 打开失败</translation>
+        <location filename="../ankermainwindow.cpp" line="1181"/>
+        <location filename="../ankermainwindow.cpp" line="1188"/>
+        <location filename="../ankermainwindow.cpp" line="1279"/>
+        <source>Error While Opening</source>
+        <translation>打开错误</translation>
     </message>
     <message>
-        <source>Model File Error!</source>
-        <translation type="vanished">模型文件错误</translation>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
+        <source>Model File Error</source>
+        <translation>模型文件错误!</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1513"/>
+        <location filename="../ankermainwindow.cpp" line="1646"/>
         <source>Save Model File</source>
         <translation>保存模型文件</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1595"/>
-        <source>You must specify file extension!!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>File extension not supported!</source>
-        <translation type="vanished">不支持文件扩展名！</translation>
+        <location filename="../ankermainwindow.cpp" line="1681"/>
+        <source>Error While Saving</source>
+        <translation>保存错误</translation>
     </message>
 </context>
 <context>
     <name>CHModelMirrorTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="185"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="191"/>
         <source>Mirror</source>
         <translation>镜像</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="114"/>
-        <source>Axis</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="188"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="191"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="62"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="92"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="120"/>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="194"/>
-        <source> Axis</source>
-        <translation>  轴</translation>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="197"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="200"/>
+        <source>Axis</source>
+        <translation> 轴</translation>
     </message>
 </context>
 <context>
     <name>CHModelMoveTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="29"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="288"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="289"/>
         <source>Move</source>
         <translation>移动</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="162"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="164"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="292"/>
         <source>Place On Bed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="291"/>
-        <source>Keeping Lay On Panel</source>
-        <translation>保持贴底</translation>
+        <translation>模型贴合热床</translation>
     </message>
 </context>
 <context>
     <name>CHModelRotationTransformParamsSetUI</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="28"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="311"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="30"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="370"/>
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
@@ -281,1339 +207,671 @@
 <context>
     <name>CHModelSupportParamsSetUi</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="32"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="280"/>
         <source>Manual Support</source>
-        <translation>手动支撑</translation>
+        <translation type="vanished">手动支撑</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="314"/>
-        <source>Disable global support</source>
-        <translation>禁用全局支撑</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="48"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="227"/>
         <source>Global Support enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">启用全局支撑</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="283"/>
         <source>Tree</source>
-        <translation>树形支撑</translation>
+        <translation type="vanished">树木</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="286"/>
         <source>Square</source>
-        <translation>方块支撑</translation>
+        <translation type="vanished">正方形</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="70"/>
         <source>Topshape</source>
-        <translation> 顶部形状</translation>
+        <translation type="vanished">顶部形状</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="292"/>
         <source>Trapezoid</source>
-        <translation>梯台</translation>
+        <translation type="vanished">梯形</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="293"/>
         <source>Sphere</source>
-        <translation>球</translation>
+        <translation type="vanished">球体</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="294"/>
         <source>Cylinder</source>
-        <translation>圆锥</translation>
+        <translation type="vanished">气缸</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="295"/>
         <source>Wedge</source>
-        <translation>三角木</translation>
+        <translation type="vanished">楔入</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="78"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="298"/>
         <source>Strength</source>
-        <translation>长度</translation>
+        <translation type="vanished">强度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="150"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="301"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="304"/>
         <source>Angle</source>
-        <translation>角度</translation>
+        <translation type="vanished">角度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="168"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="307"/>
         <source>Delete All</source>
-        <translation>删除所有</translation>
+        <translation type="vanished">全部删除</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="179"/>
         <source>Auto-Generate</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">自动生成</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="227"/>
         <source>Global Support disabled.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="310"/>
-        <source>Auto Generate</source>
-        <translation>自动生成</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="314"/>
-        <source>Enable global support</source>
-        <translation>启用全局支撑</translation>
+        <translation type="vanished">禁用全局支撑</translation>
     </message>
 </context>
 <context>
     <name>CHModelZoomTransformParamsSetUI</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="33"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="601"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="34"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="606"/>
         <source>Scale</source>
-        <translation>比例</translation>
+        <translation>规模</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="63"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="604"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="66"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="609"/>
         <source>Uniform Scaling</source>
-        <translation>均匀缩放</translation>
+        <translation>等比缩放</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="275"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="607"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="276"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="612"/>
         <source>Scale To Fit</source>
-        <translation>缩放适应</translation>
+        <translation>适应比例</translation>
     </message>
 </context>
 <context>
     <name>ChooseDevice</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="29"/>
         <source>My Printer</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">我的设备</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="56"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="120"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="63"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="123"/>
         <source>Print</source>
-        <translation type="unfinished">打印</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="117"/>
-        <source>My Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CongratsDialog</name>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="14"/>
-        <source>Congratulations!</source>
-        <translation>恭喜！</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="20"/>
-        <source>Close</source>
-        <translation>关闭</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="44"/>
-        <source>Send us an email</source>
-        <translation>给我们发邮件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="55"/>
-        <source>Share on GitHub</source>
-        <translation>在GitHub上共享</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="69"/>
-        <source>Don&apos;t show this message again.</source>
-        <translation>不再显示此消息。</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="82"/>
-        <source>Congratulations</source>
-        <translation>恭喜</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="85"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Congratulations&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-size:18pt;&quot;&gt;Congratulations! &lt;/span&gt;&lt;br /&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;&lt;br /&gt;You have successfully used MeshLab to open and process more than &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;one hundred meshes&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;!&lt;br /&gt;We hope that this means that you have found MeshLab useful.&lt;br /&gt;&lt;br /&gt;Please consider to share your experience on GitHub, or to send a short email to the developers of MeshLab, describing how MeshLab fitted your needs. Attach some screenshots of your processed meshes and tell us your impression about MeshLab. &lt;br /&gt;&lt;br /&gt;MeshLab is developed on public funding and assessment of its impact on the whole community is necessary, so, &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;please&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;, spend a couple of minutes sharing your experience to us (or at least connect with the MeshLab FaceBook page).&lt;br /&gt;&lt;br /&gt;Thanks for using MeshLab&lt;br /&gt;&lt;br /&gt;Paolo Cignoni&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;http://www.facebook.com/MeshLab&quot;&gt;&lt;img src=&quot;:images/facebook.gif&quot; /&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC“-//W3C//DTD HTML 4.0//EN”http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-
-&lt;html&gt;&lt;head&gt;&lt;meta name=“qrichtext”content=“1”/&gt;&lt;title&gt;恭喜&lt;/title&gt;&lt;style type=“text/css”&gt;
-
-p、 li{空白：预包装；}
-
-&lt;/style&gt;&lt;/head&gt;&lt;body style=“font-family:&apos;Ubuntu&apos;；字体大小：11pt；字体重量：400；字体样式：normal；“&gt;
-
-&lt;p align=“center”style=“页边距顶部：0px；页边距底部：0px；页边距左侧：0px；页边距右侧：0px；-qt块缩进：0；文本缩进：0px；”&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；字体大小：18pt；”&gt;恭喜你&lt;/span&gt;&lt;br/&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；”&gt;&lt;br/&gt;您已成功使用MeshLab打开和处理了超过&lt;/span&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；font style:italic；“&gt;一百个网格&lt;/span&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；”&gt;&lt;br/&gt;我们希望这意味着您发现MeshLab很有用&lt;BR/&gt; BR/&gt;请考虑分享您在Github上的经验，或向MeHLAB的开发者发送一封简短的电子邮件，描述MeHlab如何满足您的需求。附上一些经过处理的网格的截图，告诉我们您对MeshLab的印象&lt;br/&gt;&lt;br/&gt;MeshLab是基于公共资金开发的，有必要评估其对整个社区的影响，因此，&lt;/span&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；font style:italic；”&gt;请&lt;/span&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；”&gt;，花几分钟时间与我们分享您的体验（或者至少与MeshLab FaceBook页面联系）&lt;br/&gt;&lt;br/&gt;感谢您使用MeshLab&lt;br/&gt;&lt;br/&gt;http://www.facebook.com/MeshLab“&gt;&lt;img src=“：images/facebook。gif“/&gt;&lt;/a&gt;&lt;span style=“font family:&apos;Lucida Sans&apos;；“&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">打印</translation>
     </message>
 </context>
 <context>
     <name>CopyRightWidget</name>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="27"/>
+        <location filename="../controls/copyrightwidget.cpp" line="44"/>
+        <source>Copyright Information</source>
+        <translation>版权信息</translation>
+    </message>
+    <message>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation>名称</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>License</source>
-        <translation type="unfinished"></translation>
+        <translation>许可证</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Modifications</source>
-        <translation type="unfinished"></translation>
+        <translation>修改</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="62"/>
+        <location filename="../controls/copyrightwidget.cpp" line="72"/>
         <source>Copyright@2021 Anker Innovations Limited</source>
-        <translation type="unfinished"></translation>
+        <translation>版权归安克创新科技股份有限公司@2021所有</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="96"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>Yes</source>
-        <translation type="unfinished">是</translation>
+        <translation>是的</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="96"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>No</source>
-        <translation type="unfinished">不</translation>
+        <translation>没有</translation>
     </message>
 </context>
 <context>
     <name>DeviceInfoWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="91"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="156"/>
-        <source>Anker 3D Printer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="97"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="195"/>
-        <source>Print Mission</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="100"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="204"/>
-        <source>Time About</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="103"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="213"/>
-        <source>Speed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="106"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="225"/>
-        <source>Temp</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="109"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="269"/>
-        <source>Nozzle</source>
-        <translation type="unfinished">喷嘴直径</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="112"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="282"/>
-        <source>Heat-Bed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="115"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="294"/>
-        <source>Filament</source>
-        <translation type="unfinished">细丝</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="309"/>
-        <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="121"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="314"/>
-        <source>Print</source>
-        <translation type="unfinished">打印</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="94"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">关于</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="124"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="341"/>
-        <source>One More</source>
-        <translation type="unfinished"></translation>
+        <source>Print Job</source>
+        <translation type="vanished">打印任务</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="127"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="345"/>
+        <source>Approximate Time</source>
+        <translation type="vanished">预估耗时</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="vanished">速度</translation>
+    </message>
+    <message>
+        <source>Temperature</source>
+        <translation type="vanished">温度</translation>
+    </message>
+    <message>
+        <source>Nozzle</source>
+        <translation type="vanished">喷嘴</translation>
+    </message>
+    <message>
+        <source>Heatbed</source>
+        <translation type="vanished">热床</translation>
+    </message>
+    <message>
+        <source>Filament</source>
+        <translation type="vanished">耗材</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="vanished">打印</translation>
+    </message>
+    <message>
+        <source>Reprint</source>
+        <translation type="vanished">重新打印</translation>
+    </message>
+    <message>
         <source>Finish</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">完成</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="547"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="560"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="925"/>
+        <source>Click to create some stuff</source>
+        <translation type="vanished">点击创建一些东西</translation>
+    </message>
+    <message>
+        <source>Click to create some Stuff</source>
+        <translation type="vanished">点击创建一些东西</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">取消</translation>
+    </message>
+    <message>
+        <source>Time Saved</source>
+        <translation type="vanished">节省时间</translation>
+    </message>
+    <message>
         <source>Notice</source>
-        <translation type="unfinished">注意</translation>
+        <translation type="vanished">通知</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="548"/>
-        <source>Are you sure stop printing?</source>
-        <translation type="unfinished"></translation>
+        <source>Frequent requests, please try again later.</source>
+        <translation type="vanished">请求频繁，请稍后重试。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="561"/>
-        <source>Are you sure pause printing?</source>
-        <translation type="unfinished"></translation>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">速度已经超过了打印机的上限。如果您继续，速度将减慢，以配合您的打印机。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="672"/>
-        <source>Printing failed, please check it and try again.</source>
-        <translation type="unfinished"></translation>
+        <source>Continue</source>
+        <translation type="vanished">继续</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="798"/>
-        <source>Printing is complete! You can view the print effect remotely via video.</source>
-        <translation type="unfinished"></translation>
+        <source>Are you sure you want to stop printing?</source>
+        <translation type="vanished">确认停止打印吗？</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="836"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="866"/>
-        <source>An error has been detected, please check the device.</source>
-        <translation type="unfinished"></translation>
+        <source>Are you sure you want to pause printing?</source>
+        <translation type="vanished">确认暂停打印吗？</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="842"/>
-        <source>The filament has been broken, please reload new filament.</source>
-        <translation type="unfinished"></translation>
+        <source>A new print job will begin. Clear the heatbed before starting. Are you ready?</source>
+        <translation type="vanished">请先清理热床，如已清理完毕，是否开始新的打印？</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="893"/>
-        <source>Printing failed, please check it and try again</source>
-        <translation type="unfinished"></translation>
+        <source>Failed to start the print. Try again.</source>
+        <translation type="vanished">打印启动失败。请再试一次。</translation>
+    </message>
+    <message>
+        <source>Process G-Code</source>
+        <translation type="vanished">处理G-Code</translation>
+    </message>
+    <message>
+        <source>Leveling</source>
+        <translation type="vanished">调平</translation>
+    </message>
+    <message>
+        <source>Printing...</source>
+        <translation type="vanished">打印中...</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation type="vanished">已暂停</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation type="vanished">已完成</translation>
+    </message>
+    <message>
+        <source>Before starting, we suggest running the Auto-Level for a better</source>
+        <translation type="vanished">在开始之前，我们建议运行自动调平以获得更好的效果</translation>
+    </message>
+    <message>
+        <source>Auto-Level</source>
+        <translation type="vanished">自动调平</translation>
+    </message>
+    <message>
+        <source>You don&apos;t have printer control permissions.</source>
+        <translation type="vanished">您没有打印机控制权限。</translation>
     </message>
 </context>
 <context>
     <name>EditMeshTransformFactory</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="128"/>
-        <source>transform mesh model</source>
-        <translation>变换网格模型</translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="135"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="353"/>
+        <source>Rotate Mesh Model</source>
+        <translation>旋转网格模型</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="222"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="386"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="241"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="344"/>
         <source>Move</source>
         <translation>移动</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="387"/>
-        <source>move mesh model</source>
-        <translation>移动网格模型</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="259"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="390"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="256"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="348"/>
         <source>Zoom</source>
         <translation>缩放</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="263"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="391"/>
-        <source>zoom mesh model</source>
-        <translation>缩放网格模型</translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="260"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="349"/>
+        <source>Zoom Mesh Model</source>
+        <translation>缩放网状模型</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="275"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="394"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="271"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="352"/>
         <source>Rotate</source>
         <translation>旋转</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="395"/>
-        <source>rotate mesh model</source>
-        <translation>旋转网格模型</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="291"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="398"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="286"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="356"/>
         <source>Mirror</source>
         <translation>镜像</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="399"/>
-        <source>mirror mesh model</source>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="345"/>
+        <source>Move Mesh Model</source>
+        <translation>移动网状模型</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="357"/>
+        <source>Mirror Mesh Model</source>
         <translation>镜像网格模型</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="402"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="360"/>
         <source>Support</source>
         <translation>支撑</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="403"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="361"/>
         <source>Tree Support</source>
-        <translation>树形支撑</translation>
+        <translation>树状支撑</translation>
+    </message>
+</context>
+<context>
+    <name>ErrorMessage</name>
+    <message>
+        <source>Printing failed. Check and try again. </source>
+        <translation type="vanished">打印失败。请检查后重试。</translation>
+    </message>
+    <message>
+        <source>Printer error. Printing has stopped.</source>
+        <translation type="vanished">打印机错误。打印已停止。</translation>
+    </message>
+    <message>
+        <source>Nozzle heating failure. Printing has stopped.</source>
+        <translation type="vanished">喷嘴加热失败。打印已停止。</translation>
+    </message>
+    <message>
+        <source>Heatbed failed to heat. Printing has stopped.</source>
+        <translation type="vanished">热床加热失败。打印已停止。</translation>
+    </message>
+    <message>
+        <source>Auto-Level Error</source>
+        <translation type="vanished">自动调平错误</translation>
+    </message>
+    <message>
+        <source>Filament transfer interrupted, printing has paused. Resume printing after checking.</source>
+        <translation type="vanished">耗材传输中断，打印已暂停。检查后恢复打印。</translation>
+    </message>
+    <message>
+        <source>An error has been detected. Check your printer.</source>
+        <translation type="vanished">检测到一个错误。检查你的打印机。</translation>
+    </message>
+    <message>
+        <source>An error has been detected, please check the device.</source>
+        <translation type="vanished">打印中发现错误，请尝试检查设备</translation>
+    </message>
+    <message>
+        <source>The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</source>
+        <translation type="vanished">喷嘴温度超过了打印机的上限。如果您继续，喷嘴将调整至与您的打印机相匹配的问题。</translation>
+    </message>
+    <message>
+        <source>The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</source>
+        <translation type="vanished">热床温度已经超过了打印机的上限。如果您继续，热床温度将冷却到与您的打印机相匹配。</translation>
+    </message>
+    <message>
+        <source>Connection timeout. Try again or contact us for support.</source>
+        <translation type="vanished">连接超时。再试一次或联系我们寻求支持。</translation>
+    </message>
+    <message>
+        <source>Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</source>
+        <translation type="vanished">关闭打印机电源。错误可能导致异常高温。联系支持团队寻求帮助。</translation>
+    </message>
+    <message>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">检测到无网络。请检查。</translation>
+    </message>
+    <message>
+        <source>Unknown network error.</source>
+        <translation type="vanished">未知的网络错误，请检查电脑的网路是否正常</translation>
+    </message>
+</context>
+<context>
+    <name>ExportModelThread</name>
+    <message>
+        <location filename="../../common/file_property/export_model_thread.cpp" line="32"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
+    </message>
+</context>
+<context>
+    <name>ExportProjectWorker</name>
+    <message>
+        <location filename="../../common/file_property/export_project_thread.cpp" line="163"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
+    </message>
+</context>
+<context>
+    <name>ExtruderPage</name>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="16"/>
+        <source>Nozzle Settings</source>
+        <translation>喷嘴设置</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="44"/>
+        <source>Nozzle Offset X</source>
+        <translation>喷嘴补偿 X</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="54"/>
+        <source>Nozzle Offset Y</source>
+        <translation>喷嘴补偿 Y</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="64"/>
+        <source>Cooling Fan Number</source>
+        <translation>冷却风扇编号</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="97"/>
+        <source>Start G-Code</source>
+        <translation>开始Gcode</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="140"/>
+        <source>End G-Code</source>
+        <translation>结束Gcode</translation>
     </message>
 </context>
 <context>
     <name>FdmGcodeParser</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="298"/>
-        <source>load GCode file</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
+        <source>can&apos;t open more gcode preview widgt whice numbers must less than 10.</source>
+        <translation>无法打开更多 gcode 预览小部件，因为数字必须小于 10。</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="257"/>
+        <source>Load G-Code</source>
+        <translation>加载Gcode文件</translation>
     </message>
 </context>
 <context>
     <name>FdmSlicer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="194"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="201"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="227"/>
-        <source>is Slicing...</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>FilterScriptDialog</name>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>对话</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="321"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="329"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="376"/>
+        <source>Slicing</source>
+        <translation>切片中...</translation>
     </message>
     <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="25"/>
-        <source>Move Up</source>
-        <translation>向上移动</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
+        <source>Notice</source>
+        <translation>通知</translation>
     </message>
     <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="32"/>
-        <source>Move Down</source>
-        <translation>下移</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="39"/>
-        <source>Remove</source>
-        <translation>移除</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="46"/>
-        <source>Edit Parameters</source>
-        <translation>编辑参数</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="70"/>
-        <source>Save Script</source>
-        <translation>保存脚本</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="77"/>
-        <source>Open Script</source>
-        <translation>打开脚本</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="84"/>
-        <source>Clear Script</source>
-        <translation>清除脚本</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="104"/>
-        <source>Apply Script</source>
-        <translation>应用脚本</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="111"/>
-        <source>Close</source>
-        <translation>关闭</translation>
-    </message>
-    <message>
-        <source>Save Filter Script File</source>
-        <translation type="vanished">保存过滤器脚本文件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.cpp" line="75"/>
-        <source>Open Filter Script File</source>
-        <translation>打开过滤器脚本文件</translation>
-    </message>
-</context>
-<context>
-    <name>GLArea</name>
-    <message>
-        <location filename="../glarea.cpp" line="279"/>
-        <source>MeshLab::Appearance::backgroundBotColor</source>
-        <translation>MeshLab::Appearance::backgroundBotColor</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="282"/>
-        <source>MeshLab::Appearance::backgroundTopColor</source>
-        <translation>MeshLab::Appearance::backgroundTopColor</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="2205"/>
-        <source>Load Project</source>
-        <translation>加载项目</translation>
-    </message>
-    <message>
-        <source>Xml Files (*.xml)</source>
-        <translation type="vanished">Xml 文件 (*.xml)</translation>
-    </message>
-    <message>
-        <source>Save View To File</source>
-        <translation type="vanished">将视图保存到文件</translation>
-    </message>
-    <message>
-        <source>View file (*.xml)</source>
-        <translation type="vanished">查看文件（*.xml）</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="2276"/>
-        <source>Meshlab Saving Error</source>
-        <translation>Meshlab保存错误</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">顶部</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="vanished">底部</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation type="vanished">左</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation type="vanished">右</translation>
-    </message>
-    <message>
-        <source>Front</source>
-        <translation type="vanished">正面</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation type="vanished">返回</translation>
-    </message>
-    <message>
-        <source>Top (Z is up)</source>
-        <translation type="vanished">顶部（Z向上）</translation>
-    </message>
-    <message>
-        <source>Bottom (Z is up)</source>
-        <translation type="vanished">底部（Z向上）</translation>
-    </message>
-    <message>
-        <source>Left (Z is up)</source>
-        <translation type="vanished">左（Z向上）</translation>
-    </message>
-    <message>
-        <source>Right (Z is up)</source>
-        <translation type="vanished">向右（Z向上）</translation>
-    </message>
-    <message>
-        <source>Front (Z is up)</source>
-        <translation type="vanished">前面（Z向上）</translation>
-    </message>
-    <message>
-        <source>Back (Z is up)</source>
-        <translation type="vanished">后退（Z向上）</translation>
-    </message>
-    <message>
-        <source>Horizontal +</source>
-        <translation type="vanished">水平+</translation>
-    </message>
-    <message>
-        <source>Horizontal -</source>
-        <translation type="vanished">水平-</translation>
-    </message>
-    <message>
-        <source>Vertical +</source>
-        <translation type="vanished">垂直方向 +</translation>
-    </message>
-    <message>
-        <source>Vertical -</source>
-        <translation type="vanished">垂直方向-</translation>
-    </message>
-    <message>
-        <source>Axial +</source>
-        <translation type="vanished">轴向+</translation>
-    </message>
-    <message>
-        <source>Axial -</source>
-        <translation type="vanished">轴 -</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
+        <source>The model is hovering in the air. Please generate support or switch on [place on bed].</source>
+        <translation>模型悬空，请打开支撑功能或者开启模型贴合热床按钮</translation>
     </message>
 </context>
 <context>
     <name>GcodeViewer</name>
     <message>
-        <source>load gcode file</source>
-        <translation type="vanished">加载GCode文件</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2613"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2644"/>
         <source>Load G-Code</source>
-        <translation type="unfinished"></translation>
+        <translation>加载Gcode文件</translation>
     </message>
+</context>
+<context>
+    <name>ImportModelThread</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="3790"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4077"/>
-        <source>OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!</source>
-        <translation>OpenGlOffscreenSurface::recreateFbo() - 无法创建背景FBO！</translation>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="48"/>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="59"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
+    </message>
+</context>
+<context>
+    <name>ImportProjectWorker</name>
+    <message>
+        <location filename="../../common/file_property/import_project_thread.cpp" line="57"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
     </message>
 </context>
 <context>
     <name>LogInWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="50"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="341"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="501"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="504"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="579"/>
         <source>Region</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">国家/地区</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="78"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="498"/>
-        <source>Turkey</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="138"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="507"/>
-        <source>E-Mail</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="162"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="510"/>
-        <source>Password</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="209"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="513"/>
-        <source>Verification code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="226"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="516"/>
-        <source>Sign in</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="266"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="519"/>
-        <source>AnkerMake stores and managed yours personal information according to you country’s data privacy laws. Make sure the region you choose is the same as the region you use the decice in.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="273"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="522"/>
-        <source>search your region</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="330"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="525"/>
         <source>Email</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">电子邮箱</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="352"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="528"/>
+        <source>Password</source>
+        <translation type="vanished">密码</translation>
+    </message>
+    <message>
+        <source>Forget Password</source>
+        <translation type="vanished">忘记密码</translation>
+    </message>
+    <message>
+        <source>Verification Code</source>
+        <translation type="vanished">验证码</translation>
+    </message>
+    <message>
+        <source>Sign In</source>
+        <translation type="vanished">登录</translation>
+    </message>
+    <message>
+        <source>No Account?</source>
+        <translation type="vanished">没有账号？</translation>
+    </message>
+    <message>
+        <source>Create one</source>
+        <translation type="vanished">马上注册</translation>
+    </message>
+    <message>
+        <source>Sign Up</source>
+        <translation type="vanished">马上注册</translation>
+    </message>
+    <message>
+        <source>To protect your data privacy and security, your printer&apos;s information will only be stored on a server in your region.</source>
+        <translation type="vanished">为了保护您的数据隐私和安全，您的设备信息将只存储在您所在地区的服务器上。</translation>
+    </message>
+    <message>
+        <source>Please make sure to select the region where you live.You cannot access your devices if you choose a new region.</source>
+        <translation type="vanished">请确保选择了您当前所在的区域。如果您选择了一个与之前不同的新区域，您将无法访问这些设备。</translation>
+    </message>
+    <message>
+        <source>Search for your region</source>
+        <translation type="vanished">搜索您的地区</translation>
+    </message>
+    <message>
         <source>Server</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">服务器</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="368"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="531"/>
         <source>Log Out</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">退出登录</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="462"/>
-        <source>Invaild email fomat.Please enter again</source>
-        <translation type="unfinished"></translation>
+        <source>Invalid email format. Try again.</source>
+        <translation type="vanished">无效的邮件格式，请重试。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="466"/>
         <source>Enter password.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">请输入密码</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="606"/>
         <source>Notice</source>
-        <translation type="unfinished">注意</translation>
+        <translation type="vanished">通知</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="606"/>
-        <source>In order to protect your data and comply with local raw, please ensure you select the region that you currently live in.</source>
-        <translation type="unfinished"></translation>
+        <source>You cannot access your devices if you choose a new region.</source>
+        <translation type="vanished">如果您选择了一个与之前不同的新区域，您将无法访问这些设备。</translation>
+    </message>
+</context>
+<context>
+    <name>LoginApi</name>
+    <message>
+        <source>Notice</source>
+        <translation type="vanished">通知</translation>
+    </message>
+    <message>
+        <source>Running diagnostics Estimated time remaining: </source>
+        <translation type="vanished">运行诊断估计剩余时间：</translation>
     </message>
 </context>
 <context>
     <name>MachineView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="65"/>
         <source>Printer</source>
         <translation>打印机</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="100"/>
-        <source>Printer Settings</source>
-        <translation>打印机设置</translation>
-    </message>
-    <message>
-        <source>X(width)</source>
-        <translation type="vanished">X（宽度）</translation>
-    </message>
-    <message>
-        <source>Y(Depth)</source>
-        <translation type="vanished">Y（深度）</translation>
-    </message>
-    <message>
-        <source>Z(Height)</source>
-        <translation type="vanished">Z（高度）</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="145"/>
-        <source>Build Plate Shape</source>
-        <translation>构建板形状</translation>
-    </message>
-    <message>
-        <source>Origin At Center</source>
-        <translation type="vanished">起点在中心</translation>
-    </message>
-    <message>
-        <source>Has a heated build plate</source>
-        <translation type="vanished">构建板可加热</translation>
-    </message>
-    <message>
-        <source>Can stabilize build temperature</source>
-        <translation type="vanished">可以恒温打印</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="178"/>
-        <source>G-Code Flavor</source>
-        <translation>G代码风格</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="207"/>
-        <source>Printhead Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Number Of Extruders</source>
-        <translation type="vanished">挤出机数量</translation>
-    </message>
-    <message>
-        <source>Start G-code</source>
-        <translation type="vanished">启动G代码</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="120"/>
-        <source>X (Length)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="130"/>
-        <source>Y (Width)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="138"/>
-        <source>Z (Height)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="155"/>
-        <source>Origin at Center</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="163"/>
-        <source>Heated Build Plate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="171"/>
-        <source>Build Temperature Stabilization</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="227"/>
-        <source>Amount of Extruders</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="237"/>
-        <source>Apply Extruder Offsets to G-Code?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="255"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="416"/>
-        <source>Start G-Code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="288"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="459"/>
-        <source>End G-Code</source>
-        <translation>结束G代码</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="340"/>
-        <source>Nozzle Settings</source>
-        <translation>喷嘴设置</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="354"/>
-        <source>Compatible Material Diameter</source>
-        <translation>相容材料直径</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="365"/>
-        <source>Nozzle Offset X</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="374"/>
-        <source>Nozzle Offset Y</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="383"/>
-        <source>Cooling Fan Number</source>
-        <translation>冷却风扇编号</translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="71"/>
+        <source>Extruder</source>
+        <translation>挤出机</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <source>New Empty Project...</source>
-        <translation type="vanished">新的空项目...</translation>
-    </message>
-    <message>
-        <source>&amp;Open project...</source>
-        <translation type="vanished">&amp;打开项目。。。</translation>
-    </message>
-    <message>
-        <source>Append project to current...</source>
-        <translation type="vanished">将项目附加到当前...</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project As...</source>
-        <translation type="vanished">&amp;将项目另存为...</translation>
-    </message>
-    <message>
-        <source>Close Project</source>
-        <translation type="vanished">关闭项目</translation>
-    </message>
-    <message>
-        <source>&amp;Import Mesh...</source>
-        <translation type="vanished">&amp;导入网格...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Mesh...</source>
-        <translation type="vanished">&amp;导出网格...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Mesh As...</source>
-        <translation type="vanished">&amp;将网格导出为...</translation>
-    </message>
-    <message>
-        <source>&amp;Reload</source>
-        <translation type="vanished">&amp;重新加载</translation>
-    </message>
-    <message>
-        <source>&amp;Reload All</source>
-        <translation type="vanished">&amp;全部重新加载</translation>
-    </message>
-    <message>
-        <source>Import Raster...</source>
-        <translation type="vanished">导入光栅...</translation>
-    </message>
-    <message>
-        <source>Save snapsho&amp;t</source>
-        <translation type="vanished">保存快照</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation type="vanished">退出</translation>
-    </message>
-    <message>
-        <source>&amp;FullScreen</source>
-        <translation type="vanished">&amp;全屏</translation>
-    </message>
-    <message>
-        <source>&amp;Standard</source>
-        <translation type="vanished">&amp;标准的</translation>
-    </message>
-    <message>
-        <source>Show Info &amp;Panel</source>
-        <translation type="vanished">显示信息和面板</translation>
-    </message>
-    <message>
-        <source>Show &amp;Trackball</source>
-        <translation type="vanished">显示&amp;轨迹球</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Trackball</source>
-        <translation type="vanished">重置&amp;回滚</translation>
-    </message>
-    <message>
-        <source>Show Layer Dialog</source>
-        <translation type="vanished">显示图层对话框</translation>
-    </message>
-    <message>
-        <source>Show Current Raster Mode</source>
-        <translation type="vanished">显示当前光栅模式</translation>
-    </message>
-    <message>
-        <source>Not editing</source>
-        <translation type="vanished">不能编辑</translation>
-    </message>
-    <message>
-        <source>&amp;Tile</source>
-        <translation type="vanished">&amp;平铺</translation>
-    </message>
-    <message>
-        <source>&amp;Cascade</source>
-        <translation type="vanished">&amp;级联</translation>
-    </message>
-    <message>
-        <source>&amp;Next</source>
-        <translation type="vanished">&amp;下一个</translation>
-    </message>
-    <message>
-        <source>Close &amp;All Windows</source>
-        <translation type="vanished">关闭 &amp; 所有窗口</translation>
-    </message>
-    <message>
-        <source>&amp;Horizontally</source>
-        <translation type="vanished">&amp;水平</translation>
-    </message>
-    <message>
-        <source>&amp;Vertically</source>
-        <translation type="vanished">&amp;垂直方向</translation>
-    </message>
-    <message>
-        <source>&amp;Close current view</source>
-        <translation type="vanished">&amp;关闭当前视图</translation>
-    </message>
-    <message>
-        <source>Link Viewers</source>
-        <translation type="vanished">链接浏览者</translation>
-    </message>
-    <message>
-        <source>Front</source>
-        <translation type="vanished">正面</translation>
-    </message>
-    <message>
-        <source>Back</source>
-        <translation type="vanished">返回</translation>
-    </message>
-    <message>
-        <source>Right</source>
-        <translation type="vanished">右</translation>
-    </message>
-    <message>
-        <source>Left</source>
-        <translation type="vanished">左</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">顶部</translation>
-    </message>
-    <message>
-        <source>Bottom</source>
-        <translation type="vanished">底部</translation>
-    </message>
-    <message>
-        <source>Front (Z is up)</source>
-        <translation type="vanished">前面（Z向上）</translation>
-    </message>
-    <message>
-        <source>Back (Z is up)</source>
-        <translation type="vanished">后退（Z向上）</translation>
-    </message>
-    <message>
-        <source>Right (Z is up)</source>
-        <translation type="vanished">向右（Z向上）</translation>
-    </message>
-    <message>
-        <source>Left (Z is up)</source>
-        <translation type="vanished">左（Z向上）</translation>
-    </message>
-    <message>
-        <source>Top (Z is up)</source>
-        <translation type="vanished">顶部（Z向上）</translation>
-    </message>
-    <message>
-        <source>Bottom (Z is up)</source>
-        <translation type="vanished">底部（Z向上）</translation>
-    </message>
-    <message>
-        <source>Toggle Orthographic Camera</source>
-        <translation type="vanished">切换正交摄影机</translation>
-    </message>
-    <message>
-        <source>Horizontal +</source>
-        <translation type="vanished">水平+</translation>
-    </message>
-    <message>
-        <source>Horizontal -</source>
-        <translation type="vanished">水平-</translation>
-    </message>
-    <message>
-        <source>Vertical +</source>
-        <translation type="vanished">垂直方向 +</translation>
-    </message>
-    <message>
-        <source>Vertical -</source>
-        <translation type="vanished">垂直方向-</translation>
-    </message>
-    <message>
-        <source>Axial +</source>
-        <translation type="vanished">轴向+</translation>
-    </message>
-    <message>
-        <source>Axial -</source>
-        <translation type="vanished">轴 -</translation>
-    </message>
-    <message>
-        <source>View from Mesh Camera</source>
-        <translation type="vanished">从网格摄影机查看</translation>
-    </message>
-    <message>
-        <source>View from Raster Camera</source>
-        <translation type="vanished">从光栅相机观看</translation>
-    </message>
-    <message>
-        <source>Read camera settings from file</source>
-        <translation type="vanished">从文件中读取相机设置</translation>
-    </message>
-    <message>
-        <source>Restore camera settings from an XML description stored in a file.</source>
-        <translation type="vanished">从存储在文件中的XML描述恢复相机设置。</translation>
-    </message>
-    <message>
-        <source>Save camera settings to file</source>
-        <translation type="vanished">将相机设置保存到文件</translation>
-    </message>
-    <message>
-        <source>Save camera settings to a file as an XML description.</source>
-        <translation type="vanished">将相机设置保存为XML描述的文件。</translation>
-    </message>
-    <message>
-        <source>Copy camera settings to clipboard</source>
-        <translation type="vanished">将相机设置复制到剪贴板</translation>
-    </message>
-    <message>
-        <source>Save current camera settings to clipboard as a XML document that you can share or restore anytime.</source>
-        <translation type="vanished">将当前相机设置保存为XML文档，可以随时共享或还原。</translation>
-    </message>
-    <message>
-        <source>Paste clipboard to camera settings</source>
-        <translation type="vanished">将剪贴板粘贴到相机设置</translation>
-    </message>
-    <message>
-        <source>Restore camera settings from a XML description stored in the clipboard.</source>
-        <translation type="vanished">从剪贴板中存储的XML描述恢复相机设置。</translation>
-    </message>
-    <message>
-        <source>Apply filter</source>
-        <translation type="vanished">应用过滤器</translation>
-    </message>
-    <message>
-        <source>Show current filter script</source>
-        <translation type="vanished">显示当前筛选脚本</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation type="vanished">&amp;选项...</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished">&amp;关于</translation>
-    </message>
-    <message>
-        <source>Plugin Info</source>
-        <translation type="vanished">插件信息</translation>
-    </message>
-    <message>
-        <source>&amp;Up</source>
-        <translation type="vanished">&amp;向上</translation>
-    </message>
-    <message>
-        <source>&amp;Down</source>
-        <translation type="vanished">&amp;向下</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">&amp;右</translation>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">&amp;左</translation>
-    </message>
-    <message>
-        <source>Recent Projects</source>
-        <translation type="vanished">近期项目</translation>
-    </message>
-    <message>
-        <source>Recent Files</source>
-        <translation type="vanished">最近使用的文件</translation>
-    </message>
-    <message>
-        <source>&amp;ToolBars</source>
-        <translation type="vanished">&amp;工具栏</translation>
-    </message>
-    <message>
-        <source>&amp;Split</source>
-        <translation type="vanished">&amp;分裂</translation>
-    </message>
-    <message>
-        <source>Selection</source>
-        <translation type="vanished">选择</translation>
-    </message>
-    <message>
-        <source>Cleaning and Repairing</source>
-        <translation type="vanished">清除和修理</translation>
-    </message>
-    <message>
-        <source>Create New Mesh Layer</source>
-        <translation type="vanished">创建新的网格层</translation>
-    </message>
-    <message>
-        <source>Remeshing, Simplification and Reconstruction</source>
-        <translation type="vanished">重新网格化、简化、重构</translation>
-    </message>
-    <message>
-        <source>Polygonal and Quad Mesh</source>
-        <translation type="vanished">多边形和四边形网格</translation>
-    </message>
-    <message>
-        <source>Color Creation and Processing</source>
-        <translation type="vanished">色彩创造与处理</translation>
-    </message>
-    <message>
-        <source>Smoothing, Fairing and Deformation</source>
-        <translation type="vanished">平滑、光顺和变形</translation>
-    </message>
-    <message>
-        <source>Quality Measure and Computations</source>
-        <translation type="vanished">质量度量与计算</translation>
-    </message>
-    <message>
-        <source>Normals, Curvatures and Orientation</source>
-        <translation type="vanished">法线、曲率和方向</translation>
-    </message>
-    <message>
-        <source>Mesh Layer</source>
-        <translation type="vanished">网格层</translation>
-    </message>
-    <message>
-        <source>Raster Layer</source>
-        <translation type="vanished">光栅层</translation>
-    </message>
-    <message>
-        <source>Range Map</source>
-        <translation type="vanished">范围图</translation>
-    </message>
-    <message>
-        <source>Point Set</source>
-        <translation type="vanished">设定点</translation>
-    </message>
-    <message>
-        <source>Sampling</source>
-        <translation type="vanished">取样</translation>
-    </message>
-    <message>
-        <source>Texture</source>
-        <translation type="vanished">纹理</translation>
-    </message>
-    <message>
-        <source>Camera</source>
-        <translation type="vanished">相机</translation>
-    </message>
-    <message>
-        <source>&amp;Shaders</source>
-        <translation type="vanished">&amp;着色器</translation>
-    </message>
-    <message>
-        <source>&amp;%1 %2</source>
-        <translation type="vanished">&amp;%1 %2</translation>
-    </message>
-    <message>
-        <source>&amp;Split current view</source>
-        <translation type="vanished">&amp;拆分当前视图</translation>
-    </message>
-    <message>
-        <source>&amp;View from</source>
-        <translation type="vanished">&amp;从视野</translation>
-    </message>
-    <message>
-        <source>Trackball step</source>
-        <translation type="vanished">轨迹步</translation>
-    </message>
-    <message>
-        <source>&amp;%1. %2</source>
-        <translation type="vanished">&amp;%1. %2</translation>
-    </message>
-    <message>
-        <source>Filter Failure</source>
-        <translation type="vanished">过滤器故障</translation>
-    </message>
-    <message>
-        <source>PreConditions&apos; Failure</source>
-        <translation type="vanished">先决条件的失败</translation>
-    </message>
-    <message>
-        <source>GLSLang</source>
-        <translation type="vanished">GLSLang</translation>
-    </message>
-    <message>
-        <source>Save Project File</source>
-        <translation type="vanished">保存项目文件</translation>
-    </message>
-    <message>
-        <source>Project Saving Aborted</source>
-        <translation type="vanished">项目保存中止</translation>
-    </message>
-    <message>
-        <source>Open Project File</source>
-        <translation type="vanished">打开项目文件</translation>
-    </message>
-    <message>
-        <source>Meshlab Opening Error</source>
-        <translation type="vanished">Meshlab开启错误</translation>
-    </message>
-    <message>
-        <source>Open Additional Project File</source>
-        <translation type="vanished">打开其他项目文件</translation>
-    </message>
-    <message>
-        <source>Append Project File</source>
-        <translation type="vanished">追加项目文件</translation>
-    </message>
-    <message>
-        <source>Import Mesh</source>
-        <translation type="vanished">导入网格</translation>
-    </message>
-    <message>
-        <source>Opening Failure</source>
-        <translation type="vanished">开启故障</translation>
-    </message>
-    <message>
-        <source>Pre-Open Options</source>
-        <translation type="vanished">开放前选择</translation>
-    </message>
-    <message>
-        <source>Meshlab Saving Error</source>
-        <translation type="vanished">Meshlab保存错误</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/mainwindow.cpp" line="45"/>
         <source>AnkerMake</source>
-        <translation type="unfinished">安克智造</translation>
+        <translation type="vanished">AnkerMake</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/mainwindow.cpp" line="75"/>
-        <source>refresh</source>
-        <translation type="unfinished"></translation>
+        <source>Refresh</source>
+        <translation type="vanished">刷新</translation>
+    </message>
+    <message>
+        <source>Disconnect</source>
+        <translation type="vanished">已断开</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="vanished">错误</translation>
+    </message>
+    <message>
+        <source>Click to create some stuff</source>
+        <translation type="vanished">点击创建一些东西</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation type="vanished">已暂停</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation type="vanished">已完成</translation>
+    </message>
+    <message>
+        <source>Printing...</source>
+        <translation type="vanished">打印中...</translation>
     </message>
 </context>
 <context>
     <name>ManualTreeSupportTool</name>
     <message>
-        <source>support init</source>
-        <translation type="vanished">支撑初始化</translation>
+        <source>Support preprocessing...</source>
+        <translation type="vanished">支撑预处理...</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_manualtreesupport.cpp" line="298"/>
-        <source>Support Generating</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_manualtreesupport.cpp" line="803"/>
         <source>Generating support...</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">支撑生成中</translation>
     </message>
 </context>
 <context>
     <name>MaterialView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="79"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="64"/>
         <source>Global</source>
         <translation>全局</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="88"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="173"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="73"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="158"/>
         <source>Flow</source>
         <translation>流量</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="105"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="187"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="90"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="172"/>
         <source>Printing Temperature</source>
         <translation>打印温度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="119"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="201"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="104"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="186"/>
         <source>Plate Temperature</source>
-        <translation>构造板温度</translation>
+        <translation>板块温度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="134"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="119"/>
         <source>Fan Speed</source>
         <translation>风扇速度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="163"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="148"/>
         <source>Initial Layer</source>
         <translation>初始层</translation>
     </message>
@@ -1621,107 +879,80 @@ p、 li{空白：预包装；}
 <context>
     <name>MeshLabApplication</name>
     <message>
-        <location filename="../../common/mlapplication.h" line="19"/>
+        <location filename="../../common/mlapplication.h" line="22"/>
         <source>AnkerMake</source>
-        <translation>安克智造</translation>
+        <translation>AnkerMake</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="29"/>
+        <location filename="../../common/mlapplication.h" line="32"/>
         <source>http://vcg.isti.cnr.it</source>
         <translation>http://vcg.isti.cnr.it</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="30"/>
+        <location filename="../../common/mlapplication.h" line="33"/>
         <source>http://www.meshlab.net/</source>
         <translation>http://www.meshlab.net/</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="31"/>
+        <location filename="../../common/mlapplication.h" line="34"/>
         <source>http://www.meshlab.net/#download</source>
         <translation>http://www.meshlab.net/#download</translation>
     </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="33"/>
-        <source>pluginsPath</source>
-        <translation>插件路径</translation>
-    </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="34"/>
-        <source>version</source>
-        <translation>版本</translation>
-    </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="35"/>
-        <source>wordSize</source>
-        <translation>字号</translation>
-    </message>
 </context>
 <context>
-    <name>MeshLabOptionsDialog</name>
+    <name>MeshModelImport_Export</name>
     <message>
-        <location filename="../dialogs/options_dialog.cpp" line="53"/>
-        <location filename="../dialogs/options_dialog.cpp" line="179"/>
-        <source>Global Parameters Window</source>
-        <translation>全局参数窗口</translation>
-    </message>
-</context>
-<context>
-    <name>MultiViewer_Container</name>
-    <message>
-        <location filename="../multiViewer_Container.cpp" line="362"/>
-        <source>MeshLab</source>
-        <translation>MeshLab</translation>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="9"/>
+        <source>Error encountered while loading file</source>
+        <translation>加载文件时遇到错误</translation>
     </message>
     <message>
-        <source>Project &apos;%1&apos; modified.
-
-Close without saving?</source>
-        <translation type="vanished">“已修改项目“%1”。
-
-关闭而不保存？&quot;</translation>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="9"/>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="88"/>
+        <source>Error details</source>
+        <translation>错误详情</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="13"/>
+        <source>File does not exist</source>
+        <translation>文件不存在</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="28"/>
+        <source>Error while loading OBJ mask.</source>
+        <translation>加载 OBJ 掩码时出错。</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="88"/>
+        <source>Error encountered while exportering file</source>
+        <translation>导出文件时遇到错误</translation>
     </message>
 </context>
 <context>
     <name>OnlinePathWidgt</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="120"/>
         <source>Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">在线文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="138"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="225"/>
-        <source>Device Local</source>
-        <translation type="unfinished"></translation>
+        <source>Internal</source>
+        <translation type="vanished">本地文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="147"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="228"/>
         <source>Device USB</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">USB设备</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="160"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="231"/>
-        <source>search your region</source>
-        <translation type="unfinished"></translation>
+        <source>Search for your model</source>
+        <translation type="vanished">搜索您的模型</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="186"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="234"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation type="vanished">取消</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="193"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="237"/>
         <source>Print</source>
-        <translation type="unfinished">打印</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="222"/>
-        <source>Online Path</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">打印</translation>
     </message>
 </context>
 <context>
@@ -1735,94 +966,45 @@ Close without saving?</source>
 <context>
     <name>ParametersView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="89"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="74"/>
         <source>Machine</source>
         <translation>机器</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="114"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="99"/>
+        <source>Nozzle</source>
+        <translation>喷嘴</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="133"/>
         <source>Material</source>
         <translation>材料</translation>
     </message>
 </context>
 <context>
-    <name>PluginInfoDialog</name>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="14"/>
-        <source>Plugin Information</source>
-        <translation>插件信息</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="20"/>
-        <source>Load Plugins</source>
-        <translation>加载插件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="37"/>
-        <source>Plugins</source>
-        <translation>插件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="42"/>
-        <source>Enabled</source>
-        <translation>使能</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="47"/>
-        <source>Type</source>
-        <translation>类型</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="52"/>
-        <source>Vendor</source>
-        <translation>厂商</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="57"/>
-        <source>File</source>
-        <translation>文件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="62"/>
-        <source>Uninstall</source>
-        <translation>卸载</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="80"/>
-        <source>Number of plugin loaded: </source>
-        <translation>加载的插件数：</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.cpp" line="157"/>
-        <source>No plugin has been loaded.</source>
-        <translation>没有加载插件。</translation>
-    </message>
-</context>
-<context>
     <name>PreferencesListView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="33"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="42"/>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>默认值</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="82"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="90"/>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="124"/>
         <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="132"/>
         <source>Import</source>
         <translation>导入</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="154"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="146"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="178"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="169"/>
         <source>Create</source>
         <translation>创建</translation>
     </message>
@@ -1830,165 +1012,170 @@ Close without saving?</source>
 <context>
     <name>PrintControlPage</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="318"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="745"/>
-        <source>How to Add a device</source>
-        <translation type="unfinished"></translation>
+        <source>How to Add a Printer</source>
+        <translation type="vanished">如何添加打印机</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="335"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="748"/>
-        <source>Download and install the AnkerMake app, then sign up for an account.</source>
-        <translation type="unfinished"></translation>
+        <source>Download and install the AnkerMake app, and then sign up for an account.</source>
+        <translation type="vanished">下载安装AnkerMake App以注册账号</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="355"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="751"/>
-        <source>Follow on-screen instructions to add the printer to your device list and connect it to Wi-Fi.</source>
-        <translation type="unfinished"></translation>
+        <source>Follow on-screen instructions to add the printer to your printer list and connect it to Wi-Fi.</source>
+        <translation type="vanished">请根据屏幕上的指示添加打印机并为打印机配置Wi-Fi</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="381"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="754"/>
-        <source>How to connect the device&apos;s network</source>
-        <translation type="unfinished"></translation>
+        <source>How to Connect to the Printer Network</source>
+        <translation type="vanished">打印机如何连接网络</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="399"/>
-        <source>Open AnkerMake APP</source>
-        <translation type="unfinished"></translation>
+        <source>Open AnkerMake App</source>
+        <translation type="vanished">打开AnkerMake App</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="419"/>
         <source>Check the printer&apos;s settings and reconnect to the network.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">请检查打印机的网络设置。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="452"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="763"/>
-        <source>Choose a file to start print</source>
-        <translation type="unfinished"></translation>
+        <source>Choose a file to start printing.</source>
+        <translation type="vanished">选择一个文件来开始打印。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="456"/>
         <source>You can choose a local computer file or go to AnkerMake.com to download.</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">您可选择电脑中的本地文件，或前往www.ankermake.com下载文件。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="468"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="769"/>
         <source>My Computer</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">我的电脑</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="478"/>
         <source>Cloud</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">在线文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="544"/>
-        <source>load GCode file</source>
-        <translation type="unfinished"></translation>
+        <source>Load G-Code</source>
+        <translation type="vanished">加载Gcode文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="656"/>
         <source>Open</source>
-        <translation type="unfinished">打开</translation>
+        <translation type="vanished">打开</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="669"/>
-        <source>File Open Error!</source>
-        <translation type="unfinished"></translation>
+        <source>File Open Error</source>
+        <translation type="vanished">文件打开错误</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="696"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="735"/>
         <source>Notice</source>
-        <translation type="unfinished">注意</translation>
+        <translation type="vanished">通知</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="698"/>
-        <source>Print is running.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="757"/>
-        <source>Open the AnkerMake APP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="760"/>
-        <source>Click device&apos;s setting to reconnect the network</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="766"/>
-        <source>You can choose a local file on your computer or jump to the anker official website to download the file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="772"/>
-        <source>Online path</source>
-        <translation type="unfinished"></translation>
+        <source>Your printer is on.</source>
+        <translation type="vanished">您的打印机已上线</translation>
     </message>
 </context>
 <context>
     <name>PrintResultWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="49"/>
         <source>Print Analysis</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">打印结果</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="21"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="63"/>
-        <source>One More</source>
-        <translation type="unfinished"></translation>
+        <source>Reprint</source>
+        <translation type="vanished">重新打印</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="18"/>
-        <source>Result</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="24"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="27"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="67"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="91"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="121"/>
         <source>Finished</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">已完成</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="94"/>
-        <source>Heat- Bed heating failure,printing has stopped,please start over!</source>
-        <translation type="unfinished"></translation>
+        <source>Heating failed. Printing has stopped. Please restart your print.</source>
+        <translation type="vanished">热床加热失败，打印已停止。请重新启动。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="33"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="125"/>
         <source>Time Saved</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">节省时间</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="36"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="131"/>
         <source>Filament</source>
-        <translation type="unfinished">细丝</translation>
+        <translation type="vanished">耗材</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="39"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="139"/>
         <source>Print Time</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">打印时间</translation>
+    </message>
+</context>
+<context>
+    <name>PrinterPage</name>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="24"/>
+        <source>Printer Settings</source>
+        <translation>打印机设置</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="39"/>
+        <source>X (Width)</source>
+        <translation>X (宽度)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="49"/>
+        <source>Y (Depth)</source>
+        <translation>Y (深度)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="57"/>
+        <source>Z (Height)</source>
+        <translation>Z (高度)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="64"/>
+        <source>Build Plate Shape</source>
+        <translation>建板形状</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="82"/>
+        <source>Heated Build Plate</source>
+        <translation>热床已加热</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="90"/>
+        <source>Build Temperature Stabilization</source>
+        <translation>打印温度稳定</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="97"/>
+        <source>G-Code Flavor</source>
+        <translation>Gcode</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="126"/>
+        <source>Printhead Settings</source>
+        <translation>喷头设置</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="144"/>
+        <source>Amount of Extruders</source>
+        <translation>喷嘴的数量</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="154"/>
+        <source>Apply Extruder Offsets to G-Code</source>
+        <translation>将喷嘴的偏移量应用于Gcode</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="172"/>
+        <source>Start G-Code</source>
+        <translation>开始Gcode</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="206"/>
+        <source>End G-Code</source>
+        <translation>结束Gcode</translation>
     </message>
 </context>
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="26"/>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="49"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="28"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="51"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
@@ -1996,241 +1183,237 @@ Close without saving?</source>
 <context>
     <name>ProjectLoadSave</name>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="316"/>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="316"/>
-        <source>Save Path Not Found</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="321"/>
-        <source>Save File</source>
-        <translation>保存文件</translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="722"/>
-        <location filename="../../common/file_property/project_load_save.cpp" line="730"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="686"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="694"/>
         <source>Error</source>
-        <translation type="unfinished"></translation>
+        <translation>错误</translation>
     </message>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="722"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="686"/>
         <source>Import Project Error</source>
-        <translation type="unfinished"></translation>
+        <translation>导入项目错误</translation>
     </message>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="730"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="694"/>
         <source>Export Project Error</source>
-        <translation type="unfinished"></translation>
+        <translation>导出项目错误</translation>
+    </message>
+</context>
+<context>
+    <name>QHttpsSelect</name>
+    <message>
+        <source>HTTP 407 Authentication Required Error. Please log in again.</source>
+        <translation type="vanished">HTTP 407 认证要求错误。请重新登录。</translation>
+    </message>
+    <message>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">检测到无网络。请检查。</translation>
+    </message>
+    <message>
+        <source>Operation canceled.</source>
+        <translation type="vanished">操作已取消。</translation>
+    </message>
+    <message>
+        <source>Unknown network error.</source>
+        <translation type="vanished">未知的网络错误。</translation>
+    </message>
+    <message>
+        <source>Timeout error.</source>
+        <translation type="vanished">超时错误。</translation>
     </message>
 </context>
 <context>
     <name>QNetworkObject</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="740"/>
-        <source>The system is abnormal</source>
-        <translation type="unfinished"></translation>
+        <source>HTTP 407 Authentication Required Error. Please log in again.</source>
+        <translation type="vanished">HTTP 407 认证要求错误。请重新登录。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="743"/>
-        <source>Input Param Invalid</source>
-        <translation type="unfinished"></translation>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">检测到无网络。请检查。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="746"/>
-        <source>Third-party login failure</source>
-        <translation type="unfinished"></translation>
+        <source>Something&apos;s wrong. Try again later.</source>
+        <translation type="vanished">出错了。请稍后重试</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="749"/>
-        <source>The account or password is incorrect</source>
-        <translation type="unfinished"></translation>
+        <source>Invalid Parameters</source>
+        <translation type="vanished">无效参数</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="752"/>
-        <source>The account has not been activated </source>
-        <translation type="unfinished"></translation>
+        <source>Third-Party Login Failure</source>
+        <translation type="vanished">第三方登录失败</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="755"/>
+        <source>Due to 5 failed login attempts, your account has been disabled for 10 minutes. Please try again later.</source>
+        <translation type="vanished">由于尝试登陆失败5次，您的账户在10分钟内无法登陆。请稍后再试。</translation>
+    </message>
+    <message>
+        <source>The account or password is incorrect.</source>
+        <translation type="vanished">帐户或密码不正确。</translation>
+    </message>
+    <message>
+        <source>The account has not been activated.</source>
+        <translation type="vanished">帐户未被激活。</translation>
+    </message>
+    <message>
         <source>The login mode is restricted</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">登录模式受到限制</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="758"/>
-        <source>Need Captcha</source>
-        <translation type="unfinished"></translation>
+        <source>Captcha Needed</source>
+        <translation type="vanished">需要验证码</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="762"/>
         <source>Captcha Error</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">验证码错误</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="766"/>
-        <source>If the number of incorrect passwords reaches the maximum within 24 hours </source>
-        <translation type="unfinished"></translation>
+        <source>Incorrect password login limit reached. Try again in 24 hours.</source>
+        <translation type="vanished">密码错误次数过多。请24小时后重试。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="769"/>
         <source>Header parameters incorrect</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">头部请求参数不正确</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="772"/>
-        <source>Blacklisted users are prohibited from logging in</source>
-        <translation type="unfinished"></translation>
+        <source>Something&apos;s wrong. Please contact customer support.</source>
+        <translation type="vanished">登录失败，请重试。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="775"/>
-        <source>The maximum number of logins reached within 24 hours</source>
-        <translation type="unfinished"></translation>
+        <source>You&apos;ve reached the max number of daily logins. Try again in 24 hours.</source>
+        <translation type="vanished">单日登录次数过多。请24小时后重试。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="967"/>
-        <source>No device available, please use AnkerMake App to add a new device.</source>
-        <translation type="unfinished"></translation>
+        <source>No printer available. Add a new printer via the AnkerMake App.</source>
+        <translation type="vanished">没有可用的打印机。通过AnkerMake App添加一个新的打印机。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1821"/>
-        <source>Failed to start the print mission, please try again.</source>
-        <translation type="unfinished"></translation>
+        <source>AnkerMake is up to date.</source>
+        <translation type="vanished">AnkerMake 是最新的。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1850"/>
+        <source>Downloading...</source>
+        <translation type="vanished">正在下载...</translation>
+    </message>
+    <message>
         <source>Notice</source>
-        <translation type="unfinished">注意</translation>
+        <translation type="vanished">通知</translation>
+    </message>
+    <message>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">速度已经超过了打印机的上限。如果您继续，速度将减慢，以配合您的打印机。</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">取消</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="vanished">继续</translation>
+    </message>
+    <message>
+        <source>Failed to start the print. Try again.</source>
+        <translation type="vanished">打印启动失败。请再试一次。</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <source>Open File %1 Failed, errno=%2, reason is %3</source>
-        <translation type="vanished">打开文件%1失败，错误号=%2，原因是%3</translation>
+        <source>Ready to Print</source>
+        <translation type="vanished">打印机空闲</translation>
     </message>
     <message>
-        <source>Can&apos;t Open The File: </source>
-        <translation type="vanished">无法打开文件：</translation>
+        <source>Printing...</source>
+        <translation type="vanished">打印中...</translation>
     </message>
     <message>
-        <source>Can&apos;t Open the File: </source>
-        <translation type="vanished">无法打开文件：</translation>
+        <source>Paused</source>
+        <translation type="vanished">已暂停</translation>
     </message>
     <message>
-        <source>Parse File </source>
-        <translation type="vanished">解析文件</translation>
+        <source>Print Stopped</source>
+        <translation type="vanished">打印已停止</translation>
     </message>
     <message>
-        <source> Failed.</source>
-        <translation type="vanished">失败。</translation>
+        <source>Print&apos;s done</source>
+        <translation type="vanished">打印完成</translation>
     </message>
     <message>
-        <source>Can&apos;t Read File </source>
-        <translation type="vanished">无法读取文件</translation>
+        <source>Leveling</source>
+        <translation type="vanished">调平</translation>
     </message>
     <message>
-        <source>File Parse Success!</source>
-        <translation type="vanished">文件解析成功！</translation>
+        <source>Downloading...</source>
+        <translation type="vanished">正在下载...</translation>
     </message>
     <message>
-        <source>All known formats (</source>
-        <translation type="vanished">所有已知格式(</translation>
+        <source>Leveling and Heating...</source>
+        <translation type="vanished">预热调平中</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="137"/>
+        <source>Preheating...</source>
+        <translation type="vanished">打印预热中...</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4200"/>
+        <source>Failed to create background FBO. There may be insufficient memory.</source>
+        <translation>创建背景FBO失败。内存可能不足。</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4309"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>发生了未知的错误，请尝试重试</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="277"/>
+        <source>This version of OpenGL is not compatible with your setup. Upgrade your graphics driver.</source>
+        <translation>此版本的OpenGL不兼容。请升级您的显卡驱动。</translation>
+    </message>
+    <message>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>English</source>
-        <translation>英语</translation>
+        <translation>English</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="137"/>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1832"/>
-        <source>Ready to Print</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1833"/>
-        <source>Printing.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1834"/>
-        <source>Paused.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1835"/>
-        <source>Stopped.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1836"/>
-        <source>Finished.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1837"/>
-        <source>The leveling.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1838"/>
-        <source>Downloading.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1839"/>
-        <source>Leveling and Heating...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1840"/>
-        <source>Printing heating.</source>
-        <translation type="unfinished"></translation>
+        <location filename="../settingmanager.cpp" line="179"/>
+        <source>Japanese</source>
+        <translation>日本語</translation>
     </message>
 </context>
 <context>
     <name>QP2PWriteWork</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="561"/>
-        <source>File Not Found!</source>
-        <translation type="unfinished"></translation>
+        <source>File not found</source>
+        <translation type="vanished">未找到文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="568"/>
-        <source>Open File Failed!</source>
-        <translation type="unfinished"></translation>
+        <source>Failed to open file</source>
+        <translation type="vanished">无法打开文件</translation>
     </message>
 </context>
 <context>
     <name>QWorkerThreadWrite</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="194"/>
-        <source>File Not Found!</source>
-        <translation type="unfinished"></translation>
+        <source>File not found</source>
+        <translation type="vanished">未找到文件</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="201"/>
-        <source>Open File Failed!</source>
-        <translation type="unfinished"></translation>
+        <source>Failed to open file</source>
+        <translation type="vanished">无法打开文件</translation>
     </message>
 </context>
 <context>
     <name>RadioButtonItem</name>
     <message>
-        <source>Layer Height: </source>
-        <translation type="vanished">层高：</translation>
-    </message>
-    <message>
         <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/RadioButtonItem.qml" line="35"/>
-        <source>Layer Height </source>
-        <translation type="unfinished"></translation>
+        <source>Layer Height</source>
+        <translation>层高</translation>
     </message>
 </context>
 <context>
@@ -2242,305 +1425,77 @@ Close without saving?</source>
     </message>
 </context>
 <context>
-    <name>SaveMeshAttributesDialog</name>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>对话</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="22"/>
-        <source>Vert</source>
-        <translation>垂直</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="40"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="116"/>
-        <source>Flags</source>
-        <translation>标志</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="47"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="123"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="178"/>
-        <source>Color</source>
-        <translation>颜色</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="54"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="130"/>
-        <source>Quality</source>
-        <translation>质量</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="61"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="137"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="185"/>
-        <source>Normal</source>
-        <translation>典型的</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="68"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="192"/>
-        <source>TexCoord</source>
-        <translation>TexCoord</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="75"/>
-        <source>Radius</source>
-        <translation>半径</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="98"/>
-        <source>Face</source>
-        <translation>平面</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="160"/>
-        <source>Wedge</source>
-        <translation>三角木</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="215"/>
-        <source>Texture Name</source>
-        <translation>纹理名称</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="236"/>
-        <source>Rename Texture</source>
-        <translation>重命名纹理</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="243"/>
-        <source>Save Texture File(s)</source>
-        <translation>保存纹理文件</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="280"/>
-        <source>Texture Quality:</source>
-        <translation>纹理质量：</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="287"/>
-        <source> (default)</source>
-        <translation>（默认）</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="311"/>
-        <source>Additional Parameters</source>
-        <translation>附加参数</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="331"/>
-        <source>All</source>
-        <translation>全部的</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="344"/>
-        <source>None</source>
-        <translation>无</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="355"/>
-        <source>Camera</source>
-        <translation>相机</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="365"/>
-        <source>Polygonal</source>
-        <translation>多边形</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="374"/>
-        <source>Help</source>
-        <translation>帮助</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="397"/>
-        <source>OK</source>
-        <translation>完成</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="407"/>
-        <source>Cancel</source>
-        <translation>取消</translation>
-    </message>
-</context>
-<context>
     <name>SavePanel</name>
     <message>
-        <source>Save Parameters</source>
-        <translation type="vanished">保存参数</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="177"/>
-        <source>Save As Parameters</source>
-        <translation>另存为参数</translation>
-    </message>
-    <message>
-        <source>Please type a name before you save a parameters</source>
-        <translation type="vanished">请在保存参数前键入名称</translation>
-    </message>
-    <message>
-        <source>Please type a name</source>
-        <translation type="vanished">请命名</translation>
-    </message>
-    <message>
-        <source>The Name is longer than 128 chars, please choose a shorter one</source>
-        <translation type="vanished">名称长度超过128个字符，请选择一个较短的</translation>
-    </message>
-    <message>
         <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="32"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="181"/>
         <source>Save</source>
-        <translation type="unfinished">保存</translation>
+        <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="39"/>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="112"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="40"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="113"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="178"/>
         <source>Save As</source>
-        <translation type="unfinished">另存为</translation>
+        <translation>保存为</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="112"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="113"/>
         <source>Input a name before you save.</source>
-        <translation type="unfinished"></translation>
+        <translation>请在保存参数前键入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="144"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="145"/>
         <source>Input a name.</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="151"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="152"/>
         <source>Name is longer than 128 characters. Create a shorter one.</source>
-        <translation type="unfinished"></translation>
+        <translation>名称已超过128个字符，请使用较短的名称。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="159"/>
-        <source>The Name Already Exists. Please Try Another Name.</source>
-        <translation>该名称已存在，请改名。</translation>
-    </message>
-</context>
-<context>
-    <name>SaveSnapShotDialog</name>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="14"/>
-        <source>Save Snapshot</source>
-        <translation>保存快照</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="22"/>
-        <source>Output folder  </source>
-        <translation>输出文件夹</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="48"/>
-        <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="72"/>
-        <source>Base name  </source>
-        <translation>基本名称</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="95"/>
-        <source>Counter</source>
-        <translation>计数器</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="125"/>
-        <source>Snap All Layers</source>
-        <translation>给所有图层拍照</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="145"/>
-        <source>If checked, save each image independently, allowing to later combine the saved images into a very very large image</source>
-        <translation>如果选中，则单独保存每个图像，允许以后将保存的图像合并成非常大的图像</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="148"/>
-        <source>Tiled Save</source>
-        <translation>平铺保存</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="172"/>
-        <source>Background</source>
-        <translation>背景</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="180"/>
-        <source>MeshLab Gradient</source>
-        <translation>网格梯度</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="185"/>
-        <source>Alpha Transparent</source>
-        <translation>阿尔法透明</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="190"/>
-        <source>Solid White</source>
-        <translation>纯白</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="195"/>
-        <source>Solid Black</source>
-        <translation>纯黑</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="216"/>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="226"/>
-        <source>The resolution of the screenshot is the resolution of the current window multiplied by this number</source>
-        <translation>屏幕截图的分辨率是当前窗口的分辨率乘以这个数字</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="219"/>
-        <source>Screen Multiplier  </source>
-        <translation>屏幕倍增器</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="249"/>
-        <source>Add Snapshot as new Raster Layer</source>
-        <translation>将快照添加为新的光栅图层</translation>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="160"/>
+        <source>This name already exists. Try another name.</source>
+        <translation>该名称已存在。请尝试另一个名字。</translation>
     </message>
 </context>
 <context>
     <name>SceneRightMenu</name>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="20"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="594"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="629"/>
         <source>Delete</source>
         <translation>删除</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="27"/>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="32"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="597"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="632"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="36"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="600"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="635"/>
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="42"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="603"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="638"/>
         <source>Hide</source>
         <translation>隐藏</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="48"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="606"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="641"/>
         <source>Show</source>
         <translation>显示</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="54"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="609"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="644"/>
         <source>Reset</source>
         <translation>重置</translation>
     </message>
@@ -2548,116 +1503,80 @@ Close without saving?</source>
 <context>
     <name>SettingView</name>
     <message>
-        <source>Nomal</source>
-        <translation type="vanished">正常</translation>
-    </message>
-    <message>
-        <source>High</source>
-        <translation type="vanished">高</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="76"/>
         <source>Machine</source>
         <translation>机器</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="97"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="96"/>
         <source>Nozzle</source>
-        <translation>喷嘴直径</translation>
+        <translation>喷嘴</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="120"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="119"/>
         <source>Material</source>
         <translation>材料</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="158"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="155"/>
         <source>Parameters</source>
         <translation>参数</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="241"/>
-        <source>Infill</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="290"/>
-        <source>Global Support have been disabled by Manual Support.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="290"/>
-        <source>Global Support and Manual Support will take effect at the same time.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="302"/>
-        <source>Start Adhesion</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quality</source>
-        <translation type="vanished">质量</translation>
-    </message>
-    <message>
-        <source>infill Density</source>
-        <translation type="vanished">填充密度</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="209"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="203"/>
         <source>Layer Height</source>
         <translation>层高</translation>
     </message>
     <message>
-        <source>infill</source>
-        <translation type="vanished">填充</translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="234"/>
+        <source>Infill</source>
+        <translation>填充</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="273"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="261"/>
         <source>Global Support</source>
         <translation>全局支撑</translation>
     </message>
     <message>
-        <source>Global support have been disabled by manual supports</source>
-        <translation type="vanished">全局支撑已被手动支撑禁用 </translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
+        <source>Global Support have been disabled by Manual Support.</source>
+        <translation>全局支撑已被手动支撑所禁用</translation>
     </message>
     <message>
-        <source>Global support and manual support will take effect at the same time</source>
-        <translation type="vanished">全局支撑和手动支撑将同时生效 </translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
+        <source>Global Support and Manual Support will take effect at the same time.</source>
+        <translation>全局支撑和手动支撑将同时生效</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="405"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
         <source></source>
         <translation></translation>
     </message>
     <message>
-        <source>Generate Adhesion</source>
-        <translation type="vanished"> 平台附着</translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="288"/>
+        <source>Start Adhesion</source>
+        <translation>生成粘性</translation>
     </message>
 </context>
 <context>
     <name>ShotfWidget</name>
     <message>
         <location filename="../rich_parameter_gui/richparameterwidgets.cpp" line="812"/>
-        <source>Load xml camera</source>
-        <translation>加载xml摄像机</translation>
-    </message>
-    <message>
-        <source>Xml Files (*.xml)</source>
-        <translation type="vanished">Xml 文件 (*.xml)</translation>
+        <source>Load XML Camera</source>
+        <translation>加载XML摄像机</translation>
     </message>
 </context>
 <context>
     <name>ToolTip</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="20"/>
-        <source>Affects </source>
-        <translation type="unfinished"></translation>
+        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="19"/>
+        <source>Affects</source>
+        <translation>效果</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="24"/>
+        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="26"/>
         <source>Affected By</source>
-        <translation type="unfinished"></translation>
+        <translation>受影响的是</translation>
     </message>
 </context>
 <context>
@@ -2665,762 +1584,598 @@ Close without saving?</source>
     <message>
         <location filename="../translator.cpp" line="9"/>
         <source>English</source>
-        <translation type="unfinished">英语</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="10"/>
-        <source>German</source>
-        <translation type="unfinished"></translation>
+        <source>Deutsch</source>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="11"/>
-        <source>Spanish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="12"/>
-        <source>French</source>
-        <translation type="unfinished"></translation>
+        <source>Français</source>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="13"/>
-        <source>Italian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="14"/>
-        <source>Japanese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="15"/>
-        <source>Chinese Simplified</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="16"/>
-        <source>Chinese Traditional</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="17"/>
-        <location filename="../translator.cpp" line="39"/>
-        <source>Korean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="18"/>
-        <source>Russian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="19"/>
-        <source>Swedish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="20"/>
-        <source>Afrikaans</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="21"/>
-        <source>Norwegian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="22"/>
-        <source>Portuguese, Brazilian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="23"/>
-        <source>Portuguese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="24"/>
-        <source>Dutch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="25"/>
-        <source>Ukrainian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="26"/>
-        <source>Finnish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="27"/>
-        <source>Croatian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="28"/>
-        <source>Polish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="29"/>
-        <source>Czech</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="30"/>
-        <source>Hungarian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="31"/>
-        <source>Romanian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="32"/>
-        <source>Slovak</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="33"/>
-        <source>Turkish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="34"/>
-        <source>Slovenian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="35"/>
-        <source>Basque</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="36"/>
-        <source>Catalan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="37"/>
-        <source>Galician</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="38"/>
-        <source>Kabyle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="40"/>
-        <source>Filipino</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="41"/>
-        <source>Indonesian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="42"/>
-        <source>Lithuanian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="43"/>
-        <source>Valencian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="44"/>
-        <source>Arabic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="45"/>
-        <source>Vietnamese</source>
-        <translation type="unfinished"></translation>
+        <source>Italiano</source>
+        <translation>Italiano</translation>
     </message>
 </context>
 <context>
     <name>UpdateWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="26"/>
-        <source>Check For Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="35"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="115"/>
-        <source>Installsing Updates for AnkerMake</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="40"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="118"/>
-        <source>The software will install automatically after finishing the download.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="59"/>
-        <source>The download will continue in the background after you close the window.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="66"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="124"/>
-        <source>Close</source>
-        <translation type="unfinished">关闭</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="73"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="127"/>
-        <source>Stop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="112"/>
         <source>Check for Update</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">检查更新</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="121"/>
-        <source>The download will continue in the background when you close.</source>
-        <translation type="unfinished"></translation>
+        <source>Installing Updates for</source>
+        <translation type="vanished">安装升级</translation>
+    </message>
+    <message>
+        <source>The software will install automatically after finishing the download.</source>
+        <translation type="vanished">软件下载完成后将自动安装。</translation>
+    </message>
+    <message>
+        <source>The download will continue in the background after you close the window.</source>
+        <translation type="vanished">当你关闭软件时，下载将在后台继续进行。</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">关闭</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="vanished">停止</translation>
+    </message>
+    <message>
+        <source>Downloading...</source>
+        <translation type="vanished">正在下载...</translation>
+    </message>
+</context>
+<context>
+    <name>UploadLogWidget</name>
+    <message>
+        <source>Log Upload</source>
+        <translation type="vanished">日志上传</translation>
+    </message>
+    <message>
+        <source>Upload log to diagnose issues.We only see the error history, date, and system information.</source>
+        <translation type="vanished">上传日志以帮我们诊断问题，日志将只能看到错误历史、日期和系统信息</translation>
+    </message>
+    <message>
+        <source>Downloading...</source>
+        <translation type="vanished">正在下载...</translation>
+    </message>
+    <message>
+        <source>The upload will continue in the background when you close.</source>
+        <translation type="vanished">窗口关闭后我们将在后台继续上传.</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">关闭</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="vanished">停止</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation type="vanished">上传</translation>
+    </message>
+    <message>
+        <source>Installing Updates for</source>
+        <translation type="vanished">安装升级</translation>
+    </message>
+    <message>
+        <source>Uploading...</source>
+        <translation type="vanished">上传中...</translation>
     </message>
 </context>
 <context>
     <name>UserAgreementWidget</name>
     <message>
         <location filename="../controls/useragreementwidget.cpp" line="10"/>
-        <location filename="../controls/useragreementwidget.cpp" line="65"/>
+        <location filename="../controls/useragreementwidget.cpp" line="89"/>
         <source>User Agreement</source>
-        <translation type="unfinished"></translation>
+        <translation>用户协议</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="18"/>
-        <location filename="../controls/useragreementwidget.cpp" line="67"/>
+        <location filename="../controls/useragreementwidget.cpp" line="19"/>
+        <location filename="../controls/useragreementwidget.cpp" line="91"/>
         <source>Welcome to AnkerMake</source>
-        <translation type="unfinished"></translation>
+        <translation>欢迎来到AnkerMake</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="24"/>
-        <location filename="../controls/useragreementwidget.cpp" line="70"/>
-        <source>&lt;body&gt;Please click to read the &lt;a href=&quot;https://ankermake.com/terms-of-use&quot;&gt;&lt;font color = #61D37D&gt;&lt;text-decoration: none&gt;Terms of Use&lt;/a&gt; and &lt;a href=&quot;https://ankermake.com/privacy-policy&quot;&gt;&lt;font color = #61D37D&gt;&lt;&gt;Privacy Policy&lt;/a&gt; &lt;/body&gt;</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/useragreementwidget.cpp" line="34"/>
-        <location filename="../controls/useragreementwidget.cpp" line="73"/>
+        <location filename="../controls/useragreementwidget.cpp" line="36"/>
+        <location filename="../controls/useragreementwidget.cpp" line="97"/>
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>接受</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="40"/>
-        <location filename="../controls/useragreementwidget.cpp" line="76"/>
+        <location filename="../controls/useragreementwidget.cpp" line="42"/>
+        <location filename="../controls/useragreementwidget.cpp" line="100"/>
         <source>Decline</source>
-        <translation type="unfinished"></translation>
+        <translation>拒绝</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Read the </source>
+        <translation>阅读</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <source>Please read and accept</source>
+        <translation>阅读并同意</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Terms of Use</source>
+        <translation>使用条款</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <source>and</source>
+        <translation>和</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Privacy Policy</source>
+        <translation>隐私政策</translation>
     </message>
 </context>
 <context>
     <name>VSliderRange</name>
     <message>
         <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="14"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="593"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="600"/>
         <source>Arial</source>
-        <translation>Arial</translation>
-    </message>
-</context>
-<context>
-    <name>XmlStream</name>
-    <message>
-        <location filename="../../common/file_property/xml_stream.cpp" line="694"/>
-        <location filename="../../common/file_property/xml_stream.cpp" line="753"/>
-        <source>Get File Property Failed.</source>
-        <translation>获取文件属性失败。</translation>
+        <translation>键盘</translation>
     </message>
 </context>
 <context>
     <name>control::FdmMainWidget</name>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="87"/>
-        <location filename="../controls/mainwidget.cpp" line="821"/>
+        <location filename="../controls/mainwidget.cpp" line="50"/>
+        <location filename="../controls/mainwidget.cpp" line="939"/>
+        <source>Slice</source>
+        <translation>切片</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="67"/>
+        <location filename="../controls/mainwidget.cpp" line="940"/>
+        <source>Preview</source>
+        <translation>预览</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="94"/>
+        <location filename="../controls/mainwidget.cpp" line="941"/>
         <source>Device</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="182"/>
-        <location filename="../controls/mainwidget.cpp" line="824"/>
+        <location filename="../controls/mainwidget.cpp" line="191"/>
+        <location filename="../controls/mainwidget.cpp" line="976"/>
         <source>File</source>
         <translation>文件</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="192"/>
-        <location filename="../controls/mainwidget.cpp" line="284"/>
-        <location filename="../controls/mainwidget.cpp" line="826"/>
-        <location filename="../controls/mainwidget.cpp" line="911"/>
+        <location filename="../controls/mainwidget.cpp" line="201"/>
+        <location filename="../controls/mainwidget.cpp" line="356"/>
+        <location filename="../controls/mainwidget.cpp" line="978"/>
+        <location filename="../controls/mainwidget.cpp" line="1063"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="835"/>
-        <source>Open Recent...</source>
-        <translation>打开最近</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="196"/>
-        <location filename="../controls/mainwidget.cpp" line="838"/>
-        <source>Export...</source>
-        <translation>导出</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="841"/>
-        <source>All Object</source>
-        <translation>所有对象</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="198"/>
-        <location filename="../controls/mainwidget.cpp" line="213"/>
-        <location filename="../controls/mainwidget.cpp" line="217"/>
-        <location filename="../controls/mainwidget.cpp" line="844"/>
-        <location filename="../controls/mainwidget.cpp" line="866"/>
-        <location filename="../controls/mainwidget.cpp" line="875"/>
-        <source>Select Object</source>
-        <translation>选择对象</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="200"/>
-        <location filename="../controls/mainwidget.cpp" line="238"/>
-        <location filename="../controls/mainwidget.cpp" line="829"/>
-        <location filename="../controls/mainwidget.cpp" line="884"/>
-        <source>Save</source>
-        <translation>保存</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="201"/>
-        <source>Save As</source>
-        <translation>另存为</translation>
+        <location filename="../controls/mainwidget.cpp" line="202"/>
+        <location filename="../controls/mainwidget.cpp" line="987"/>
+        <source>Open Recent</source>
+        <translation>打开最近...</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="205"/>
-        <location filename="../controls/mainwidget.cpp" line="848"/>
-        <source>Edit</source>
-        <translation>编辑</translation>
+        <location filename="../controls/mainwidget.cpp" line="990"/>
+        <source>Export</source>
+        <translation>导出</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="206"/>
-        <location filename="../controls/mainwidget.cpp" line="851"/>
-        <source>Undo</source>
-        <translation>撤销</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="207"/>
-        <location filename="../controls/mainwidget.cpp" line="854"/>
-        <source>Redo</source>
-        <translation>撤回</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="832"/>
-        <source>Save as</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="857"/>
-        <source>Select Project...</source>
-        <translation>选择项目...</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="211"/>
-        <location filename="../controls/mainwidget.cpp" line="860"/>
-        <source>Copy</source>
-        <translation>复制</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="863"/>
-        <source>Delete..</source>
-        <translation>删除...</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="197"/>
-        <location filename="../controls/mainwidget.cpp" line="215"/>
-        <location filename="../controls/mainwidget.cpp" line="218"/>
-        <location filename="../controls/mainwidget.cpp" line="869"/>
-        <location filename="../controls/mainwidget.cpp" line="878"/>
+        <location filename="../controls/mainwidget.cpp" line="225"/>
+        <location filename="../controls/mainwidget.cpp" line="228"/>
+        <location filename="../controls/mainwidget.cpp" line="993"/>
+        <location filename="../controls/mainwidget.cpp" line="1021"/>
+        <location filename="../controls/mainwidget.cpp" line="1030"/>
         <source>All Objects</source>
         <translation>所有对象</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="872"/>
-        <source>Reset Transformations</source>
-        <translation>重置</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="881"/>
-        <source>Setting</source>
-        <translation>设置</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="49"/>
-        <source>Slice</source>
-        <translation type="unfinished">切片</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="61"/>
-        <source>Preview</source>
-        <translation type="unfinished">预览</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="193"/>
-        <source>Open Recent</source>
-        <translation type="unfinished"></translation>
+        <location filename="../controls/mainwidget.cpp" line="208"/>
+        <location filename="../controls/mainwidget.cpp" line="223"/>
+        <location filename="../controls/mainwidget.cpp" line="227"/>
+        <location filename="../controls/mainwidget.cpp" line="996"/>
+        <location filename="../controls/mainwidget.cpp" line="1018"/>
+        <location filename="../controls/mainwidget.cpp" line="1027"/>
+        <source>Select Object</source>
+        <translation>选择对象</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="210"/>
-        <source>Select Project</source>
-        <translation type="unfinished"></translation>
+        <location filename="../controls/mainwidget.cpp" line="248"/>
+        <location filename="../controls/mainwidget.cpp" line="981"/>
+        <location filename="../controls/mainwidget.cpp" line="1036"/>
+        <source>Save</source>
+        <translation>保存</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="212"/>
-        <source>Delete</source>
-        <translation type="unfinished">删除</translation>
+        <location filename="../controls/mainwidget.cpp" line="211"/>
+        <location filename="../controls/mainwidget.cpp" line="984"/>
+        <source>Save As</source>
+        <translation>保存为</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="215"/>
+        <location filename="../controls/mainwidget.cpp" line="1000"/>
+        <source>Edit</source>
+        <translation>编辑</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="216"/>
-        <source>Default Settings</source>
-        <translation type="unfinished"></translation>
+        <location filename="../controls/mainwidget.cpp" line="1003"/>
+        <source>Undo</source>
+        <translation>撤销</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="217"/>
+        <location filename="../controls/mainwidget.cpp" line="1006"/>
+        <source>Redo</source>
+        <translation>重做</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="220"/>
+        <location filename="../controls/mainwidget.cpp" line="1009"/>
+        <source>Select Project</source>
+        <translation>选择项目</translation>
     </message>
     <message>
         <location filename="../controls/mainwidget.cpp" line="221"/>
+        <location filename="../controls/mainwidget.cpp" line="1012"/>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="222"/>
+        <location filename="../controls/mainwidget.cpp" line="1015"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="226"/>
+        <location filename="../controls/mainwidget.cpp" line="1024"/>
+        <source>Revert to Original</source>
+        <translation>还原所有编辑</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="231"/>
+        <location filename="../controls/mainwidget.cpp" line="1033"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>设置</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="227"/>
-        <location filename="../controls/mainwidget.cpp" line="914"/>
+        <location filename="../controls/mainwidget.cpp" line="237"/>
+        <location filename="../controls/mainwidget.cpp" line="1066"/>
         <source>General</source>
-        <translation>通用设置</translation>
+        <translation>一般</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="229"/>
-        <location filename="../controls/mainwidget.cpp" line="917"/>
+        <location filename="../controls/mainwidget.cpp" line="239"/>
+        <location filename="../controls/mainwidget.cpp" line="1069"/>
         <source>Machine</source>
         <translation>机器</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="231"/>
-        <location filename="../controls/mainwidget.cpp" line="920"/>
+        <location filename="../controls/mainwidget.cpp" line="241"/>
+        <location filename="../controls/mainwidget.cpp" line="1072"/>
         <source>Material</source>
         <translation>材料</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="233"/>
-        <location filename="../controls/mainwidget.cpp" line="923"/>
+        <location filename="../controls/mainwidget.cpp" line="243"/>
+        <location filename="../controls/mainwidget.cpp" line="1075"/>
         <source>Parameters</source>
         <translation>参数</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="249"/>
-        <location filename="../controls/mainwidget.cpp" line="887"/>
+        <location filename="../controls/mainwidget.cpp" line="259"/>
+        <location filename="../controls/mainwidget.cpp" line="1039"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="252"/>
-        <location filename="../controls/mainwidget.cpp" line="890"/>
+        <location filename="../controls/mainwidget.cpp" line="265"/>
+        <location filename="../controls/mainwidget.cpp" line="1042"/>
         <source>Tutorial</source>
         <translation>教程</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="256"/>
-        <location filename="../controls/mainwidget.cpp" line="893"/>
+        <location filename="../controls/mainwidget.cpp" line="276"/>
+        <location filename="../controls/mainwidget.cpp" line="1045"/>
         <source>Feedback</source>
-        <translation>反馈</translation>
+        <translation>反馈信息</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="259"/>
-        <location filename="../controls/mainwidget.cpp" line="896"/>
+        <location filename="../controls/mainwidget.cpp" line="289"/>
+        <location filename="../controls/mainwidget.cpp" line="1048"/>
         <source>Software Update</source>
         <translation>软件更新</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="262"/>
-        <location filename="../controls/mainwidget.cpp" line="899"/>
+        <location filename="../controls/mainwidget.cpp" line="292"/>
+        <location filename="../controls/mainwidget.cpp" line="1051"/>
         <source>Privacy Policy</source>
-        <translation>隐私协议</translation>
+        <translation>隐私政策</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="266"/>
-        <location filename="../controls/mainwidget.cpp" line="902"/>
+        <location filename="../controls/mainwidget.cpp" line="312"/>
+        <location filename="../controls/mainwidget.cpp" line="1054"/>
         <source>Terms of Use</source>
-        <translation>条款</translation>
+        <translation>使用条款</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="270"/>
-        <location filename="../controls/mainwidget.cpp" line="905"/>
+        <location filename="../controls/mainwidget.cpp" line="332"/>
+        <location filename="../controls/mainwidget.cpp" line="946"/>
+        <source>Log Upload</source>
+        <translation>日志上传</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="342"/>
+        <location filename="../controls/mainwidget.cpp" line="1057"/>
         <source>Copyright Information</source>
         <translation>版权信息</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="279"/>
-        <location filename="../controls/mainwidget.cpp" line="280"/>
-        <location filename="../controls/mainwidget.cpp" line="908"/>
-        <location filename="../controls/mainwidget.cpp" line="926"/>
+        <location filename="../controls/mainwidget.cpp" line="351"/>
+        <location filename="../controls/mainwidget.cpp" line="352"/>
+        <location filename="../controls/mainwidget.cpp" line="1060"/>
+        <location filename="../controls/mainwidget.cpp" line="1078"/>
         <source>Account</source>
-        <translation>账户</translation>
+        <translation>帐户</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="368"/>
+        <location filename="../controls/mainwidget.cpp" line="450"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="396"/>
+        <location filename="../controls/mainwidget.cpp" line="481"/>
+        <location filename="../controls/mainwidget.cpp" line="949"/>
         <source>3D View</source>
-        <translation>3D视角</translation>
+        <translation>三维视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="400"/>
+        <location filename="../controls/mainwidget.cpp" line="485"/>
+        <location filename="../controls/mainwidget.cpp" line="952"/>
         <source>Front View</source>
         <translation>前视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="404"/>
+        <location filename="../controls/mainwidget.cpp" line="489"/>
+        <location filename="../controls/mainwidget.cpp" line="955"/>
         <source>Rear View</source>
-        <translation type="unfinished"></translation>
+        <translation>后视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="408"/>
+        <location filename="../controls/mainwidget.cpp" line="493"/>
+        <location filename="../controls/mainwidget.cpp" line="958"/>
         <source>Left View</source>
-        <translation type="unfinished"></translation>
+        <translation>左视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="412"/>
+        <location filename="../controls/mainwidget.cpp" line="497"/>
+        <location filename="../controls/mainwidget.cpp" line="961"/>
         <source>Right View</source>
-        <translation type="unfinished"></translation>
+        <translation>右视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="416"/>
+        <location filename="../controls/mainwidget.cpp" line="501"/>
+        <location filename="../controls/mainwidget.cpp" line="964"/>
         <source>Top View</source>
-        <translation type="unfinished"></translation>
+        <translation>顶视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="420"/>
+        <location filename="../controls/mainwidget.cpp" line="505"/>
+        <location filename="../controls/mainwidget.cpp" line="967"/>
         <source>Bottom View</source>
-        <translation type="unfinished"></translation>
+        <translation>底部视图</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="476"/>
-        <source>The file can&apos;t be found. Please check.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Rear view</source>
-        <translation type="vanished">后视图</translation>
-    </message>
-    <message>
-        <source>Left view</source>
-        <translation type="vanished">左视图</translation>
-    </message>
-    <message>
-        <source>Right view</source>
-        <translation type="vanished">右视图</translation>
-    </message>
-    <message>
-        <source>Top view</source>
-        <translation type="vanished">俯视图</translation>
-    </message>
-    <message>
-        <source>Bottom view</source>
-        <translation type="vanished">底视图</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="476"/>
+        <location filename="../controls/mainwidget.cpp" line="561"/>
         <source>Notice</source>
-        <translation>注意</translation>
+        <translation>通知</translation>
     </message>
     <message>
-        <source>This file has been remove,please check it </source>
-        <translation type="vanished">此文件已被删除，请检查</translation>
+        <location filename="../controls/mainwidget.cpp" line="561"/>
+        <source>The file can&apos;t be found. Please check.</source>
+        <translation>此文件已被删除，请检查。</translation>
     </message>
 </context>
 <context>
     <name>control::GeneralWidget</name>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="18"/>
-        <location filename="../controls/generalwidget.cpp" line="172"/>
-        <source>    General</source>
-        <translation>   通用</translation>
+        <location filename="../controls/generalwidget.cpp" line="23"/>
+        <location filename="../controls/generalwidget.cpp" line="283"/>
+        <source>General</source>
+        <translation>一般</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="37"/>
-        <location filename="../controls/generalwidget.cpp" line="174"/>
+        <location filename="../controls/generalwidget.cpp" line="42"/>
+        <location filename="../controls/generalwidget.cpp" line="285"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="177"/>
-        <source>The language change takes effect after the software is restarted</source>
-        <translation>修改语言需要重新启动软件才能生效 </translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="180"/>
-        <source>AI Detect</source>
-        <translation>人工智能检测</translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="48"/>
+        <location filename="../controls/generalwidget.cpp" line="53"/>
+        <location filename="../controls/generalwidget.cpp" line="288"/>
         <source>Language will change after software restarts.</source>
-        <translation type="unfinished"></translation>
+        <translation>语言在软件重新启动后改变。</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="79"/>
-        <source>AI Detection</source>
-        <translation type="unfinished"></translation>
+        <location filename="../controls/generalwidget.cpp" line="84"/>
+        <location filename="../controls/generalwidget.cpp" line="291"/>
+        <source>Create AI File</source>
+        <translation>创建AI文件</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="83"/>
-        <location filename="../controls/generalwidget.cpp" line="183"/>
-        <source>Keeping Creat Ai File When Slice</source>
-        <translation>切片时保持创建Ai文件</translation>
+        <location filename="../controls/generalwidget.cpp" line="88"/>
+        <location filename="../controls/generalwidget.cpp" line="294"/>
+        <source>Create AI file when slicing.</source>
+        <translation>切片时创建AI文件</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="99"/>
-        <location filename="../controls/generalwidget.cpp" line="193"/>
+        <location filename="../controls/generalwidget.cpp" line="105"/>
+        <location filename="../controls/generalwidget.cpp" line="304"/>
         <source>Version</source>
         <translation>版本</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="109"/>
-        <location filename="../controls/generalwidget.cpp" line="189"/>
+        <location filename="../controls/generalwidget.cpp" line="115"/>
+        <location filename="../controls/generalwidget.cpp" line="300"/>
         <source>Check</source>
         <translation>检查</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="118"/>
+        <location filename="../controls/generalwidget.cpp" line="128"/>
+        <location filename="../controls/generalwidget.cpp" line="307"/>
         <source>Auto-Check for Updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="263"/>
-        <source>Close Auto-Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="196"/>
-        <source>Automatically Check For Updates</source>
         <translation>自动检查更新</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="148"/>
-        <location filename="../controls/generalwidget.cpp" line="187"/>
-        <location filename="../controls/generalwidget.cpp" line="342"/>
-        <location filename="../controls/generalwidget.cpp" line="361"/>
+        <location filename="../controls/generalwidget.cpp" line="231"/>
+        <location filename="../controls/generalwidget.cpp" line="298"/>
+        <location filename="../controls/generalwidget.cpp" line="522"/>
+        <location filename="../controls/generalwidget.cpp" line="544"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="263"/>
-        <source>Notice</source>
-        <translation>注意</translation>
+        <location filename="../controls/generalwidget.cpp" line="250"/>
+        <source>AnkerMake is up to date.</source>
+        <translation>AnkerMake 是最新的。</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="476"/>
+        <location filename="../controls/generalwidget.cpp" line="693"/>
+        <source>is ready, the changes will effective once you restart the app.</source>
+        <translation>已准备就绪，更改将在您重新启动应用程序后生效。</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="478"/>
+        <location filename="../controls/generalwidget.cpp" line="603"/>
+        <location filename="../controls/generalwidget.cpp" line="696"/>
+        <source>Check for Update</source>
+        <translation>检查更新</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="481"/>
+        <location filename="../controls/generalwidget.cpp" line="699"/>
+        <source>Later</source>
+        <translation>稍后</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="482"/>
+        <location filename="../controls/generalwidget.cpp" line="700"/>
+        <source>Restart</source>
+        <translation>重新启动</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="489"/>
+        <location filename="../controls/generalwidget.cpp" line="614"/>
+        <location filename="../controls/generalwidget.cpp" line="707"/>
+        <source>What&apos;s new</source>
+        <translation>更新日志</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="603"/>
+        <source>is ready, click to download new version</source>
+        <translation>已准备就绪，点击下载新版本</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="606"/>
+        <source>Close</source>
+        <translation>关闭</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="607"/>
+        <source>OK</source>
+        <translation>确认</translation>
     </message>
 </context>
 <context>
     <name>control::MachineWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="14"/>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="146"/>
-        <source>    Machine</source>
-        <translation>    机器</translation>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="147"/>
+        <source>Machine</source>
+        <translation>机器</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="102"/>
         <source>Name These Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>参数命名</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="102"/>
         <source>Input a name before you save.</source>
-        <translation type="unfinished"></translation>
+        <translation>请在保存参数前键入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="128"/>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="129"/>
         <source>Input a name.</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="135"/>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="136"/>
         <source>Name already exists. Try another.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Name the Parameters</source>
-        <translation type="vanished">命名参数</translation>
-    </message>
-    <message>
-        <source>Please type a name before you save a parameters</source>
-        <translation type="vanished">请在保存参数前键入名称</translation>
-    </message>
-    <message>
-        <source>Please type a name</source>
-        <translation type="vanished">请命名</translation>
-    </message>
-    <message>
-        <source>The name already exists. Please try another</source>
-        <translation type="vanished">该名称已存在。请再试一次</translation>
+        <translation>该名称已经存在。请尝试另一个</translation>
     </message>
 </context>
 <context>
     <name>control::MaterialWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="12"/>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="133"/>
-        <source>    Material</source>
-        <translation>    材料</translation>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="134"/>
+        <source>Material</source>
+        <translation>材料</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="89"/>
         <source>Name These Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>参数命名</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="89"/>
         <source>Input a name before you save.</source>
-        <translation type="unfinished"></translation>
+        <translation>请在保存参数前键入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="115"/>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="116"/>
         <source>Input a name.</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="122"/>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="123"/>
         <source>Name already exists. Try another.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Name the Parameters</source>
-        <translation type="vanished">命名参数</translation>
-    </message>
-    <message>
-        <source>Please type a name before you save a parameters</source>
-        <translation type="vanished">请在保存参数前键入名称</translation>
-    </message>
-    <message>
-        <source>Please type a name</source>
-        <translation type="vanished">请命名</translation>
-    </message>
-    <message>
-        <source>The name already exists. Please try another</source>
-        <translation type="vanished">该名称已存在。请再试一次</translation>
+        <translation>该名称已经存在。请尝试另一个</translation>
     </message>
 </context>
 <context>
     <name>control::MeshInfoWidget</name>
     <message>
-        <location filename="../controls/meshinfowidget.cpp" line="16"/>
-        <location filename="../controls/meshinfowidget.cpp" line="327"/>
+        <location filename="../controls/meshinfowidget.cpp" line="17"/>
+        <location filename="../controls/meshinfowidget.cpp" line="363"/>
         <source>Object List</source>
         <translation>对象列表</translation>
     </message>
@@ -3428,198 +2183,186 @@ Close without saving?</source>
 <context>
     <name>control::MessageDialog</name>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="102"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="108"/>
         <source>OK</source>
-        <translation>完成</translation>
+        <translation>确认</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="114"/>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="121"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="120"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="127"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="116"/>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="123"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="122"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="129"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="142"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="125"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="131"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="140"/>
         <source>Don&apos;t Save</source>
         <translation>不保存</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="134"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="147"/>
         <source>No</source>
-        <translation>不</translation>
+        <translation>没有</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="137"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="150"/>
         <source>Yes</source>
-        <translation>是</translation>
+        <translation>是的</translation>
     </message>
 </context>
 <context>
     <name>control::ParametersWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="11"/>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="149"/>
-        <source>    Parameters</source>
-        <translation>    参数</translation>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="162"/>
+        <source>Parameters</source>
+        <translation>参数</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="76"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Name These Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>参数命名</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="76"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Input a name before you save.</source>
-        <translation type="unfinished"></translation>
+        <translation>请在保存参数前键入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="101"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="106"/>
         <source>Input a name.</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入一个名称</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="108"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="114"/>
         <source>Name is longer than 128 characters. Create a shorter one.</source>
-        <translation type="unfinished"></translation>
+        <translation>名称已超过128个字符，请使用较短的名称。</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="115"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="121"/>
         <source>Name already exists. Try another.</source>
-        <translation type="unfinished"></translation>
+        <translation>该名称已经存在。请尝试另一个</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="126"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="132"/>
         <source>Import</source>
-        <translation type="unfinished">导入</translation>
+        <translation>导入</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="138"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="148"/>
         <source>Export</source>
-        <translation type="unfinished">导出</translation>
-    </message>
-    <message>
-        <source>Name the Parameters</source>
-        <translation type="vanished">命名参数</translation>
-    </message>
-    <message>
-        <source>Please type a name before you save a parameters</source>
-        <translation type="vanished">请在保存参数前键入名称</translation>
-    </message>
-    <message>
-        <source>Please type a name</source>
-        <translation type="vanished">请命名</translation>
-    </message>
-    <message>
-        <source>The Name is longer than 128 chars, please choose a shorter one</source>
-        <translation type="vanished">名称长度超过128个字符，请选择一个较短的</translation>
-    </message>
-    <message>
-        <source>The name already exists. Please try another</source>
-        <translation type="vanished">该名称已存在。请再试一次</translation>
-    </message>
-    <message>
-        <source>import</source>
-        <translation type="vanished">导入</translation>
-    </message>
-    <message>
-        <source>export</source>
-        <translation type="vanished">导出</translation>
+        <translation>导出</translation>
     </message>
 </context>
 <context>
     <name>control::PreferencesDialog</name>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="30"/>
+        <location filename="../controls/preferencesdialog.cpp" line="51"/>
+        <location filename="../controls/preferencesdialog.cpp" line="227"/>
         <source>Preferences</source>
-        <translation>偏好设置</translation>
+        <translation>首选项</translation>
     </message>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="54"/>
+        <location filename="../controls/preferencesdialog.cpp" line="75"/>
+        <location filename="../controls/preferencesdialog.cpp" line="236"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="60"/>
+        <location filename="../controls/preferencesdialog.cpp" line="81"/>
+        <location filename="../controls/preferencesdialog.cpp" line="239"/>
         <source>Save</source>
         <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>General</source>
+        <translation>一般</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Machine</source>
+        <translation>机器</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Material</source>
+        <translation>材料</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Parameters</source>
+        <translation>参数</translation>
+    </message>
+</context>
+<context>
+    <name>control::updateMessageDialog</name>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="140"/>
+        <source>OK</source>
+        <translation>确认</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="152"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="159"/>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="154"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="161"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="174"/>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="163"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="172"/>
+        <source>Don&apos;t Save</source>
+        <translation>不保存</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="179"/>
+        <source>No</source>
+        <translation>没有</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="182"/>
+        <source>Yes</source>
+        <translation>是的</translation>
     </message>
 </context>
 <context>
     <name>fdmsettings::FdmParamSettingsWidget</name>
     <message>
-        <source>Parameters Reset</source>
-        <translation type="vanished">重置参数</translation>
-    </message>
-    <message>
-        <source>this operation will reset the current parameters are you sure?</source>
-        <translation type="vanished">该操作将重置当前参数是否确定 </translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="121"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Reset Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>参数重置</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="121"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Parameters will be reset. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>此操作将重置当前参数，确定吗？</translation>
     </message>
 </context>
 <context>
-    <name>layerDialog</name>
+    <name>fdmsettings::FdmSettingPlugin</name>
     <message>
-        <location filename="../ui/layerDialog.ui" line="20"/>
-        <source>Layer Dialog</source>
-        <translation>图层对话框</translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="51"/>
-        <location filename="../ui/layerDialog.ui" line="101"/>
-        <location filename="../ui/layerDialog.ui" line="182"/>
-        <source>2</source>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="510"/>
+        <source>Import ini config </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/layerDialog.ui" line="56"/>
-        <location filename="../ui/layerDialog.ui" line="118"/>
-        <location filename="../ui/layerDialog.ui" line="199"/>
-        <source>3</source>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="520"/>
+        <source>Export ini config file</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="61"/>
-        <location filename="../ui/layerDialog.ui" line="135"/>
-        <location filename="../ui/layerDialog.ui" line="216"/>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="81"/>
-        <location filename="../ui/layerDialog.ui" line="98"/>
-        <location filename="../ui/layerDialog.ui" line="115"/>
-        <location filename="../ui/layerDialog.ui" line="132"/>
-        <source>CTRL-click to store view, click to recall</source>
-        <translation>CTRL单击可查看存储视图，单击可回忆</translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="84"/>
-        <location filename="../ui/layerDialog.ui" line="165"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="162"/>
-        <location filename="../ui/layerDialog.ui" line="179"/>
-        <location filename="../ui/layerDialog.ui" line="196"/>
-        <location filename="../ui/layerDialog.ui" line="213"/>
-        <source>CTRL-click to store layer visibility, click to recall</source>
-        <translation>单击CTRL以存储图层可见性，单击以调用</translation>
     </message>
 </context>
 <context>
@@ -3627,186 +2370,245 @@ Close without saving?</source>
     <message>
         <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.ui" line="20"/>
         <source>Form</source>
-        <translation>表格</translation>
+        <translation>格式</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="72"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2161"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="68"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2096"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3240"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
     <message>
-        <source>AnkerMake Gcode Preview</source>
-        <translation type="vanished">安克智造Gcode预览</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="332"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="369"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="404"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="438"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="472"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="506"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="540"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="572"/>
-        <source>Camera View</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Line type</source>
-        <translation type="vanished">线型</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="167"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="172"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3242"/>
         <source>AnkerMake G-Code Preview</source>
-        <translation type="unfinished"></translation>
+        <translation>Gcode预览</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="708"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="717"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="341"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3339"/>
+        <source>AI View</source>
+        <translation>AI 视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="370"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3342"/>
+        <source>3D View</source>
+        <translation>三维视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="394"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3336"/>
+        <source>Front View</source>
+        <translation>前视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="417"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3345"/>
+        <source>Rear View</source>
+        <translation>后视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="440"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3348"/>
+        <source>Left View</source>
+        <translation>左视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="463"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3351"/>
+        <source>Right View</source>
+        <translation>右视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3354"/>
+        <source>Top View</source>
+        <translation>顶视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="507"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3357"/>
+        <source>Bottom View</source>
+        <translation>底部视图</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="625"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="634"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3247"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3294"/>
         <source>Line Type</source>
-        <translation type="unfinished"></translation>
+        <translation>线条类型</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="709"/>
-        <source>speed</source>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="626"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3248"/>
+        <source>Speed</source>
         <translation>速度</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="710"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="627"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3249"/>
         <source>Trapezoid</source>
-        <translation>梯台</translation>
+        <translation>梯形</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="711"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="628"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3250"/>
         <source>Flow</source>
         <translation>流量</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="749"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1133"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1436"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1740"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="667"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1060"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1362"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1666"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3263"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3297"/>
         <source>Inner Wall</source>
-        <translation type="unfinished"></translation>
+        <translation>内墙</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="796"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1166"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1469"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1773"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="715"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1093"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1395"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1699"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3266"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3300"/>
         <source>Outer Wall</source>
-        <translation type="unfinished"></translation>
+        <translation>外墙</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="959"/>
-        <source>Travel</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="757"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1123"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1425"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1729"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3269"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3272"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3303"/>
+        <source>Skin</source>
+        <translation>表层</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1041"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1288"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1591"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1895"/>
-        <source>Support</source>
-        <translation type="unfinished">支撑</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2025"/>
-        <source>Consumables</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2931"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3217"/>
-        <source>Generate AI Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>inner Wall</source>
-        <translation type="vanished">内壁</translation>
-    </message>
-    <message>
-        <source>outer wall</source>
-        <translation type="vanished">外墙</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="837"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1196"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1499"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1803"/>
-        <source>skin</source>
-        <translation>皮肤</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="878"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1226"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1529"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1833"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="799"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1153"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1455"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1759"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3275"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3306"/>
         <source>Adhesion</source>
-        <translation> 平台附着</translation>
+        <translation>粘性</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="919"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1257"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1560"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1864"/>
-        <source>fill</source>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="841"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1184"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1790"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3278"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3309"/>
+        <source>Fill</source>
         <translation>填充</translation>
     </message>
     <message>
-        <source>travel</source>
-        <translation type="vanished">滑行</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="882"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3321"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3324"/>
+        <source>Travel</source>
+        <translation>移动</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1001"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="925"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3327"/>
+        <source>Zlap</source>
+        <translation>z缝</translation>
+    </message>
+    <message>
         <source>zlap</source>
-        <translation>快速</translation>
+        <translation type="vanished">z缝</translation>
     </message>
     <message>
-        <source>support</source>
-        <translation type="vanished">支撑</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="967"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1215"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1517"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1821"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3254"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3281"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3284"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3330"/>
+        <source>Support</source>
+        <translation>支撑</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1082"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1319"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1622"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1926"/>
-        <source>unkonwn</source>
-        <translation>未知的</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1009"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1246"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1548"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1852"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3257"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3287"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3333"/>
+        <source>Unknown</source>
+        <translation>未知</translation>
     </message>
     <message>
-        <source>adhesion</source>
-        <translation type="vanished"> 平台附着</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1360"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1663"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1967"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1286"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1589"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1892"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3260"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3290"/>
         <source>mm/s</source>
-        <translation>毫米/秒</translation>
+        <translation>mm/s</translation>
     </message>
     <message>
-        <source>Consumed</source>
-        <translation type="vanished">消耗</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1950"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3312"/>
+        <source>Consumables</source>
+        <translation>消耗</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2044"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1969"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3315"/>
         <source>Filament</source>
-        <translation>细丝</translation>
+        <translation>耗材</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2087"/>
-        <source>time</source>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2012"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3318"/>
+        <source>Time</source>
         <translation>时间</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2122"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2049"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3237"/>
         <source>Export</source>
         <translation>导出</translation>
     </message>
     <message>
-        <source>gen ai pic</source>
-        <translation type="vanished">生成Ai图片</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2878"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3392"/>
+        <source>Generate AI Image</source>
+        <translation>生成AI图片</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2880"/>
+        <source>Export G-Code</source>
+        <translation>导出Gcode</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
+        <source>G-Code failed to open. Try again.</source>
+        <translation>G-Code未能打开。再次尝试。</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
+        <source>No GCODE here!</source>
+        <translation>这里没有 GCODE！</translation>
     </message>
 </context>
 </TS>

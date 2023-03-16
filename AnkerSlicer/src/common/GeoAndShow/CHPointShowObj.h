@@ -12,7 +12,7 @@
 
 
 DEF_PTR(CHPointShowObj)
-class CHPointShowObj :public CHShowObj
+class COMMONLIB_EXPORT CHPointShowObj :public CHShowObj
 {
 public:
 	CHPointShowObj();
@@ -27,6 +27,9 @@ public:
 	virtual CHAABB3D calRealAABB();
 
 	void setSize(double tsize);
+    QVector3D getOriginCoord() const;
+    QVector3D getCurrentCoord() const;
+    QMatrix4x4 getTransform() const;
 
 
 public:

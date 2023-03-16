@@ -17,6 +17,9 @@
 #include <QListView>
 #include "translator.h"
 #include "message/messageprocessing.h"
+//#include "common/controlInterface/messageDialog.h"
+#include "updateMessageDialog.h"
+
 namespace  control{
 
 enum LANGUAGE{
@@ -38,12 +41,20 @@ public:
     QString displayName() const {return m_displayName;};
     virtual void closeWidget();;
     virtual void save();;
+    void forcedUpdateApp();
+    void manualUpdate();
 protected:
     void changeEvent(QEvent *e);
+private:
+    int versionCompare(const QString &ver1, const QString &ver2);
 signals:
    void networkLanguageChangedSignal(qint64);
+   void unloadPluginsSignal();
+   void closeMainWindow();
+   void otaNeedSaveProjectSignal(const QString &filePath);
 public slots:
     void receiveMsgFromNetwork(PluginMessageData metadata);
+    void doPluginUnloaded();
 
 private slots:
     void checkButtonClicked();
@@ -54,7 +65,9 @@ private:
 
      void update_app(const QString&);
      QPushButton *m_checkButton;
+     QLabel *m_checkText;
      QString m_filePath;
+     QString m_releaseNote;
      QComboBox *m_languageCombox;
      QCheckBox *m_aiCheckBox;
      QCheckBox *m_updateCheckBox;
@@ -62,7 +75,12 @@ private:
      QLabel *m_languageLabel = nullptr;
      QLabel *m_aiLabel = nullptr;
      bool m_updateFlag = false;
+     bool m_autoUpdateCheck;
+     bool m_StartUpCheck = false;         
+     bool m_requestingReleasNote = false; 
+     updateMessageDialog* m_downLoadNewverDlg = nullptr;
      QLabel *m_versionLabel = nullptr;
+     bool m_formGeneral = false;
 };
 
 

@@ -2,6 +2,15 @@
 #define AK_CONST_H
 #include <QString>
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 namespace AkConst{
 
 namespace Time {
@@ -48,6 +57,7 @@ namespace Param {
     const QString GLOBAL_SUPPORT_DISABLED_STATUS = "GlobalSupportDisabledStatus";
     //gcode preview Gcode wid
     const QString GCODE_PREVIEW_WID = "gcodePreviewWid";
+    const QString LOGGING_STATUS = "loggingStatus";
 
     const QString AIMODE_STATE = "AiModeState";
     const QString LANGUAGE_STATE = "languageState";
@@ -55,7 +65,12 @@ namespace Param {
     //Update
     const QString ANKERMAKE_VERSION = "AnkerMakeVersion";
     const QString UPDATE_DO = "UpdateDo";
+    const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
     const QString ANKERMAKE_UPDATE_EXE = "AnkerMakeUpdateExe"; 
+    const QString ANKERMAKE_RELEASE_NOTE = "AnkerMakeReleaseNote"; 
+    const QString UPDATE_PHASE = "UpdatePhase";
+    const QString APP_STARTUP = "AppStartUp";
+    const QString PREFERENCE_SHOW = "PreferenceShow";
 
     
     const QString ANKERMAKE_MAINWINDOW_WID = "AnkerMakeMainwindowWid";
@@ -63,6 +78,13 @@ namespace Param {
 
     
     const QString A_KEY_PRINT_FILE_PATH = "AKeyPrintFilePath";
+    const QString MAX_PRINT_SPEED = "MaxPrintSpeed";
+
+    
+    const QString GENERATE_SUPPORT_RESULT = "GenerateSupportResult";
+    
+    const QString MODEL_SUSPEND_STATUS_RESULT = "ModelSuspendStatusResult";
+
 
 //    //const QString SLICE_PANEL_STATE = "slicePanelState";
 
@@ -117,6 +139,16 @@ namespace Msg {
     
     const QString MODEL_SUPPORT_NUMBER_CHANGED = "ModelSupportNumberChanged";
 
+    
+    const QString MODEL_SUSPEND_STATUS = "ModelSuspendStatus";
+
+    
+    const QString GET_GENERATE_SUPPORT_STATUS = "GetGenerateSupportStatus";
+    
+    const QString GET_GENERATE_SUPPORT_STATUS_RESULT = "GetGenerateSupportStatusResult";
+    
+    const QString GET_GS_STATUS_RESULT = "GetGSStatusResult";
+
     const QString PARAMETER_CHANGED = "ParameterChanged";
     const QString SLICE_START = "SliceStart";
     const QString SLICE_SUCCESS = "SliceSuccess";
@@ -133,6 +165,7 @@ namespace Msg {
     const QString OPEN_PREVIEW_WITHOUT_FILE = "OpenPreviewWithoutFile";
     const QString OPEN_PREVIEW_IN_NETWORK = "OpenPreviewInNetwork";
     const QString CHECKOUT_PREVIEW = "CheckoutPreview";
+    const QString GET_LOGGING_STATUS = "getLoggingStatus";
 
     //AI mode
     const QString AIMODE_CHANGED = "AiMode";
@@ -143,9 +176,13 @@ namespace Msg {
     
     const QString MANUAL_UPDATE = "ManualUpdate";
     const QString AUTO_UPDATE = "AutoUpdate";
+    const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
+    const QString HAVE_NEW_VERSION = "HaveNewVersion";
+    const QString CANCEL_AUTO_CHECK_SERVER_VERSION = "CancelAutoCheckServerVersion";
 
     
     const QString A_KEY_PRINT = "AKeyPrint";
+    const QString OPEN_NEW_GCODE = "OpenNewGCode";
 
     
     const QString ANKERMAKE_LOGIN = "AnkerMakeLogin";
@@ -166,6 +203,11 @@ namespace Msg {
     const QString ANKERMAKE_MAINWINDOW_MODAL = "AnkerMakeMainwindowModal";
 
     const QString MAIN_WINDOW_INIT_FINISHED = "MainWindowInitFinished";
+
+    
+    const QString PRIVACY_PROTOCOL = "PrivacyProtocol";
+    // Log upload
+    const QString LOG_UPLOAD = "LogUpload";
 }
 
 
@@ -186,6 +228,7 @@ namespace Category
 
 namespace SettingKey
 {
+    const int MAX_NAME_SIZE = 80;
     //ak_meta
     //const QString META_PROFILE_ID = "meta_profile_id";
     const QString META_PROFILE_NAME = "meta_profile_name";
@@ -237,6 +280,8 @@ namespace SettingKey
     const QString MACHINE_NOZZLE_SIZE = "machine_nozzle_size";
 
     const QString EXTRACT_PARAM_FROM_GCODE = "extract_param_from_gcode";
+
+    const QString CHECK_PARAM_LOST_INTERVAL = "check_param_lost_interval";
 }
 
 namespace GlobalParameterKeys{
@@ -383,6 +428,45 @@ enum NetworkUpdateType
     NetworkUpdateType_AutoUpdate,
 };
 
+
+enum ELanguage
+{
+    English = 0,
+    Chinese ,
+    Japenese
+};
+
+namespace WebAddress {
+    const QString TermOfUseURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html";
+    const QString PrivacyPolicyURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html";
+    const QString TutorialEnglish = "https://support.ankermake.com";
+    const QString FeedBackEnglish = "https://support.ankermake.com/s/emailcontactus";
+
+    const QString TermOfUseURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.ja.html";
+    const QString PrivacyPolicyURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.ja.html";
+    const QString TutorialJapanese = "https://www.ankerjapan.com/pages/anker-make";
+    const QString FeedBackJapanese = "https://www.ankerjapan.com/pages/customer-support";
+
+}
+
+
+namespace GlobalStyleSheet {
+const QString ScrollBarVertical = " QScrollBar:vertical {border:0px solid grey;background: #24252B;width: 3px;margin: 0;}"
+    "QScrollBar::handle:vertical { background:#797B80;min-height: 20px;}"
+    "QScrollBar::add-line:vertical {border: 0px solid grey;background: #24252B;height: 0px;subcontrol-position: bottom;subcontrol-origin: margin;}"
+    "QScrollBar::sub-line:vertical {border: 0px solid grey;background: #24252B;height:0px;subcontrol-position: top;subcontrol-origin: margin;}"
+    "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {border:0px solid grey;width: 0px;height: 0px;background: white;}"
+    "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: none;}";
+
+const QString ScrollBarHorizontal  = "QScrollBar:horizontal {border: 0px solid grey;background: #24252B;height:3px;margin: 0;}"
+     "QScrollBar::handle:horizontal {background: #797B80;min-width: 20px;}"
+     "QScrollBar::add-line:horizontal {background: grey;width: 0px;subcontrol-position: right;subcontrol-origin: margin;border:0px solid black;}"
+     "QScrollBar::sub-line:horizontal {background: grey;width: 0px;subcontrol-position: top right;subcontrol-origin: margin;border:0px solid black;position: absolute;right: 20px;}"
+     "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {width: 0px;height: 3px;background: grey;}"
+      "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {background: none;}";
+
+
+}
 //#define More "More..."
 
 }

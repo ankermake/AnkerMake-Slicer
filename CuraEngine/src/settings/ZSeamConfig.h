@@ -44,6 +44,11 @@ struct ZSeamConfig
      *
      * This will select the "shortest" seam strategy.
      */
+
+    float z_seam_min_angle_diff;
+    float z_seam_max_angle;
+    static std::vector<Point3> last_layer_start_point;
+
     ZSeamConfig();
 
     /*!
@@ -52,7 +57,7 @@ struct ZSeamConfig
      * \param pos The position of a user-specified seam.
      * \param corner_pref The corner preference, applicable to some strategies.
      */
-    ZSeamConfig(const EZSeamType type, const Point pos, const EZSeamCornerPrefType corner_pref);
+    ZSeamConfig(const EZSeamType type, const Point pos, const EZSeamCornerPrefType corner_pref, float z_seam_min_angle_diff, float z_seam_max_angle);
 };
 
 }

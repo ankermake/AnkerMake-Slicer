@@ -14,6 +14,7 @@
 using namespace std;
 
 
+
 class CH3dView : public QOpenGLWidget, public QOpenGLFunctions
 {
     Q_OBJECT
@@ -53,6 +54,8 @@ public:
 
     void setPerspectiveTransformationRef(QVector3D rotCenter);
 
+    void getMechineBoxSize(float &length, float &width, float &height);
+
     
     enum ViewType
     {
@@ -65,9 +68,21 @@ public:
         TOP_VIEW_TYPE,
         BOTTOM_VIEW_TYPE,
     };
+    struct ViewVec
+    {
+        QVector3D eye;
+        QVector3D up;
+        QVector3D front;
+    };
     void setView(const ViewType& _type, const CHAABB3D& aabb);
     void getBoxPoints(const QVector3D& iMin, const QVector3D& iMax, std::vector<QVector3D>& points);
+
+public slots:
+    void machinePlatformSizeChanged(float length, float width, float height);
+
 private:
+
+    void initView();
     void Scale(int x, int y, float d);
     void xyTranslate(int dx, int dy);
     void xyRotate(int dx, int dy);
@@ -96,6 +111,8 @@ private:
 
     QVector3D lastmousept;
     bool m_bMove;
+    bool rightBtnPressed = false;
+    bool mouseRightMoved = false;
 
     QVector3D cameralocation;
     QVector3D lockN;
@@ -118,5 +135,13 @@ private:
 
     CHAABB3D m_sceneBox;
     ViewType m_viewType;
+
+    ViewVec m_ViewVec[8]; 
+
+    float m_length;
+    float m_width;
+    float m_height;
+
+    QVector2D m_lastMousePts; 
 };
 #endif

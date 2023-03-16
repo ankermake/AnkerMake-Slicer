@@ -10,8 +10,8 @@ CHChildDocWindow::CHChildDocWindow(QWidget* parent) : QWidget(parent)
 {
     AkUtil::TFunction("");
     connect(m_doc.get(), &CHDoc::modelObjsStatusChanged, m_pickCommand.get(), &CHPickOperationCommand::doWithDocMeshModelsChanged);
-
     m_view = new CH3dView(this);
+    connect(this, &CHChildDocWindow::machinePlatformSizeSignal, m_view, &CH3dView::machinePlatformSizeChanged);
     m_view->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     m_view->show();
 
@@ -42,6 +42,22 @@ void CHChildDocWindow::pixelToWorld(float x, float y, float z, QVector3D& worldC
 void CHChildDocWindow::worldToPixel(QVector3D worldCoord, float& x, float& y, float& z)
 {
     m_view->worldToPixel(worldCoord, x, y, z);
+}
+
+bool CHChildDocWindow::getCurMouseInWidget(int x, int y)
+{
+    QRect rect = geometry();
+    return rect.contains(x, y);
+}
+
+bool CHChildDocWindow::isActivteAppWindow()
+{
+    return isActiveWindow();
+}
+
+void CHChildDocWindow::getMechineBoxSize(float &length, float &width, float &height)
+{
+    m_view->getMechineBoxSize(length, width, height);
 }
 
 QOpenGLShaderProgram& CHChildDocWindow::getShaderProgram()
@@ -100,6 +116,18 @@ void CHChildDocWindow::createMachineBox(const QString& logPath, float x, float y
     m_doc->m_showPickedAABB->updateToScene();
 }
 
+void CHChildDocWindow::updateMechineBox(float x, float y, float z)
+{
+    if (m_doc->m_machineBox == NULL)
+    {
+        return;
+    }
+    m_doc->m_machineBox->updateMechineSize(x, y, z);
+    m_doc->m_machineBox->updateToScene();
+    m_view->calcSceneParamsFromBox(m_doc->m_machineBox->getBaseAABB());
+    m_doc->m_showPickedAABB->updateToScene();
+}
+
 void CHChildDocWindow::updatePoint(CHPointShowObjPtr pb)
 {
     set<CHPointShowObjPtr>::iterator it = m_renderData->m_allpoints.find(pb);
@@ -117,8 +145,7 @@ void CHChildDocWindow::updatePoint(CHPointShowObjPtr pb)
     }
 }
 
-void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
-{
+void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve){
     m_view->makeCurrent();
 
     std::map<CHCurveShowObjPtr, CHRenderCurvePtr>::iterator it = m_renderData->m_allcurves.find(showcurve);
@@ -129,7 +156,6 @@ void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
             
             it->second->m_vbo.destroy();
             it->second->m_vao.destroy();
-
             
             m_renderData->m_allcurves.erase(it);
         }
@@ -140,9 +166,9 @@ void CHChildDocWindow::updateCurve(CHCurveShowObjPtr showcurve)
                 showcurve->setDirty(false);
 
                 
+                qDebug() << "destroy ago: " << it->second->m_vbo.bufferId();
                 it->second->m_vbo.destroy();
                 it->second->m_vao.destroy();
-
                 writeToGPUBUffer(showcurve, it->second);
             }
         }
@@ -174,7 +200,7 @@ void CHChildDocWindow::updateMesh(CHMeshShowObjPtr mb)
             
             if(it->first != nullptr)
             {
-                qDebug() << "delete: " << it->first->getObjectName();
+                //qDebug() << "delete: " << it->first->getObjectName();
                 it->second->m_vbo.destroy();
                 it->second->m_norbo.destroy();
                 it->second->m_vao.destroy();
@@ -319,6 +345,7 @@ void CHChildDocWindow::writeToGPUBUffer(CHCurveShowObjPtr curvebody, CHRenderCur
 
     QOpenGLVertexArrayObject::Binder vaoBind(&(rendercurve->m_vao));
     rendercurve->m_vbo.create();
+    //qDebug() << "create vbo: " << rendercurve->m_vbo.bufferId();
     rendercurve->m_vbo.bind();
     rendercurve->m_vbo.allocate(vertices, sizeof(GLfloat) * rendercurve->m_Num * 3);
     int attr = -1;
@@ -327,7 +354,7 @@ void CHChildDocWindow::writeToGPUBUffer(CHCurveShowObjPtr curvebody, CHRenderCur
     m_renderData->m_shaderProgram.enableAttributeArray(attr);
     rendercurve->m_vbo.release();
 
-    delete vertices;
+    delete [] vertices;
 }
 
 void CHChildDocWindow::setView(const CH3dView::ViewType& _type, const CHAABB3D& aabb)

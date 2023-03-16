@@ -20,6 +20,7 @@
 
 #include "sliceDataStorage.h"
 
+
 namespace cura 
 {
 
@@ -337,6 +338,7 @@ public:
  * A LayerPlan is also knows as a 'layer plan'.
  * 
  */
+
 class LayerPlan : public NoCopy
 {
     friend class LayerPlanBuffer;

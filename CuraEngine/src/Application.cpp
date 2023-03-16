@@ -14,6 +14,13 @@
 #include "utils/string.h" //For stringcasecompare.
 #include "utils/DecodeUtils.hpp"
 
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <unistd.h>
+#endif
+#include <ctime>
+
 namespace cura
 {
 
@@ -192,6 +199,23 @@ void Application::printLicense() const
     logAlways("along with this program.  If not, see <http://www.gnu.org/licenses/>.\n");
 }
 
+//  add @2023-01-09 by ChunLian
+void printDateTime()
+{
+    
+    time_t now = std::time(0);
+
+    
+    char* dt =  std::ctime(&now);
+
+    std::cout << "localtime and data:" << dt << std::endl;
+
+    
+    //tm *gmtm = gmtime(&now);
+    //dt = std::asctime(gmtm);
+    
+}
+
 void Application::slice()
 {
     std::vector<std::string> arguments;
@@ -205,6 +229,7 @@ void Application::slice()
 
 void Application::run(const size_t argc_, char** argv_)
 {
+    printDateTime();
     size_t extArgc = argc_;
     char** extArgv = argv_;
 
@@ -214,7 +239,8 @@ void Application::run(const size_t argc_, char** argv_)
     testArg.push_back(std::string(argv_[0]));
     testArg.push_back(std::string("extParam"));
     testArg.push_back(std::string("-f"));
-    testArg.push_back(std::string("C:/Users/Administrator/AppData/Local/AnkerSlicer/AnkerMake_64bit_fp/stl/20220804184344699/sliceCmd.cmd"));
+    //testArg.push_back(std::string("C:/Users/Administrator/AppData/Local/AnkerMake/AnkerMake_64bit_fp/stl/20221213143211778/sliceCmd.cmd"));
+    testArg.push_back(std::string("../stl/20230215102059757/sliceCmd.cmd"));
 
     std::vector<char*> vc;
     for (int i = 0; i < testArg.size(); i++)
@@ -230,9 +256,16 @@ void Application::run(const size_t argc_, char** argv_)
     
 
     
+    
+    const int MAXPATH = 256;
+    char buffer[MAXPATH];
+    getcwd(buffer,MAXPATH);
+    cura::logWarning("The current directory is:%s\n", buffer);
+
     std::vector<char*> cmd;
     if (cura::stringcasecompare(extArgv[1], "extParam") == 0)
     {
+        //*(int*)(0) = 0;
         //_sleep(30000);
         std::vector<std::string> arguments;
         arguments.emplace_back(extArgv[0]);
@@ -243,9 +276,17 @@ void Application::run(const size_t argc_, char** argv_)
             {
                 i++;
                 auto fileFullName = extArgv[i];
+                cura::log("open file :%s\n", fileFullName);
                 auto content = readFileIntoString(fileFullName);
+                if (content.empty())
+                {
+                    cura::logError("content of file is empty .file :%s\n", fileFullName);
+                    return;
+                }
+                cura::log("file base64 content :%s\n", content.c_str());
                 //auto localContent = utf8ToLocalString(content);
                 auto localContent = base64Decode(content);
+                cura::log("base64 decode content :%s\n", localContent.c_str());
                 
                 auto extendArgs = splitCommand(localContent);
                 for (size_t j = 0; j < extendArgs.size(); j++)

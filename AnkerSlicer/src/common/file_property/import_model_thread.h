@@ -4,8 +4,16 @@
 #include <QObject>
 #include <QThread>
 #include "mesh_model_import_export.h"
-
-class ImportModelThread : public QThread
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT ImportModelThread : public QThread
 {
     Q_OBJECT
 public:
@@ -15,9 +23,11 @@ public:
     //static void open(const QString& formatName, const QString& fileName, CMeshO& cm, vcg::CallBackPos* cb);
     //MeshModelImport_Export::open(extension, fileName, *tmpPrintModelPtr->m_oldMesh, QCallBack_ak);
     void initOpenParam(const QString& formatName, const QString& fileName, CMeshO* cm, vcg::CallBackPos* cb);
-    bool openFileSuccessful() { return successful;};
+    inline bool openFileSuccessful() { return successful;};
+    inline bool getExit() const {   return m_exit; }
 public slots:
     void exitThreadSLot();
+    void usbChanged(int);
 
 signals:
     void resultReady(const QString &s);
@@ -31,11 +41,11 @@ private:
     CMeshO *m_cm;
     vcg::CallBackPos *m_cb;
 
-    bool m_exit;
+    bool m_exit = false;
     bool successful = true;
 };
 
-class ImportModelWoker : public QObject
+class COMMONLIB_EXPORT ImportModelWoker : public QObject
 {
     Q_OBJECT
 
@@ -59,7 +69,7 @@ private:
     vcg::CallBackPos *m_cb;
 };
 
-class ImportModelController : public QObject
+class COMMONLIB_EXPORT ImportModelController : public QObject
 {
     Q_OBJECT
     QThread workerThread;

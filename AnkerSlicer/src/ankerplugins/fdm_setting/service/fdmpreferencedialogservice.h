@@ -4,6 +4,7 @@
 #include "profilemanage/ifdmprofile.h"
 #include "common/ak_const.h"
 #include "../profilemanage/operatelog.h"
+#include <QDateTime>
 
 
 
@@ -53,6 +54,9 @@ private:
     IFdmProfile *activeProfile;
     
     AkConst::EOpenPreferenceSource openSource;
+
+    
+    QDateTime lastManuClickTime ;
 };
 
 #endif // FDMPREFERENCEDIALOGSERVICE_H

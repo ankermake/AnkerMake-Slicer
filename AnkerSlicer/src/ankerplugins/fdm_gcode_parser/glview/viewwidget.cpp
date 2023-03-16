@@ -55,15 +55,7 @@ viewWidget::viewWidget(QWidget* parent, const SceneParam& param,bool pmode,QStri
     }
 
     connect(m_rpc.data(),&QRemoteObjectDynamicReplica::initialized,this,&viewWidget::connectedRPC);
-    connect(m_rpc.data(),&QRemoteObjectDynamicReplica::stateChanged,[](QRemoteObjectReplica::State state, QRemoteObjectReplica::State oldState) {
-        if(state==QRemoteObjectReplica::Suspect && oldState == QRemoteObjectReplica::Valid){
-            //qApp->quit();
-        }
-        QString dstr;
-        QDebug(&dstr) << "oldState: " <<oldState;
-        QDebug(&dstr) << "state: " <<state;
-        AkUtil::TDebug( "-----stateChanged---"+dstr);
-    });
+//no need check rpc
 
 
     if(printMode)
@@ -74,9 +66,8 @@ viewWidget::viewWidget(QWidget* parent, const SceneParam& param,bool pmode,QStri
     if(!pmode)
     {
     ExitButton->setText(tr("Print"));
-    ExitButton->setVisible(false);
+    ExitButton->setVisible(true);
     }
-    ExitButton->setVisible(false);
 
     colorDlg = new QColorDialog(this);
     colorDlg->setStyleSheet(QString("background-color:#9a9a9a;"));
@@ -109,6 +100,8 @@ void viewWidget::connectedRPC()
     this->m_sceneParam.m_front = var_test.value<passSceneParam>().m_front;
     this->m_sceneParam.m_up = var_test.value<passSceneParam>().m_up;
     this->m_sceneParam.m_printMachineBox = var_test.value<passSceneParam>().m_printMachineBox;
+    this->m_sceneParam.logo = var_test.value<passSceneParam>().logo;
+    qDebug() << "connectedRPC eye: " << m_sceneParam.m_eye << ", m_sceneParam: " << "logo verts size: " << m_sceneParam.logo.points.size();
     //QObject::connect(this,SIGNAL(closePreviewEvent(int)), m_rpc.data(),SLOT(msgFromGcodepreview(int)));
     ui->openGLWidget->setSceneParams(m_sceneParam);
     this->changeSlider();
@@ -138,14 +131,20 @@ void viewWidget::connectedRPC()
 void viewWidget::paramChange(QVariant p)
 {
     AkUtil::TDebug("in param change ");
-    //emit setValue(42);
-    QString str;
-    //QDebug(&str) << var_test.toFloat();
-    //QDebug(&str) << "p.m_backgroundColor "<<p.value<passSceneParam>();
+    if(p.canConvert<passSceneParam>())
+    {
+       m_sceneParam.m_printMachineBox = p.value<passSceneParam>().m_printMachineBox;
+       m_sceneParam.logo = p.value<passSceneParam>().logo;
+       ui->openGLWidget->setSceneParams(m_sceneParam);
+       if(printModeInit){
+          this->changeSlider();
+       }
+       return;
+    }
+
     ui->openGLWidget->setSceneParams(m_sceneParam);
     this->changeSlider();
-    AkUtil::TDebug( str);
-
+//    AkUtil::TDebug( str);
 }
 
 void viewWidget::onMsgFromFdmGcodePaser(const QString &msg)
@@ -158,19 +157,20 @@ void viewWidget::onMsgFromFdmGcodePaser(const QString &msg)
 void viewWidget::initForm()
 {
     AkUtil::TFunction("");
-    setAttribute(Qt::WA_StyledBackground, true);
-    int tmpR, tmpG, tmpB, tmpA;
-    m_sceneParam.m_backgroundColor.getRgb(&tmpR, &tmpG, &tmpB, &tmpA);
+    
+    //setAttribute(Qt::WA_StyledBackground, true);
+   // int tmpR, tmpG, tmpB, tmpA;
+   // m_sceneParam.m_backgroundColor.getRgb(&tmpR, &tmpG, &tmpB, &tmpA);
     //setStyleSheet("background-color: rgb(234, 234, 234)");
-    setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
+    //setStyleSheet(QString("background-color: rgba(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
     //ui->openGLWidget->setSceneParams(m_sceneParam);
-    ui->openGLWidget->setAttribute(Qt::WA_StyledBackground, true);
+   // ui->openGLWidget->setAttribute(Qt::WA_StyledBackground, true);
     //ui->openGLWidget->setStyleSheet("background-color: rgb(234, 234, 234)");
-    ui->openGLWidget->setStyleSheet(QString("background-color: rgb(%1, %2, %3, %4)").arg(tmpR).arg(tmpG).arg(tmpB).arg(tmpA));
+    //ui->openGLWidget->setStyleSheet(QString("background-color: rgb(%1, %2, %3, %4)").arg(31).arg(32).arg(34).arg(tmpA));
 
     ui->widget->setStyleSheet(QString("background-color:#292A2D;"));
     setWindowTitle(tr("AnkerMake G-Code Preview"));
-    setWindowIcon(QIcon(":/pic/ui/logo_ankerslicer.ico"));
+  //  setWindowIcon(QIcon(":/pic/ui/logo_AnkerMake.ico"));
 
     //ui opengl widgt layout
     QVBoxLayout* verticalLayout_in;
@@ -234,7 +234,7 @@ void viewWidget::initForm()
     sizePolicy1.setVerticalStretch(0);
     sizePolicy1.setHeightForWidth(verticalSlider->sizePolicy().hasHeightForWidth());
     verticalSlider->setSizePolicy(sizePolicy1);
-    verticalSlider->setMinimumSize(QSize(30, 400));
+    verticalSlider->setMinimumSize(QSize(30, 350));
     verticalSlider->setMaximumSize(QSize(30, 400));
 
     //verticalSlider->setOrientation(Qt::Vertical);
@@ -274,6 +274,7 @@ void viewWidget::initForm()
 
     //play button
     pushButton_9 = new QPushButton(ui->openGLWidget);
+    pushButton_9->setFocusPolicy(Qt::NoFocus);
     pushButton_9->setObjectName(QString::fromUtf8("pushButton_9"));
     QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
     sizePolicy2.setHorizontalStretch(0);
@@ -334,36 +335,28 @@ void viewWidget::initForm()
     pButtonGroup->setExclusive(true);
 
     aiButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_ai = new QAction(QIcon(":pic/ui/fdm_ai_icon_n.png"), tr("Camera View"));
-    actiona_ai->setCheckable(true);
-    actiona_ai->setChecked(false);
-    aiButton->setDefaultAction(actiona_ai);
+    QIcon iconAi;
+    iconAi.addPixmap(QPixmap(":pic/ui/fdm_ai_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconAi.addPixmap(QPixmap(":/pic/ui/fdm_ai_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_ai = new QAction(iconAi, tr("AI View"));
+    m_actiona_ai->setCheckable(true);
+    m_actiona_ai->setChecked(false);
+
+    aiButton->setDefaultAction(m_actiona_ai);
     aiButton->setObjectName(QString::fromUtf8("aiButton"));
     sizePolicy2.setHeightForWidth(aiButton->sizePolicy().hasHeightForWidth());
     aiButton->setSizePolicy(sizePolicy2);
-    aiButton->setMinimumSize(QSize(26, 26));
-    aiButton->setMaximumSize(QSize(26, 26));
+//    aiButton->setMinimumSize(QSize(26, 26));
+//    aiButton->setMaximumSize(QSize(26, 26));
+    aiButton->setFixedSize(32,32);
     //aiButton->setFlat(true);
-    aiButton->setIconSize(QSize(26, 26));
+    aiButton->setIconSize(QSize(32, 32));
     aiButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_ai_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
         "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_ai_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+));
     //aiButton->setIcon(QPixmap("://pic//ui/fdm_ai_icon_n.png"));
     //aiButton->setCheckable(true);
     pButtonGroup->addButton(aiButton);
@@ -371,239 +364,162 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(aiButton);
 
     justButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_just = new QAction(QIcon(":pic/ui/fdm_full_icon_n.png"), tr("Camera View"));
-    actiona_just->setCheckable(true);
-    actiona_just->setChecked(false);
-    justButton->setDefaultAction(actiona_just);
+    QIcon iconJust;
+    iconJust.addPixmap(QPixmap(":pic/ui/fdm_full_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconJust.addPixmap(QPixmap(":pic/ui/fdm_full_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_just = new QAction(iconJust, tr("3D View"));
+    m_actiona_just->setCheckable(true);
+    m_actiona_just->setChecked(false);
+    justButton->setDefaultAction(m_actiona_just);
     justButton->setObjectName(QString::fromUtf8("justButton"));
     sizePolicy2.setHeightForWidth(justButton->sizePolicy().hasHeightForWidth());
     justButton->setSizePolicy(sizePolicy2);
-    justButton->setMinimumSize(QSize(26, 26));
-    justButton->setMaximumSize(QSize(26, 26));
+//    justButton->setMinimumSize(QSize(26, 26));
+//    justButton->setMaximumSize(QSize(26, 26));
     //justButton->setCheckable(true);
-    justButton->setIconSize(QSize(26, 26));
+    justButton->setIconSize(QSize(32, 32));
     justButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_full_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_full_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(justButton);
 
     horizontalLayout_in_4->addWidget(justButton);
 
     frontButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_front = new QAction(QIcon(":pic/ui/fdm_is_icon_n.png"), tr("Camera View"));
-    actiona_front->setCheckable(true);
-    actiona_front->setChecked(false);
-    frontButton->setDefaultAction(actiona_front);
+    QIcon iconFront;
+    iconFront.addPixmap(QPixmap(":pic/ui/fdm_is_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconFront.addPixmap(QPixmap(":pic/ui/fdm_is_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_front = new QAction(iconFront, tr("Front View"));
+    m_actiona_front->setCheckable(true);
+    m_actiona_front->setChecked(false);
+    frontButton->setDefaultAction(m_actiona_front);
     frontButton->setObjectName(QString::fromUtf8("frontButton"));
     sizePolicy2.setHeightForWidth(frontButton->sizePolicy().hasHeightForWidth());
     frontButton->setSizePolicy(sizePolicy2);
-    frontButton->setMinimumSize(QSize(26, 26));
-    frontButton->setMaximumSize(QSize(26, 26));
+//    frontButton->setMinimumSize(QSize(26, 26));
+//    frontButton->setMaximumSize(QSize(26, 26));
     //frontButton->setCheckable(true);
-    frontButton->setIconSize(QSize(26, 26));
+    frontButton->setIconSize(QSize(32, 32));
     frontButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_is_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_is_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(frontButton);
     horizontalLayout_in_4->addWidget(frontButton);
 
     backButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_back = new QAction(QIcon(":pic/ui/fdm_back_icon_n.png"), tr("Camera View"));
-    actiona_back->setCheckable(true);
-    actiona_back->setChecked(false);
-    backButton->setDefaultAction(actiona_back);
+    QIcon iconBack;
+    iconBack.addPixmap(QPixmap(":pic/ui/fdm_back_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconBack.addPixmap(QPixmap(":pic/ui/fdm_back_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_back = new QAction(iconBack, tr("Rear View"));
+    m_actiona_back->setCheckable(true);
+    m_actiona_back->setChecked(false);
+    backButton->setDefaultAction(m_actiona_back);
     backButton->setObjectName(QString::fromUtf8("backButton"));
     sizePolicy2.setHeightForWidth(backButton->sizePolicy().hasHeightForWidth());
     backButton->setSizePolicy(sizePolicy2);
-    backButton->setMinimumSize(QSize(26, 26));
-    backButton->setMaximumSize(QSize(26, 26));
+//    backButton->setMinimumSize(QSize(26, 26));
+//    backButton->setMaximumSize(QSize(26, 26));
     //backButton->setCheckable(true);
-    backButton->setIconSize(QSize(26, 26));
+    backButton->setIconSize(QSize(32, 32));
     backButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_back_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_back_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(backButton);
     horizontalLayout_in_4->addWidget(backButton);
 
     leftButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_left = new QAction(QIcon(":pic/ui/fdm_left_icon_n.png"), tr("Camera View"));
-    actiona_left->setCheckable(true);
-    actiona_left->setChecked(false);
-    leftButton->setDefaultAction(actiona_left);
+    QIcon iconLeft;
+    iconLeft.addPixmap(QPixmap(":pic/ui/fdm_left_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconLeft.addPixmap(QPixmap(":pic/ui/fdm_left_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_left = new QAction(iconLeft, tr("Left View"));
+    m_actiona_left->setCheckable(true);
+    m_actiona_left->setChecked(false);
+    leftButton->setDefaultAction(m_actiona_left);
     leftButton->setObjectName(QString::fromUtf8("leftButton"));
     sizePolicy2.setHeightForWidth(leftButton->sizePolicy().hasHeightForWidth());
     leftButton->setSizePolicy(sizePolicy2);
-    leftButton->setMinimumSize(QSize(26, 26));
-    leftButton->setMaximumSize(QSize(26, 26));
+//    leftButton->setMinimumSize(QSize(26, 26));
+//    leftButton->setMaximumSize(QSize(26, 26));
     //leftButton->setCheckable(true);
-    leftButton->setIconSize(QSize(26, 26));
+    leftButton->setIconSize(QSize(32, 32));
     leftButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_left_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_left_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(leftButton);
     horizontalLayout_in_4->addWidget(leftButton);
 
     rightButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_right = new QAction(QIcon(":pic/ui/fdm_right_icon_n.png"), tr("Camera View"));
-    actiona_right->setCheckable(true);
-    actiona_right->setChecked(false);
-    rightButton->setDefaultAction(actiona_right);
+    QIcon iconRight;
+    iconRight.addPixmap(QPixmap(":pic/ui/fdm_right_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconRight.addPixmap(QPixmap(":pic/ui/fdm_right_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_right = new QAction(iconRight, tr("Right View"));
+    m_actiona_right->setCheckable(true);
+    m_actiona_right->setChecked(false);
+    rightButton->setDefaultAction(m_actiona_right);
     rightButton->setObjectName(QString::fromUtf8("rightButton"));
     sizePolicy2.setHeightForWidth(rightButton->sizePolicy().hasHeightForWidth());
     rightButton->setSizePolicy(sizePolicy2);
-    rightButton->setMinimumSize(QSize(26, 26));
-    rightButton->setMaximumSize(QSize(26, 26));
+//    rightButton->setMinimumSize(QSize(26, 26));
+//    rightButton->setMaximumSize(QSize(26, 26));
     //rightButton->setCheckable(true);
-    rightButton->setIconSize(QSize(26, 26));
+    rightButton->setIconSize(QSize(32, 32));
     rightButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_right_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_right_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(rightButton);
     horizontalLayout_in_4->addWidget(rightButton);
 
     topButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_top = new QAction(QIcon(":pic/ui/fdm_on_icon_n.png"), tr("Camera View"));
-    actiona_top->setCheckable(true);
-    actiona_top->setChecked(false);
-    topButton->setDefaultAction(actiona_top);
+    QIcon iconTop;
+    iconTop.addPixmap(QPixmap(":pic/ui/fdm_on_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconTop.addPixmap(QPixmap(":pic/ui/fdm_on_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_top = new QAction(iconTop, tr("Top View"));
+    m_actiona_top->setCheckable(true);
+    m_actiona_top->setChecked(false);
+    topButton->setDefaultAction(m_actiona_top);
     topButton->setObjectName(QString::fromUtf8("topButton"));
-    topButton->setMinimumSize(QSize(26, 26));
-    topButton->setMaximumSize(QSize(26, 26));
+//    topButton->setMinimumSize(QSize(26, 26));
+//    topButton->setMaximumSize(QSize(26, 26));
     //topButton->setCheckable(true);
-    topButton->setIconSize(QSize(26, 26));
+    topButton->setIconSize(QSize(32, 32));
     topButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_on_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_on_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(topButton);
     horizontalLayout_in_4->addWidget(topButton);
 
     bottomButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_bottom = new QAction(QIcon(":pic/ui/fdm_under_icon_n.png.png"), tr("Camera View"));
-    actiona_bottom->setCheckable(true);
-    actiona_bottom->setChecked(false);
-    bottomButton->setDefaultAction(actiona_bottom);
+    QIcon iconBottom;
+    iconBottom.addPixmap(QPixmap(":pic/ui/fdm_under_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconBottom.addPixmap(QPixmap(":pic/ui/fdm_under_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_bottom = new QAction(iconBottom, tr("Bottom View"));
+    m_actiona_bottom->setCheckable(true);
+    m_actiona_bottom->setChecked(false);
+    bottomButton->setDefaultAction(m_actiona_bottom);
     bottomButton->setObjectName(QString::fromUtf8("bottomButton"));
     sizePolicy2.setHeightForWidth(bottomButton->sizePolicy().hasHeightForWidth());
     bottomButton->setSizePolicy(sizePolicy2);
-    bottomButton->setMinimumSize(QSize(26, 26));
-    bottomButton->setMaximumSize(QSize(26, 26));
+//    bottomButton->setMinimumSize(QSize(26, 26));
+//    bottomButton->setMaximumSize(QSize(26, 26));
     //bottomButton->setCheckable(true);
-    bottomButton->setIconSize(QSize(26, 26));
+    bottomButton->setIconSize(QSize(32, 32));
     bottomButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_under_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_under_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(bottomButton);
     horizontalLayout_in_4->addWidget(bottomButton);
     horizontalSpacer_in_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -684,22 +600,18 @@ void viewWidget::initForm()
     QFrame* line_11; //zlap line
     QVBoxLayout* verticalLayout;   
     QHBoxLayout* linetypeLabelLayout;
-#ifndef USE_EXTRA_UI
-    QLabel* linetypelabel;
-#endif
+
     QHBoxLayout* ConsumedLabelLayout;
-    QLabel* ConsumedLabelabel;
 
 
 
     QHBoxLayout* filamentLayout;
     QLabel* filamentPicLabel;
-    QLabel* filamentLabel;
+
     QSpacerItem* horizontalSpacer_filamentLayout10;
 
     QHBoxLayout* timeLayout;
     QLabel* timePiclabel;
-    QLabel* timelabel;
     QSpacerItem* horizontalSpacer_time11;
 
     QVBoxLayout* lineTypeLayout;
@@ -711,7 +623,7 @@ void viewWidget::initForm()
 #ifdef   USE_EXTRA_UI
     linetypeCombox = new QComboBox(ui->widget);
     linetypeCombox->addItem(tr("Line Type"));
-    linetypeCombox->addItem(tr("speed"));
+    linetypeCombox->addItem(tr("Speed"));
     linetypeCombox->addItem(tr("Trapezoid"));
     linetypeCombox->addItem(tr("Flow"));
     verticalLayout->addWidget(linetypeCombox);
@@ -737,6 +649,7 @@ void viewWidget::initForm()
     innerWallLayout->setObjectName(QString::fromUtf8("innerWallLayout"));
     innerWallLayout->setContentsMargins(0, 0, 0, 0);
     innerWallLabelC = new QPushButton(ui->widget);
+    innerWallLabelC->setFocusPolicy(Qt::NoFocus);
     innerWallLabelC->setObjectName(QString::fromUtf8("innerWallLabelC"));
     innerWallLabelC->setStyleSheet(QString::fromUtf8("background-color: rgb(80,99,92);\n"
         "border-radius:5"));//QString::fromUtf8("background-color:rgb(51, 51, 51)\n""border-radius:5"));
@@ -787,6 +700,7 @@ void viewWidget::initForm()
     outerWallLayout->setObjectName(QString::fromUtf8("outerWallLayout"));
     outerWallLayout->setContentsMargins(0, 0, 0, 0);
     outerWallLabelC = new QPushButton(ui->widget);
+    outerWallLabelC->setFocusPolicy(Qt::NoFocus);
     outerWallLabelC->setObjectName(QString::fromUtf8("outerWallLabelC"));
     outerWallLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 144, 82, 1);\n"
         "border-radius:5"));
@@ -828,6 +742,7 @@ void viewWidget::initForm()
     skinLayout->setObjectName(QString::fromUtf8("skinLayout"));
     skinLayout->setContentsMargins(0, 0, 0, 0);
     skinLabelC = new QPushButton(ui->widget);
+    skinLabelC->setFocusPolicy(Qt::NoFocus);
     skinLabelC->setObjectName(QString::fromUtf8("skinLabelC"));
     skinLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(97, 211, 125, 1);\n"
         "border-radius:5"));
@@ -839,7 +754,7 @@ void viewWidget::initForm()
     skinLayout->addWidget(skinLabelC);
     skinLabel = new QLabel(ui->widget);
     skinLabel->setObjectName(QString::fromUtf8("skinLabel"));
-    skinLabel->setText(tr("skin"));
+    skinLabel->setText(tr("Skin"));
     sizePolicy2.setHeightForWidth(skinLabel->sizePolicy().hasHeightForWidth());
     skinLabel->setSizePolicy(sizePolicy2);
     skinLabel->setMinimumSize(QSize(80, 15));
@@ -869,6 +784,7 @@ void viewWidget::initForm()
     helperLayout->setObjectName(QString::fromUtf8("helperLayout"));
     helperLayout->setContentsMargins(0, 0, 0, 0);
     helperLabelC = new QPushButton(ui->widget);
+    helperLabelC->setFocusPolicy(Qt::NoFocus);
     helperLabelC->setObjectName(QString::fromUtf8("helperLabelC"));
     helperLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(71, 143, 255, 1);\n"
         "border-radius:5"));
@@ -910,6 +826,7 @@ void viewWidget::initForm()
     fillLayout->setObjectName(QString::fromUtf8("fillLayout"));
     fillLayout->setContentsMargins(0, 0, 0, 0);
     fillLabelC = new QPushButton(ui->widget);
+    fillLabelC->setFocusPolicy(Qt::NoFocus);
     fillLabelC->setObjectName(QString::fromUtf8("fillLabelC"));
     fillLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(138, 76, 216, 1);\n"
         "border-radius:5"));
@@ -921,7 +838,7 @@ void viewWidget::initForm()
     fillLayout->addWidget(fillLabelC);
     fillLabel = new QLabel(ui->widget);
     fillLabel->setObjectName(QString::fromUtf8("fillLabel"));
-    fillLabel->setText(tr("fill"));
+    fillLabel->setText(tr("Fill"));
     sizePolicy2.setHeightForWidth(fillLabel->sizePolicy().hasHeightForWidth());
     fillLabel->setSizePolicy(sizePolicy2);
     fillLabel->setMinimumSize(QSize(80, 15));
@@ -950,6 +867,7 @@ void viewWidget::initForm()
     travelLayout->setObjectName(QString::fromUtf8("travelLayout"));
     travelLayout->setContentsMargins(0, 0, 0, 0);
     travelLabelC = new QPushButton(ui->widget);
+    travelLabelC->setFocusPolicy(Qt::NoFocus);
     travelLabelC->setObjectName(QString::fromUtf8("travelLabelC"));
     travelLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(91, 207, 207, 1);\n"
         "border-radius:5"));
@@ -975,8 +893,8 @@ void viewWidget::initForm()
     travelLayout->addWidget(travelcheckBox);
     lineTypeLayout->addLayout(travelLayout);
     //verticalLayout->addLayout(travelLayout);
-#ifdef USE_EXTRA_UI
-#endif
+
+
     line_11 = new QFrame(ui->widget);
     line_11->setObjectName(QString::fromUtf8("line_11"));
     sizePolicy3.setHeightForWidth(line_11->sizePolicy().hasHeightForWidth());
@@ -992,6 +910,7 @@ void viewWidget::initForm()
     zlapLayout->setObjectName(QString::fromUtf8("zlapLayout"));
     zlapLayout->setContentsMargins(0, 0, 0, 0);
     zlapLabelC = new QPushButton(ui->widget);
+    zlapLabelC->setFocusPolicy(Qt::NoFocus);
     zlapLabelC->setObjectName(QString::fromUtf8("zlapLabelC"));
     zlapLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 255, 255, 1);\n"
         "border-radius:5"));
@@ -1003,7 +922,7 @@ void viewWidget::initForm()
     zlapLayout->addWidget(zlapLabelC);
     zlapLabel = new QLabel(ui->widget);
     zlapLabel->setObjectName(QString::fromUtf8("zlapLabel"));
-    zlapLabel->setText(tr("zlap"));
+    zlapLabel->setText(tr("Zlap"));
     sizePolicy2.setHeightForWidth(zlapLabel->sizePolicy().hasHeightForWidth());
     zlapLabel->setSizePolicy(sizePolicy2);
     zlapLabel->setMinimumSize(QSize(80, 15));
@@ -1016,7 +935,8 @@ void viewWidget::initForm()
     zlapcheckBox->setMaximumSize(QSize(41, 20));
     zlapLayout->addWidget(zlapcheckBox);
     lineTypeLayout->addLayout(zlapLayout);
-
+#ifdef USE_EXTRA_UI
+#endif
 
     line_7 = new QFrame(ui->widget);
     line_7->setObjectName(QString::fromUtf8("line_7"));
@@ -1032,6 +952,7 @@ void viewWidget::initForm()
     supportLayout->setObjectName(QString::fromUtf8("supportLayout"));
     supportLayout->setContentsMargins(0, 0, 0, 0);
     supportLabelC = new QPushButton(ui->widget);
+    supportLabelC->setFocusPolicy(Qt::NoFocus);
     supportLabelC->setObjectName(QString::fromUtf8("supportLabelC"));
     supportLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(249, 211, 86, 1);\n"
         "border-radius:5"));
@@ -1073,6 +994,7 @@ void viewWidget::initForm()
     unkonwnLayout->setObjectName(QString::fromUtf8("unkonwnLayout"));
     unkonwnLayout->setContentsMargins(0, 0, 0, 0);
     unkonwnLabelC = new QPushButton(ui->widget);
+    unkonwnLabelC->setFocusPolicy(Qt::NoFocus);
     unkonwnLabelC->setObjectName(QString::fromUtf8("unkonwnLabelC"));
     unkonwnLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 105, 105, 1);\n"
         "border-radius:5"));
@@ -1084,7 +1006,7 @@ void viewWidget::initForm()
     unkonwnLayout->addWidget(unkonwnLabelC);
     unkonwnLabel = new QLabel(ui->widget);
     unkonwnLabel->setObjectName(QString::fromUtf8("unknowLabel"));
-    unkonwnLabel->setText(tr("unkonwn"));
+    unkonwnLabel->setText(tr("Unknown"));
     sizePolicy2.setHeightForWidth(unkonwnLabel->sizePolicy().hasHeightForWidth());
     unkonwnLabel->setSizePolicy(sizePolicy2);
     unkonwnLabel->setMinimumSize(QSize(80, 15));
@@ -1198,7 +1120,7 @@ void viewWidget::initForm()
      skinLayout_speed->setContentsMargins(16, -1, 16, -1);
      skinLabel_speed = new QLabel(ui->widget);
      skinLabel_speed->setObjectName(QString::fromUtf8("skinLabel_speed"));
-     skinLabel_speed->setText(tr("skin"));
+     skinLabel_speed->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_speed->sizePolicy().hasHeightForWidth());
      skinLabel_speed->setSizePolicy(sizePolicy2);
      skinLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1259,7 +1181,7 @@ void viewWidget::initForm()
      fillLayout_speed->setContentsMargins(16, -1, 16, -1);
      fillLabel_speed = new QLabel(ui->widget);
      fillLabel_speed->setObjectName(QString::fromUtf8("fillLabel_speed"));
-     fillLabel_speed->setText(tr("fill"));
+     fillLabel_speed->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_speed->sizePolicy().hasHeightForWidth());
      fillLabel_speed->setSizePolicy(sizePolicy2);
      fillLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1321,7 +1243,7 @@ void viewWidget::initForm()
      unkonwnLayout_speed->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_speed = new QLabel(ui->widget);
      unkonwnLabel_speed->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_speed->setText(tr("unkonwn"));
+     unkonwnLabel_speed->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_speed->sizePolicy().hasHeightForWidth());
      unkonwnLabel_speed->setSizePolicy(sizePolicy2);
      unkonwnLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1347,7 +1269,6 @@ void viewWidget::initForm()
 
      QVBoxLayout* colorPatch;
      QHBoxLayout* HLayout_colorPatch_label;
-     QLabel* colorPatch_label_unit;
      QHBoxLayout* HLayout_clolorpatch;
      QSpacerItem* horizontalSpacer_cp;
      QSpacerItem* horizontalSpacer_cp_2;
@@ -1501,7 +1422,7 @@ void viewWidget::initForm()
      skinLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      skinLabel_trapezoid = new QLabel(ui->widget);
      skinLabel_trapezoid->setObjectName(QString::fromUtf8("skinLabel_trapezoid"));
-     skinLabel_trapezoid->setText(tr("skin"));
+     skinLabel_trapezoid->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_trapezoid->sizePolicy().hasHeightForWidth());
      skinLabel_trapezoid->setSizePolicy(sizePolicy2);
      skinLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1562,7 +1483,7 @@ void viewWidget::initForm()
      fillLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      fillLabel_trapezoid = new QLabel(ui->widget);
      fillLabel_trapezoid->setObjectName(QString::fromUtf8("fillLabel_trapezoid"));
-     fillLabel_trapezoid->setText(tr("fill"));
+     fillLabel_trapezoid->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_trapezoid->sizePolicy().hasHeightForWidth());
      fillLabel_trapezoid->setSizePolicy(sizePolicy2);
      fillLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1624,7 +1545,7 @@ void viewWidget::initForm()
      unkonwnLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_trapezoid = new QLabel(ui->widget);
      unkonwnLabel_trapezoid->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_trapezoid->setText(tr("unkonwn"));
+     unkonwnLabel_trapezoid->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_trapezoid->sizePolicy().hasHeightForWidth());
      unkonwnLabel_trapezoid->setSizePolicy(sizePolicy2);
      unkonwnLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1805,7 +1726,7 @@ void viewWidget::initForm()
      skinLayout_Flow->setContentsMargins(16, -1, 16, -1);
      skinLabel_Flow = new QLabel(ui->widget);
      skinLabel_Flow->setObjectName(QString::fromUtf8("skinLabel_Flow"));
-     skinLabel_Flow->setText(tr("skin"));
+     skinLabel_Flow->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_Flow->sizePolicy().hasHeightForWidth());
      skinLabel_Flow->setSizePolicy(sizePolicy2);
      skinLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1866,7 +1787,7 @@ void viewWidget::initForm()
      fillLayout_Flow->setContentsMargins(16, -1, 16, -1);
      fillLabel_Flow = new QLabel(ui->widget);
      fillLabel_Flow->setObjectName(QString::fromUtf8("fillLabel_Flow"));
-     fillLabel_Flow->setText(tr("fill"));
+     fillLabel_Flow->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_Flow->sizePolicy().hasHeightForWidth());
      fillLabel_Flow->setSizePolicy(sizePolicy2);
      fillLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1928,7 +1849,7 @@ void viewWidget::initForm()
      unkonwnLayout_Flow->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_Flow = new QLabel(ui->widget);
      unkonwnLabel_Flow->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_Flow->setText(tr("unkonwn"));
+     unkonwnLabel_Flow->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_Flow->sizePolicy().hasHeightForWidth());
      unkonwnLabel_Flow->setSizePolicy(sizePolicy2);
      unkonwnLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1954,7 +1875,6 @@ void viewWidget::initForm()
 
      QVBoxLayout* colorPatch_Flow;
      QHBoxLayout* HLayout_colorPatch_label_Flow;
-     QLabel* colorPatch_label_unit_Flow;
      QHBoxLayout* HLayout_clolorpatch_Flow;
      QSpacerItem* horizontalSpacer_cp_Flow;
      QSpacerItem* horizontalSpacer_cp_2_Flow;
@@ -2050,7 +1970,7 @@ void viewWidget::initForm()
     filamentLabel->setStyleSheet("font: normal normal 16px;font-family:Microsoft YaHei;");
     sizePolicy2.setHeightForWidth(filamentLabel->sizePolicy().hasHeightForWidth());
     filamentLabel->setSizePolicy(sizePolicy2);
-    filamentLabel->setMinimumSize(QSize(80, 15));
+    filamentLabel->setMinimumSize(QSize(240, 15));
     filamentLayout->addWidget(filamentLabel);
     horizontalSpacer_filamentLayout10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     filamentLayout->addItem(horizontalSpacer_filamentLayout10);
@@ -2089,7 +2009,7 @@ void viewWidget::initForm()
     timeLayout->addWidget(timePiclabel);
     timelabel = new QLabel(ui->widget);
     timelabel->setObjectName(QString::fromUtf8("timelabel"));
-    timelabel->setText(tr("time"));
+    timelabel->setText(tr("Time"));
     timelabel->setStyleSheet("font: normal bold 16px Microsoft YaHei");
     sizePolicy2.setHeightForWidth(timelabel->sizePolicy().hasHeightForWidth());
     timelabel->setSizePolicy(sizePolicy2);
@@ -2106,6 +2026,7 @@ void viewWidget::initForm()
     timeValue->setAlignment(Qt::AlignRight | Qt::AlignTrailing | Qt::AlignVCenter);
     timeLayout->addWidget(timeValue);
     verticalLayout->addLayout(timeLayout);
+
     verticalLayout->addStretch();
 
     QHBoxLayout* ExportLayout;
@@ -2123,11 +2044,12 @@ void viewWidget::initForm()
 //    horizontalSpacer_ExportLayout12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExportLayout->addItem(horizontalSpacer_ExportLayout12);
     ExportButton = new QPushButton(ui->widget);
+    ExportButton->setFocusPolicy(Qt::NoFocus);
     ExportButton->setObjectName(QString::fromUtf8("ExportButton"));
     ExportButton->setText(tr("Export"));
     QSizePolicy bottomsizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
     ExportButton->setSizePolicy(bottomsizePolicy);
-    ExportButton->setFixedHeight(40);
+    ExportButton->setFixedHeight(30);
 //    ExportButton->setMinimumSize(252,40);
 //    ExportButton->setMaximumSize(252,40);
     ExportButton->setStyleSheet(QString::fromUtf8("QPushButton{\n"
@@ -2138,6 +2060,12 @@ void viewWidget::initForm()
         "    background-color:#3A3B3F;\n"
         "\n"
         "}\n"
+        "QPushButton:disabled {\n"
+        "    color:#696969;\n"
+        "    background-color:#3A3B3F;\n"
+        "    border: 0px  solid #000000;\n"
+        "}\n"
+        "\n"
         "QPushButton:hover {\n"
         "    color:#71D78A;;\n"
         "    border: 1px  solid #71D78A;\n"
@@ -2148,6 +2076,7 @@ void viewWidget::initForm()
         "     border: 1px  solid #71D78A;\n"
         "}"));
     ExportLayout->addWidget(ExportButton);
+    ExportButton->setEnabled(false);
 //    horizontalSpacer_ExportLayout13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExportLayout->addItem(horizontalSpacer_ExportLayout13);
 //    ExportLayout->setStretch(0, 1);
@@ -2162,9 +2091,10 @@ void viewWidget::initForm()
 //    horizontalSpacer_Exit14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExitLayout->addItem(horizontalSpacer_Exit14);
     ExitButton = new QPushButton(ui->widget);
+    ExitButton->setFocusPolicy(Qt::NoFocus);
     ExitButton->setObjectName(QString::fromUtf8("ExitButton"));
     ExitButton->setText(tr("Print"));
-    ExitButton->setFixedHeight(40);
+    ExitButton->setFixedHeight(30);
     ExitButton->setSizePolicy(bottomsizePolicy);
 //    ExitButton->setMinimumSize(252,40);
 //    ExitButton->setMaximumSize(252,40);
@@ -2176,6 +2106,12 @@ void viewWidget::initForm()
         "    background-color:#61D37D;\n"
         "\n"
         "}\n"
+        "QPushButton:disabled {\n"
+        "    color:#696969;\n"
+        "    background-color:#3A3B3F;\n"
+        "    border: 0px  solid #000000;\n"
+        "}\n"
+        "\n"
         "QPushButton:hover {\n"
         "    background-color:#71D78A;\n"
         "}\n"
@@ -2185,6 +2121,7 @@ void viewWidget::initForm()
         "    background-color:#61D37D;\n"
         "}"));
     ExitLayout->addWidget(ExitButton);
+    ExitButton->setEnabled(false);
 //    horizontalSpacer_Exit15 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExitLayout->addItem(horizontalSpacer_Exit15);
 //    ExitLayout->setStretch(0, 1);
@@ -2780,20 +2717,23 @@ void viewWidget::linetypeComboxChange(int changeValue)
 
 //
     typeLayout->setCurrentIndex(changeValue);
-    if(changeValue == 1 || changeValue == 2)
-    {
-        colorPatch_label_start->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
-        colorPatch_label_end->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
-        colorPatch_label_start_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
-        colorPatch_label_end_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
-        //colorPatch_label_start->update();
-        //qDebug()<< "freedrate_range :" <<(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0])) ;
-    }
+    if (!this->ui->openGLWidget->gcode_result.freedrate_range.empty()) {
+        if(changeValue == 1 || changeValue == 2)
+        {
+            colorPatch_label_start->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
+            colorPatch_label_end->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
+            colorPatch_label_start_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
+            colorPatch_label_end_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
+            //colorPatch_label_start->update();
+            //qDebug()<< "freedrate_range :" <<(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0])) ;
+        }
 
-    if(changeValue == 3)
-    {
-        colorPatch_label_start_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[0]));
-        colorPatch_label_end_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[1]));
+        if(changeValue == 3)
+        {
+            colorPatch_label_start_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[0]));
+            colorPatch_label_end_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[1]));
+        }
+
     }
 
     this->ui->openGLWidget->setColorType(GcodeViewer::colorType(changeValue));
@@ -2896,10 +2836,8 @@ void viewWidget::horizontalSliderValueChanged(int value1, int value2)
 
 void viewWidget::setExportPic()
 {
-    //reSetGcodePath("T:\\_tmp\\1.gcode",false,0);
-    //this->ui->openGLWidget->clearGcodeSource();
-    //return;
-    QString dir = QDir::homePath();
+    oStlName = oStlName.replace(".acode","");
+    QString dir = lastExportPath.isEmpty() ?  QDir::homePath() : lastExportPath;
     QString defaultName = dir + "/" + oStlName;
     QString savePath ;
 
@@ -2913,6 +2851,9 @@ void viewWidget::setExportPic()
     {
         return;
     }
+
+    QFileInfo saveinfo(savePath);
+    lastExportPath = saveinfo.absolutePath();
 #if 0
     {
     AkUtil::TDebug("-------------IgnoreEvent start--------------");
@@ -2933,7 +2874,11 @@ void viewWidget::setExportPic()
     mpDlg = new ProgressDialog(nullptr);//(QDialog*)this
     IgnoreEvent ign(ui->openGLWidget);
     //boolLock orL(offRenderLock);
-    mpDlg->setText(tr("Generate AI Image"));
+    if(isAiMode){
+        mpDlg->setText(tr("Generate AI Image"));
+    }else{
+        mpDlg->setText(tr("Export G-Code"));
+    }
     mpDlg->setCancelVisible(false);
     connect( ui->openGLWidget,SIGNAL(setValue(int)),mpDlg,SLOT(setValue(int)));
     connect(mpDlg, &ProgressDialog::destroyed, this, [&]()->void { mpDlg = NULL; });
@@ -2980,6 +2925,19 @@ void viewWidget::setOriginalStlName(const QString& oStlName)
     this->ui->openGLWidget->setOriginalStlName(oStlName);
 }
 
+void viewWidget::setLoadingProgress()
+{
+    timer_value += 895.2 * (1024 / 4.7) / f_size * 0.3;
+    qDebug()<< "timer sum set Value " <<timer_value;
+    if(timer_value < 30.0)
+    {
+        emit this->ui->openGLWidget->setValue((int)timer_value);
+    }else{
+        tp_timer->stop();
+        timer_value = 0.0;
+    }
+}
+
 void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_size)
 {
     
@@ -2988,46 +2946,112 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
     {
         dir.removeRecursively();
     }
-//    std::shared_ptr<Anker::GCodeProcessor> processor;
-//    processor = std::make_shared<Anker::GCodeProcessor>();
+    
+    if (this->mPlayTimer != nullptr)
+    {
+    this->mPlayTimer->stop();
+    }
+    this->pushButton_9->setChecked(false);
+    
+    QFileInfo fi(QString::fromStdString(gcodePath));
+    f_size = fi.size() / 1024; 
+    if(tp_timer == nullptr)
+    {
+       tp_timer = new QTimer(this);
+    }
+    connect(tp_timer, &QTimer::timeout, this, &viewWidget::setLoadingProgress,Qt::UniqueConnection);
+    tp_timer->start(100);
+
     QThreadPool::globalInstance()->start([=](){
-        qDebug()<< "processFile start";
-        qDebug()<<"QThread::currentThread() "<<QThread::currentThread() ;
         processor->reset();
         processor->enable_producers(true);
         processor->process_file(gcodePath, false);
-        qDebug()<< "processFile end";
+        this->ui->openGLWidget->waitForSceneInit();
+        auto poolThread = QThread::currentThread();
+        
+        QMetaObject::invokeMethod(QCoreApplication::instance(), [&] {
+            if(this->ui->openGLWidget->cnt == nullptr)
+            {
+                this->ui->openGLWidget->cnt = new QOpenGLContext();
+            }
+            if(this->ui->openGLWidget->m_offscreenSurface == nullptr)
+            {
+                this->ui->openGLWidget->m_offscreenSurface = new QOffscreenSurface();
+            }
+            this->ui->openGLWidget->m_offscreenSurface->setFormat(this->ui->openGLWidget->context()->format());
+            this->ui->openGLWidget->m_offscreenSurface->create();
+            this->ui->openGLWidget->doneCurrent();
+            this->ui->openGLWidget->cnt->setFormat(this->ui->openGLWidget->context()->format());
+            this->ui->openGLWidget->cnt->setShareContext(this->ui->openGLWidget->context());
+            this->ui->openGLWidget->cnt->create();
+            this->ui->openGLWidget->cnt->moveToThread(poolThread);
+
+        }, Qt::BlockingQueuedConnection);
+        this->ui->openGLWidget->clearGcodeSource();
+        this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
+
+        
+        this->tp_timer->stop();
+        this->timer_value = 0.0;
+        this->ui->openGLWidget->loadGcode();
+
+        this->ui->openGLWidget->cnt->moveToThread(QThread::currentThread());
+        this->ui->openGLWidget->cnt->destroyed();
+        this->ui->openGLWidget->cnt = nullptr;
         emit processFile(QString::fromStdString(gcodePath),isAiMode);
     });
-    qDebug()<< "processFile mid";
-    qDebug()<< "QThread::currentThread() main"<<QThread::currentThread() ;
     if(processing){
-        connect(this,&viewWidget::processFile,this,[=](const QString& _gcodePath,bool _isAiMode){
-            qDebug()<< "processFile";
-            qDebug()<<"QThread::currentThread() 1"<<QThread::currentThread() ;
-            this->ui->openGLWidget->clearGcodeSource();
-            this->setToolPath(std::move(processor->extract_result()), _gcodePath.toStdString(), _isAiMode,gcode_size);
-            this->ui->openGLWidget->loadGcode();
+        connect(this,&viewWidget::processFile,this,[&](const QString& _gcodePath,bool _isAiMode){
             changeSlider();
             processing = false;
+            
+            QVariant totleTime = allTimeValue;
+            m_rpc.data()->setProperty("gcodeTotalTime",totleTime);
+            QVariant totleFilament = allFilamentValue;
+            m_rpc.data()->setProperty("gcodeTotalFilament",totleFilament);
+
+            float extruderTemperature, bedTemperature;
+            getGcodeTargetTemperature(extruderTemperature, bedTemperature);
+            QVariant gcodeExtruderTargetTemperature = extruderTemperature;
+            m_rpc.data()->setProperty("gcodeExtruderTargetTemperature",gcodeExtruderTargetTemperature);
+            QVariant gcodeBedTargetTemperature = bedTemperature;
+            m_rpc.data()->setProperty("gcodeBedTargetTemperature",gcodeBedTargetTemperature);
+            QVariant maxSpeed = this->ui->openGLWidget->gcode_result.MaxSpeed;
+            m_rpc.data()->setProperty("maxSpeed",maxSpeed);
         }, Qt::QueuedConnection);
     }
-//    while(true){
-//        if(!processing){
-//            this->ui->openGLWidget->clearGcodeSource();
-//            this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
-//            this->ui->openGLWidget->loadGcode();
-//            changeSlider();
-//            break;
-//        }
-//        qDebug()<< "while loop";
-//        QThread::msleep(10);
-//    }
+}
 
-//    this->ui->openGLWidget->clearGcodeSource();
-//    this->setToolPath(std::move(processor->extract_result()), gcodePath, isAiMode,gcode_size);
-//    this->ui->openGLWidget->loadGcode();
-//    changeSlider();
+void viewWidget::getGcodeTargetTemperature(float& extruderTemperature, float& bedTemperature)
+{
+    if(ui == nullptr || ui->openGLWidget == nullptr)
+    {
+        return;
+    }
+
+    extruderTemperature = 0.0f;
+    bedTemperature = 0.0f;
+    for(int i=0;i< ui->openGLWidget->gcode_result.moves.size();++i)
+    {
+        if(extruderTemperature<0.01)
+        {
+            extruderTemperature = ui->openGLWidget->gcode_result.moves[i].temperature;
+        }
+        if(bedTemperature<0.01)
+        {
+            bedTemperature = ui->openGLWidget->gcode_result.moves[i].bed_temperature;
+        }
+
+        if(extruderTemperature > 0.01 && bedTemperature > 0.01)
+        {
+            break;
+        }
+    }
+}
+
+bool viewWidget::checkLastFileComplete()
+{
+  return this->lastShowFileComplete;
 }
 
 void viewWidget::setDefaultScene()
@@ -3093,6 +3117,7 @@ bool viewWidget::setToolPath(Anker::GCodeProcessor::Result&& gcode_result, std::
 void viewWidget::changeSlider()
 {
     
+
     unsigned int layersize = static_cast<unsigned int>(ui->openGLWidget->m_layers.size());
     if(layersize < 1)
     {
@@ -3101,12 +3126,34 @@ void viewWidget::changeSlider()
         this->spinBox_2->hide();
         this->horizontalSlider->hide();
         this->pushButton_9->hide();//play button
+        
+        if(!printModeInit || !innerModeInit)
+        {
+            control::MessageDialog a(tr("Warning"), tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
+            QVariant gcodeComplete = false;
+            m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
+            a.exec();
+        }
+        if(printModeInit){
+            printModeInit = false;
+        }else{
+            innerModeInit = false;
+        }
+        this->ExitButton->setEnabled(false);
+        this->ExportButton->setEnabled(false);
+        this->lastShowFileComplete = false;
+        return;
     }else{
         this->verticalSlider->show();
         this->spinBox->show();
         this->spinBox_2->show();
         this->horizontalSlider->show();
         this->pushButton_9->show();//play button
+        this->ExitButton->setEnabled(true);
+        this->ExportButton->setEnabled(true);
+        this->lastShowFileComplete = true;
+        QVariant gcodeComplete = true;
+        m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
     }
 
     this->verticalSlider->setRange(1, layersize);
@@ -3130,6 +3177,7 @@ void viewWidget::changeSlider()
     this->update();
 }
 
+//no need
 void viewWidget::closeEvent(QCloseEvent* event)
 {
     //Q_EMIT closePreviewEvent(runTimesId);
@@ -3159,20 +3207,22 @@ void viewWidget::wheelEvent(QWheelEvent* event)
    {
     QWheelEvent *wevent = new QWheelEvent(event->posF(),event->delta(),Qt::LeftButton,Qt::NoModifier);
     QApplication::postEvent(this->verticalSlider,wevent);
+    event->accept();
    }
    if(this->horizontalSlider->hasFocus())
    {
     QWheelEvent *wevent = new QWheelEvent(event->posF(),event->delta(),Qt::LeftButton,Qt::NoModifier);
     QApplication::postEvent(this->horizontalSlider,wevent);
+    event->accept();
    }
-   event->accept();
+
+   return QWidget::wheelEvent(event);
 }
 
 void viewWidget::changeEvent(QEvent * event)
 {
   if(this->windowState() == Qt::WindowNoState && !this->printMode && !this->innerMode)
   {
-
     if(QApplication::desktop()->width() < 1920 || QApplication::desktop()->height() - 80 < 1030)
     {
 
@@ -3182,13 +3232,132 @@ void viewWidget::changeEvent(QEvent * event)
         AkUtil::TDebug(dstr);
         //this->setWindowState(Qt::WindowMaximized);
     }
+  } else if (event->type() == QEvent::LanguageChange) {
+    if (ExportButton) {
+        ExportButton->setText(tr("Export"));
+    }
+    if (ExitButton) {
+        ExitButton->setText(tr("Print"));
+    }
+    setWindowTitle(tr("AnkerMake G-Code Preview"));
+#ifdef USE_EXTRA_UI
+    if (linetypeCombox) {
+        int index = linetypeCombox->currentIndex();
+        linetypeCombox->clear();
+        linetypeCombox->addItem(tr("Line Type"));
+        linetypeCombox->addItem(tr("Speed"));
+        linetypeCombox->addItem(tr("Trapezoid"));
+        linetypeCombox->addItem(tr("Flow"));
+        linetypeCombox->setCurrentIndex(index);
+    }
+    if (supportLabel_speed) {
+        supportLabel_speed->setText(tr("Support"));
+    }
+    if (unkonwnLabel_speed) {
+        unkonwnLabel_speed->setText(tr("Unknown"));
+    }
+    if (colorPatch_label_unit) {
+        colorPatch_label_unit->setText(tr("mm/s"));
+    }
+    if (innerWallLabel_trapezoid) {
+        innerWallLabel_trapezoid->setText(tr("Inner Wall"));
+    }
+    if (outerWallLabel_trapezoid) {
+        outerWallLabel_trapezoid->setText(tr("Outer Wall"));
+    }
+    if (skinLabel_trapezoid) {
+        skinLabel_trapezoid->setText(tr("Skin"));
+    }
+    if (skinLabel_trapezoid) {
+        skinLabel_trapezoid->setText(tr("Skin"));
+    }
+    if (helperLabel_Flow) {
+        helperLabel_Flow->setText(tr("Adhesion"));
+    }
+    if (fillLabel_Flow) {
+        fillLabel_Flow->setText(tr("Fill"));
+    }
+    if (supportLabel_Flow) {
+        supportLabel_Flow->setText(tr("Support"));
+    }
+    if (supportLabel_Flow) {
+        supportLabel_Flow->setText(tr("Support"));
+    }
+    if (unkonwnLabel_Flow) {
+        unkonwnLabel_Flow->setText(tr("Unknown"));
+    }
+    if (colorPatch_label_unit_Flow) {
+        colorPatch_label_unit_Flow->setText(tr("mm/s"));
+    }
+#endif
+    if (linetypelabel) {
+        linetypelabel->setText(tr("Line Type"));
+    }
+    if (innerWallLabel) {
+        innerWallLabel->setText(tr("Inner Wall"));
+    }
+    if (outerWallLabel) {
+        outerWallLabel->setText(tr("Outer Wall"));
+    }
+    if (skinLabel) {
+        skinLabel->setText(tr("Skin"));
+    }
+    if (helperLabel) {
+        helperLabel->setText(tr("Adhesion"));
+    }
+    if (fillLabel) {
+        fillLabel->setText(tr("Fill"));
+    }
+    if (ConsumedLabelabel) {
+        ConsumedLabelabel->setText(tr("Consumables"));
+    }
+    if (filamentLabel) {
+        filamentLabel->setText(tr("Filament"));
+    }
+    if (timelabel) {
+        timelabel->setText(tr("Time"));
+    }
+    if (travelLabel) {
+        travelLabel->setText(tr("Travel"));
+    }
+    if (travelLabel) {
+        travelLabel->setText(tr("Travel"));
+    }
+    if (zlapLabel) {
+        zlapLabel->setText(tr("Zlap"));
+    }
+    if (supportLabel) {
+        supportLabel->setText(tr("Support"));
+    }
+    if (unkonwnLabel) {
+        unkonwnLabel->setText(tr("Unknown"));
+    }
+    if (m_actiona_front) {
+        m_actiona_front->setText(tr("Front View"));
+    }
+    if (m_actiona_ai) {
+        m_actiona_ai->setText(tr("AI View"));
+    }
+    if (m_actiona_just) {
+        m_actiona_just->setText(tr("3D View"));
+    }
+    if (m_actiona_back) {
+        m_actiona_back->setText(tr("Rear View"));
+    }
+    if (m_actiona_left) {
+        m_actiona_left->setText(tr("Left View"));
+    }
+    if (m_actiona_right) {
+        m_actiona_right->setText(tr("Right View"));
+    }
+    if (m_actiona_top) {
+        m_actiona_top->setText(tr("Top View"));
+    }
+    if (m_actiona_bottom) {
+        m_actiona_bottom->setText(tr("Bottom View"));
+    }
   }
   return QWidget::changeEvent(event);
-//event->accept();
-//  qDebug() << "change Event";
-//  qDebug() <<QApplication::desktop()->width();
-//  qDebug() <<QApplication::desktop()->height();
-//  qDebug() <<this->windowState();
 }
 
 void viewWidget::resizeEvent(QResizeEvent* event)
@@ -3205,6 +3374,7 @@ void viewWidget::on_pushButton_quit_clicked()
     
     //this->ui->openGLWidget->off_render_single();
     QString sendStr;
+
     if(!isAiMode)
     {
         sendStr = this->ui->openGLWidget->sendOriginalStlNamedFile(true);
@@ -3212,7 +3382,7 @@ void viewWidget::on_pushButton_quit_clicked()
         sendStr = this->ui->openGLWidget->sendAcodeToPrintCtr();
         if(sendStr.size() <= 1)
         {
-            control::MessageDialog a("warning","NO GCODE HERE!", 0x00400000);
+            control::MessageDialog a(tr("Warning"),tr("No GCODE here!"), 0x00400000);
             a.exec();
             return ;
         }
@@ -3231,7 +3401,6 @@ void viewWidget::on_pushButton_quit_clicked()
         m_progessDlg->exec();
     }
     AkUtil::TDebug("sendStr: " + sendStr);
-
     emit printGcode(sendStr);
     //qs->displayDeviceListWidget(id, sendStr);
     return;
@@ -3273,9 +3442,10 @@ void viewWidget::setFilamentStr()
         showValue += showLabelCount[7];
     }
     double mm_per_g = 0.00298;
-    QString showStr = QString("%1 g").arg(int(showValue * mm_per_g), 6);
+    QString showStr = QString("%1 g").arg(int(qRound(showValue * mm_per_g)), 6);
     filamentValue->setText(showStr);
     double sum = std::accumulate(std::begin(showLabelCount), std::end(showLabelCount), 0.0);
+    allFilamentValue = sum * mm_per_g;
     this->allfilamentLabel->setText(QString("%1 g").arg(int(sum * mm_per_g), 6));
     this->allfilamentLabel->setStyleSheet("background:transparent");
 }
@@ -3304,6 +3474,11 @@ void viewWidget::setAimode(bool _isAimode)
 {
     AkUtil::TDebug("setAimode  : "+ QString::number(_isAimode));
     this->isAiMode = _isAimode;
+}
+
+void viewWidget::setLoggingStatus(bool status)
+{
+    loggingStatus = status;
 }
 
 void viewWidget::pauseGcodePlay(int index)
@@ -3360,6 +3535,7 @@ void viewWidget::setTimeStr()
     QString showStr = getTimesDhms(showValue);
     timeValue->setText(showStr);
     float sum = std::accumulate(std::begin(showTimeLabelCount), std::end(showTimeLabelCount), 0.0);
+    allTimeValue = sum;
     this->allTimeLabel->setText(getTimesDhms(sum));
     this->allTimeLabel->setStyleSheet("background:transparent");
 }
@@ -3412,16 +3588,13 @@ void viewWidget::getTimeCount()
     {ExtrusionRole::erCustom,featureType::unknown},
     {ExtrusionRole::erMixed,featureType::unknown}
     };
+    showTimeLabelCount = {};
     for (int i = 0; i < roles.size(); i++)
     {
         auto feature = roleDict.find(roles[i]);
-        showTimeLabelCount[feature->second] = times[i];
+        showTimeLabelCount[feature->second] += times[i];
+
     }
-    //    qDebug() << "showTimeLabelCount[0]"<< showTimeLabelCount[0]<< " ";
-    //    qDebug() << "showTimeLabelCount[1]"<< showTimeLabelCount[1]<< " ";
-    //    qDebug() << "showTimeLabelCount[2]"<< showTimeLabelCount[2]<< " ";
-    //    qDebug() << "showTimeLabelCount[3]"<< showTimeLabelCount[3]<< " ";
-    //    qDebug() << "showTimeLabelCount[4]"<< showTimeLabelCount[4]<< " ";
 
 }
 
@@ -3461,14 +3634,6 @@ void viewWidget::getFilamentCount()
         }
     }
 
-    //  qDebug() << "showLabelCount[0]"<< showLabelCount[0]<< " ";
-    //  qDebug() << "showLabelCount[1]"<< showLabelCount[1]<< " ";
-    //  qDebug() << "showLabelCount[2]"<< showLabelCount[2]<< " ";
-    //  qDebug() << "showLabelCount[3]"<< showLabelCount[3]<< " ";
-    //  qDebug() << "showLabelCount[4]"<< showLabelCount[4]<< " ";
-    //  qDebug() << "showLabelCount[5]"<< showLabelCount[5]<< " ";
-    //  qDebug() << "showLabelCount[6]"<< showLabelCount[6]<< " ";
-    //  qDebug() << "showLabelCount[7]"<< showLabelCount[7]<< " ";
 }
 
 

@@ -1,0 +1,38 @@
+ IDI_ICON1 ICON "logo_AnkerMake.ico"
+#if defined(UNDER_CE)
+#include <winbase.h>
+#else
+#include <winver.h>
+#endif
+VS_VERSION_INFO VERSIONINFO
+    FILEVERSION 0,9,0
+    PRODUCTVERSION 0,9,0
+    FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+    FILEFLAGS VS_FF_DEBUG
+#else
+    FILEFLAGS 0x0L
+#endif
+    FILEOS VOS__WINDOWS32
+    FILETYPE VFT_DLL
+    FILESUBTYPE 0x0L
+    BEGIN
+        BLOCK "StringFileInfo"
+        BEGIN
+            BLOCK "080404b0"
+            BEGIN
+                VALUE "CompanyName", "Anker Innovations., Ltd."
+                VALUE "FileDescription", "AnkerMake.exe"
+                VALUE "FileVersion", "0.9.0"
+                VALUE "InternalName", "AnkerMake.exe"
+                VALUE "LegalCopyright", "Copyright (C)2021"
+                VALUE "OriginalFilename", "AnkerMake.exe"
+                VALUE "ProductName", "AnkerMake"
+                VALUE "ProductVersion", "0.9.0"
+            END
+        END
+        BLOCK "VarFileInfo"
+        BEGIN
+            VALUE "Translation", 0x804, 1200
+        END
+    END

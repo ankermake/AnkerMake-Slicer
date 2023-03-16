@@ -25,7 +25,7 @@ enum ModelStatusChangedType
 
 
 DEF_PTR(CHDoc)
-class CHDoc : public QObject
+class COMMONLIB_EXPORT CHDoc : public QObject
 {
     Q_OBJECT
 
@@ -54,6 +54,7 @@ public:
     void deleteObjs(std::vector<CH3DPrintModelPtr> objs);
     void deleteObj(CH3DPrintModelPtr obj);
 
+    void getRealObjectName(const CH3DPrintModelPtr &modelPtr);
     void addObjs(std::vector<CH3DPrintModelPtr> objs);
     void addObj(CH3DPrintModelPtr obj);
     void appendObj(CH3DPrintModelPtr obj);
@@ -84,6 +85,12 @@ Q_SIGNALS:
 
     
     void modelSupportNumberChanged(int sptNum);
+
+    
+    void ModelSuspendStatusChanged(bool susStatus);
+
+    
+    void GenerateSupportButtonStatus();
 
 public Q_SLOTS:
     void modelCheckSceneIn();

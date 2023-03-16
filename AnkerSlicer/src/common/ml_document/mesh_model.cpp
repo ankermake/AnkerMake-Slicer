@@ -26,7 +26,7 @@
 #include <QFileInfo>
 
 #include "mesh_model.h"
-#include "../utilities/load_save.h"
+//#include "../utilities/load_save.h"
 
 #include <wrap/gl/math.h>
 
@@ -96,58 +96,58 @@ QString MeshModel::relativePathName(const QString& path) const
  * Returns the list of non-loaded textures that have been modified with
  * ":/img/dummy.png" in the contained mesh.
  */
-std::list<std::string> MeshModel::loadTextures(
-    GLLogStream* log,
-    vcg::CallBackPos* cb)
-{
-    std::list<std::string> unloadedTextures;
-    for (std::string& textName : cm.textures) {
-        if (textures.find(textName) == textures.end()) {
-            QImage img(":/img/dummy.png");
-            QFileInfo finfo(QString::fromStdString(textName));
-            try {
-                img = meshlab::loadImage(finfo.absoluteFilePath(), log, cb);
-                textName = finfo.fileName().toStdString();
-            }
-            catch (const MLException& e) {
-                try { //could be relative to the meshmodel
-                    QFileInfo mfi(fullName());
-                    QString fn2 = mfi.absolutePath() + "/" + finfo.fileName();
-                    img = meshlab::loadImage(fn2, log, cb);
-                    textName = finfo.fileName().toStdString();
-                }
-                catch (const MLException& e) {
-                    if (log) {
-                        log->log(
-                            GLLogStream::WARNING, "Failed loading " + textName +
-                            "; using a dummy texture");
-                    }
-                    else {
-                        std::cerr <<
-                            "Failed loading " + textName + "; using a dummy texture\n";
-                    }
-                    unloadedTextures.push_back(textName);
-                    textName = "dummy.png";
-                }
-            }
-            textures[textName] = img;
-        }
-    }
-    return unloadedTextures;
-}
+//std::list<std::string> MeshModel::loadTextures(
+//    GLLogStream* log,
+//    vcg::CallBackPos* cb)
+//{
+//    std::list<std::string> unloadedTextures;
+//    for (std::string& textName : cm.textures) {
+//        if (textures.find(textName) == textures.end()) {
+//            QImage img(":/img/dummy.png");
+//            QFileInfo finfo(QString::fromStdString(textName));
+//            try {
+//                img = meshlab::loadImage(finfo.absoluteFilePath(), log, cb);
+//                textName = finfo.fileName().toStdString();
+//            }
+//            catch (const MLException& e) {
+//                try { //could be relative to the meshmodel
+//                    QFileInfo mfi(fullName());
+//                    QString fn2 = mfi.absolutePath() + "/" + finfo.fileName();
+//                    img = meshlab::loadImage(fn2, log, cb);
+//                    textName = finfo.fileName().toStdString();
+//                }
+//                catch (const MLException& e) {
+//                    if (log) {
+//                        log->log(
+//                            GLLogStream::WARNING, "Failed loading " + textName +
+//                            "; using a dummy texture");
+//                    }
+//                    else {
+//                        std::cerr <<
+//                            "Failed loading " + textName + "; using a dummy texture\n";
+//                    }
+//                    unloadedTextures.push_back(textName);
+//                    textName = "dummy.png";
+//                }
+//            }
+//            textures[textName] = img;
+//        }
+//    }
+//    return unloadedTextures;
+//}
 
-void MeshModel::saveTextures(
-    const QString& basePath,
-    int quality,
-    GLLogStream* log,
-    CallBackPos* cb)
-{
-    for (const std::string& tname : cm.textures) {
-        meshlab::saveImage(
-            basePath + "/" + QString::fromStdString(tname),
-            textures.at(tname), quality, log, cb);
-    }
-}
+//void MeshModel::saveTextures(
+//    const QString& basePath,
+//    int quality,
+//    GLLogStream* log,
+//    CallBackPos* cb)
+//{
+//    for (const std::string& tname : cm.textures) {
+//        meshlab::saveImage(
+//            basePath + "/" + QString::fromStdString(tname),
+//            textures.at(tname), quality, log, cb);
+//    }
+//}
 
 QImage MeshModel::getTexture(const std::string& tn) const
 {

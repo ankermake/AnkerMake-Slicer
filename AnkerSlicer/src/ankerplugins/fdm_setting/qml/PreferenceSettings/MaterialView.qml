@@ -6,24 +6,10 @@ import "../PreferenceSettings" as FdmSetting
 Rectangle {
     id: root
     color: "#292A2D"
-    // property bool isDefaultMaterial: (materialParameter.defaultMaterialList).indexOf(materialParameter.currentMaterialName) >=0 ? true : false
     signal qmlCurrentMaterialChanged(string name)
     signal qmlDeleteCustomMaterial(string name)
     signal qmlRenameCustomMaterial(string oldName)
     signal qmlCreateMaterial(string name)
-
-//    Label {
-//        id:titleLabel
-//        anchors.left: parent.left
-//        anchors.top: parent.top
-//        horizontalAlignment: Text.AlignLeft
-//        verticalAlignment: Text.AlignVCenter
-//        font.pixelSize: 18
-//        font.weight: Font.Bold
-//        anchors.topMargin: 12
-//        anchors.leftMargin: 12
-//        text: qsTr("Material Setting")
-//    }
 
     FdmSetting.PreferencesListView {
         id:listview
@@ -35,7 +21,6 @@ Rectangle {
         width: 210
         customModel: materialParameter.customMaterialList
         defaultModel: materialParameter.defaultMaterialList
-      //  defaultCurrentIndex: materialParameter.defaultMaterialList.indexOf(materialParameter.currentMaterialName)
         defaultName : materialParameter.currentMaterialName
 
     }

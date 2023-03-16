@@ -6,20 +6,20 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
     property int version: 2
     FdmQml_Settings{ id:settings; objectName: "settings"
         FdmQml_Category{ id:anker_fdm_setting; objectName: "anker_fdm_setting"
-            fdmLabel: "Anker Experimental Parameters"
+            fdmLabel: "AnkerMake FDM Settings"
             fdmType: "category"
-            fdmDescription: "Anker experimental tuning parameters"
+            fdmDescription: "Customized for AnkerMake"
             fdmIcon: "AnkerFdmSettings"
             FdmQml_Param{ id:international_language; objectName: "international_language"
-                fdmLabel: "International Language"
-                fdmDescription: "International Language Switch for FDM"
+                fdmLabel: "Languages"
+                fdmDescription: "International Language Switch"
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:anker_param_ai_camera; objectName: "anker_param_ai_camera"
-                fdmLabel: "AnkerAiCamera"
-                fdmDescription: "AnkerAiCamera."
+                fdmLabel: "AnkerMake AI Camera"
+                fdmDescription: "Take pictures or record timelapses of your 3D prints."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -27,8 +27,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMeshgroup: false
                 fdmAffectedById: ""
                 FdmQml_Param{ id:camera_take_picture_time; objectName: "camera_take_picture_time"
-                    fdmLabel: "Time for camera to take pictures"
-                    fdmDescription: "Time for camera to take pictures."
+                    fdmLabel: "Timelapse Settings"
+                    fdmDescription: "Set the parameters of your timelapse."
                     fdmUnit: "ms"
                     fdmType: "float"
                     fdmDefaultValue: 20.0
@@ -36,8 +36,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:camera_position; objectName: "camera_position"
-                    fdmLabel: "camera position"
-                    fdmDescription: "camera position."
+                    fdmLabel: "Camera Position"
+                    fdmDescription: "The location of your camera in relation to your print."
                     fdmType: "str"
                     fdmValue: "[" + camera_position_x.fdmValue + ", " + camera_position_y.fdmValue + ", " + camera_position_z.fdmValue + "]"
                     fdmDefaultValue: "[ ]"
@@ -47,8 +47,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmSettablePerMeshgroup: false
                     fdmAffectedById: "camera_position_x,camera_position_y,camera_position_z"
                     FdmQml_Param{ id:camera_position_x; objectName: "camera_position_x"
-                        fdmLabel: "pos X"
-                        fdmDescription: "camera position X."
+                        fdmLabel: "X-Position"
+                        fdmDescription: "The location of your camera on the X axis."
                         fdmType: "float"
                         fdmDefaultValue: 288.78
                         fdmUnit: "mm"
@@ -59,8 +59,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:camera_position_y; objectName: "camera_position_y"
-                        fdmLabel: "pos Y"
-                        fdmDescription: "camera position Y."
+                        fdmLabel: "Y-Position"
+                        fdmDescription: "The location of your camera on the Y axis."
                         fdmType: "float"
                         fdmDefaultValue: 20.27
                         fdmUnit: "mm"
@@ -71,8 +71,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:camera_position_z; objectName: "camera_position_z"
-                        fdmLabel: "pos Z"
-                        fdmDescription: "camera position Z."
+                        fdmLabel: "Z-Position"
+                        fdmDescription: "The location of your camera on the Z axis."
                         fdmDefaultValue: 9.0
                         fdmUnit: "mm"
                         fdmType: "float"
@@ -84,8 +84,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                 }
                 FdmQml_Param{ id:camera_up; objectName: "camera_up"
-                    fdmLabel: "camera up dirction"
-                    fdmDescription: "camera up dirction."
+                    fdmLabel: "Camera Vertical Movement"
+                    fdmDescription: "Move the camera up or down."
                     fdmDefaultValue: ""
                     fdmType: "str"
                     fdmValue: "[" + camera_up_x.fdmValue + ", " + camera_up_y.fdmValue + ", " + camera_up_z.fdmValue + "]"
@@ -174,7 +174,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                 }
                 FdmQml_Param{ id:camera_resolution; objectName: "camera_resolution"
-                    fdmLabel: "camera resolution"
+                    fdmLabel: "Camera Resolution"
                     fdmDescription: "camera resolution."
                     fdmDefaultValue: ""
                     fdmType: "str"
@@ -185,7 +185,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmSettablePerMeshgroup: false
                     fdmAffectedById: "camera_resolution_w,camera_resolution_h"
                     FdmQml_Param{ id:camera_resolution_w; objectName: "camera_resolution_w"
-                        fdmLabel: "camera resolution width"
+                        fdmLabel: "Camera Resolution Width"
                         fdmDescription: "camera resolution width."
                         fdmDefaultValue: 1920
                         fdmType: "int"
@@ -196,7 +196,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:camera_resolution_h; objectName: "camera_resolution_h"
-                        fdmLabel: "camera resolution height"
+                        fdmLabel: "Camera Resolution Height"
                         fdmDescription: "camera resolution height"
                         fdmDefaultValue: 1080
                         fdmType: "int"
@@ -222,14 +222,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:ak_meshfix_dynamic_resolution; objectName: "ak_meshfix_dynamic_resolution"
                 fdmLabel: "Dynamic Resolution"
-                fdmDescription: "meshfix dynamic resolution."
+                fdmDescription: "Input the MeshFix resolution detail."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:meshfix_maximum_resolution; objectName: "meshfix_maximum_resolution"
                 fdmLabel: "Maximum Resolution"
-                fdmDescription: "The minimum size of a line segment after slicing. If you increase this, the mesh will have a lower resolution. This may allow the printer to keep up with the speed it has to process g-code and will increase slice speed by removing details of the mesh that it can't process anyway."
+                fdmDescription: "The minimum size of a line segment after slicing. If you increase this, the mesh will have a lower resolution. This allows the printer to keep up with its G-Code processing speed and will increase slice speed by removing details of the mesh that it can't process."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.5
@@ -241,7 +241,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:meshfix_maximum_travel_resolution; objectName: "meshfix_maximum_travel_resolution"
                 fdmLabel: "Maximum Travel Resolution"
-                fdmDescription: "The minimum size of a travel line segment after slicing. If you increase this, the travel moves will have less smooth corners. This may allow the printer to keep up with the speed it has to process g-code, but it may cause model avoidance to become less accurate."
+                fdmDescription: "The minimum size of a travel line segment after slicing. If you increase this, the travel moves will have corners that are less smooth. This allows the printer to keep up with its G-Code processing, but it will cause model avoidance to become less accurate."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 1.0
@@ -255,7 +255,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:meshfix_maximum_deviation; objectName: "meshfix_maximum_deviation"
                 fdmLabel: "Maximum Deviation"
-                fdmDescription: "The maximum deviation allowed when reducing the resolution for the Maximum Resolution setting. If you increase this, the print will be less accurate, but the g-code will be smaller. Maximum Deviation is a limit for Maximum Resolution, so if the two conflict the Maximum Deviation will always be held true."
+                fdmDescription: "The maximum deviation allowed when reducing the Maximum Resolution setting. If you increase this, the print will be less accurate, but the G-Code will be smaller. Note, Maximum Deviation is a limit for Maximum Resolution."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.025
@@ -276,21 +276,21 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "machine_gcode_flavor"
             }
             FdmQml_Param{ id:ak_VAJK_K_enabled; objectName: "ak_VAJK_K_enabled"
-                fdmLabel: "Linear Advance Factor"
-                fdmDescription: "Linear Advance Factor."
+                fdmLabel: "Linear Advance"
+                fdmDescription: "Predicts pressure build-up in the extruder when printing at high speeds."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmAffectedById: ""
                 FdmQml_Param{ id:ak_K_print; objectName: "ak_K_print"
-                    fdmLabel: "Linear Advance Factor"
-                    fdmDescription: "Linear Advance Factor."
+                    fdmLabel: "Linear Advance"
+                    fdmDescription: "Predicts pressure build-up in the extruder when printing at high speeds."
                     fdmDefaultValue: 0.0
                     fdmType: "float"
                     fdmEnabled: ak_VAJK_K_enabled.fdmValue
                     fdmAffectedById: ""
                     FdmQml_Param{ id:ak_K_infill; objectName: "ak_K_infill"
                         fdmLabel: "Infill"
-                        fdmDescription: "Infill Linear Advance Factor."
+                        fdmDescription: "Infill Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -299,7 +299,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:ak_K_wall; objectName: "ak_K_wall"
                         fdmLabel: "Wall"
-                        fdmDescription: "Wall Linear Advance Factor."
+                        fdmDescription: "Wall Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -307,7 +307,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "ak_K_print"
                         FdmQml_Param{ id:ak_K_wall_0; objectName: "ak_K_wall_0"
                             fdmLabel: "Outer Wall"
-                            fdmDescription: "Outer Wall Linear Advance Factor."
+                            fdmDescription: "Outer Wall Linear Advance"
                             fdmDefaultValue: 0.0
                             fdmValue: Number(ak_K_wall.fdmValue)
                             fdmType: "float"
@@ -316,7 +316,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:ak_K_wall_x; objectName: "ak_K_wall_x"
                             fdmLabel: "Inner Wall"
-                            fdmDescription: "Inner Wall Linear Advance Factor."
+                            fdmDescription: "Inner Wall Linear Advance"
                             fdmDefaultValue: 0.0
                             fdmValue: Number(ak_K_wall.fdmValue)
                             fdmType: "float"
@@ -326,7 +326,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:ak_K_topbottom; objectName: "ak_K_topbottom"
                         fdmLabel: "Skin"
-                        fdmDescription: "Top Bottom Skin Linear Advance Factor."
+                        fdmDescription: "Top & Bottom Skin Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -335,7 +335,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:ak_K_support; objectName: "ak_K_support"
                         fdmLabel: "Support"
-                        fdmDescription: "Support Linear Advance Factor."
+                        fdmDescription: "Support Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -343,8 +343,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "ak_K_print"
                     }
                     FdmQml_Param{ id:ak_K_skirt_brim; objectName: "ak_K_skirt_brim"
-                        fdmLabel: "skirt_brim"
-                        fdmDescription: "skirt_brim Linear Advance Factor."
+                        fdmLabel: "Skirts & Brims"
+                        fdmDescription: "Skirts & Brims Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -352,8 +352,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "ak_K_print"
                     }
                     FdmQml_Param{ id:ak_K_layer_0; objectName: "ak_K_layer_0"
-                        fdmLabel: "layer_0"
-                        fdmDescription: "layer_0 Linear Advance Factor."
+                        fdmLabel: "Initial Layer"
+                        fdmDescription: "Initial Layer Linear Advance"
                         fdmDefaultValue: 0.0
                         fdmValue: Number(ak_K_print.fdmValue)
                         fdmType: "float"
@@ -363,8 +363,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:shrink_infill_shrink_distance; objectName: "shrink_infill_shrink_distance"
-                fdmLabel: "Infill Shrink Didtance"
-                fdmDescription: "The Infill Shrink Didtance."
+                fdmLabel: "Infill Shrink Distance"
+                fdmDescription: "Set the infill distance near the walls on your 3D print."
                 fdmDefaultValue: 0.0
                 fdmValue: Number(machine_nozzle_size.fdmValue) / 2
                 fdmUnit: "mm"
@@ -375,15 +375,15 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "machine_nozzle_size"
             }
             FdmQml_Param{ id:wall_ruler_concave_convex_enable; objectName: "wall_ruler_concave_convex_enable"
-                fdmLabel: "Ruler printing optimization"
-                fdmDescription: "﻿Ruler printing optimization."
+                fdmLabel: "Concave / Convex Clarity"
+                fdmDescription: "This setting increases the quality of concave and convex curves on your print."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
                 FdmQml_Param{ id:wall_ruler_concave_percent; objectName: "wall_ruler_concave_percent"
-                    fdmLabel: "Printing optimization for concave areas"
-                    fdmDescription: "Printing optimization for concave areas."
+                    fdmLabel: "Concave Settings"
+                    fdmDescription: "Input the strength of the concave setting."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 20.0
@@ -394,8 +394,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_ruler_convex_percent; objectName: "wall_ruler_convex_percent"
-                    fdmLabel: "Printing optimization of convex area"
-                    fdmDescription: "Printing optimization of convex area."
+                    fdmLabel: "Convex Settings"
+                    fdmDescription: "Input the strength of the convex setting."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 20.0
@@ -406,8 +406,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_ruler_separate_percent; objectName: "wall_ruler_separate_percent"
-                    fdmLabel: "Walls Separation Rate"
-                    fdmDescription: "Walls Separation Rate."
+                    fdmLabel: "Wall Separation Rate"
+                    fdmDescription: "The distance between the outer and inner wall."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 20.0
@@ -468,7 +468,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_min_extrusion; objectName: "wall_min_extrusion"
                 fdmLabel: "Minimum Wall Extrusion"
-                fdmDescription: "Minimum allowed extrusion for a wall line. Walls whose flow is less than this value will be replaced with a travel move."
+                fdmDescription: "Minimum allowed extrusion for a wall line. Walls where the flow is less than this value will be replaced with a travel move."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -478,7 +478,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_overhang_angle; objectName: "wall_overhang_angle"
                 fdmLabel: "Overhanging Wall Angle"
-                fdmDescription: "Walls that overhang more than this angle will be printed using overhanging wall settings. When the value is 90, no walls will be treated as overhanging. Overhang that gets supported by support will not be treated as overhang either."
+                fdmDescription: "Walls that overhang more than this angle will be printed using overhanging wall settings. When the value is 90, no walls will be treated as overhanging. Overhangs with supports will not be treated as overhangs."
                 fdmUnit: "°"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -488,8 +488,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
                 FdmQml_Param{ id:wall_overhang_area_filter; objectName: "wall_overhang_area_filter"
-                    fdmLabel: "drape wall area filtration"
-                    fdmDescription: "filter the smaller part of the overhanging wall area. if less than this, it will not be opened."
+                    fdmLabel: "Drape Wall Area Filtration"
+                    fdmDescription: "Adjust the minimum area that will be treated as overhang."
                     fdmUnit: "mm²"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -498,28 +498,28 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_overhang_extend_circle; objectName: "wall_overhang_extend_circle"
-                    fdmLabel: "Overhanging Wall Extend Circle"
-                    fdmDescription: "the overhanging part of the wall extends to the whole circle."
+                    fdmLabel: "Overhang Limit"
+                    fdmDescription: "Set where overhangs apply on your print."
                     fdmType: "bool"
                     fdmDefaultValue: false
                     fdmSettablePerMesh: true
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_overhang_extend_type; objectName: "wall_overhang_extend_type"
-                    fdmLabel: "wall overhang extend type"
-                    fdmDescription: "set the range of the overhang effect to make the printing smoothly."
+                    fdmLabel: "Wall Overhang Effect Speed"
+                    fdmDescription: "Set how the printer slows down for overhangs."
                     fdmType: "enum"
                     fdmOptions:{
-                        "none": "none",
-                        "gradually_xy": "gradually_xy",
-                        "circle": "circle"
+                        "instant": "instant",
+                        "gradually_xy": "Gradually before overhang",
+                        "circle": "Gradually for entire layer"
                     }
                     fdmDefaultValue: "gradually_xy"
                     fdmSettablePerMesh: true
                     fdmAffectedById: ""
                     FdmQml_Param{ id:overhang_min_line_length; objectName: "overhang_min_line_length"
                         fdmLabel: "Overhang Min Line Length"
-                        fdmDescription: "The min length to judge a line in overhang area need to be treated as an overhang line."
+                        fdmDescription: "Input the minimum length that a line will be treated as an overhang line."
                         fdmUnit: "mm"
                         fdmType: "float"
                         fdmDefaultValue: 5.0
@@ -528,8 +528,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:wall_overhang_extend_xy_distance; objectName: "wall_overhang_extend_xy_distance"
-                        fdmLabel: "Wall Overhang Extend XY Distance"
-                        fdmDescription: "The speed will begin to slow down when The nozzle run into the distance from the overhang space in xy coordinate"
+                        fdmLabel: "Wall Overhang Speed Buffer (X/Y Axis)"
+                        fdmDescription: "Input the distance where the speed will slow down when approaching overhangs on the X or Y axis."
                         fdmUnit: "mm"
                         fdmType: "float"
                         fdmDefaultValue: 10.0
@@ -538,8 +538,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:wall_overhang_extend_z_distance; objectName: "wall_overhang_extend_z_distance"
-                        fdmLabel: "Wall Overhang Extend Z Distance"
-                        fdmDescription: "The speed will begin to slow down when The nozzle run into the distance from the overhang space in z coordinate"
+                        fdmLabel: "Wall Overhang Speed Buffer (Z Axis)"
+                        fdmDescription: "Input the distance where the speed will slow down when approaching overhangs on the Z axis."
                         fdmUnit: "mm"
                         fdmType: "float"
                         fdmDefaultValue: 10.0
@@ -549,15 +549,23 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:overhang_inner_wall_shrink_distance; objectName: "overhang_inner_wall_shrink_distance"
                         fdmLabel: "Overhang Inner Wall Shrink Distance"
-                        fdmDescription: "inner wall shrink to make a tiny gap between outter wall and inner wall , expect to make the out line more wide "
+                        fdmDescription: "This setting creates a tiny gap between the outer and inner walls to improve overhang quality."
                         fdmUnit: "mm"
                         fdmType: "float"
-                        fdmDefaultValue: 0.05
-                        fdmValue: Number(machine_nozzle_size.fdmValue) * 0.125
+                        fdmDefaultValue: 0.0
+                        fdmValue: 0.05
                         fdmEnabled: wall_overhang_extend_type.fdmValue === "gradually_xy"
                         fdmSettablePerMesh: true
-                        fdmAffectedById: "machine_nozzle_size"
+                        fdmAffectedById: ""
                     }
+                }
+                FdmQml_Param{ id:overhang_related_inner_wall_slow_down; objectName: "overhang_related_inner_wall_slow_down"
+                    fdmLabel: "slow down overhang inner wall"
+                    fdmDescription: "Print overhang inner wall with overhang speed."
+                    fdmType: "bool"
+                    fdmDefaultValue: true
+                    fdmSettablePerMesh: true
+                    fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_overhang_speed_factor; objectName: "wall_overhang_speed_factor"
                     fdmLabel: "Overhanging Wall Speed"
@@ -566,13 +574,13 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmType: "float"
                     fdmDefaultValue: 100.0
                     fdmMinimumValue: 0.001
-                    fdmMinimumValueWarning: 25.0
+                    fdmMinimumValueWarning: 5.0
                     fdmSettablePerMesh: true
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:wall_overhang_flow_factor; objectName: "wall_overhang_flow_factor"
-                    fdmLabel: "Overhanging Wall Flow"
-                    fdmDescription: "Overhanging walls will be printed at this percentage of their normal print flow."
+                    fdmLabel: "Overhang Wall Flow"
+                    fdmDescription: "Control the extrusion flow when printing overhangs."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -583,15 +591,15 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:skin_overhang_enable; objectName: "skin_overhang_enable"
-                fdmLabel: "Overhanging Skin Overlap Enable"
-                fdmDescription: ""
+                fdmLabel: "Overhang Skin Overlap"
+                fdmDescription: "This setting controls the overlap between the skin wall and its filling."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: true
                 fdmAffectedById: ""
                 FdmQml_Param{ id:skin_overlap_overhang_speed; objectName: "skin_overlap_overhang_speed"
-                    fdmLabel: "Overhanging Skin Overlap Speed Percentage"
-                    fdmDescription: "Overhanging Skin Overlap Speed Percentage."
+                    fdmLabel: "Overhang Skin Overlap Speed Percentage"
+                    fdmDescription: "Set how much the printer slows down when approaching overhang skin overlaps."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 50.0
@@ -600,8 +608,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:skin_overlap_overhang_flow; objectName: "skin_overlap_overhang_flow"
-                    fdmLabel: "Overhanging Skin Overlap Flow Percentage"
-                    fdmDescription: "Overhanging Skin Overlap Flow Percentage."
+                    fdmLabel: "Overhang Skin Overlap Flow Percentage"
+                    fdmDescription: "Set the intensity of the flow when approaching overhang skin overlaps."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmValue: Number(skin_material_flow.fdmValue)
@@ -612,7 +620,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:skin_overlap_overhang; objectName: "skin_overlap_overhang"
                     fdmLabel: "Overhanging Skin Overlap Percentage"
-                    fdmDescription: "Adjust the amount of overlap between the walls and (the endpoints of) the skin-centerlines, as a percentage of the line widths of the skin lines and the innermost wall. A slight overlap allows the walls to connect firmly to the skin. Note that, given an equal skin and wall line-width, any percentage over 50% may already cause any skin to go past the wall, because at that point the position of the nozzle of the skin-extruder may already reach past the middle of the wall."
+                    fdmDescription: "Adjust the amount of overlap between the walls and the endpoitns of the skin centerlines.A slight overlap allows the walls to firmly connect to the skin.Note: Percentages over 50% may cause the skin to go past the wall."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 20.0
@@ -633,48 +641,48 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:optimize_wall_0_printing_order; objectName: "optimize_wall_0_printing_order"
-                fdmLabel: "Optimize Outside Wall Printing Order"
-                fdmDescription: "optimize the Outer Wall Printing Order ,make it nether be the first nor the last to be printed."
+                fdmLabel: "Outer Wall Print Priority"
+                fdmDescription: "Decide when outer walls will be printed."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:optimize_wall_hole_printing; objectName: "optimize_wall_hole_printing"
-                fdmLabel: "Optimize Hole Wall Printing"
-                fdmDescription: "Optimize Hole Wall Printing"
+                fdmLabel: "Holes"
+                fdmDescription: "Adjust parameters to create more circular holes in your print."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:reverse_hole_outer_wall_print_orient; objectName: "reverse_hole_outer_wall_print_orient"
-                fdmLabel: "Reverse Hole OuterWall Print Orient"
-                fdmDescription: "reverse the print orient of the hole outer wall, make the printing smoothly when the last print position is from outer wall"
+                fdmLabel: "Reverse Printing for Holes"
+                fdmDescription: "Print in a clockwise direction when reaching the hole's outer wall. This creates a smoother effect when transitioning away from the hole's outer wall."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:optimize_wall_small_printing; objectName: "optimize_wall_small_printing"
-                fdmLabel: "Optimize Small Part Printing"
-                fdmDescription: "Optimize Small Part Printing"
+                fdmLabel: "Small Part Printing"
+                fdmDescription: "Slow down prints when they reach small, intricate parts of the model."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:optimize_single_part_z_seam; objectName: "optimize_single_part_z_seam"
-                fdmLabel: "Single part Z seam optimization"
-                fdmDescription: "Single part Z seam optimization"
+                fdmLabel: "Z Seam"
+                fdmDescription: "Smooth bumps that can occur when your print moves to the next layer."
                 fdmType: "int"
                 fdmDefaultValue: 0
                 fdmSettablePerMesh: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:show_machine_setting; objectName: "show_machine_setting"
-                fdmLabel: "Show Machine Max Setting."
-                fdmDescription: "Show Machine Max Setting."
+                fdmLabel: "Max Jerk Parameters"
+                fdmDescription: "This shows the maxium parameters of the printer's jerk setting."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmAffectedById: ""
@@ -720,7 +728,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:bridge_settings_enabled; objectName: "bridge_settings_enabled"
                 fdmLabel: "Enable Bridge Settings"
-                fdmDescription: "Detect bridges and modify print speed, flow and fan settings while bridges are printed."
+                fdmDescription: "Detect bridges and modify print speed, flow, and fan settings while bridges are printed."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmResolve: bridge_settings_enabled.fdmValue
@@ -730,19 +738,19 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:bridge_split_min_length; objectName: "bridge_split_min_length"
                     fdmLabel: "Bridge split min length"
-                    fdmDescription: "Split long bridge to be ."
+                    fdmDescription: "Split a long bridge to 3 part to perform a variable speed printing"
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
-                    fdmDefaultValue: 5.0
+                    fdmDefaultValue: 20.0
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmSettablePerExtruder: false
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:bridge_shrink_length; objectName: "bridge_shrink_length"
-                    fdmLabel: "Minimum Bridge Wall Length"
-                    fdmDescription: "Unsupported walls shorter than this will be printed using the normal wall settings. Longer unsupported walls will be printed using the bridge wall settings."
+                    fdmLabel: "Bridge shrink length"
+                    fdmDescription: "Offset from Bridge start to apply the bridge config "
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -766,7 +774,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bridge_skin_support_threshold; objectName: "bridge_skin_support_threshold"
                     fdmLabel: "Bridge Skin Support Threshold"
-                    fdmDescription: "If a skin region is supported for less than this percentage of its area, print it using the bridge settings. Otherwise it is printed using the normal skin settings."
+                    fdmDescription: "If a skin region is supported for less than this percentage of its area, print it using the bridge settings. Otherwise it will be printed using the normal skin settings."
                     fdmUnit: "%"
                     fdmDefaultValue: 50.0
                     fdmType: "float"
@@ -778,7 +786,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bridge_sparse_infill_max_density; objectName: "bridge_sparse_infill_max_density"
                     fdmLabel: "Bridge Sparse Infill Max Density"
-                    fdmDescription: "Maximum density of infill considered to be sparse. Skin over sparse infill is considered to be unsupported and so may be treated as a bridge skin."
+                    fdmDescription: "Maximum density of infill considered to be sparse. Skin over sparse infill is considered to be unsupported and may be treated as a bridge skin."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 0.0
@@ -789,7 +797,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bridge_wall_coast; objectName: "bridge_wall_coast"
                     fdmLabel: "Bridge Wall Coasting"
-                    fdmDescription: "This controls the distance the extruder should coast immediately before a bridge wall begins. Coasting before the bridge starts can reduce the pressure in the nozzle and may produce a flatter bridge."
+                    fdmDescription: "This controls the distance the extruder coasts before a bridge wall begins. Coasting before the bridge starts can reduce pressure in the nozzle and produce a flatter bridge."
                     fdmUnit: "%"
                     fdmDefaultValue: 100.0
                     fdmType: "float"
@@ -804,14 +812,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "The speed at which the bridge walls are printed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
-                    fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                    fdmMinimumValue: 15.0 //Number(cool_min_speed.fdmValue)
                     fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                     fdmMaximumValueWarning: 300.0
                     fdmDefaultValue: 15.0
-                    fdmValue: Math.max(Number(cool_min_speed.fdmValue), Number(speed_wall_0.fdmValue) / 2)
+                    fdmValue: 25.0 //Math.max(Number(cool_min_speed.fdmValue), Number(speed_wall_0.fdmValue) / 2)
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
-                    fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y,speed_wall_0,cool_min_speed"
+                    fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y"
                 }
                 FdmQml_Param{ id:bridge_wall_material_flow; objectName: "bridge_wall_material_flow"
                     fdmLabel: "Bridge Wall Flow"
@@ -831,14 +839,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "The speed at which bridge skin regions are printed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
-                    fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                    fdmMinimumValue: 15.0 //Number(cool_min_speed.fdmValue)
                     fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                     fdmMaximumValueWarning: 300.0
                     fdmDefaultValue: 15.0
-                    fdmValue: Math.max(Number(cool_min_speed.fdmValue), Number(speed_topbottom.fdmValue) / 2)
+                    fdmValue: 25.0 //Math.max(Number(cool_min_speed.fdmValue), Number(speed_topbottom.fdmValue) / 2)
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
-                    fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y,speed_topbottom,cool_min_speed"
+                    fdmAffectedById: "machine_max_feedrate_x,machine_max_feedrate_y"
                 }
                 FdmQml_Param{ id:bridge_skin_material_flow; objectName: "bridge_skin_material_flow"
                     fdmLabel: "Bridge Skin Flow"
@@ -860,16 +868,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDefaultValue: 100.0
                     fdmType: "float"
                     fdmMinimumValue: 5.0
-                    fdmMaximumValue: 100.0
+                    fdmMaximumValue: 150.0
                     fdmMinimumValueWarning: 20.0
-                    fdmMaximumValueWarning: 100.0
+                    fdmMaximumValueWarning: 150.0
                     fdmEnabled: bridge_settings_enabled.fdmValue
                     fdmSettablePerMesh: true
                     fdmAffectedById: ""
                 }
                 FdmQml_Param{ id:bridge_fan_speed; objectName: "bridge_fan_speed"
                     fdmLabel: "Bridge Fan Speed"
-                    fdmDescription: "Percentage fan speed to use when printing bridge walls and skin."
+                    fdmDescription: "Adjusts the fan speed when printing bridge walls and skin."
                     fdmUnit: "%"
                     fdmMinimumValue: 0.0
                     fdmMaximumValue: 100.0
@@ -889,17 +897,17 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                     FdmQml_Param{ id:bridge_skin_speed_2; objectName: "bridge_skin_speed_2"
                         fdmLabel: "Bridge Second Skin Speed"
-                        fdmDescription: "Print speed to use when printing the second bridge skin layer."
+                        fdmDescription: "Print speed when printing the second bridge skin layer."
                         fdmUnit: "mm/s"
                         fdmType: "float"
-                        fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                        fdmMinimumValue: 15 //Number(cool_min_speed.fdmValue)
                         fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                         fdmMaximumValueWarning: 300.0
                         fdmDefaultValue: 25.0
                         fdmValue: Number(bridge_skin_speed.fdmValue)
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
-                        fdmAffectedById: "bridge_skin_speed,machine_max_feedrate_x,machine_max_feedrate_y,cool_min_speed"
+                        fdmAffectedById: "bridge_skin_speed,machine_max_feedrate_x,machine_max_feedrate_y"
                     }
                     FdmQml_Param{ id:bridge_skin_material_flow_2; objectName: "bridge_skin_material_flow_2"
                         fdmLabel: "Bridge Second Skin Flow"
@@ -922,16 +930,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDefaultValue: 75.0
                         fdmType: "float"
                         fdmMinimumValue: 5.0
-                        fdmMaximumValue: 100.0
+                        fdmMaximumValue: 150.0
                         fdmMinimumValueWarning: 20.0
-                        fdmMaximumValueWarning: 100.0
+                        fdmMaximumValueWarning: 150.0
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:bridge_fan_speed_2; objectName: "bridge_fan_speed_2"
                         fdmLabel: "Bridge Second Skin Fan Speed"
-                        fdmDescription: "Percentage fan speed to use when printing the second bridge skin layer."
+                        fdmDescription: "Percentage fan speed when printing the second bridge skin layer."
                         fdmUnit: "%"
                         fdmMinimumValue: 0.0
                         fdmMaximumValue: 100.0
@@ -943,17 +951,17 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:bridge_skin_speed_3; objectName: "bridge_skin_speed_3"
                         fdmLabel: "Bridge Third Skin Speed"
-                        fdmDescription: "Print speed to use when printing the third bridge skin layer."
+                        fdmDescription: "Print speed when printing the third bridge skin layer."
                         fdmUnit: "mm/s"
                         fdmType: "float"
-                        fdmMinimumValue: Number(cool_min_speed.fdmValue)
+                        fdmMinimumValue: 15.0 //Number(cool_min_speed.fdmValue)
                         fdmMaximumValue:  Math.sqrt(Number(machine_max_feedrate_x.fdmValue) ** 2 + Number(machine_max_feedrate_y.fdmValue) ** 2)
                         fdmMaximumValueWarning: 300.0
                         fdmDefaultValue: 15.0
                         fdmValue: Number(bridge_skin_speed.fdmValue)
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
-                        fdmAffectedById: "bridge_skin_speed,machine_max_feedrate_x,machine_max_feedrate_y,cool_min_speed"
+                        fdmAffectedById: "bridge_skin_speed,machine_max_feedrate_x,machine_max_feedrate_y"
                     }
                     FdmQml_Param{ id:bridge_skin_material_flow_3; objectName: "bridge_skin_material_flow_3"
                         fdmLabel: "Bridge Third Skin Flow"
@@ -976,16 +984,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDefaultValue: 80.0
                         fdmType: "float"
                         fdmMinimumValue: 5.0
-                        fdmMaximumValue: 100.0
+                        fdmMaximumValue: 150.0
                         fdmMinimumValueWarning: 20.0
-                        fdmMaximumValueWarning: 100.0
+                        fdmMaximumValueWarning: 150.0
                         fdmEnabled: bridge_settings_enabled.fdmValue && bridge_enable_more_layers.fdmValue
                         fdmSettablePerMesh: true
                         fdmAffectedById: ""
                     }
                     FdmQml_Param{ id:bridge_fan_speed_3; objectName: "bridge_fan_speed_3"
                         fdmLabel: "Bridge Third Skin Fan Speed"
-                        fdmDescription: "Percentage fan speed to use when printing the third bridge skin layer."
+                        fdmDescription: "Fan speed percentage when printing the third bridge skin layer."
                         fdmUnit: "%"
                         fdmMinimumValue: 0.0
                         fdmMaximumValue: 100.0
@@ -998,7 +1006,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:machine_index_name; objectName: "machine_index_name"
-                fdmLabel: "MachineIndexName"
+                fdmLabel: "Machine Index Name"
                 fdmDescription: "The name of machine index."
                 fdmType: "str"
                 fdmDefaultValue: "unknown"
@@ -1008,7 +1016,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:extruder_index_name; objectName: "extruder_index_name"
-                fdmLabel: "ExtruderIndexName"
+                fdmLabel: "Extruder Index Name"
                 fdmDescription: "The name of extruder index."
                 fdmType: "str"
                 fdmDefaultValue: "unknown"
@@ -1018,7 +1026,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:material_index_name; objectName: "material_index_name"
-                fdmLabel: "MaterialIndexName"
+                fdmLabel: "Material Index Name"
                 fdmDescription: "The name of material index."
                 fdmType: "str"
                 fdmDefaultValue: "unknown"
@@ -1028,7 +1036,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:parameter_index_name; objectName: "parameter_index_name"
-                fdmLabel: "ParameterIndexName"
+                fdmLabel: "Parameter Index Name"
                 fdmDescription: "The name of parameter index."
                 fdmType: "str"
                 fdmDefaultValue: "unknown"
@@ -1038,13 +1046,21 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:extract_param_from_gcode; objectName: "extract_param_from_gcode"
-                fdmLabel: "show the gcode param when preview ankerMake gcode "
-                fdmDescription: "show the parameters of the gcode in the setting pannel when preview the gcode which was sliced by ankerMake."
+                fdmLabel: "G-Code Parameter Preview"
+                fdmDescription: "See the G-Code parameters when previewing G-Code files."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmSettablePerMesh: false
                 fdmSettablePerExtruder: false
                 fdmSettablePerMeshgroup: false
+                fdmAffectedById: ""
+            }
+            FdmQml_Param{ id:check_param_lost_interval; objectName: "check_param_lost_interval"
+                fdmLabel: "check param lost interval"
+                fdmDescription: "check whether the parameter lost every interval seconds."
+                fdmType: "int"
+                fdmDefaultValue: 60
+                fdmEnabled: true
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:coasting_enable; objectName: "coasting_enable"
@@ -1099,7 +1115,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         FdmQml_Category{ id:machine_settings; objectName: "machine_settings"
             fdmLabel: "Machine"
             fdmType: "category"
-            fdmDescription: "Machine specific settings"
+            fdmDescription: "Machine specific settings."
             fdmIcon: "MachinePrinter"
             FdmQml_Param{ id:machine_name; objectName: "machine_name"
                 fdmLabel: "Machine Type"
@@ -1113,7 +1129,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_show_variants; objectName: "machine_show_variants"
                 fdmLabel: "Show Machine Variants"
-                fdmDescription: "Whether to show the different variants of this machine, which are described in separate json files."
+                fdmDescription: "This shows the different variants of this machine, which are described in separate JSON files."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1122,8 +1138,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:machine_start_gcode; objectName: "machine_start_gcode"
-                fdmLabel: "Start G-code"
-                fdmDescription: "G-code commands to be executed at the very start - separated by \\n."
+                fdmLabel: "Start G-Code"
+                fdmDescription: "Add G-Code commands to the beginning of the file. Separate commands by \\n."
                 fdmDefaultValue: "; config start gcode "
                 fdmType: "str"
                 fdmSettablePerMesh: false
@@ -1132,8 +1148,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:machine_end_gcode; objectName: "machine_end_gcode"
-                fdmLabel: "End G-code"
-                fdmDescription: "G-code commands to be executed at the very end - separated by \\n."
+                fdmLabel: "End G-Code"
+                fdmDescription: "Add G-code commands to the end of the file. Separate commands by \\n."
                 fdmDefaultValue: "; config end gcode\nM104 S0\nM140 S0\n;Retract the filament\nG92 E1\nG1 E-1 F300\nG28 X0 Y0\nM84"
                 fdmType: "str"
                 fdmSettablePerMesh: false
@@ -1151,7 +1167,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_bed_temp_wait; objectName: "material_bed_temp_wait"
                 fdmLabel: "Wait for Build Plate Heatup"
-                fdmDescription: "Whether to insert a command to wait until the build plate temperature is reached at the start."
+                fdmDescription: "Inserts a command to wait until the build plate temperature is reached before starting."
                 fdmDefaultValue: true
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1161,7 +1177,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_print_temp_wait; objectName: "material_print_temp_wait"
                 fdmLabel: "Wait for Nozzle Heatup"
-                fdmDescription: "Whether to wait until the nozzle temperature is reached at the start."
+                fdmDescription: "Waits until the nozzle temperature is reached before starting."
                 fdmDefaultValue: true
                 fdmType: "bool"
                 fdmEnabled: machine_nozzle_temp_enabled.fdmValue
@@ -1172,7 +1188,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_print_temp_prepend; objectName: "material_print_temp_prepend"
                 fdmLabel: "Include Material Temperatures"
-                fdmDescription: "Whether to include nozzle temperature commands at the start of the gcode. When the start_gcode already contains nozzle temperature commands Cura frontend will automatically disable this setting."
+                fdmDescription: "Place nozzle temperature commands at the start of the G-Code. When the Start G-Code already contains nozzle temperature commands, the AnkerMake frontend will automatically disable this setting."
                 fdmDefaultValue: true
                 fdmType: "bool"
                 fdmEnabled: machine_nozzle_temp_enabled.fdmValue
@@ -1183,7 +1199,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_bed_temp_prepend; objectName: "material_bed_temp_prepend"
                 fdmLabel: "Include Build Plate Temperature"
-                fdmDescription: "Whether to include build plate temperature commands at the start of the gcode. When the start_gcode already contains build plate temperature commands Cura frontend will automatically disable this setting."
+                fdmDescription: "Place build plate temperature commands at the start of the G-Code. When the Start G-Code already contains build plate temeprature commands, the AnkerMake Slicer frontend will automatically disable this setting."
                 fdmDefaultValue: true
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1254,7 +1270,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_heated_bed; objectName: "machine_heated_bed"
                 fdmLabel: "Has Heated Build Plate"
-                fdmDescription: "Whether the machine has a heated build plate present."
+                fdmDescription: "Toggle if you have a heated build plate."
                 fdmDefaultValue: true // 5x
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1264,7 +1280,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_heated_build_volume; objectName: "machine_heated_build_volume"
                 fdmLabel: "Has Build Volume Temperature Stabilization"
-                fdmDescription: "Whether the machine is able to stabilize the build volume temperature."
+                fdmDescription: "Toggle if your printer can stabilize the build volume temperature."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1273,7 +1289,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:build_volume_temperature; objectName: "build_volume_temperature"
                     fdmLabel: "Build Volume Temperature"
-                    fdmDescription: "The temperature of the environment to print in. If this is 0, the build volume temperature will not be adjusted."
+                    fdmDescription: "The temperature of the ambient environment. If this is 0, the build volume temperature will not be adjusted."
                     fdmUnit: "°C"
                     fdmType: "float"
                     fdmDefaultValue: 0.0
@@ -1299,7 +1315,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_center_is_zero; objectName: "machine_center_is_zero"
                 fdmLabel: "Is Center Origin"
-                fdmDescription: "Whether the X/Y coordinates of the zero position of the printer is at the center of the printable area."
+                fdmDescription: "Toggle if the X/Y coordinates of the zero position of the printer is at the center of the printable area."
                 fdmDefaultValue: false
                 fdmType: "bool"
                 fdmSettablePerMesh: false
@@ -1312,7 +1328,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "Number of extruder trains. An extruder train is the combination of a feeder, bowden tube, and nozzle."
                 fdmDefaultValue: 1
                 fdmMinimumValue: 1
-                fdmMaximumValue: 2
+                fdmMaximumValue: 1
                 fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
                 fdmSettablePerMesh: false
@@ -1322,7 +1338,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:extruders_enabled_count; objectName: "extruders_enabled_count"
                 fdmLabel: "Number of Extruders That Are Enabled"
-                fdmDescription: "Number of extruder trains that are enabled; automatically set in software"
+                fdmDescription: "Number of extruder trains that are enabled; automatically set in software."
                 fdmValue: Number(machine_extruder_count.fdmValue)
                 fdmDefaultValue: 1
                 fdmMinimumValue: 1
@@ -1335,7 +1351,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_tip_outer_diameter; objectName: "machine_nozzle_tip_outer_diameter"
                 fdmLabel: "Outer Nozzle Diameter"
-                fdmDescription: "The outer diameter of the tip of the nozzle."
+                fdmDescription: "The outer diameter of the nozzle tip."
                 fdmUnit: "mm"
                 fdmDefaultValue: 1.0
                 fdmType: "float"
@@ -1358,7 +1374,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_expansion_angle; objectName: "machine_nozzle_expansion_angle"
                 fdmLabel: "Nozzle Angle"
-                fdmDescription: "The angle between the horizontal plane and the conical part right above the tip of the nozzle."
+                fdmDescription: "The angle between the horizontal plane and the conical part, right above the tip of the nozzle."
                 fdmUnit: "°"
                 fdmType: "int"
                 fdmDefaultValue: 45
@@ -1371,7 +1387,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_heat_zone_length; objectName: "machine_heat_zone_length"
                 fdmLabel: "Heat Zone Length"
-                fdmDescription: "The distance from the tip of the nozzle in which heat from the nozzle is transferred to the filament."
+                fdmDescription: "The distance from the tip of the nozzle where nozzle heat is transferred to the filament."
                 fdmUnit: "mm"
                 fdmDefaultValue: 16.0
                 fdmType: "float"
@@ -1382,7 +1398,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_temp_enabled; objectName: "machine_nozzle_temp_enabled"
                 fdmLabel: "Enable Nozzle Temperature Control"
-                fdmDescription: "Whether to control temperature from Cura. Turn this off to control nozzle temperature from outside of Cura."
+                fdmDescription: "Control the temperature from the AnkerMake Slicer. Turn this off to control the nozzle temperature from outside of AnkerMake Slicer."
                 fdmDefaultValue: true
                 fdmValue: true
                 fdmType: "bool"
@@ -1415,7 +1431,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_min_cool_heat_time_window; objectName: "machine_min_cool_heat_time_window"
                 fdmLabel: "Minimal Time Standby Temperature"
-                fdmDescription: "The minimal time an extruder has to be inactive before the nozzle is cooled. Only when an extruder is not used for longer than this time will it be allowed to cool down to the standby temperature."
+                fdmDescription: "The minimal time an extruder has to be inactive before the nozzle is cooled to the standby temperature."
                 fdmDefaultValue: 50.0
                 fdmUnit: "s"
                 fdmType: "float"
@@ -1425,17 +1441,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:machine_gcode_flavor; objectName: "machine_gcode_flavor"
-                fdmLabel: "G-code Flavor"
-                fdmDescription: "The type of g-code to be generated."
+                fdmLabel: "G-Code Flavor"
+                fdmDescription: "The type of G-Code generated."
                 fdmType: "enum"
                 fdmOptions:{
                     "RepRap (Marlin/Sprinter)": "Marlin",
-                    "RepRap (Volumetric)": "Marlin (Volumetric)",
                     "RepRap (RepRap)": "RepRap",
-                    "UltiGCode": "Ultimaker 2",
                     "Griffin": "Griffin",
-                    "Makerbot": "Makerbot",
-                    "BFB": "Bits from Bytes"
+                    "Makerbot": "Makerbot"
                 }
                 fdmDefaultValue: "RepRap (Marlin/Sprinter)"
                 fdmSettablePerMesh: false
@@ -1445,7 +1458,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_firmware_retract; objectName: "machine_firmware_retract"
                 fdmLabel: "Firmware Retraction"
-                fdmDescription: "Whether to use firmware retract commands (G10/G11) instead of using the E property in G1 commands to retract the material."
+                fdmDescription: "Use the firmware retract commands (G10/G11) instead of the E property in G1 commands to retract material."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmValue: machine_gcode_flavor.fdmValue === "RepRap (Volumetric)" || machine_gcode_flavor.fdmValue === "UltiGCode" || machine_gcode_flavor.fdmValue === "BFB"
@@ -1456,7 +1469,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruders_share_heater; objectName: "machine_extruders_share_heater"
                 fdmLabel: "Extruders Share Heater"
-                fdmDescription: "Whether the extruders share a single heater rather than each extruder having its own heater."
+                fdmDescription: "Toggle if your extruders share a single heater."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: false
@@ -1476,7 +1489,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruders_shared_nozzle_initial_retraction; objectName: "machine_extruders_shared_nozzle_initial_retraction"
                 fdmLabel: "Shared Nozzle Initial Retraction"
-                fdmDescription: "How much the filament of each extruder is assumed to have been retracted from the shared nozzle tip at the completion of the printer-start gcode script; the value should be equal to or greater than the length of the common part of the nozzle's ducts."
+                fdmDescription: "Set how much each extruder will retract from the shared nozzle tip after the G-Code start script finishes. The value should be equal to or greater than the length of the shared nozzle duct area."
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
                 fdmMinimumValue: 0.0
@@ -1489,7 +1502,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_disallowed_areas; objectName: "machine_disallowed_areas"
                 fdmLabel: "Disallowed Areas"
-                fdmDescription: "A list of polygons with areas the print head is not allowed to enter."
+                fdmDescription: "Set which polygons the print head will not travel to."
                 fdmType: "polygons"
                 fdmDefaultValue: "[]"
                 fdmSettablePerMesh: false
@@ -1520,7 +1533,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_use_extruder_offset_to_offset_coords; objectName: "machine_use_extruder_offset_to_offset_coords"
                 fdmLabel: "Offset with Extruder"
-                fdmDescription: "Apply the extruder offset to the coordinate system. Affects all extruders."
+                fdmDescription: "Apply the extruder offset to the coordinate system for all extruders."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmSettablePerMesh: false
@@ -1539,7 +1552,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_feedrate_x; objectName: "machine_max_feedrate_x"
                 fdmLabel: "Maximum Speed X"
-                fdmDescription: "The maximum speed for the motor of the X-direction."
+                fdmDescription: "The maximum speed for the motor in the X direction."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1550,7 +1563,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_feedrate_y; objectName: "machine_max_feedrate_y"
                 fdmLabel: "Maximum Speed Y"
-                fdmDescription: "The maximum speed for the motor of the Y-direction."
+                fdmDescription: "The maximum speed for the motor in the Y direction."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1561,7 +1574,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_feedrate_z; objectName: "machine_max_feedrate_z"
                 fdmLabel: "Maximum Speed Z"
-                fdmDescription: "The maximum speed for the motor of the Z-direction."
+                fdmDescription: "The maximum speed for the motor in the Z direction."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1583,7 +1596,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_acceleration_x; objectName: "machine_max_acceleration_x"
                 fdmLabel: "Maximum Acceleration X"
-                fdmDescription: "Maximum acceleration for the motor of the X-direction"
+                fdmDescription: "Maximum acceleration for the motor in the X direction"
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1594,7 +1607,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_acceleration_y; objectName: "machine_max_acceleration_y"
                 fdmLabel: "Maximum Acceleration Y"
-                fdmDescription: "Maximum acceleration for the motor of the Y-direction."
+                fdmDescription: "Maximum acceleration for the motor in the Y direction."
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1605,7 +1618,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_acceleration_z; objectName: "machine_max_acceleration_z"
                 fdmLabel: "Maximum Acceleration Z"
-                fdmDescription: "Maximum acceleration for the motor of the Z-direction."
+                fdmDescription: "Maximum acceleration for the motor in the Z direction."
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1616,7 +1629,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_max_acceleration_e; objectName: "machine_max_acceleration_e"
                 fdmLabel: "Maximum Filament Acceleration"
-                fdmDescription: "Maximum acceleration for the motor of the filament."
+                fdmDescription: "Maximum acceleration for the filament motor."
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0
@@ -1627,7 +1640,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_acceleration; objectName: "machine_acceleration"
                 fdmLabel: "Default Acceleration"
-                fdmDescription: "The default acceleration of print head movement."
+                fdmDescription: "The default acceleration of the print head movement."
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmDefaultValue: 999999.0   // 5x
@@ -1638,7 +1651,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_steps_per_mm_x; objectName: "machine_steps_per_mm_x"
                 fdmLabel: "Steps per Millimeter (X)"
-                fdmDescription: "How many steps of the stepper motor will result in one millimeter of movement in the X direction."
+                fdmDescription: "How many stepper motor steps will result in 1 mm of movement in the X direction."
                 fdmType: "float"
                 fdmDefaultValue: 80.0
                 fdmMinimumValue: 0.0000001
@@ -1648,7 +1661,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_steps_per_mm_y; objectName: "machine_steps_per_mm_y"
                 fdmLabel: "Steps per Millimeter (Y)"
-                fdmDescription: "How many steps of the stepper motor will result in one millimeter of movement in the Y direction."
+                fdmDescription: "How many stepper motor steps will result in 1 mm of movement in the Y direction."
                 fdmType: "float"
                 fdmDefaultValue: 80.0
                 fdmMinimumValue: 0.0000001
@@ -1658,7 +1671,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_steps_per_mm_z; objectName: "machine_steps_per_mm_z"
                 fdmLabel: "Steps per Millimeter (Z)"
-                fdmDescription: "How many steps of the stepper motor will result in one millimeter of movement in the Z direction."
+                fdmDescription: "How many stepper motor steps will result in 1 mm of movement in the Z direction."
                 fdmType: "float"
                 fdmDefaultValue: 400.0
                 fdmMinimumValue: 0.0000001
@@ -1668,7 +1681,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_steps_per_mm_e; objectName: "machine_steps_per_mm_e"
                 fdmLabel: "Steps per Millimeter (E)"
-                fdmDescription: "How many steps of the stepper motors will result in moving the feeder wheel by one millimeter around its circumference."
+                fdmDescription: "How many stepper motor steps will result in moving the feeder wheel by 1 mm around its circumference."
                 fdmType: "float"
                 fdmDefaultValue: 1200 //  1600 1312
                 fdmMinimumValue: 0.0000001
@@ -1678,7 +1691,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_endstop_positive_direction_x; objectName: "machine_endstop_positive_direction_x"
                 fdmLabel: "X Endstop in Positive Direction"
-                fdmDescription: "Whether the endstop of the X axis is in the positive direction (high X coordinate) or negative (low X coordinate)."
+                fdmDescription: "Toggle if you want the X-axis endstop to end in a positive direction (high X coordinate)."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: false
@@ -1687,7 +1700,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_endstop_positive_direction_y; objectName: "machine_endstop_positive_direction_y"
                 fdmLabel: "Y Endstop in Positive Direction"
-                fdmDescription: "Whether the endstop of the Y axis is in the positive direction (high Y coordinate) or negative (low Y coordinate)."
+                fdmDescription: "Toggle if you want the Y-axis endstop to end in a positive direction (high Y coordinate)."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: false
@@ -1696,7 +1709,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_endstop_positive_direction_z; objectName: "machine_endstop_positive_direction_z"
                 fdmLabel: "Z Endstop in Positive Direction"
-                fdmDescription: "Whether the endstop of the Z axis is in the positive direction (high Z coordinate) or negative (low Z coordinate)."
+                fdmDescription: "Toggle if you want Z-axis endstop to end in a positive direction (high Z coordinate)."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmSettablePerMesh: false
@@ -1705,7 +1718,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_minimum_feedrate; objectName: "machine_minimum_feedrate"
                 fdmLabel: "Minimum Feedrate"
-                fdmDescription: "The minimal movement speed of the print head."
+                fdmDescription: "The minimum movement speed of the print head."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -1716,7 +1729,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_feeder_wheel_diameter; objectName: "machine_feeder_wheel_diameter"
                 fdmLabel: "Feeder Wheel Diameter"
-                fdmDescription: "The diameter of the wheel that drives the material in the feeder."
+                fdmDescription: "The diameter of the feeder wheel."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 10.0
@@ -1728,7 +1741,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         FdmQml_Category{ id:extruder_settings; objectName: "extruder_settings"
             fdmLabel: "Extruder"
             fdmType: "category"
-            fdmDescription: "Extruder specific settings"
+            fdmDescription: "Extruder Settings"
             FdmQml_Param{ id:extruder_nr; objectName: "extruder_nr"
                 fdmLabel: "Extruder"
                 fdmDescription: "The extruder train used for printing. This is used in multi-extrusion."
@@ -1763,7 +1776,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_offset_x; objectName: "machine_nozzle_offset_x"
                 fdmLabel: "Nozzle X Offset"
-                fdmDescription: "The x-coordinate of the offset of the nozzle."
+                fdmDescription: "The X coordinate of the nozzle offset."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1775,7 +1788,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_nozzle_offset_y; objectName: "machine_nozzle_offset_y"
                 fdmLabel: "Nozzle Y Offset"
-                fdmDescription: "The y-coordinate of the offset of the nozzle."
+                fdmDescription: "The Y coordinate of the nozzle offset."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1787,7 +1800,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_start_code; objectName: "machine_extruder_start_code"
                 fdmLabel: "Extruder Start G-Code"
-                fdmDescription: "Start g-code to execute when switching to this extruder."
+                fdmDescription: "Execute Start G-Code when switching to this extruder."
                 fdmType: "str"
                 fdmDefaultValue: ""
                 fdmSettablePerMesh: false
@@ -1809,7 +1822,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_start_pos_x; objectName: "machine_extruder_start_pos_x"
                 fdmLabel: "Extruder Start Position X"
-                fdmDescription: "The x-coordinate of the starting position when turning the extruder on."
+                fdmDescription: "The X-coordinate starting position when turning on the extruder."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1821,7 +1834,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_start_pos_y; objectName: "machine_extruder_start_pos_y"
                 fdmLabel: "Extruder Start Position Y"
-                fdmDescription: "The y-coordinate of the starting position when turning the extruder on."
+                fdmDescription: "The Y-coordinate starting position when turning on the extruder."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1833,7 +1846,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_end_code; objectName: "machine_extruder_end_code"
                 fdmLabel: "Extruder End G-Code"
-                fdmDescription: "End g-code to execute when switching away from this extruder."
+                fdmDescription: "Execute End G-Code when switching from this extruder."
                 fdmType: "str"
                 fdmDefaultValue: ""
                 fdmSettablePerMesh: false
@@ -1855,7 +1868,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_end_pos_x; objectName: "machine_extruder_end_pos_x"
                 fdmLabel: "Extruder End Position X"
-                fdmDescription: "The x-coordinate of the ending position when turning the extruder off."
+                fdmDescription: "The X-coordinate ending position when turning off the extruder."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1867,7 +1880,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:machine_extruder_end_pos_y; objectName: "machine_extruder_end_pos_y"
                 fdmLabel: "Extruder End Position Y"
-                fdmDescription: "The y-coordinate of the ending position when turning the extruder off."
+                fdmDescription: "The Y-coordinate ending position when turning off the extruder."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1879,7 +1892,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:extruder_prime_pos_z; objectName: "extruder_prime_pos_z"
                 fdmLabel: "Extruder Prime Z Position"
-                fdmDescription: "The Z coordinate of the position where the nozzle primes at the start of printing."
+                fdmDescription: "Set the Z-coordinate position where the nozzle primes as printing begins."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.0
@@ -1903,7 +1916,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:nozzle_disallowed_areas; objectName: "nozzle_disallowed_areas"
                 fdmLabel: "Nozzle Disallowed Areas"
-                fdmDescription: "A list of polygons with areas the nozzle is not allowed to enter."
+                fdmDescription: "Polygon areas where the nozzle cannot move to."
                 fdmType: "polygons"
                 fdmDefaultValue: "[]"
                 fdmSettablePerMesh: false
@@ -1916,7 +1929,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             fdmLabel: "Quality"
             fdmType: "category"
             fdmIcon: "PrintQuality"
-            fdmDescription: "All settings that influence the resolution of the print. These settings have a large impact on the quality (and print time)"
+            fdmDescription: "All settings that influence the resolution of the print. These settings greatly impact quality and print time."
             FdmQml_Param{ id:layer_height; objectName: "layer_height"
                 fdmLabel: "Layer Height"
                 fdmDescription: "The height of each layer in mm. Higher values produce faster prints in lower resolution, lower values produce slower prints in higher resolution."
@@ -1936,7 +1949,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "The height of the initial layer in mm. A thicker initial layer makes adhesion to the build plate easier."
                 fdmUnit: "mm"
                 fdmType: "float"
-                fdmValue: layer_height.fdmValue * 0.7
+                fdmValue: layer_height.fdmValue * 0.7 > 0.1 ? layer_height.fdmValue * 0.7 : 0.1
                 fdmDefaultValue: 0.3
                 fdmResolve: Number(layer_height_0.fdmValue)
                 fdmMinimumValue: 0.001
@@ -1979,11 +1992,25 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmMinimumValueWarning: outer_inset_first.fdmValue ? (0.1 + 0.4 * Number(machine_nozzle_size.fdmValue)) : (0.1 * Number(machine_nozzle_size.fdmValue))
                         fdmMaximumValueWarning: 2 * Number(machine_nozzle_size.fdmValue)
                         fdmDefaultValue: 0.4
-                        fdmValue: Number(wall_line_width.fdmValue)
+                        fdmValue: Number(wall_line_width.fdmValue) * 1.1
                         fdmType: "float"
                         fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
                         fdmSettablePerMesh: true
-                        fdmAffectedById: "machine_nozzle_size,wall_line_width,wall_0_extruder_nr,outer_inset_first"
+                        fdmAffectedById: "machine_nozzle_size,wall_0_extruder_nr,outer_inset_first"
+                    }
+                    FdmQml_Param{ id:thin_wall_line_width_0; objectName: "thin_wall_line_width_0"
+                        fdmLabel: "Thin Outer Wall Line Width"
+                        fdmDescription: "Thin wall line. Some wall that too thin to generate one wall, can use this param to print a thin wall."
+                        fdmUnit: "mm"
+                        fdmMinimumValue: 0.001
+                        fdmMinimumValueWarning: 0.001
+                        fdmMaximumValueWarning: Number(machine_nozzle_size.fdmValue)
+                        fdmDefaultValue: 0.1
+                        fdmValue: Number(wall_line_width.fdmValue) * 0.25
+                        fdmType: "float"
+                        fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
+                        fdmSettablePerMesh: true
+                        fdmAffectedById: "machine_nozzle_size,wall_line_width,wall_0_extruder_nr"
                     }
                     FdmQml_Param{ id:wall_line_width_x; objectName: "wall_line_width_x"
                         fdmLabel: "Inner Wall(s) Line Width"
@@ -2001,8 +2028,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                 }
                 FdmQml_Param{ id:skin_line_width; objectName: "skin_line_width"
-                    fdmLabel: "Top/Bottom Line Width"
-                    fdmDescription: "Width of a single top/bottom line."
+                    fdmLabel: "Top / Bottom Line Width"
+                    fdmDescription: "Width of a single top / bottom line."
                     fdmUnit: "mm"
                     fdmMinimumValue: 0.001
                     fdmMinimumValueWarning: 0.1 + 0.4 * Number(machine_nozzle_size.fdmValue)
@@ -2031,7 +2058,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "machine_nozzle_size,line_width,infill_extruder_nr"
                 }
                 FdmQml_Param{ id:skirt_brim_line_width; objectName: "skirt_brim_line_width"
-                    fdmLabel: "Skirt/Brim Line Width"
+                    fdmLabel: "Skirt / Brim Line Width"
                     fdmDescription: "Width of a single skirt or brim line."
                     fdmUnit: "mm"
                     fdmMinimumValue: 0.001
@@ -2063,7 +2090,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:support_interface_line_width; objectName: "support_interface_line_width"
                     fdmLabel: "Support Interface Line Width"
-                    fdmDescription: "Width of a single line of support roof or floor."
+                    fdmDescription: "Width of a single line for the support roof or floor."
                     fdmUnit: "mm"
                     fdmDefaultValue: 0.4
                     fdmMinimumValue: 0.001
@@ -2127,7 +2154,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:initial_layer_line_width_factor; objectName: "initial_layer_line_width_factor"
                 fdmLabel: "Initial Layer Line Width"
-                fdmDescription: "Multiplier of the line width on the first layer. Increasing this could improve bed adhesion."
+                fdmDescription: "This is a multipliyer of the first layer line width. Increasing this could improve bed adhesion."
                 fdmType: "float"
                 fdmUnit: "%"
                 fdmDefaultValue: 80.0
@@ -2185,8 +2212,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "Wall Thickness"
                 fdmDescription: "The thickness of the walls in the horizontal direction. This value divided by the wall line width defines the number of walls."
                 fdmUnit: "mm"
-                fdmDefaultValue: 0.8
-                fdmValue: magic_spiralize.fdmValue ? wall_line_width_0.fdmValue : 0.8  // (wall_line_width_0.fdmValuewall_line_width_0.fdmValue + wall_line_width_x.fdmValue * Math.max(0, wall_line_count.fdmValue-1))
+                fdmDefaultValue: 1.24
+                fdmValue: magic_spiralize.fdmValue ? wall_line_width_0.fdmValue : 1.24  // (wall_line_width_0.fdmValuewall_line_width_0.fdmValue + wall_line_width_x.fdmValue * Math.max(0, wall_line_count.fdmValue-1))
                 fdmMinimumValue: 0.0
                 fdmMinimumValueWarning: Number(line_width.fdmValue)
                 fdmMaximumValueWarning: 10 * Number(line_width.fdmValue)
@@ -2210,7 +2237,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_0_wipe_dist; objectName: "wall_0_wipe_dist"
                 fdmLabel: "Outer Wall Wipe Distance"
-                fdmDescription: "Distance of a travel move inserted after the outer wall, to hide the Z seam better."
+                fdmDescription: "Distance of a travel move inserted after the outer wall. This can better hide the Z seam."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.2
@@ -2223,7 +2250,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_0_inset; objectName: "wall_0_inset"
                 fdmLabel: "Outer Wall Inset"
-                fdmDescription: "Inset applied to the path of the outer wall. If the outer wall is smaller than the nozzle, and printed after the inner walls, use this offset to get the hole in the nozzle to overlap with the inner walls instead of the outside of the model."
+                fdmDescription: "Inset applied to the outer wall path. If the outer wall is smaller than the nozzle and printed after the inner walls, use this offset to get the nozzle to overlap with the inner walls instead of the model's outer wall."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -2236,7 +2263,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:optimize_wall_printing_order; objectName: "optimize_wall_printing_order"
                 fdmLabel: "Optimize Wall Printing Order"
-                fdmDescription: "Optimize the order in which walls are printed so as to reduce the number of retractions and the distance travelled. Most parts will benefit from this being enabled but some may actually take longer so please compare the print time estimates with and without optimization. First layer is not optimized when choosing brim as build plate adhesion type."
+                fdmDescription: "Optimize the wall print order to reduce the number of retractions and the travel distance. Most parts will benefit from this being enabled, but some may actually take longer. Please compare the print time estimates with and without optimization. The first layer is not optimized when choosing brim as the build plate adhesion type."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
@@ -2244,7 +2271,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:outer_inset_first; objectName: "outer_inset_first"
                 fdmLabel: "Outer Before Inner Walls"
-                fdmDescription: "Prints walls in order of outside to inside when enabled. This can help improve dimensional accuracy in X and Y when using a high viscosity plastic like ABS; however it can decrease outer surface print quality, especially on overhangs."
+                fdmDescription: "Prints walls from outside to inside when enabled. This can help improve dimensional accuracy on the X and Y planes when using a high viscosity plastic like ABS; however, it can decrease outer surface print quality, especially on overhangs."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: Number(wall_0_extruder_nr.fdmValue) === Number(wall_x_extruder_nr.fdmValue)
@@ -2253,7 +2280,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:alternate_extra_perimeter; objectName: "alternate_extra_perimeter"
                 fdmLabel: "Alternate Extra Wall"
-                fdmDescription: "Prints an extra wall at every other layer. This way infill gets caught between these extra walls, resulting in stronger prints."
+                fdmDescription: "Prints an extra wall at every other layer. This helps the infill build up between these extra walls for stronger prints."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmLimitToExtruder: Number(infill_extruder_nr.fdmValue)
@@ -2262,7 +2289,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:travel_compensate_overlapping_walls_enabled; objectName: "travel_compensate_overlapping_walls_enabled"
                 fdmLabel: "Compensate Wall Overlaps"
-                fdmDescription: "Compensate the flow for parts of a wall being printed where there is already a wall in place."
+                fdmDescription: "Reduce the flow for parts of a wall being printed where there is already a wall in place."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmLimitToExtruder: Number(wall_x_extruder_nr.fdmValue)
@@ -2270,7 +2297,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "wall_x_extruder_nr"
                 FdmQml_Param{ id:travel_compensate_overlapping_walls_0_enabled; objectName: "travel_compensate_overlapping_walls_0_enabled"
                     fdmLabel: "Compensate Outer Wall Overlaps"
-                    fdmDescription: "Compensate the flow for parts of an outer wall being printed where there is already a wall in place."
+                    fdmDescription: "Reduce the flow for parts of an outer wall being printed where there is already a wall in place."
                     fdmType: "bool"
                     fdmDefaultValue: true
                     fdmValue: travel_compensate_overlapping_walls_enabled.fdmValue
@@ -2280,7 +2307,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:travel_compensate_overlapping_walls_x_enabled; objectName: "travel_compensate_overlapping_walls_x_enabled"
                     fdmLabel: "Compensate Inner Wall Overlaps"
-                    fdmDescription: "Compensate the flow for parts of an inner wall being printed where there is already a wall in place."
+                    fdmDescription: "Reduce the flow for parts of an inner wall being printed where there is already a wall in place."
                     fdmType: "bool"
                     fdmDefaultValue: true
                     fdmValue: travel_compensate_overlapping_walls_enabled.fdmValue
@@ -2291,7 +2318,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_min_flow; objectName: "wall_min_flow"
                 fdmLabel: "Minimum Wall Flow"
-                fdmDescription: "Minimum allowed percentage flow for a wall line. The wall overlap compensation reduces a wall's flow when it lies close to an existing wall. Walls whose flow is less than this value will be replaced with a travel move. When using this setting, you must enable the wall overlap compensation and print the outer wall before inner walls."
+                fdmDescription: "Minimum allowed wall line percentage flow. Walls with flows less than this value will be replaced with a travel move. When using this setting, you must enable Wall Overlap Compensation and print the outer wall before in the inner walls."
                 fdmUnit: "%"
                 fdmMinimumValue: 0.0
                 fdmMaximumValue: 100.0
@@ -2303,7 +2330,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:wall_min_flow_retract; objectName: "wall_min_flow_retract"
                 fdmLabel: "Prefer Retract"
-                fdmDescription: "If enabled, retraction is used rather than combing for travel moves that replace walls whose flow is below the minimum flow threshold."
+                fdmDescription: "If enabled, retraction is used rather than combing for travel moves replacing walls with flows below the minimum flow threshold."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: (travel_compensate_overlapping_walls_0_enabled.fdmValue || travel_compensate_overlapping_walls_x_enabled.fdmValue) && Number(wall_min_flow.fdmValue) > 0
@@ -2325,7 +2352,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:filter_out_tiny_gaps; objectName: "filter_out_tiny_gaps"
                 fdmLabel: "Filter Out Tiny Gaps"
-                fdmDescription: "Filter out tiny gaps to reduce blobs on outside of model."
+                fdmDescription: "Filter out tiny gaps to reduce blobs on the outside of the model."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
@@ -2343,7 +2370,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:xy_offset; objectName: "xy_offset"
                 fdmLabel: "Horizontal Expansion"
-                fdmDescription: "Amount of offset applied to all polygons in each layer. Positive values can compensate for too big holes; negative values can compensate for too small holes."
+                fdmDescription: "Amount of offset applied to all polygons in each layer. Positive values can compensate for holes too large; negative values can compensate for holes too small."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmMinimumValueWarning: -1.0
@@ -2368,7 +2395,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:hole_xy_offset; objectName: "hole_xy_offset"
                 fdmLabel: "Hole Horizontal Expansion"
-                fdmDescription: "Amount of offset applied to all holes in each layer. Positive values increase the size of the holes, negative values reduce the size of the holes."
+                fdmDescription: "Amount of offset applied to the holes in each layer. Positive values increase the size of the holes, negative values reduce the size of the holes."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmMinimumValueWarning: -1.0
@@ -2380,7 +2407,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:z_seam_type; objectName: "z_seam_type"
                 fdmLabel: "Z Seam Alignment"
-                fdmDescription: "Starting point of each path in a layer. When paths in consecutive layers start at the same point a vertical seam may show on the print. When aligning these near a user specified location, the seam is easiest to remove. When placed randomly the inaccuracies at the paths' start will be less noticeable. When taking the shortest path the print will be quicker."
+                fdmDescription: "Starting point of each path in a layer. When paths in consecutive layers start at the same point, a vertical seam may show on the print. When aligning these near a user specified location, the seam is easiest to remove. When placed randomly, the inaccuracies at the paths' starting point will be less noticeable."
                 fdmType: "enum"
                 fdmOptions:{
                     "back": "User Specified",
@@ -2395,7 +2422,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:z_seam_position; objectName: "z_seam_position"
                 fdmLabel: "Z Seam Position"
-                fdmDescription: "The position near where to start printing each part in a layer."
+                fdmDescription: "The position where printing begins in each part of a layer."
                 fdmType: "enum"
                 fdmOptions:{
                     "backleft": "Back Left",
@@ -2414,7 +2441,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "wall_0_extruder_nr"
                 FdmQml_Param{ id:z_seam_x; objectName: "z_seam_x"
                     fdmLabel: "Z Seam X"
-                    fdmDescription: "The X coordinate of the position near where to start printing each part in a layer."
+                    fdmDescription: "The X coordinate of the position where each layer part begins to print."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -2426,7 +2453,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:z_seam_y; objectName: "z_seam_y"
                     fdmLabel: "Z Seam Y"
-                    fdmDescription: "The Y coordinate of the position near where to start printing each part in a layer."
+                    fdmDescription: "The Y coordinate of the position where each layer part begins to print."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -2456,7 +2483,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:z_seam_relative; objectName: "z_seam_relative"
                 fdmLabel: "Z Seam Relative"
-                fdmDescription: "When enabled, the z seam coordinates are relative to each part's centre. When disabled, the coordinates define an absolute position on the build plate."
+                fdmDescription: "When enabled, the z seam coordinates are relative to each part's center point. When disabled, the coordinates define an absolute position on the build plate."
                 fdmUnit: "mm"
                 fdmType: "bool"
                 fdmDefaultValue: false
@@ -2465,14 +2492,42 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: true
                 fdmAffectedById: "wall_0_extruder_nr"
             }
+
+            FdmQml_Param{ id:z_seam_min_angle_diff; objectName: "z_seam_min_angle_diff"
+                fdmLabel: "Z Seam Min Angle Diff"
+                fdmDescription: "When the angle difference between the Sharpest Corner type point and the Shortest type point is less than this value, the Shortest type point is selected."
+                fdmUnit: "°"
+                fdmType: "float"
+                fdmMinimumValueWarning: 0
+                fdmMaximumValueWarning: 180
+                fdmDefaultValue: 36
+                fdmEnabled: z_seam_type.fdmValue === "sharpest_corner"
+                fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "wall_0_extruder_nr"
+            }
+
+            FdmQml_Param{ id:z_seam_max_angle; objectName: "z_seam_max_angle"
+                fdmLabel: "Z Seam Max Angle"
+                fdmDescription: "Only corners smaller than this value are considered sharp corners. If there is no sharp corner point, select the Shortest type point."
+                fdmUnit: "°"
+                fdmType: "float"
+                fdmMinimumValueWarning: 0
+                fdmMaximumValueWarning: 180
+                fdmDefaultValue: 162
+                fdmEnabled: z_seam_type.fdmValue === "sharpest_corner"
+                fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "wall_0_extruder_nr"
+            }
         }
         FdmQml_Category{ id:top_bottom; objectName: "top_bottom"
-            fdmLabel: "Top/Bottom"
+            fdmLabel: "Top / Bottom"
             fdmIcon: "PrintTopBottom"
-            fdmDescription: "Top/Bottom"
+            fdmDescription: "Differentiates between the top and bottom."
             fdmType: "category"
             FdmQml_Param{ id:top_bottom_extruder_nr; objectName: "top_bottom_extruder_nr"
-                fdmLabel: "Top/Bottom Extruder"
+                fdmLabel: "Top / Bottom Extruder"
                 fdmDescription: "The extruder train used for printing the top and bottom skin. This is used in multi-extrusion."
                 fdmType: "int"
                 fdmDefaultValue: -1
@@ -2484,8 +2539,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:top_bottom_thickness; objectName: "top_bottom_thickness"
-                fdmLabel: "Top/Bottom Thickness"
-                fdmDescription: "The thickness of the top/bottom layers in the print. This value divided by the layer height defines the number of top/bottom layers."
+                fdmLabel: "Top / Bottom Thickness"
+                fdmDescription: "The thickness of the top and bottom layers. This value divided by the layer height defines the number of top/bottom layers."
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.8
                 fdmMinimumValue: 0.0
@@ -2497,7 +2552,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "machine_height,top_bottom_extruder_nr"
                 FdmQml_Param{ id:top_thickness; objectName: "top_thickness"
                     fdmLabel: "Top Thickness"
-                    fdmDescription: "The thickness of the top layers in the print. This value divided by the layer height defines the number of top layers."
+                    fdmDescription: "The thickness of the top layers. This value divided by the layer height defines the number of top layers."
                     fdmUnit: "mm"
                     fdmDefaultValue: 0.8
                     fdmMinimumValue: 0.0
@@ -2524,7 +2579,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bottom_thickness; objectName: "bottom_thickness"
                     fdmLabel: "Bottom Thickness"
-                    fdmDescription: "The thickness of the bottom layers in the print. This value divided by the layer height defines the number of bottom layers."
+                    fdmDescription: "The thickness of the bottom layers. This value divided by the layer height defines the number of bottom layers."
                     fdmUnit: "mm"
                     fdmDefaultValue: 0.6
                     fdmMinimumValue: 0.0
@@ -2549,7 +2604,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:initial_bottom_layers; objectName: "initial_bottom_layers"
                         fdmLabel: "Initial Bottom Layers"
-                        fdmDescription: "The number of initial bottom layers, from the build-plate upwards. When calculated by the bottom thickness, this value is rounded to a whole number."
+                        fdmDescription: "The number of initial bottom layers from the build-plate upward. When calculated by the bottom thickness, this value is rounded to a whole number."
                         fdmMinimumValue: 0
                         fdmMinimumValueWarning: 2
                         fdmDefaultValue: 6
@@ -2576,7 +2631,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:roofing_layer_count; objectName: "roofing_layer_count"
                 fdmLabel: "Top Surface Skin Layers"
-                fdmDescription: "The number of top most skin layers. Usually only one top most layer is sufficient to generate higher quality top surfaces."
+                fdmDescription: "The number of top skin layers. Usually only one top layer is sufficient to generate higher quality top surfaces."
                 fdmDefaultValue: 0
                 fdmMinimumValue: 0
                 fdmMaximumValueWarning: Number(top_layers.fdmValue) - 1
@@ -2588,8 +2643,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "top_layers,roofing_extruder_nr"
             }
             FdmQml_Param{ id:top_bottom_pattern; objectName: "top_bottom_pattern"
-                fdmLabel: "Top/Bottom Pattern"
-                fdmDescription: "The pattern of the top/bottom layers."
+                fdmLabel: "Top / Bottom Pattern"
+                fdmDescription: "The pattern of the top / bottom layers."
                 fdmType: "enum"
                 fdmOptions:{
                     "lines": "Lines",
@@ -2619,8 +2674,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "top_bottom_extruder_nr,top_bottom_pattern"
             }
             FdmQml_Param{ id:connect_skin_polygons; objectName: "connect_skin_polygons"
-                fdmLabel: "Connect Top/Bottom Polygons"
-                fdmDescription: "Connect top/bottom skin paths where they run next to each other. For the concentric pattern enabling this setting greatly reduces the travel time, but because the connections can happen midway over infill this feature can reduce the top surface quality."
+                fdmLabel: "Connect Top / Bottom Polygons"
+                fdmDescription: "Connect top and bottom skin paths where they run next to each other. For concentric patterns, this setting greatly reduces the travel time, but can reduce top surface quality because the connections can happen midway over the infill."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: ((Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0) && top_bottom_pattern.fdmValue === "concentric") || (Number(initial_bottom_layers.fdmValue) > 0 && top_bottom_pattern_0.fdmValue === "concentric") || (Number(roofing_layer_count.fdmValue) > 0 && roofing_pattern.fdmValue === "concentric")
@@ -2629,8 +2684,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "top_bottom_extruder_nr"
             }
             FdmQml_Param{ id:skin_monotonic; objectName: "skin_monotonic"
-                fdmLabel: "Monotonic Top/Bottom Order"
-                fdmDescription: "Print top/bottom lines in an ordering that causes them to always overlap with adjacent lines in a single direction. This takes slightly more time to print, but makes flat surfaces look more consistent."
+                fdmLabel: "Monotonic Top / Bottom Order"
+                fdmDescription: "Print top and bottom lines in an order where they always overlap with adjacent lines in a single direction. This takes slightly more time to print, but makes flat surfaces look more consistent."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: (Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0) && (top_bottom_pattern.fdmValue !== "concentric" || top_bottom_pattern_0.fdmValue !== "concentric")
@@ -2639,8 +2694,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "top_bottom_extruder_nr"
             }
             FdmQml_Param{ id:skin_angles; objectName: "skin_angles"
-                fdmLabel: "Top/Bottom Line Directions"
-                fdmDescription: "A list of integer line directions to use when the top/bottom layers use the lines or zig zag pattern. Elements from the list are used sequentially as the layers progress and when the end of the list is reached, it starts at the beginning again. The list items are separated by commas and the whole list is contained in square brackets. Default is an empty list which means use the traditional default angles (45 and 135 degrees)."
+                fdmLabel: "Top / Bottom Line Directions"
+                fdmDescription: "Use a list of integer line directions when the top / bottom layers use lines or zig-zag patterns. List elements are used sequentially as the layers progress. When the end of the list is reached, the list starts over The list items are separated by commas, and the whole list is constrained in square brackets. The default is an empty list whih uses traditional default angles of 45° and 135°."
                 fdmType: "[int]"
                 fdmDefaultValue: "[ ]"
                 fdmEnabled: (Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0) && top_bottom_pattern.fdmValue !== "concentric"
@@ -2650,7 +2705,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skin_no_small_gaps_heuristic; objectName: "skin_no_small_gaps_heuristic"
                 fdmLabel: "No Skin in Z Gaps"
-                fdmDescription: "When the model has small vertical gaps of only a few layers, there should normally be skin around those layers in the narrow space. Enable this setting to not generate skin if the vertical gap is very small. This improves printing time and slicing time, but technically leaves infill exposed to the air."
+                fdmDescription: "This setting will not generate skin in small vertical gaps. This improves printing and slicing time, but leaves infills exposed to the air."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0
@@ -2660,7 +2715,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skin_outline_count; objectName: "skin_outline_count"
                 fdmLabel: "Extra Skin Wall Count"
-                fdmDescription: "Replaces the outermost part of the top/bottom pattern with a number of concentric lines. Using one or two lines improves roofs that start on infill material."
+                fdmDescription: "Replaces the outermost part of the top / bottom pattern with a number of concentric lines. Using one or two lines improves roofs that start on infill material."
                 fdmValue: (top_bottom_pattern.fdmValue === "concentric" && top_bottom_pattern_0.fdmValue === "concentric" && Number(roofing_layer_count.fdmValue) <= 0) ? 0 : 1
                 fdmDefaultValue: 1
                 fdmMinimumValue: 0
@@ -2671,9 +2726,32 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: true
                 fdmAffectedById: "top_bottom_extruder_nr,roofing_layer_count,top_bottom_pattern,top_bottom_pattern_0"
             }
+            FdmQml_Param{ id:top_skin_density; objectName: "top_skin_density"
+                fdmLabel: "Top Skin Infill Density"
+                fdmDescription: "Adjusts the Top Skin Infill Density."
+                fdmUnit: "%"
+                fdmType: "float"
+                fdmDefaultValue: 110.0
+                fdmMinimumValue: 100.0
+                fdmMaximumValueWarning: 200.0
+                fdmLimitToExtruder: Number(infill_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "infill_extruder_nr"
+            }
+            FdmQml_Param{ id:top_surface_one_wall; objectName: "top_surface_one_wall"
+                fdmLabel: "Use One Wall On Top Surface"
+                fdmDescription: "Use only one wall on flat top surface ,to give more space to the top infill pattern"
+                fdmValue: (top_bottom_pattern.fdmValue === "concentric" && top_bottom_pattern_0.fdmValue === "concentric" && Number(roofing_layer_count.fdmValue) <= 0) ? false : true
+                fdmType: "bool"
+                fdmDefaultValue: true
+                fdmEnabled: (Number(top_layers.fdmValue) > 0 || Number(bottom_layers.fdmValue) > 0) && (top_bottom_pattern.fdmValue !== "concentric" || top_bottom_pattern_0.fdmValue !== "concentric" || (Number(roofing_layer_count.fdmValue) > 0 && roofing_pattern.fdmValue !== "concentric"))
+                fdmLimitToExtruder: Number(top_bottom_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "top_bottom_extruder_nr,roofing_layer_count,top_bottom_pattern,top_bottom_pattern_0"
+            }
             FdmQml_Param{ id:ironing_enabled; objectName: "ironing_enabled"
                 fdmLabel: "Enable Ironing"
-                fdmDescription: "Go over the top surface one additional time, but this time extruding very little material. This is meant to melt the plastic on top further, creating a smoother surface. The pressure in the nozzle chamber is kept high so that the creases in the surface are filled with material."
+                fdmDescription: "Go over the top surface one additional time, but this time with very little extruded material. This better melts the top plastic to create a smooth surface. The pressure in the nozzle chamber is kept high so that surface creases are filled."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmLimitToExtruder: Number(top_bottom_extruder_nr.fdmValue)
@@ -2682,7 +2760,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:ironing_only_highest_layer; objectName: "ironing_only_highest_layer"
                 fdmLabel: "Iron Only Highest Layer"
-                fdmDescription: "Only perform ironing on the very last layer of the mesh. This saves time if the lower layers don't need a smooth surface finish."
+                fdmDescription: "Only perform ironing on the last mesh layer. This saves time if the lower layers don't need a smooth surface finish."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: ironing_enabled.fdmValue
@@ -2692,7 +2770,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:ironing_pattern; objectName: "ironing_pattern"
                 fdmLabel: "Ironing Pattern"
-                fdmDescription: "The pattern to use for ironing top surfaces."
+                fdmDescription: "The pattern used when ironing top surfaces."
                 fdmType: "enum"
                 fdmOptions:{
                     "concentric": "Concentric",
@@ -2706,7 +2784,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:ironing_monotonic; objectName: "ironing_monotonic"
                 fdmLabel: "Monotonic Ironing Order"
-                fdmDescription: "Print ironing lines in an ordering that causes them to always overlap with adjacent lines in a single direction. This takes slightly more time to print, but makes flat surfaces look more consistent."
+                fdmDescription: "Print ironing lines in an order that always overlap in a single direcrtion. This increases print times, but makes flat surfaces look consistent."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: ironing_enabled.fdmValue && ironing_pattern.fdmValue !== "concentric"
@@ -2716,7 +2794,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:ironing_line_spacing; objectName: "ironing_line_spacing"
                 fdmLabel: "Ironing Line Spacing"
-                fdmDescription: "The distance between the lines of ironing."
+                fdmDescription: "The distance between the ironing lines."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: 0.1
@@ -2756,7 +2834,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_ironing; objectName: "speed_ironing"
                 fdmLabel: "Ironing Speed"
-                fdmDescription: "The speed at which to pass over the top surface."
+                fdmDescription: "Set top-surface passing speed."
                 fdmType: "float"
                 fdmUnit: "mm/s"
                 fdmDefaultValue: 20.0
@@ -2771,7 +2849,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:acceleration_ironing; objectName: "acceleration_ironing"
                 fdmLabel: "Ironing Acceleration"
-                fdmDescription: "The acceleration with which ironing is performed."
+                fdmDescription: "How much acceleration is used when ironing."
                 fdmUnit: "mm/s²"
                 fdmType: "float"
                 fdmMinimumValue: 0.1
@@ -2786,7 +2864,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:jerk_ironing; objectName: "jerk_ironing"
                 fdmLabel: "Ironing Jerk"
-                fdmDescription: "The maximum instantaneous velocity change while performing ironing."
+                fdmDescription: "The max instantaneous velocity change while ironing."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -2800,10 +2878,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skin_overlap; objectName: "skin_overlap"
                 fdmLabel: "Skin Overlap Percentage"
-                fdmDescription: "Adjust the amount of overlap between the walls and (the endpoints of) the skin-centerlines, as a percentage of the line widths of the skin lines and the innermost wall. A slight overlap allows the walls to connect firmly to the skin. Note that, given an equal skin and wall line-width, any percentage over 50% may already cause any skin to go past the wall, because at that point the position of the nozzle of the skin-extruder may already reach past the middle of the wall."
+                fdmDescription: "Adjust the amount of overlap between the walls and the skin-centerline endpoints. This is a percentage of the skin lines and inntermost wall line widths.A slight overlap allows walls to connect firmly to the skin. Note that with equal skin and wall line width, percentages over 50% may cause the skin to go past the wall."
                 fdmUnit: "%"
                 fdmType: "float"
-                fdmDefaultValue: 5.0
+                fdmDefaultValue: 0
                 fdmMinimumValueWarning: -50.0
                 fdmMaximumValueWarning: 100.0
                 fdmValue: top_bottom_pattern.fdmValue !== "concentric" ? 5 : 0
@@ -2813,10 +2891,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "top_bottom_extruder_nr,top_bottom_pattern"
                 FdmQml_Param{ id:skin_overlap_mm; objectName: "skin_overlap_mm"
                     fdmLabel: "Skin Overlap"
-                    fdmDescription: "Adjust the amount of overlap between the walls and (the endpoints of) the skin-centerlines. A slight overlap allows the walls to connect firmly to the skin. Note that, given an equal skin and wall line-width, any value over half the width of the wall may already cause any skin to go past the wall, because at that point the position of the nozzle of the skin-extruder may already reach past the middle of the wall."
+                    fdmDescription: "Adjust the overlap between the walls and the skin-centerline endpoints. A slight overlap allows walls to connect firmly to the skin.Note that with equal skin and wall line width, values over half the wall witdh may cause the skin to go past the wall."
                     fdmUnit: "mm"
                     fdmType: "float"
-                    fdmDefaultValue: 0.02
+                    fdmDefaultValue: 0.00
                     fdmMinimumValueWarning: -0.5 * Number(machine_nozzle_size.fdmValue)
                     fdmMaximumValueWarning: Number(machine_nozzle_size.fdmValue)
                     fdmValue: top_bottom_pattern.fdmValue !== "concentric" ? (0.5 * (Number(skin_line_width.fdmValue) + (Number(wall_line_count.fdmValue) > 1 ? Number(wall_line_width_x.fdmValue) : Number(wall_line_width_0.fdmValue))) * Number(skin_overlap.fdmValue) / 100 ) : 0
@@ -2827,7 +2905,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skin_preshrink; objectName: "skin_preshrink"
                 fdmLabel: "Skin Removal Width"
-                fdmDescription: "The largest width of skin areas which are to be removed. Every skin area smaller than this value will disappear. This can help in limiting the amount of time and material spent on printing top/bottom skin at slanted surfaces in the model."
+                fdmDescription: "Eliminte any skin area smaller than this value. This helps limit the amount of time and material spent on printing top and bottom skin on the model's slanted surfaces."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 1.0
@@ -2840,7 +2918,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "wall_line_width_0,wall_line_width_x,wall_line_count,top_bottom_extruder_nr"
                 FdmQml_Param{ id:top_skin_preshrink; objectName: "top_skin_preshrink"
                     fdmLabel: "Top Skin Removal Width"
-                    fdmDescription: "The largest width of top skin areas which are to be removed. Every skin area smaller than this value will disappear. This can help in limiting the amount of time and material spent on printing top skin at slanted surfaces in the model."
+                    fdmDescription: "Eliminte any top skin area smaller than this value. This helps limit the amount of time and material spent on printing top skin on the model's slanted surfaces."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 1.0
@@ -2854,7 +2932,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bottom_skin_preshrink; objectName: "bottom_skin_preshrink"
                     fdmLabel: "Bottom Skin Removal Width"
-                    fdmDescription: "The largest width of bottom skin areas which are to be removed. Every skin area smaller than this value will disappear. This can help in limiting the amount of time and material spent on printing bottom skin at slanted surfaces in the model."
+                    fdmDescription: "Eliminte any bottom skin area smaller than this value. This helps limit the amount of time and material spent on printing bottom skin on the model's slanted surfaces."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 1.0
@@ -2869,7 +2947,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:expand_skins_expand_distance; objectName: "expand_skins_expand_distance"
                 fdmLabel: "Skin Expand Distance"
-                fdmDescription: "The distance the skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the walls on neighboring layers adhere better to the skin. Lower values save amount of material used."
+                fdmDescription: "The distance the skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the walls on neighboring layers adhere better to the skin. Lower values save material."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 1.0
@@ -2881,7 +2959,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "wall_line_width_0,wall_line_width_x,wall_line_count,top_bottom_extruder_nr,skin_preshrink"
                 FdmQml_Param{ id:top_skin_expand_distance; objectName: "top_skin_expand_distance"
                     fdmLabel: "Top Skin Expand Distance"
-                    fdmDescription: "The distance the top skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the walls on the layer above adhere better to the skin. Lower values save amount of material used."
+                    fdmDescription: "The distance the top skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the walls on the layer above adhere better to the skin. Lower values save material."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 1.0
@@ -2894,7 +2972,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:bottom_skin_expand_distance; objectName: "bottom_skin_expand_distance"
                     fdmLabel: "Bottom Skin Expand Distance"
-                    fdmDescription: "The distance the bottom skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the skin adhere better to the walls on the layer below. Lower values save amount of material used."
+                    fdmDescription: "The distance the bottom skins are expanded into the infill. Higher values makes the skin attach better to the infill pattern and makes the skin adhere better to the walls on the layer below. Lower values save material."
                     fdmUnit: "mm"
                     fdmType: "float"
                     fdmDefaultValue: 1.0
@@ -2908,7 +2986,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:max_skin_angle_for_expansion; objectName: "max_skin_angle_for_expansion"
                 fdmLabel: "Maximum Skin Angle for Expansion"
-                fdmDescription: "Top and/or bottom surfaces of your object with an angle larger than this setting, won't have their top/bottom skin expanded. This avoids expanding the narrow skin areas that are created when the model surface has a near vertical slope. An angle of 0° is horizontal and will cause no skin to be expanded, while an angle of 90° is vertical and will cause all skin to be expanded."
+                fdmDescription: "Stop skin expansion for top and bottom surfaces larger than this input. Use this if you want to avoid expanding narrow skin areas created when the model surface has a near-vertical slope. An an angle of 0° is horizontal and will not have skin expansion. An angle of 90° is vertical and will lead all skin to be expanded."
                 fdmUnit: "°"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -2978,7 +3056,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_pattern; objectName: "infill_pattern"
                 fdmLabel: "Infill Pattern"
-                fdmDescription: "The pattern of the infill material of the print. The line and zig zag infill swap direction on alternate layers, reducing material cost. The grid, triangle, tri-hexagon, cubic, octet, quarter cubic, cross and concentric patterns are fully printed every layer. Gyroid, cubic, quarter cubic and octet infill change with every layer to provide a more equal distribution of strength over each direction."
+                fdmDescription: "The pattern of the infill material of the print. The line and zig zag infill swap direction on alternate layers, reducing material cost. The grid, triangle, tri-hexagon, cubic, octet, quarter cubic, cross, and concentric patterns are fully printed every layer. Gyroid, cubic, quarter cubic, and octet infill change with every layer to provide a more equal distribution of strength over each direction."
                 fdmType: "enum"
                 fdmOptions:{
                     "grid": "Grid",
@@ -3004,7 +3082,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:zig_zaggify_infill; objectName: "zig_zaggify_infill"
                 fdmLabel: "Connect Infill Lines"
-                fdmDescription: "Connect the ends where the infill pattern meets the inner wall using a line which follows the shape of the inner wall. Enabling this setting can make the infill adhere to the walls better and reduce the effects of infill on the quality of vertical surfaces. Disabling this setting reduces the amount of material used."
+                fdmDescription: "Connect the ends where the infill pattern meets the inner wall using a line which follows the shape of the inner wall. Enabling this setting can make the infill adhere to the walls better and reduce infill effects on vertical surface quality. Disabling this setting reduces the amount of material."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmValue: infill_pattern.fdmValue === "cross" || infill_pattern.fdmValue === "cross_3d"
@@ -3015,7 +3093,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:connect_infill_polygons; objectName: "connect_infill_polygons"
                 fdmLabel: "Connect Infill Polygons"
-                fdmDescription: "Connect infill paths where they run next to each other. For infill patterns which consist of several closed polygons, enabling this setting greatly reduces the travel time."
+                fdmDescription: "Connect infill paths that run next to each other. For infill patterns which consist of several closed polygons, enabling this setting greatly reduces the travel time."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmValue: (infill_pattern.fdmValue === "cross" || infill_pattern.fdmValue === "cross_3d" || Number(infill_multiplier.fdmValue) % 2 === 0) && Number(infill_wall_line_count.fdmValue) > 0
@@ -3026,7 +3104,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_angles; objectName: "infill_angles"
                 fdmLabel: "Infill Line Directions"
-                fdmDescription: "A list of integer line directions to use. Elements from the list are used sequentially as the layers progress and when the end of the list is reached, it starts at the beginning again. The list items are separated by commas and the whole list is contained in square brackets. Default is an empty list which means use the traditional default angles (45 and 135 degrees for the lines and zig zag patterns and 45 degrees for all other patterns)."
+                fdmDescription: "A list of integer line directions. Elements from this list are used sequentailly as layers progress. When the end of the list is reached, the directions begin again. The list items are separated by commas, and the whole list is contained in square brackets. The default is an empty list that uses traditional default angles of 45° and 135° for lines and zig-zag patterns. 45° is used for all other patterns."
                 fdmType: "[int]"
                 fdmDefaultValue: "[ ]"
                 fdmEnabled: infill_pattern.fdmValue !== "concentric" && Number(infill_sparse_density.fdmValue) > 0
@@ -3058,7 +3136,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_randomize_start_location; objectName: "infill_randomize_start_location"
                 fdmLabel: "Randomize Infill Start"
-                fdmDescription: "Randomize which infill line is printed first. This prevents one segment becoming the strongest, but it does so at the cost of an additional travel move."
+                fdmDescription: "Randomize which infill line is printed first. This prevents one segment becoming the strongest, but it will increase the amount of travel moves."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmValueWarning: (["grid", "triangles", "trihexagon", "cubic", "cubicsubdiv", "tetrahedral", "quarter_cubic"].indexOf(infill_pattern.fdmValue) < 0) ? true : false
@@ -3069,7 +3147,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_multiplier; objectName: "infill_multiplier"
                 fdmLabel: "Infill Line Multiplier"
-                fdmDescription: "Convert each infill line to this many lines. The extra lines do not cross over each other, but avoid each other. This makes the infill stiffer, but increases print time and material usage."
+                fdmDescription: "Convert each infill line to this many lines. The extra lines avoid each other to create a stiffer infill, but increases print time and material used."
                 fdmDefaultValue: 1
                 fdmType: "int"
                 fdmMinimumValue: 1
@@ -3106,7 +3184,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_overlap; objectName: "infill_overlap"
                 fdmLabel: "Infill Overlap Percentage"
-                fdmDescription: "The amount of overlap between the infill and the walls as a percentage of the infill line width. A slight overlap allows the walls to connect firmly to the infill."
+                fdmDescription: "The amount of overlap between the infill and the walls. It's displayed as a percentage of the infill line width. A slight overlap allows the walls to connect firmly to the infill."
                 fdmUnit: "%"
                 fdmType: "float"
                 fdmDefaultValue: 10.0
@@ -3175,7 +3253,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:gradual_infill_step_height; objectName: "gradual_infill_step_height"
                 fdmLabel: "Gradual Infill Step Height"
-                fdmDescription: "The height of infill of a given density before switching to half the density."
+                fdmDescription: "The infill height with a given density before switching to half the density."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 1.5
@@ -3208,7 +3286,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_support_enabled; objectName: "infill_support_enabled"
                 fdmLabel: "Infill Support"
-                fdmDescription: "Print infill structures only where tops of the model should be supported. Enabling this reduces print time and material usage, but leads to ununiform object strength."
+                fdmDescription: "Print infill structures only where tops of the model should be supported. Enabling this reduces print time and material usage, but leads to non-uniform object strength."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: Number(infill_sparse_density.fdmValue) > 0
@@ -3218,7 +3296,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:infill_support_angle; objectName: "infill_support_angle"
                 fdmLabel: "Infill Overhang Angle"
-                fdmDescription: "The minimum angle of internal overhangs for which infill is added. At a value of 0° objects are totally filled with infill, 90° will not provide any infill."
+                fdmDescription: "The minimum angle of internal overhangs for which infill is added. At a value of 0°, objects are totally filled with infill, 90° will not provide any infill."
                 fdmUnit: "°"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -3291,7 +3369,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:material_linear_density; objectName: "material_linear_density"
                     fdmLabel: "Linear Density"
-                    fdmDescription: "Adjusts the linear density of the filament used. Match this value with the linear density of the used filament."
+                    fdmDescription: "Adjusts the linear density of the filament used. Match this value with your filament's linear density."
                     fdmUnit: "g/m"
                     fdmType: "float"
                     fdmDefaultValue: 2.986
@@ -3334,8 +3412,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerExtruder: true
                 fdmAffectedById: "default_material_print_temperature"
                 FdmQml_Param{ id:before_homing_temperature; objectName: "before_homing_temperature"
-                    fdmLabel: "Temperature before Homing"
-                    fdmDescription: "Temperature before Homing."
+                    fdmLabel: "Pre-Homing Temperature"
+                    fdmDescription: "Set the temperature of the nozzle before homing."
                     fdmUnit: "°C"
                     fdmType: "float"
                     fdmDefaultValue: 225.0
@@ -3383,7 +3461,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:material_final_print_temperature; objectName: "material_final_print_temperature"
                     fdmLabel: "Final Printing Temperature"
-                    fdmDescription: "The temperature to which to already start cooling down just before the end of printing."
+                    fdmDescription: "The temperature where the print can begin cooling down before printing stops."
                     fdmUnit: "°C"
                     fdmType: "float"
                     fdmDefaultValue: 195.0
@@ -3434,7 +3512,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:material_bed_temperature_layer_0; objectName: "material_bed_temperature_layer_0"
                     fdmLabel: "Build Plate Temperature Initial Layer"
-                    fdmDescription: "The temperature used for the heated build plate at the first layer. If this is 0, the build plate is left unheated during the first layer."
+                    fdmDescription: "The heated build plate temperature used for the first layer. If this is 0, the build plate is left unheated during the first layer."
                     fdmUnit: "°C"
                     fdmType: "float"
                     //fdmResolve: Number(material_bed_temperature_layer_0.fdmValue)
@@ -3492,7 +3570,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_shrinkage_percentage; objectName: "material_shrinkage_percentage"
                 fdmLabel: "Scaling Factor Shrinkage Compensation"
-                fdmDescription: "To compensate for the shrinkage of the material as it cools down, the model will be scaled with this factor."
+                fdmDescription: "To compensate for material shrinkage as it cools down, the model will be scaled with this factor."
                 fdmUnit: "%"
                 fdmType: "float"
                 fdmDefaultValue: 100.0
@@ -3507,7 +3585,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_crystallinity; objectName: "material_crystallinity"
                 fdmLabel: "Crystalline Material"
-                fdmDescription: "Is this material the type that breaks off cleanly when heated (crystalline), or is it the type that produces long intertwined polymer chains (non-crystalline)?"
+                fdmDescription: "Toggle this setting if you're using crystaline material, which breaks off cleanly when heated."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: false
@@ -3516,7 +3594,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
             }
             FdmQml_Param{ id:material_anti_ooze_retracted_position; objectName: "material_anti_ooze_retracted_position"
-                fdmLabel: "Anti-ooze Retracted Position"
+                fdmLabel: "Anti-Ooze Retracted Position"
                 fdmDescription: "How far the material needs to be retracted before it stops oozing."
                 fdmType: "float"
                 fdmUnit: "mm"
@@ -3529,7 +3607,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "switch_extruder_retraction_amount"
             }
             FdmQml_Param{ id:material_anti_ooze_retraction_speed; objectName: "material_anti_ooze_retraction_speed"
-                fdmLabel: "Anti-ooze Retraction Speed"
+                fdmLabel: "Anti-Ooze Retraction Speed"
                 fdmDescription: "How fast the material needs to be retracted during a filament switch to prevent oozing."
                 fdmType: "float"
                 fdmUnit: "mm/s"
@@ -3543,7 +3621,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_preparation_retracted_position; objectName: "material_break_preparation_retracted_position"
                 fdmLabel: "Break Preparation Retracted Position"
-                fdmDescription: "How far the filament can be stretched before it breaks, while heated."
+                fdmDescription: "How far heated filament can be stretched before it breaks."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: -16.0
@@ -3556,7 +3634,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_preparation_speed; objectName: "material_break_preparation_speed"
                 fdmLabel: "Break Preparation Retraction Speed"
-                fdmDescription: "How fast the filament needs to be retracted just before breaking it off in a retraction."
+                fdmDescription: "How fast the filament needs to be retracted before breaking it off in a retraction."
                 fdmType: "float"
                 fdmUnit: "mm/s"
                 fdmDefaultValue: 2.0
@@ -3569,7 +3647,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_preparation_temperature; objectName: "material_break_preparation_temperature"
                 fdmLabel: "Break Preparation Temperature"
-                fdmDescription: "The temperature used to purge material, should be roughly equal to the highest possible printing temperature."
+                fdmDescription: "The temperature used to purge material. It should be roughly equal to the highest possible printing temperature."
                 fdmType: "float"
                 fdmUnit: "°C"
                 fdmDefaultValue: 50.0
@@ -3584,7 +3662,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_retracted_position; objectName: "material_break_retracted_position"
                 fdmLabel: "Break Retracted Position"
-                fdmDescription: "How far to retract the filament in order to break it cleanly."
+                fdmDescription: "How far the filament retracts before it breaks cleanly."
                 fdmType: "float"
                 fdmUnit: "mm"
                 fdmDefaultValue: -50.0
@@ -3597,7 +3675,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_speed; objectName: "material_break_speed"
                 fdmLabel: "Break Retraction Speed"
-                fdmDescription: "The speed at which to retract the filament in order to break it cleanly."
+                fdmDescription: "The retraction speed for clean filament breaks."
                 fdmType: "float"
                 fdmUnit: "mm/s"
                 fdmDefaultValue: 25.0
@@ -3610,7 +3688,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_break_temperature; objectName: "material_break_temperature"
                 fdmLabel: "Break Temperature"
-                fdmDescription: "The temperature at which the filament is broken for a clean break."
+                fdmDescription: "The temperature for clean filament breaks."
                 fdmType: "float"
                 fdmUnit: "°C"
                 fdmDefaultValue: 50.0
@@ -3624,7 +3702,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_flush_purge_speed; objectName: "material_flush_purge_speed"
                 fdmLabel: "Flush Purge Speed"
-                fdmDescription: "How fast to prime the material after switching to a different material."
+                fdmDescription: "How fast the material primes after switching material."
                 fdmType: "float"
                 fdmDefaultValue: 0.5
                 fdmEnabled: false
@@ -3632,7 +3710,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_flush_purge_length; objectName: "material_flush_purge_length"
                 fdmLabel: "Flush Purge Length"
-                fdmDescription: "How much material to use to purge the previous material out of the nozzle (in length of filament) when switching to a different material."
+                fdmDescription: "How much material is used to purge the previous material out of the nozzle to switch to another material. Input by filament length."
                 fdmType: "float"
                 fdmDefaultValue: 60.0
                 fdmEnabled: false
@@ -3640,7 +3718,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_end_of_filament_purge_speed; objectName: "material_end_of_filament_purge_speed"
                 fdmLabel: "End of Filament Purge Speed"
-                fdmDescription: "How fast to prime the material after replacing an empty spool with a fresh spool of the same material."
+                fdmDescription: "How fast the material primes after replacing an empty spool with a fresh spool of the same material."
                 fdmType: "float"
                 fdmDefaultValue: 0.5
                 fdmEnabled: false
@@ -3648,7 +3726,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_end_of_filament_purge_length; objectName: "material_end_of_filament_purge_length"
                 fdmLabel: "End of Filament Purge Length"
-                fdmDescription: "How much material to use to purge the previous material out of the nozzle (in length of filament) when replacing an empty spool with a fresh spool of the same material."
+                fdmDescription: "How much material is used to purge the previous material out of the nozzle when replacing an empty spool with a fresh spool of the same material. Input in lengths of filament."
                 fdmType: "float"
                 fdmDefaultValue: 20.0
                 fdmEnabled: false
@@ -3664,7 +3742,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_no_load_move_factor; objectName: "material_no_load_move_factor"
                 fdmLabel: "No Load Move Factor"
-                fdmDescription: "A factor indicating how much the filament gets compressed between the feeder and the nozzle chamber, used to determine how far to move the material for a filament switch."
+                fdmDescription: "Indicates how much the filament gets compressed between the feeder and the nozzle chamber. Determines how far to move the material for a filament switch."
                 fdmType: "float"
                 fdmDefaultValue: 0.940860215
                 fdmEnabled: false
@@ -3672,7 +3750,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_flow; objectName: "material_flow"
                 fdmLabel: "Flow"
-                fdmDescription: "Flow compensation: the amount of material extruded is multiplied by this value."
+                fdmDescription: "The amount of material extruded is multipled by the folow compensation value.Flow compensation: the amount of material extruded is multiplied by this value."
                 fdmUnit: "%"
                 fdmDefaultValue: 100.0
                 fdmType: "float"
@@ -3711,7 +3789,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:wall_x_material_flow; objectName: "wall_x_material_flow"
                         fdmLabel: "Inner Wall(s) Flow"
-                        fdmDescription: "Flow compensation on wall lines for all wall lines except the outermost one."
+                        fdmDescription: "Flow compensation on wall lines except the outermost one."
                         fdmUnit: "%"
                         fdmType: "float"
                         fdmDefaultValue: 100.0
@@ -3725,8 +3803,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                 }
                 FdmQml_Param{ id:skin_material_flow; objectName: "skin_material_flow"
-                    fdmLabel: "Top/Bottom Flow"
-                    fdmDescription: "Flow compensation on top/bottom lines."
+                    fdmLabel: "Top / Bottom Flow"
+                    fdmDescription: "Flow compensation on top / bottom lines."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -3741,7 +3819,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:roofing_material_flow; objectName: "roofing_material_flow"
                     fdmLabel: "Top Surface Skin Flow"
-                    fdmDescription: "Flow compensation on lines of the areas at the top of the print."
+                    fdmDescription: "Flow compensation on lines for areas on top of the print."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -3770,7 +3848,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "infill_extruder_nr,material_flow"
                 }
                 FdmQml_Param{ id:skirt_brim_material_flow; objectName: "skirt_brim_material_flow"
-                    fdmLabel: "Skirt/Brim Flow"
+                    fdmLabel: "Skirt / Brim Flow"
                     fdmDescription: "Flow compensation on skirt or brim lines."
                     fdmUnit: "%"
                     fdmType: "float"
@@ -3802,7 +3880,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:support_interface_material_flow; objectName: "support_interface_material_flow"
                     fdmLabel: "Support Interface Flow"
-                    fdmDescription: "Flow compensation on lines of support roof or floor."
+                    fdmDescription: "Flow compensation on support roof or floor lines."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmDefaultValue: 100.0
@@ -3865,7 +3943,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:material_flow_layer_0; objectName: "material_flow_layer_0"
                 fdmLabel: "Initial Layer Flow"
-                fdmDescription: "Flow compensation for the first layer: the amount of material extruded on the initial layer is multiplied by this value."
+                fdmDescription: "Flow compensation for the first layer. The amount of material extruded on the initial layer is multiplied by this value."
                 fdmUnit: "%"
                 fdmDefaultValue: 150.0
                 fdmType: "float"
@@ -3894,14 +3972,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         FdmQml_Category{ id:speed; objectName: "speed"
             fdmLabel: "Speed"
             fdmIcon: "SpeedOMeter"
-            fdmDescription: "Speed"
+            fdmDescription: "Set the speed of various actions."
             fdmType: "category"
             fdmMinimumValue: 0.1
             fdmMaximumValue: Math.sqrt(machine_max_feedrate_x.fdmValue ** 2 + machine_max_feedrate_y.fdmValue ** 2)
             fdmMaximumValueWarning: 1200.0 // 20x
             FdmQml_Param{ id:speed_travel; objectName: "speed_travel"
                 fdmLabel: "Travel Speed"
-                fdmDescription: "The speed at which travel moves are made."
+                fdmDescription: "The travel move speed."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 250.0      // 5x
@@ -3915,7 +3993,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_print; objectName: "speed_print"
                 fdmLabel: "Print Speed"
-                fdmDescription: "The speed at which printing happens."
+                fdmDescription: "The printing speed."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmMinimumValue: speed.fdmMinimumValue
@@ -3926,7 +4004,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:speed_infill; objectName: "speed_infill"
                     fdmLabel: "Infill Speed"
-                    fdmDescription: "The speed at which infill is printed."
+                    fdmDescription: "The infill printing speed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmMinimumValue: speed_print.fdmMinimumValue
@@ -3941,7 +4019,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:speed_wall; objectName: "speed_wall"
                     fdmLabel: "Wall Speed"
-                    fdmDescription: "The speed at which the walls are printed."
+                    fdmDescription: "The wall printing speed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmMinimumValue: speed_print.fdmMinimumValue
@@ -3953,7 +4031,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                     FdmQml_Param{ id:speed_wall_0; objectName: "speed_wall_0"
                         fdmLabel: "Outer Wall Speed"
-                        fdmDescription: "The speed at which the outermost walls are printed. Printing the outer wall at a lower speed improves the final skin quality. However, having a large difference between the inner wall speed and the outer wall speed will affect quality in a negative way."
+                        fdmDescription: "The print speed for the outermost walls. Printing at a lower speed improves the final skin quality for outer walls. However, a large difference between the inner wall speed and outer wall speed will negatively affect quality."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: speed_print.fdmMinimumValue
@@ -3967,22 +4045,22 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:speed_wall_x; objectName: "speed_wall_x"
                         fdmLabel: "Inner Wall Speed"
-                        fdmDescription: "The speed at which all inner walls are printed. Printing the inner wall faster than the outer wall will reduce printing time. It works well to set this in between the outer wall speed and the infill speed."
+                        fdmDescription: "The print speed for inner walls. Printing inner walls faster than outer walls will reduce printing time. For best results, set this between the outer wall speed and infill speed."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: speed_print.fdmMinimumValue
                         fdmMaximumValue: speed_print.fdmMaximumValue
                         fdmMaximumValueWarning: speed_print.fdmMaximumValueWarning
                         fdmDefaultValue: 150.0
-                        fdmValue: Math.min(Number(speed_wall.fdmValue) * 2, 250)
+                        fdmValue: Math.min(Number(speed_wall.fdmValue) * 5/3, 250) //Math.min(Number(speed_wall.fdmValue) * 2, 250)
                         fdmLimitToExtruder: Number(wall_x_extruder_nr.fdmValue)
                         fdmSettablePerMesh: true
-                        fdmAffectedById: "wall_x_extruder_nr,speed_wall"
+                        fdmAffectedById: "wall_x_extruder_nr"
                     }
                 }
                 FdmQml_Param{ id:speed_topbottom; objectName: "speed_topbottom"
-                    fdmLabel: "Top/Bottom Speed"
-                    fdmDescription: "The speed at which top/bottom layers are printed."
+                    fdmLabel: "Top / Bottom Speed"
+                    fdmDescription: "The speed at which the top and bottom layers are printed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmMinimumValue: speed_print.fdmMinimumValue
@@ -4012,7 +4090,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:speed_support; objectName: "speed_support"
                     fdmLabel: "Support Speed"
-                    fdmDescription: "The speed at which the support structure is printed. Printing support at higher speeds can greatly reduce printing time. The surface quality of the support structure is not important since it is removed after printing."
+                    fdmDescription: "The speed at which the support structure is printed. Printing supports at higher speeds greatly reduces printing time."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmMinimumValue: speed_print.fdmMinimumValue
@@ -4027,7 +4105,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "speed_print,support_extruder_nr"
                     FdmQml_Param{ id:speed_support_infill; objectName: "speed_support_infill"
                         fdmLabel: "Support Infill Speed"
-                        fdmDescription: "The speed at which the infill of support is printed. Printing the infill at lower speeds improves stability."
+                        fdmDescription: "The speed at which the infill support is printed. Printing the infill at lower speeds improves stability."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmDefaultValue: 250.0
@@ -4043,7 +4121,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:speed_support_interface; objectName: "speed_support_interface"
                         fdmLabel: "Support Interface Speed"
-                        fdmDescription: "The speed at which the roofs and floors of support are printed. Printing them at lower speeds can improve overhang quality."
+                        fdmDescription: "The speed at which support roofs and floors are printed. Printing at lower speeds can improve overhang quality."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmDefaultValue: 150.0
@@ -4058,7 +4136,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "speed_support,support_interface_extruder_nr"
                         FdmQml_Param{ id:speed_support_roof; objectName: "speed_support_roof"
                             fdmLabel: "Support Roof Speed"
-                            fdmDescription: "The speed at which the roofs of support are printed. Printing them at lower speeds can improve overhang quality."
+                            fdmDescription: "The speed at which support roofs are printed. Printing them at lower speeds can improve overhang quality."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmDefaultValue: 150.0
@@ -4074,7 +4152,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:speed_support_bottom; objectName: "speed_support_bottom"
                             fdmLabel: "Support Floor Speed"
-                            fdmDescription: "The speed at which the floor of support is printed. Printing it at lower speed can improve adhesion of support on top of your model."
+                            fdmDescription: "The speed at which support floors are printed. Printing support floors at lower speed can improve support adhesion on top of your model."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmDefaultValue: 150.0
@@ -4092,7 +4170,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:speed_prime_tower; objectName: "speed_prime_tower"
                     fdmLabel: "Prime Tower Speed"
-                    fdmDescription: "The speed at which the prime tower is printed. Printing the prime tower slower can make it more stable when the adhesion between the different filaments is suboptimal."
+                    fdmDescription: "The speed at which the prime tower is printed. Printing the prime tower slower can make it more stable when the adhesion between  different filaments is suboptimal."
                     fdmType: "float"
                     fdmUnit: "mm/s"
                     fdmEnabled: prime_tower_enable.fdmValue
@@ -4108,7 +4186,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_layer_0; objectName: "speed_layer_0"
                 fdmLabel: "Initial Layer Speed"
-                fdmDescription: "The speed for the initial layer. A lower value is advised to improve adhesion to the build plate. Does not affect the build plate adhesion structures themselves, like brim and raft."
+                fdmDescription: "The initial layer speed. For improved adhesion, use a lower value. This setting does not affect build plate adehsion structures, such as brims and rafts."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmEnabled: Number(speed_slowdown_layers.fdmValue) > 0
@@ -4121,7 +4199,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:speed_print_layer_0; objectName: "speed_print_layer_0"
                     fdmLabel: "Initial Layer Print Speed"
-                    fdmDescription: "The speed of printing for the initial layer. A lower value is advised to improve adhesion to the build plate."
+                    fdmDescription: "The initial layer print speed. For improved build plate adhesion, use a lower value."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmEnabled: Number(speed_slowdown_layers.fdmValue) > 0
@@ -4135,7 +4213,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:speed_travel_layer_0; objectName: "speed_travel_layer_0"
                     fdmLabel: "Initial Layer Travel Speed"
-                    fdmDescription: "The speed of travel moves in the initial layer. A lower value is advised to prevent pulling previously printed parts away from the build plate. The value of this setting can automatically be calculated from the ratio between the Travel Speed and the Print Speed."
+                    fdmDescription: "The speed of travel moves for the initial layer. To avoid pulling previously printed parts, use a lower value. The value of this setting can automatically be calucated from the ratio between Travel Speed and Print Speed."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmEnabled: Number(speed_slowdown_layers.fdmValue) > 0
@@ -4149,8 +4227,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "speed_travel,speed_print,speed_layer_0"
                 }
                 FdmQml_Param{ id:skirt_brim_speed; objectName: "skirt_brim_speed"
-                    fdmLabel: "Skirt/Brim Speed"
-                    fdmDescription: "The speed at which the skirt and brim are printed. Normally this is done at the initial layer speed, but sometimes you might want to print the skirt or brim at a different speed."
+                    fdmLabel: "Skirt / Brim Speed"
+                    fdmDescription: "The skirt and brim print speed. This is normally done at the initial layer speed, but is customizable if you choose so."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmDefaultValue: 30.0
@@ -4167,7 +4245,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_z_hop; objectName: "speed_z_hop"
                 fdmLabel: "Z Hop Speed"
-                fdmDescription: "The speed at which the vertical Z movement is made for Z Hops. This is typically lower than the print speed since the build plate or machine's gantry is harder to move."
+                fdmDescription: "The speed at which vertical Z movement is made. This is typically lower than the print speed since the build plate and gantry is harder to move."
                 fdmUnit: "mm/s"
                 fdmType: "float"
                 fdmDefaultValue: 10.0
@@ -4179,7 +4257,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_slowdown_layers; objectName: "speed_slowdown_layers"
                 fdmLabel: "Number of Slower Layers"
-                fdmDescription: "The first few layers are printed slower than the rest of the model, to get better adhesion to the build plate and improve the overall success rate of prints. The speed is gradually increased over these layers."
+                fdmDescription: "The first few layers are printed slower than the rest of the model for better build plate adehsion and improve the overall success rate. The speed is gradually increased over these layers."
                 fdmType: "int"
                 fdmDefaultValue: 2
                 //fdmResolve:  Math.round(Number(speed_slowdown_layers.fdmValue) / len(Number(speed_slowdown_layers.fdmValue)))
@@ -4191,7 +4269,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:speed_equalize_flow_enabled; objectName: "speed_equalize_flow_enabled"
                 fdmLabel: "Equalize Filament Flow"
-                fdmDescription: "Print thinner than normal lines faster so that the amount of material extruded per second remains the same. Thin pieces in your model might require lines printed with smaller line width than provided in the settings. This setting controls the speed changes for such lines."
+                fdmDescription: "Control the speed of thinner lines. By printing thinner lines faster, you keep a steady flow of extruded material, down to the second."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: false
@@ -4214,7 +4292,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:acceleration_enabled; objectName: "acceleration_enabled"
                 fdmLabel: "Enable Acceleration Control"
-                fdmDescription: "Enables adjusting the print head acceleration. Increasing the accelerations can reduce printing time at the cost of print quality."
+                fdmDescription: "Allows you to adjust the print head acceleration. Increasing accelerations can reduce printing time but reduces print quality."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmResolve: acceleration_enabled.fdmValue
@@ -4223,7 +4301,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:acceleration_travel; objectName: "acceleration_travel"
                     fdmLabel: "Travel Acceleration"
-                    fdmDescription: "The acceleration with which travel moves are made."
+                    fdmDescription: "The acceleration of travel moves."
                     fdmUnit: "mm/s²"
                     fdmType: "float"
                     fdmDefaultValue: 2500.0
@@ -4249,7 +4327,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                     FdmQml_Param{ id:acceleration_infill; objectName: "acceleration_infill"
                         fdmLabel: "Infill Acceleration"
-                        fdmDescription: "The acceleration with which infill is printed."
+                        fdmDescription: "The acceleration of infill prints."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmMinimumValue: 0.1
@@ -4264,7 +4342,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:acceleration_wall; objectName: "acceleration_wall"
                         fdmLabel: "Wall Acceleration"
-                        fdmDescription: "The acceleration with which the walls are printed."
+                        fdmDescription: "The acceleration of wall prints."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmMinimumValue: 0.1
@@ -4277,7 +4355,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                         FdmQml_Param{ id:acceleration_wall_0; objectName: "acceleration_wall_0"
                             fdmLabel: "Outer Wall Acceleration"
-                            fdmDescription: "The acceleration with which the outermost walls are printed."
+                            fdmDescription: "The acceleration of the outermost wall prints."
                             fdmUnit: "mm/s²"
                             fdmType: "float"
                             fdmMinimumValue: 0.1
@@ -4292,7 +4370,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:acceleration_wall_x; objectName: "acceleration_wall_x"
                             fdmLabel: "Inner Wall Acceleration"
-                            fdmDescription: "The acceleration with which all inner walls are printed."
+                            fdmDescription: "The acceleration of the inner wall prints."
                             fdmUnit: "mm/s²"
                             fdmType: "float"
                             fdmMinimumValue: 0.1
@@ -4306,8 +4384,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "wall_x_extruder_nr"
                         }
                         FdmQml_Param{ id:acceleration_topbottom; objectName: "acceleration_topbottom"
-                            fdmLabel: "Top/Bottom Acceleration"
-                            fdmDescription: "The acceleration with which top/bottom layers are printed."
+                            fdmLabel: "Top / Bottom Acceleration"
+                            fdmDescription: "The print acceleration for the top and bottom layers."
                             fdmUnit: "mm/s²"
                             fdmType: "float"
                             fdmMinimumValue: 0.1
@@ -4321,7 +4399,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "top_bottom_extruder_nr"
                             FdmQml_Param{ id:acceleration_roofing; objectName: "acceleration_roofing"
                                 fdmLabel: "Top Surface Skin Acceleration"
-                                fdmDescription: "The acceleration with which top surface skin layers are printed."
+                                fdmDescription: "The print acceleration for the top surface skin layers."
                                 fdmUnit: "mm/s²"
                                 fdmType: "float"
                                 fdmMinimumValue: 0.1
@@ -4338,7 +4416,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:acceleration_support; objectName: "acceleration_support"
                         fdmLabel: "Support Acceleration"
-                        fdmDescription: "The acceleration with which the support structure is printed."
+                        fdmDescription: "The print acceleration for the support structure."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmMinimumValue: 0.1
@@ -4353,7 +4431,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "acceleration_print,support_extruder_nr"
                         FdmQml_Param{ id:acceleration_support_infill; objectName: "acceleration_support_infill"
                             fdmLabel: "Support Infill Acceleration"
-                            fdmDescription: "The acceleration with which the infill of support is printed."
+                            fdmDescription: "The print acceleration for the infill support."
                             fdmUnit: "mm/s²"
                             fdmType: "float"
                             fdmDefaultValue: 2500.0 // 5x
@@ -4369,7 +4447,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:acceleration_support_interface; objectName: "acceleration_support_interface"
                             fdmLabel: "Support Interface Acceleration"
-                            fdmDescription: "The acceleration with which the roofs and floors of support are printed. Printing them at lower acceleration can improve overhang quality."
+                            fdmDescription: "The print acceleration for support roofs and floors. Printing with lower acceleration can improve overhang quality."
                             fdmUnit: "mm/s²"
                             fdmType: "float"
                             fdmDefaultValue: 3000.0
@@ -4384,7 +4462,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "acceleration_support,support_interface_extruder_nr"
                             FdmQml_Param{ id:acceleration_support_roof; objectName: "acceleration_support_roof"
                                 fdmLabel: "Support Roof Acceleration"
-                                fdmDescription: "The acceleration with which the roofs of support are printed. Printing them at lower acceleration can improve overhang quality."
+                                fdmDescription: "The print acceleration for support roofs. Printing with lower acceleration can improve overhang quality."
                                 fdmUnit: "mm/s²"
                                 fdmType: "float"
                                 fdmDefaultValue: 3000.0
@@ -4400,7 +4478,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             }
                             FdmQml_Param{ id:acceleration_support_bottom; objectName: "acceleration_support_bottom"
                                 fdmLabel: "Support Floor Acceleration"
-                                fdmDescription: "The acceleration with which the floors of support are printed. Printing them at lower acceleration can improve adhesion of support on top of your model."
+                                fdmDescription: "The print acceleration for support floors. Printing with lower acceleration can improve overhang quality."
                                 fdmUnit: "mm/s²"
                                 fdmType: "float"
                                 fdmDefaultValue: 3000.0
@@ -4418,7 +4496,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:acceleration_prime_tower; objectName: "acceleration_prime_tower"
                         fdmLabel: "Prime Tower Acceleration"
-                        fdmDescription: "The acceleration with which the prime tower is printed."
+                        fdmDescription: "The print acceleration for the prime tower."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmMinimumValue: 0.1
@@ -4446,7 +4524,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "acceleration_print"
                     FdmQml_Param{ id:acceleration_travel_layer_0; objectName: "acceleration_travel_layer_0"
                         fdmLabel: "Initial Layer Travel Acceleration"
-                        fdmDescription: "The acceleration for travel moves in the initial layer."
+                        fdmDescription: "The acceleration for travel moves on the initial layer."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmDefaultValue: 3000.0
@@ -4461,7 +4539,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:acceleration_print_layer_0; objectName: "acceleration_print_layer_0"
                         fdmLabel: "Initial Layer Print Acceleration"
-                        fdmDescription: "The acceleration during the printing of the initial layer."
+                        fdmDescription: "The acceleration during initial layer printing."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmDefaultValue: 3000.0
@@ -4474,8 +4552,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "acceleration_layer_0"
                     }
                     FdmQml_Param{ id:acceleration_skirt_brim; objectName: "acceleration_skirt_brim"
-                        fdmLabel: "Skirt/Brim Acceleration"
-                        fdmDescription: "The acceleration with which the skirt and brim are printed. Normally this is done with the initial layer acceleration, but sometimes you might want to print the skirt or brim at a different acceleration."
+                        fdmLabel: "Skirt / Brim Acceleration"
+                        fdmDescription: "The print acceleration for the skirt and brim. Normally, this is done with the initial layer acceleration, but you can change it here if you want them printed at different accelerations."
                         fdmUnit: "mm/s²"
                         fdmType: "float"
                         fdmDefaultValue: 3000.0
@@ -4492,7 +4570,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:jerk_enabled; objectName: "jerk_enabled"
                 fdmLabel: "Enable Jerk Control"
-                fdmDescription: "Enables adjusting the jerk of print head when the velocity in the X or Y axis changes. Increasing the jerk can reduce printing time at the cost of print quality."
+                fdmDescription: "Adjusts the print head jerk when the speed changes on the X or Y axis. Increasing the jerk can reduce print time but decreases quality."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 //fdmResolve: jerk_enabled.fdmValue
@@ -4501,7 +4579,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: ""
                 FdmQml_Param{ id:jerk_travel; objectName: "jerk_travel"
                     fdmLabel: "Travel Jerk"
-                    fdmDescription: "The maximum instantaneous velocity change with which travel moves are made."
+                    fdmDescription: "The maximum instant speed change for travel moves."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmDefaultValue: 25.0   //30.0
@@ -4514,7 +4592,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:jerk_print; objectName: "jerk_print"
                     fdmLabel: "Print Jerk"
-                    fdmDescription: "The maximum instantaneous velocity change of the print head."
+                    fdmDescription: "The maximum instant speed change for the print head."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -4525,7 +4603,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: ""
                     FdmQml_Param{ id:jerk_infill; objectName: "jerk_infill"
                         fdmLabel: "Infill Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change with which infill is printed."
+                        fdmDescription: "The maximum instant speed change for infill prints."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4539,7 +4617,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:jerk_wall; objectName: "jerk_wall"
                         fdmLabel: "Wall Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change with which the walls are printed."
+                        fdmDescription: "The maximum instant speed change for wall prints."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4551,7 +4629,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: ""
                         FdmQml_Param{ id:jerk_wall_0; objectName: "jerk_wall_0"
                             fdmLabel: "Outer Wall Jerk"
-                            fdmDescription: "The maximum instantaneous velocity change with which the outermost walls are printed."
+                            fdmDescription: "The maximum instant speed change when printing the outermost walls."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4565,7 +4643,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:jerk_wall_x; objectName: "jerk_wall_x"
                             fdmLabel: "Inner Wall Jerk"
-                            fdmDescription: "The maximum instantaneous velocity change with which all inner walls are printed."
+                            fdmDescription: "The maximum instant speed change for inner wall prints."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4578,8 +4656,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "wall_x_extruder_nr,jerk_wall"
                         }
                         FdmQml_Param{ id:jerk_topbottom; objectName: "jerk_topbottom"
-                            fdmLabel: "Top/Bottom Jerk"
-                            fdmDescription: "The maximum instantaneous velocity change with which top/bottom layers are printed."
+                            fdmLabel: "Top / Bottom Jerk"
+                            fdmDescription: "The maximum instant speed change for top and bottom layer prints."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4592,7 +4670,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "top_bottom_extruder_nr"
                             FdmQml_Param{ id:jerk_roofing; objectName: "jerk_roofing"
                                 fdmLabel: "Top Surface Skin Jerk"
-                                fdmDescription: "The maximum instantaneous velocity change with which top surface skin layers are printed."
+                                fdmDescription: "The maximum instant speed change for top surface skin layer prints."
                                 fdmUnit: "mm/s"
                                 fdmType: "float"
                                 fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4608,7 +4686,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:jerk_support; objectName: "jerk_support"
                         fdmLabel: "Support Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change with which the support structure is printed."
+                        fdmDescription: "The maximum instant speed change for support structure prints."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4622,7 +4700,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "jerk_print,support_extruder_nr"
                         FdmQml_Param{ id:jerk_support_infill; objectName: "jerk_support_infill"
                             fdmLabel: "Support Infill Jerk"
-                            fdmDescription: "The maximum instantaneous velocity change with which the infill of support is printed."
+                            fdmDescription: "The maximum instant speed change for infill support prints."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmDefaultValue: 15.0   //20.0
@@ -4637,7 +4715,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         }
                         FdmQml_Param{ id:jerk_support_interface; objectName: "jerk_support_interface"
                             fdmLabel: "Support Interface Jerk"
-                            fdmDescription: "The maximum instantaneous velocity change with which the roofs and floors of support are printed."
+                            fdmDescription: "The maximum instant speed change for support roof and floor prints."
                             fdmUnit: "mm/s"
                             fdmType: "float"
                             fdmDefaultValue: 15.0   //20.0
@@ -4651,7 +4729,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             fdmAffectedById: "jerk_support,support_interface_extruder_nr"
                             FdmQml_Param{ id:jerk_support_roof; objectName: "jerk_support_roof"
                                 fdmLabel: "Support Roof Jerk"
-                                fdmDescription: "The maximum instantaneous velocity change with which the roofs of support are printed."
+                                fdmDescription: "The maximum instant speed change for support roof prints."
                                 fdmUnit: "mm/s"
                                 fdmType: "float"
                                 fdmDefaultValue: 15.0   //20.0
@@ -4666,7 +4744,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                             }
                             FdmQml_Param{ id:jerk_support_bottom; objectName: "jerk_support_bottom"
                                 fdmLabel: "Support Floor Jerk"
-                                fdmDescription: "The maximum instantaneous velocity change with which the floors of support are printed."
+                                fdmDescription: "The maximum instant speed change for support floor prints."
                                 fdmUnit: "mm/s"
                                 fdmType: "float"
                                 fdmDefaultValue: 15.0   //20.0
@@ -4683,7 +4761,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:jerk_prime_tower; objectName: "jerk_prime_tower"
                         fdmLabel: "Prime Tower Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change with which the prime tower is printed."
+                        fdmDescription: "The maximum instant speed change for prime tower prints."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmMinimumValue: jerk_print.fdmMinimumValueWarning
@@ -4697,7 +4775,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:jerk_layer_0; objectName: "jerk_layer_0"
                     fdmLabel: "Initial Layer Jerk"
-                    fdmDescription: "The print maximum instantaneous velocity change for the initial layer."
+                    fdmDescription: "The maximum instant speed change when printing the initial layer."
                     fdmUnit: "mm/s"
                     fdmType: "float"
                     fdmDefaultValue: 15.0   //20.0
@@ -4723,7 +4801,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                     FdmQml_Param{ id:jerk_print_layer_0; objectName: "jerk_print_layer_0"
                         fdmLabel: "Initial Layer Print Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change during the printing of the initial layer."
+                        fdmDescription: "The maximum instant speed change when printing the initial layer."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmDefaultValue: 15.0   //20.0
@@ -4735,8 +4813,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmAffectedById: "jerk_layer_0"
                     }
                     FdmQml_Param{ id:jerk_skirt_brim; objectName: "jerk_skirt_brim"
-                        fdmLabel: "Skirt/Brim Jerk"
-                        fdmDescription: "The maximum instantaneous velocity change with which the skirt and brim are printed."
+                        fdmLabel: "Skirt / Brim Jerk"
+                        fdmDescription: "The maximum instant speed change for skirt and brim prints."
                         fdmUnit: "mm/s"
                         fdmType: "float"
                         fdmDefaultValue: 15.0   //20.0
@@ -4836,7 +4914,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_extra_prime_amount; objectName: "retraction_extra_prime_amount"
                 fdmLabel: "Retraction Extra Prime Amount"
-                fdmDescription: "Some material can ooze away during a travel move, which can be compensated for here."
+                fdmDescription: "Compensate for material that can ooze away during a travel move."
                 fdmUnit: "mm³"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -4847,9 +4925,22 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerExtruder: true
                 fdmAffectedById: ""
             }
+            FdmQml_Param{ id:retraction_prime_min_travel; objectName: "retraction_prime_min_travel"
+                fdmLabel: "Retraction Extra Prime Min Travel Distance"
+                fdmDescription: "Some material can ooze away during a travel move If travel distance less than this min distance, not extra amount."
+                fdmUnit: "mm"
+                fdmType: "float"
+                fdmDefaultValue: 20.0
+                fdmMinimumValueWarning: 10.0
+                fdmMaximumValueWarning: 100.0
+                fdmEnabled: retraction_enable.fdmValue
+                fdmSettablePerMesh: false
+                fdmSettablePerExtruder: true
+                fdmAffectedById: ""
+            }
             FdmQml_Param{ id:retraction_min_travel; objectName: "retraction_min_travel"
                 fdmLabel: "Retraction Minimum Travel"
-                fdmDescription: "The minimum distance of travel needed for a retraction to happen at all. This helps to get fewer retractions in a small area."
+                fdmDescription: "The minimum distance of travel needed for a retraction. This helps prevent retractions in a small area."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 1.5
@@ -4863,7 +4954,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_count_max; objectName: "retraction_count_max"
                 fdmLabel: "Maximum Retraction Count"
-                fdmDescription: "This setting limits the number of retractions occurring within the minimum extrusion distance window. Further retractions within this window will be ignored. This avoids retracting repeatedly on the same piece of filament, as that can flatten the filament and cause grinding issues."
+                fdmDescription: "Limit the amount of retractions within a minimum extrusion distance timeframe. This avoids repeated retractions on the same piece of filament, which can faltten it and lead to grinding."
                 fdmDefaultValue: 90
                 fdmMinimumValue: 0
                 fdmMaximumValueWarning: 100
@@ -4875,7 +4966,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_extrusion_window; objectName: "retraction_extrusion_window"
                 fdmLabel: "Minimum Extrusion Distance Window"
-                fdmDescription: "The window in which the maximum retraction count is enforced. This value should be approximately the same as the retraction distance, so that effectively the number of times a retraction passes the same patch of material is limited."
+                fdmDescription: "The timeframe to enforce the maximum retraction amount. This value should be about the same as the retraction distance to limit the number of times a retraction passes the same area of material."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 4.5
@@ -4889,7 +4980,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:limit_support_retractions; objectName: "limit_support_retractions"
                 fdmLabel: "Limit Support Retractions"
-                fdmDescription: "Omit retraction when moving from support to support in a straight line. Enabling this setting saves print time, but can lead to excessive stringing within the support structure."
+                fdmDescription: "Stop retractions when moving between supports in a straight line. This saves print time, but can lead to excessive stringing within the support structure."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmEnabled: retraction_enable.fdmValue && (support_enable.fdmValue || support_meshes_present.fdmValue)
@@ -4899,7 +4990,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_combing; objectName: "retraction_combing"
                 fdmLabel: "Combing Mode"
-                fdmDescription: "Combing keeps the nozzle within already printed areas when traveling. This results in slightly longer travel moves but reduces the need for retractions. If combing is off, the material will retract and the nozzle moves in a straight line to the next point. It is also possible to avoid combing over top/bottom skin areas or to only comb within the infill."
+                fdmDescription: "Keep the nozzle within printed areas when traveling. This makes travel moves longer, but reduces retractions. If Combing Mode is off, the material will retract, and the nozzle moves in a straight line to the next point. It is also possible to set this to avoid combing over top and bottom skin areas or only within the infill."
                 fdmType: "enum"
                 fdmOptions:{
                     "off": "Off",
@@ -4914,8 +5005,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "infill"
             }
             FdmQml_Param{ id:retraction_combing_max_distance; objectName: "retraction_combing_max_distance"
-                fdmLabel: "Max Comb Distance With No Retract"
-                fdmDescription: "When greater than zero, combing travel moves that are longer than this distance will use retraction. If set to zero, there is no maximum and combing moves will not use retraction."
+                fdmLabel: "Max Comb Distance Without Retraction"
+                fdmDescription: "Comb travel moves longer than this distance will retract. If set to 0, combing moves will not retract."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -4937,7 +5028,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:travel_avoid_other_parts; objectName: "travel_avoid_other_parts"
                 fdmLabel: "Avoid Printed Parts When Traveling"
-                fdmDescription: "The nozzle avoids already printed parts when traveling. This option is only available when combing is enabled."
+                fdmDescription: "The nozzle avoids printed parts when traveling. This option is only available when combing is enabled."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmEnabled: retraction_combing.fdmValue !== "off"
@@ -4947,7 +5038,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:travel_avoid_supports; objectName: "travel_avoid_supports"
                 fdmLabel: "Avoid Supports When Traveling"
-                fdmDescription: "The nozzle avoids already printed supports when traveling. This option is only available when combing is enabled."
+                fdmDescription: "The nozzle avoids printed supports when traveling. This option is only available when combing is enabled."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: retraction_combing.fdmValue !== "off" && travel_avoid_other_parts.fdmValue
@@ -4957,7 +5048,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:travel_avoid_distance; objectName: "travel_avoid_distance"
                 fdmLabel: "Travel Avoid Distance"
-                fdmDescription: "The distance between the nozzle and already printed parts when avoiding during travel moves."
+                fdmDescription: "This is the avoidnce distance between the nozzle and printed parts during travel moves."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.625
@@ -4972,7 +5063,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:layer_start_x; objectName: "layer_start_x"
                 fdmLabel: "Layer Start X"
-                fdmDescription: "The X coordinate of the position near where to find the part to start printing each layer."
+                fdmDescription: "The X coordinate where each layer will approximately begin to print."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -4984,7 +5075,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:layer_start_y; objectName: "layer_start_y"
                 fdmLabel: "Layer Start Y"
-                fdmDescription: "The Y coordinate of the position near where to find the part to start printing each layer."
+                fdmDescription: "The Y coordinate where each layer will approximately begin to print."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 0.0
@@ -4996,7 +5087,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_hop_enabled; objectName: "retraction_hop_enabled"
                 fdmLabel: "Z Hop When Retracted"
-                fdmDescription: "Whenever a retraction is done, the build plate is lowered to create clearance between the nozzle and the print. It prevents the nozzle from hitting the print during travel moves, reducing the chance to knock the print from the build plate."
+                fdmDescription: "Whenever a retraction finishes, the build plate lowers to create clearance between the nozzle and print. This prevents the nozzle from hitting the print during travel moves, reducing the chance to knock the print off the build plate."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: retraction_enable.fdmValue
@@ -5006,7 +5097,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_hop_only_when_collides; objectName: "retraction_hop_only_when_collides"
                 fdmLabel: "Z Hop Only Over Printed Parts"
-                fdmDescription: "Only perform a Z Hop when moving over printed parts which cannot be avoided by horizontal motion by Avoid Printed Parts when Traveling."
+                fdmDescription: "Only perform a Z Hop when moving over printed parts which cannot be avoided by horizontal motion with the Avoid Printed Parts when Traveling setting."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: retraction_enable.fdmValue && retraction_hop_enabled.fdmValue && travel_avoid_other_parts.fdmValue
@@ -5029,7 +5120,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_hop_after_extruder_switch; objectName: "retraction_hop_after_extruder_switch"
                 fdmLabel: "Z Hop After Extruder Switch"
-                fdmDescription: "After the machine switched from one extruder to the other, the build plate is lowered to create clearance between the nozzle and the print. This prevents the nozzle from leaving oozed material on the outside of a print."
+                fdmDescription: "After the machine switches to another extruder, the build plate lowers to create clearance between the nozzle and the print. This prevents the nozzle from oozing material on the outside of a print."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmEnabled: retraction_hop_enabled.fdmValue && Number(extruders_enabled_count.fdmValue) > 1
@@ -5039,7 +5130,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:retraction_hop_after_extruder_switch_height; objectName: "retraction_hop_after_extruder_switch_height"
                 fdmLabel: "Z Hop After Extruder Switch Height"
-                fdmDescription: "The height difference when performing a Z Hop after extruder switch."
+                fdmDescription: "The height difference when performing a Z Hop after an extruder switch."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 1.0
@@ -5059,7 +5150,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             fdmType: "category"
             FdmQml_Param{ id:cool_fan_enabled; objectName: "cool_fan_enabled"
                 fdmLabel: "Enable Print Cooling"
-                fdmDescription: "Enables the print cooling fans while printing. The fans improve print quality on layers with short layer times and bridging / overhangs."
+                fdmDescription: "Enable print cooling fans while printing. Fans improve the print quality on layers with short print times and bridges/overhangs."
                 fdmType: "bool"
                 fdmDefaultValue: true
                 fdmSettablePerMesh: false
@@ -5081,7 +5172,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmAffectedById: "cool_fan_enabled"
                 FdmQml_Param{ id:cool_fan_speed_min; objectName: "cool_fan_speed_min"
                     fdmLabel: "Regular Fan Speed"
-                    fdmDescription: "The speed at which the fans spin before hitting the threshold. When a layer prints faster than the threshold, the fan speed gradually inclines towards the maximum fan speed."
+                    fdmDescription: "The speed that fans spin before reaching the threshold. When a layer prints faster than the threshold, the fan speed gradually increases twoard maximum fan speed."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -5095,7 +5186,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:cool_fan_speed_max; objectName: "cool_fan_speed_max"
                     fdmLabel: "Maximum Fan Speed"
-                    fdmDescription: "The speed at which the fans spin on the minimum layer time. The fan speed gradually increases between the regular fan speed and maximum fan speed when the threshold is hit."
+                    fdmDescription: "The speed that fans spin for minimum layer time. The fan speed gradually increases between regular fan speed and maximum fan speed when the threshold is reached."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmMinimumValue: Math.max(0, Number(cool_fan_speed_min.fdmValue))
@@ -5108,8 +5199,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmAffectedById: "cool_fan_speed,cool_fan_speed_min"
                 }
                 FdmQml_Param{ id:cool_min_layer_time_fan_speed_max; objectName: "cool_min_layer_time_fan_speed_max"
-                    fdmLabel: "Regular/Maximum Fan Speed Threshold"
-                    fdmDescription: "The layer time which sets the threshold between regular fan speed and maximum fan speed. Layers that print slower than this time use regular fan speed. For faster layers the fan speed gradually increases towards the maximum fan speed."
+                    fdmLabel: "Regular / Maximum Fan Speed Threshold"
+                    fdmDescription: "This layer time sets the threshold between the regular fan speed and maximum fan speed. Layers that print slower than this time use regular fan speed. For faster layers, the fan speed graudally increases toward maximum fan speed."
                     fdmUnit: "s"
                     fdmType: "float"
                     fdmDefaultValue: 10.0
@@ -5120,7 +5211,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
                 FdmQml_Param{ id:cool_fan_speed_0; objectName: "cool_fan_speed_0"
                     fdmLabel: "Initial Fan Speed"
-                    fdmDescription: "The speed at which the fans spin at the start of the print. In subsequent layers the fan speed is gradually increased up to the layer corresponding to Regular Fan Speed at Height."
+                    fdmDescription: "The fan speed at the start of the print. For subsequent layers, the fan speed gradually increases to the layer where \"Regular Fan Speed at Height\" applies."
                     fdmUnit: "%"
                     fdmType: "float"
                     fdmMinimumValue: 0.0
@@ -5168,8 +5259,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmSettablePerExtruder: true
                     fdmAffectedById: ""
                     FdmQml_Param{ id:cool_min_speed_includes_outer_walls; objectName: "cool_min_speed_includes_outer_walls"
-                        fdmLabel: "includes outer walls"
-                        fdmDescription: "Minimum print speed includes outer walls."
+                        fdmLabel: "Include Outer Walls"
+                        fdmDescription: "Include outer walls when printing at minmum speed."
                         fdmType: "bool"
                         fdmDefaultValue: true
                         fdmSettablePerMesh: true
@@ -5410,7 +5501,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     "gyroid": "Gyroid"
                 }
                 fdmDefaultValue: "zigzag"
-                fdmEnabled: support_enable.fdmValue || support_meshes_present.fdmValue
+                fdmEnabled: (support_enable.fdmValue || support_meshes_present.fdmValue) && support_structure.fdmValue!=="tree"
                 fdmLimitToExtruder: Number(support_infill_extruder_nr.fdmValue)
                 fdmSettablePerMesh: false
                 fdmSettablePerExtruder: true
@@ -5462,7 +5553,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmMinimumValue: 0.0
                 fdmMaximumValueWarning: 100.0
                 fdmDefaultValue: 15.0
-                fdmValue: (support_enable.fdmValue && support_structure.fdmValue === "normal") ? 15 : ((support_enable.fdmValue && support_structure.fdmValue === "tree") ? 0 : 15)
+                fdmValue: 15.0 // (support_enable.fdmValue && support_structure.fdmValue === "normal") ? 15 : ((support_enable.fdmValue && support_structure.fdmValue === "tree") ? 0 : 15)
                 fdmEnabled: support_enable.fdmValue || support_meshes_present.fdmValue
                 fdmLimitToExtruder: Number(support_infill_extruder_nr.fdmValue)
                 fdmSettablePerMesh: false
@@ -6180,7 +6271,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:support_meshes_present; objectName: "support_meshes_present"
                 fdmLabel: "Scene Has Support Meshes"
-                fdmDescription: "There are support meshes present in the scene. This setting is controlled by Cura."
+                fdmDescription: "There are support meshes present in the scene. This setting is controlled by AnkerMake."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: true
@@ -6274,7 +6365,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:skirt_gap; objectName: "skirt_gap"
                 fdmLabel: "Skirt Distance"
-                fdmDescription: "The horizontal distance between the skirt and the first layer of the print.\nThis is the minimum distance. Multiple skirt lines will extend outwards from this distance."
+                fdmDescription: "The horizontal distance between the skirt and the first layer of the print.\nThis is the minimum distance. Multiple skirt lines will extend outward from this distance."
                 fdmUnit: "mm"
                 fdmType: "float"
                 fdmDefaultValue: 3.0
@@ -7064,7 +7155,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:meshfix_keep_open_polygons; objectName: "meshfix_keep_open_polygons"
                 fdmLabel: "Keep Disconnected Faces"
-                fdmDescription: "Normally Cura tries to stitch up small holes in the mesh and remove parts of a layer with big holes. Enabling this option keeps those parts which cannot be stitched. This option should be used as a last resort option when everything else fails to produce proper g-code."
+                fdmDescription: "Normally AnkerMake tries to stitch up small holes in the mesh and remove parts of a layer with big holes. Enabling this option keeps those parts which cannot be stitched. This option should be used as a last resort option when everything else fails to produce proper g-code."
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmSettablePerMesh: true
@@ -7261,16 +7352,26 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: false
                 fdmSettablePerExtruder: false
                 fdmAffectedById: ""
-            }
-            FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
-                fdmLabel: "Smooth Spiralized Contours"
-                fdmDescription: "Smooth the spiralized contours to reduce the visibility of the Z seam (the Z seam should be barely visible on the print but will still be visible in the layer view). Note that smoothing will tend to blur fine surface details."
-                fdmType: "bool"
-                fdmDefaultValue: true
-                fdmEnabled: magic_spiralize.fdmValue
-                fdmSettablePerMesh: false
-                fdmSettablePerExtruder: false
-                fdmAffectedById: ""
+                FdmQml_Param{ id:magic_spiralize_print_speed; objectName: "magic_spiralize_print_speed"
+                    fdmLabel: "Printing Speed of Spiralize Outer Contour"
+                    fdmDescription: "Printing Speed of Spiralize Outer Contour"
+                    fdmType: "float"
+                    fdmDefaultValue: 30.0
+                    fdmEnabled: magic_spiralize.fdmValue
+                    fdmSettablePerMesh: false
+                    fdmSettablePerExtruder: false
+                    fdmAffectedById: ""
+                }
+                FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
+                    fdmLabel: "Smooth Spiralized Contours"
+                    fdmDescription: "Smooth the spiralized contours to reduce the visibility of the Z seam (the Z seam should be barely visible on the print but will still be visible in the layer view). Note that smoothing will tend to blur fine surface details."
+                    fdmType: "bool"
+                    fdmDefaultValue: true
+                    fdmEnabled: magic_spiralize.fdmValue
+                    fdmSettablePerMesh: false
+                    fdmSettablePerExtruder: false
+                    fdmAffectedById: ""
+                }
             }
         }
         FdmQml_Category{ id:experimental; objectName: "experimental"
@@ -7499,7 +7600,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             }
             FdmQml_Param{ id:conical_overhang_hole_size; objectName: "conical_overhang_hole_size"
                 fdmLabel: "Maximum Overhang Hole Area"
-                fdmDescription: "The maximum area of a hole in the base of the model before it's removed by Make Overhang Printable.  Holes smaller than this will be retained.  A value of 0 mm² will fill all holes in the models base."
+                fdmDescription: "The maximum area of a hole in the base of the model before it's removed by Make Overhang Printable. Holes smaller than this will be retained. A value of 0 mm² will fill all holes in the models base."
                 fdmUnit: "mm²"
                 fdmType: "float"
                 fdmMinimumValue: 0.0
@@ -8269,7 +8370,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
         }
         FdmQml_Category{ id:command_line_settings; objectName: "command_line_settings"
             fdmLabel: "Command Line Settings"
-            fdmDescription: "Settings which are only used if CuraEngine isn't called from the Cura frontend."
+            fdmDescription: "Settings which are only used if AnkerMake Engine isn't called from the AnkerMake frontend."
             fdmType: "category"
             fdmEnabled: false
             FdmQml_Param{ id:center_object; objectName: "center_object"

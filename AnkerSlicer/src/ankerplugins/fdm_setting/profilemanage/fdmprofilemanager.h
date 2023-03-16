@@ -16,6 +16,7 @@ using namespace AkUtil;
 #include <QSet>
 #include <QMap>
 #include <QStandardPaths>
+#include "common/utilities/tlogger.h"
 
 
 struct profileSortItem
@@ -120,12 +121,21 @@ public:
             TProfile profile(fInfo.absoluteFilePath(), group);
             
             profile.setStatus(EProfileStatus::Normal);
+
             
-            profiles.append(profile);
-            
-            profileNameDict[profile.getName()] = &profiles.last();
-            //profileIdDict[profile.getId()] = &profiles.last();
-            //qDebug() << "loadProfiles profileIdDict[]" << profile.getId() << profile.getName();
+            if (!profileNameDict.contains(profile.getName()))
+            {
+                
+                profiles.append(profile);
+                
+                profileNameDict[profile.getName()] = &profiles.last();
+
+                TDebug("load profiles: " + profile.getName() + " path: " + fInfo.absoluteFilePath());
+            }
+            else
+            {
+                TDebug("skip profiles. filename already exist: " + profile.getName() + " path: " + fInfo.absoluteFilePath());
+            }
         }
     }
 
@@ -141,6 +151,21 @@ public:
         convertToSortItems(customProfiles,sortItems);
         sortByTimestamp(sortItems);
         return getNameList(sortItems);
+    }
+    
+    QList<TProfile*> getVisiableCustomProfiles()
+    {
+        QList<TProfile*> resultList;
+        for (TProfile & profile : customProfiles)
+        {
+            
+            if (!profile.getVisible())
+            {
+                continue;
+            }
+            resultList.append(&profile);
+        }
+        return resultList;
     }
 
     void convertToSortItems(QList<TProfile> & profiles,QList<profileSortItem>& sortItems)
@@ -464,6 +489,23 @@ public:
             TProfile& profile = customProfiles[i];
             
             if (!(profile.getStatus() & EProfileStatus::NodeValueChanged)
+                || profile.getOriginName().isEmpty())
+            {
+                continue;
+            }
+            resultSet.insert(profile.getOriginName());
+        }
+        return resultSet;
+    }
+    
+    QSet<QString> getManuallyValueChangeSet()
+    {
+        QSet<QString> resultSet;
+        for (int i = 0; i < customProfiles.size(); i++)
+        {
+            TProfile& profile = customProfiles[i];
+            
+            if (!(profile.getStatus() & EProfileStatus::NodeValueChangedManually)
                 || profile.getOriginName().isEmpty())
             {
                 continue;

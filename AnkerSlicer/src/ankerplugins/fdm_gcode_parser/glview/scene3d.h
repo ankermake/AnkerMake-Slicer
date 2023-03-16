@@ -89,6 +89,9 @@ public:
     void getMoveVec(int dx, int dy, QVector3D& move);
     void getZoomVec(int dx, int dy, QVector3D& move);
 
+    
+    void getCurrentProjMat_ssp(QMatrix4x4& matrix);
+    void getCurrentProjMat_sp(QMatrix4x4& matrix);
     void getCurrentProjMat(QMatrix4x4& matrix);
     void getCurrentViewMat(QMatrix4x4& matrix);
     void getZoomViewMat(QMatrix4x4& matrix);
@@ -122,6 +125,8 @@ public:
     void getBoxPoints(const BoxType& box, std::vector<QVector3D>& points);
     void getBoxPoints(const CHAABB3D& box, std::vector<QVector3D>& points);
 
+    CHAABB3D getMainbox() const;
+
     void setEye(float x, float y, float z);
     void setUp(float x, float y, float z);
     void setRefTranPoint(float x, float y, float z);
@@ -140,7 +145,7 @@ public:
 private:
     QVector3D m_eye;
     QVector3D m_up;
-    QVector3D m_front;//
+    QVector3D m_front;
     QVector3D m_viewCenter;
     bool isAiView = false;
     double m_verticalAngle;
@@ -173,6 +178,7 @@ private:
     CHAABB3D m_mainBox;
 
     ViewType m_viewType;
+    QVector2D m_lastMousePts; 
 };
 
 #endif // !GCODE_SCENE3D_H

@@ -35,17 +35,25 @@
 #ifndef MESHLAB_SCALAR
 #error "MESHLAB_SCALAR needs to be defined!"
 #endif
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 class RichParameterList;
 class PluginManager;
 
 namespace meshlab {
 
-QString defaultPluginPath();
-QString defaultShadersPath();
-
-RichParameterList& defaultGlobalParameterList();
-PluginManager& pluginManagerInstance();
+COMMONLIB_EXPORT QString  defaultPluginPath();
+COMMONLIB_EXPORT QString  defaultShadersPath();
+COMMONLIB_EXPORT RichParameterList&  defaultGlobalParameterList();
+COMMONLIB_EXPORT PluginManager& pluginManagerInstance();
 
 // keep these functions inlined please
 // each plugin that uses them need to have their own definition
@@ -60,14 +68,8 @@ inline bool builtWithDoublePrecision()
 	return std::string(meshlab_xstr(MESHLAB_SCALAR)) == std::string("double");
 }
 
-QVariantMap & AppInfo();
-
+COMMONLIB_EXPORT QVariantMap &  AppInfo();
 }
 
-namespace pymeshlab {
-class FunctionSet;
-
-FunctionSet& functionSetInstance();
-}
 
 #endif // MESHLAB_GLOBALS_H

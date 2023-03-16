@@ -18,16 +18,30 @@ AkSlicer::AkSlicer()
 {
     //this->sliceEnginePath = enginePath;
     resetParam();
-    enginePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("SliceEngine");
+    //enginePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("SliceEngine");
 
     auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    
+    
     appDataLocDir = QDir(writableLocation);
+
+    
+    enginePath = appDataLocDir.absoluteFilePath("SliceEngine");
+
+    
+    
+    auto oriEnginePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("SliceEngine");
+    IoApi::copyDir(oriEnginePath, enginePath, true,true);
 
     
     //enginePath = QFile::encodeName(enginePath);
     this->sliceInfo = new AkSliceInfo();
     this->pInvoker = new QProcess();
+    pInvoker->setProcessChannelMode(QProcess::MergedChannels);
     connect(this->pInvoker, &QProcess::readyReadStandardError,this,&AkSlicer::newStdErrGenerated);
+    
+    connect(this->pInvoker, &QProcess::readyRead,this,&AkSlicer::newStdErrGenerated);
+    connect(this->pInvoker, &QProcess::readAllStandardOutput,this,&AkSlicer::newStdErrGenerated);
 
 #ifdef DEBUG_BY_CL
     connect(&this->engineLib, &EngineLibThread::newStdErrGeneratedChars, this,&AkSlicer::newStdErrGeneratedChars);
@@ -62,7 +76,8 @@ void AkSlicer::slice()
     QString gcodeName = fInfo.fileName().replace(".stl",".gcode",Qt::CaseInsensitive);
     
     //QString destFile = appDataLocDir.absoluteFilePath(QString("result/%1").arg(gcodeName));
-    QString destFile = fInfo.dir().absoluteFilePath(gcodeName).toLocal8Bit();
+    //QString destFile = fInfo.dir().absoluteFilePath(gcodeName).toLocal8Bit();
+    QString destFile = fInfo.dir().absoluteFilePath(gcodeName);
 
     slice(stlFile,destFile,userSetting);
 }
@@ -72,6 +87,12 @@ void AkSlicer::slice()
 //{
 
 //}
+QString AkSlicer::toRelativePath(QString absfilePath)
+{
+    QDir engineDir(enginePath);
+    return engineDir.relativeFilePath(absfilePath);
+    //return "../" + engineDir.relativeFilePath(absfilePath);
+}
 
 
 void AkSlicer::slice(QString stlFile,QString destFile, QString userSetting)
@@ -104,7 +125,9 @@ void AkSlicer::slice(QString stlFile,QString destFile, QString userSetting)
     QStringList sptMeshCmd;
     for(int i=0;i<supportMeshes.size();i++)
     {
-        sptMeshCmd.append(getSptMeshCmd(supportMeshes[i]));
+        
+        QString relativeSptFilePath = toRelativePath(supportMeshes[i]);
+        sptMeshCmd.append(getSptMeshCmd(relativeSptFilePath));
     }
     //QString cmd = QString("C:/workspace/TortoiseGit/Repository/SliceEngine/CuraEngine slice -v -p -m4 -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2.def.json -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2_extruder_0.def.json -o C:/workspace/TortoiseGit/Repository/SliceEngine/result/cube.gcode -l C:/workspace/TortoiseGit/Repository/SliceEngine/stl/SimpleCube.stl")
 
@@ -117,44 +140,151 @@ void AkSlicer::slice(QString stlFile,QString destFile, QString userSetting)
     QString engineExe = engineDir.absoluteFilePath("CuraEngine");
     QString baseConfig = engineDir.absoluteFilePath("config/anker_fdmprinter.def.json");
     QString extruderConfig = engineDir.absoluteFilePath("config/anker_fdmextruder.def.json");
-
     QString otherConfig = getConfig(engineDir.absoluteFilePath("config"));
-    //QString cmd = QString("%1 slice -v -p -m4 -j %2 -j %3 %4 %5 -o %6 -l %7").arg(engineExe).arg(baseConfig).arg(extruderConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile);
-    
-    //QString cmd = QString("%1 slice -v -p -m4 -j %2 -j %3 %4 %5 -o %6 -g -l \"%7\" %8 ").arg(engineExe).arg(baseConfig).arg(extruderConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
 
+    
+    auto relativeEngineExe = toRelativePath(engineExe);
+    auto relativeBaseConfig = toRelativePath(baseConfig);
+    auto relativeExtruderConfig = toRelativePath(extruderConfig);
+    auto relativeOtherConfig = toRelativePath(otherConfig);
+    auto relativeDestFile = toRelativePath(destFile);
+    auto relativeStlFile = toRelativePath(stlFile);
 
     
     //QString cmd = QString("%1 slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
-    QString extendCmd = QString(" slice -v -p -j \"%1\" %2 %3 -o \"%4\" -g -l \"%5\" %6 ").arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+    QString extendCmd = QString(" slice -v -p -j \"%1\" %2 %3 -o \"%4\" -g -l \"%5\" %6 ").arg(relativeBaseConfig).arg(relativeOtherConfig).arg(userSetting).arg(relativeDestFile).arg(relativeStlFile).arg(sptMeshCmd.join(" "));
     QFileInfo fInfo(stlFile);
-    QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd").toLocal8Bit();
+    
+    //QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd").toLocal8Bit();
+    QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd");
 
     
     TDebug(extendCmd);
 
     
-    auto extBase64Cmd = extendCmd.toLocal8Bit().toBase64();
+    //auto extBase64Cmd = extendCmd.toLocal8Bit().toBase64();
+    auto extBase64Cmd = extendCmd.toUtf8().toBase64();
 
     
     IoApi::write(cmdFile, extBase64Cmd);
+    QString relativeCmdFile = toRelativePath(cmdFile);
     //QString cmd = QString("chcp 65001 & \"%1\" extParam -f \"%2\"").arg(engineExe).arg(cmdFile);
-    QString cmd = QString("\"%1\" extParam -f \"%2\"").arg(engineExe).arg(cmdFile).toUtf8();
+    //QString cmd = QString("\"%1\" extParam -f \"%2\"").arg(engineExe).arg(relativeCmdFile).toUtf8();
+    //QString cmd = QString("cd  \"%1\" && \"%2\" extParam -f \"%3\"").arg(enginePath).arg(engineExe).arg(relativeCmdFile).toUtf8();
 
     
-    //QString extendCmd = QString(" slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" ").arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile);
-    //QFileInfo fInfo(stlFile);
-    //QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd");
+    QDir::setCurrent(enginePath);
+
     
-    //IoApi::write(cmdFile, extendCmd);
-    //QString cmd = QString("%1 extParam -f %2 %3").arg(engineExe).arg(cmdFile).arg(sptMeshCmd.join(" "));
+    //QString runEngine = QString("chcp 65001 \r\n cd  \"%1\" \r\n \"%2\" extParam -f \"%3\"").arg(enginePath).arg(relativeEngineExe).arg(relativeCmdFile);
 
-    //    //QString cmd = QString("%1 slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
-    //    QString cmd = QString("\"%1\" slice -v -p -j \"%2\" %3 %4 -o \"%5\" -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+    
+    //QString runEngine = QString("chcp 65001 \r\n set path=\"\%path\%;%1\" \r\n cd \"%2\" \r\n echo \"\%cd\%\" \r\n \"%3\" extParam -f \"%4\"").arg(enginePath).arg(enginePath).arg(relativeEngineExe).arg(relativeCmdFile);
 
-    runCmd(cmd);
+//#ifdef _WIN32
+//    //QString runEngine = QString("chcp 65001 \r\n set path=\"\%path\%;%1\" \r\n cd \"%2\" \r\n echo \"\%cd\%\" \r\n \"%3\" extParam -f \"%4\"").arg(enginePath).arg(enginePath).arg(relativeEngineExe).arg(relativeCmdFile);
+//    QString runEngine = QString("chcp 65001 \r\n \"%1\" extParam -f \"%2\"").arg(relativeEngineExe).arg(relativeCmdFile);
+//#else
+//    //QString runEngine = QString("chcp 65001 \r\n set path=\"\$path %1\" \r\n cd \"%2\" \r\n echo \"\%cd\%\" \r\n \"%3\" extParam -f \"%4\"").arg(enginePath).arg(enginePath).arg(relativeEngineExe).arg(relativeCmdFile);
+//    QString runEngine = QString("\"%1\" extParam -f \"%2\"").arg(relativeEngineExe).arg(relativeCmdFile);
+//#endif
+//    QString batFile = fInfo.dir().absoluteFilePath("runEngine.bat");
+//    IoApi::write(batFile, runEngine);
+//    runCmd(batFile);
 
+    
+    QString runEngine = QString("\"./%1\" extParam -f \"%2\"").arg(relativeEngineExe).arg(relativeCmdFile).toUtf8();
+
+//    QString batFile = fInfo.dir().absoluteFilePath("runEngine.bat");
+//    IoApi::write(batFile, runEngine);
+    runCmd(runEngine);
 }
+
+
+//void AkSlicer::slice(QString stlFile,QString destFile, QString userSetting)
+//{
+//    TFunction(QString("%1,%2").arg(stlFile).arg(destFile));
+
+//    QDir engineDir(enginePath);
+//    if(!engineDir.exists())
+//    {
+//        emit progress(SliceStep::Slice, SliceStatus::Error,0, "ENGINE_NOT_EXIST");
+//        return;
+//    }
+//    //create the dest dir if it not exist
+//    QDir destFileDir = QFileInfo(destFile).absoluteDir();
+//    if (!destFileDir.exists())
+//    {
+//        //destFileDir.mkdir(destFileDir.absolutePath());
+//        destFileDir.mkpath(destFileDir.absolutePath());
+//    }
+
+
+//    this->sliceInfo->stlFile = stlFile;
+//    this->sliceInfo->gcodeFile = destFile;
+//    this->sliceInfo->originalStlName = this->originalStlName;
+
+//    auto getSptMeshCmd = [](QString meshFile)->QString {
+//        //-e0 -l "1" -s extruder_nr="0" -s support_mesh="True" -s support_mesh_drop_down="False"
+//        return QString(" -e0 -l \"%1\" -s extruder_nr=0 -s support_mesh=true -s support_mesh_drop_down=false ").arg(meshFile);
+//    };
+//    QStringList sptMeshCmd;
+//    for(int i=0;i<supportMeshes.size();i++)
+//    {
+//        sptMeshCmd.append(getSptMeshCmd(supportMeshes[i]));
+//    }
+//    //QString cmd = QString("C:/workspace/TortoiseGit/Repository/SliceEngine/CuraEngine slice -v -p -m4 -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2.def.json -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2_extruder_0.def.json -o C:/workspace/TortoiseGit/Repository/SliceEngine/result/cube.gcode -l C:/workspace/TortoiseGit/Repository/SliceEngine/stl/SimpleCube.stl")
+
+
+//    //QString engineExe = engineDir.absoluteFilePath("CuraEngine").toLocal8Bit();
+
+//    //QString extruderConfig = engineDir.absoluteFilePath("config/anker_fdmextruder.def.json").toLocal8Bit();
+
+
+//    QString engineExe = engineDir.absoluteFilePath("CuraEngine");
+//    QString baseConfig = engineDir.absoluteFilePath("config/anker_fdmprinter.def.json");
+//    QString extruderConfig = engineDir.absoluteFilePath("config/anker_fdmextruder.def.json");
+
+//    QString otherConfig = getConfig(engineDir.absoluteFilePath("config"));
+//    //QString cmd = QString("%1 slice -v -p -m4 -j %2 -j %3 %4 %5 -o %6 -l %7").arg(engineExe).arg(baseConfig).arg(extruderConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile);
+
+//    //QString cmd = QString("%1 slice -v -p -m4 -j %2 -j %3 %4 %5 -o %6 -g -l \"%7\" %8 ").arg(engineExe).arg(baseConfig).arg(extruderConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+
+
+
+//    //QString cmd = QString("%1 slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+//    QString extendCmd = QString(" slice -v -p -j \"%1\" %2 %3 -o \"%4\" -g -l \"%5\" %6 ").arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+//    QFileInfo fInfo(stlFile);
+
+//    //QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd").toLocal8Bit();
+//    QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd");
+
+
+//    TDebug(extendCmd);
+
+
+//    //auto extBase64Cmd = extendCmd.toLocal8Bit().toBase64();
+//    auto extBase64Cmd = extendCmd.toUtf8().toBase64();
+
+
+//    IoApi::write(cmdFile, extBase64Cmd);
+//    //QString cmd = QString("chcp 65001 & \"%1\" extParam -f \"%2\"").arg(engineExe).arg(cmdFile);
+//    QString cmd = QString("\"%1\" extParam -f \"%2\"").arg(engineExe).arg(cmdFile).toUtf8();
+
+
+//    //QString extendCmd = QString(" slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" ").arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile);
+//    //QFileInfo fInfo(stlFile);
+//    //QString cmdFile = fInfo.dir().absoluteFilePath("sliceCmd.cmd");
+
+//    //IoApi::write(cmdFile, extendCmd);
+//    //QString cmd = QString("%1 extParam -f %2 %3").arg(engineExe).arg(cmdFile).arg(sptMeshCmd.join(" "));
+
+//    //    //QString cmd = QString("%1 slice -v -p -j %2 %3 %4 -o %5 -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+//    //    QString cmd = QString("\"%1\" slice -v -p -j \"%2\" %3 %4 -o \"%5\" -g -l \"%6\" %7 ").arg(engineExe).arg(baseConfig).arg(otherConfig).arg(userSetting).arg(destFile).arg(stlFile).arg(sptMeshCmd.join(" "));
+
+//    runCmd(cmd);
+
+//}
 
 QString AkSlicer::getConfig(QString configPath)
 {
@@ -284,17 +414,20 @@ void AkSlicer::runCmd(QString cmd)
     TDebug(cmd);
     this->sliceInfo->sliceCmd = cmd;
 
+    //QDir engineDir(enginePath);
+    //engineDir.cd(enginePath);
+
 #if defined(DEBUG_BY_CL)
     
     engineLib.runCmd(cmd);
     AkUtil::TWarning("run static lib: ");
-    qDebug() << __CodeLocation__ << __ThreadId2__ << "run as lib: ";
 #else
     //pInvoker->start("C:/workspace/TortoiseGit/Repository/SliceEngine/CuraEngine slice -v -p -m4 -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2.def.json -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2_extruder_0.def.json -o C:/workspace/TortoiseGit/Repository/SliceEngine/result/cube.gcode -l C:/workspace/TortoiseGit/Repository/SliceEngine/stl/SimpleCube.stl");
     
+    //pInvoker->setProcessChannelMode(QProcess::MergedChannels);
     pInvoker->start(cmd);
     AkUtil::TWarning("run exe : ");
-    qDebug() << __CodeLocation__ << __ThreadId2__ << "run as exe: ";
+
 #endif
     qDebug() << "\t" << cmd;
 }
@@ -345,7 +478,8 @@ void AkSlicer::clearFile(int second,QString folder, QStringList filter,QSet<QStr
 
 void AkSlicer::newStdErrGenerated()
 {
-    QByteArray res = pInvoker->readAllStandardError();
+    //QByteArray res = pInvoker->readAllStandardError();
+    QByteArray res = pInvoker->readAllStandardOutput();
     newStdErrGeneratedChars(res);
 }
 
@@ -360,36 +494,31 @@ void AkSlicer::newStdErrGeneratedChars(QByteArray res)
 
     static int count = 0;
 
-    QString msg = QString::fromLocal8Bit(res);
+    //QString msg = QString::fromLocal8Bit(res);
+    QString msg = QString(res);
+    
+    TDebug(msg);
     //qWarning().noquote().nospace() << "[[SlicerEngine]]" << msg;
 //    TInfo(msg);
 //    TInfo(QString("================== %1 ").arg(++count));
-#if defined(DEBUG_BY_CL) // add  @2022-05-15 by CL
-    if(msg.startsWith("$CL$"))
-    {
-        if(1){
-            TMessage(msg);
-        }
-        if(1){
-            QString logPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-            QString logFile = QDir(logPath).absoluteFilePath("engine.log");
-
-            //static QMutex fileLock;
-            //QMutexLocker locker(&fileLock);
-            {
-                AkUtil::IoApi::touch(logFile);
-                AkUtil::IoApi::append(logFile, res);
-                qDebug() << res;
-            }
-        }
-    }
-#endif
     
     //QChar hell[]{'\r','\n'};
     QStringList lines = msg.split('\r',Qt::SkipEmptyParts);
     foreach(QString line, lines)
     {
-        //if(msg.startsWith("$CL$")){ qWarning().noquote().nospace() << msg; }
+#if defined(DEBUG_BY_CL) // add  @2022-05-15 by CL
+        if(true || line.startsWith("$CL$"))  
+        {
+            
+            QString logPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+            QString logFile = QDir(logPath).absoluteFilePath("engine.log");
+
+            AkUtil::IoApi::touch(logFile);
+            AkUtil::IoApi::append(logFile, line);
+            qDebug() << line;
+        }
+#endif
+
         
         if (line.indexOf("[ERROR]") >= 0)
         {

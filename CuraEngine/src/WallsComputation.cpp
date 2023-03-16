@@ -10,6 +10,12 @@
 #include "Application.h"
 #include "Slice.h"
 
+//#include"ExPolygon.hpp"
+
+//#include"slic3rapi/slice3rapi.h"
+
+#define MIN_SINGLE_WALL_AREA 3.0
+
 namespace cura {
 
 WallsComputation::WallsComputation(const Settings& settings, const LayerIndex layer_nr)
@@ -52,6 +58,9 @@ void WallsComputation::generateInsets(SliceLayerPart* part)
 
     const coord_t wall_0_inset = settings.get<coord_t>("wall_0_inset");
     coord_t line_width_0 = settings.get<coord_t>("wall_line_width_0");
+    /// 2022/11/22 binary for small area use single wall to print
+    coord_t thin_line_width_0 = settings.get<coord_t>("thin_wall_line_width_0");
+
     coord_t line_width_x = settings.get<coord_t>("wall_line_width_x");
     if (layer_nr == 0)
     {
@@ -124,7 +133,17 @@ void WallsComputation::generateInsets(SliceLayerPart* part)
         }
         else if (i == 1)
         {
-            part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2);
+            
+            //part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2);
+            part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2 - line_width_0/2);
+            if (part->insets[1].size() != 0)
+            {
+                part->insets[1] = part->insets[1].offset(line_width_0 / 2);
+            }
+            else
+            {
+                part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2);
+            }
             if(wall_ruler_concave_convex_enable)
             {
                 Polygons  outerWall_0;
@@ -170,6 +189,7 @@ void WallsComputation::generateInsets(SliceLayerPart* part)
         else
         {
             part->insets[i] = part->insets[i - 1].offset(-line_width_x);
+
         }
 
         const size_t inset_part_count = part->insets[i].size();
@@ -228,6 +248,53 @@ void WallsComputation::generateInsets(SliceLayerPart* part)
             part->insets.pop_back();
             break;
         }
+
+        /// 2022/11/22 binary for small area use single wall to print
+        //auto offset_wall = part->outline.offset(-line_width_0 / 2 - wall_0_inset);
+        auto poly_after = part->insets[0].offset(line_width_0 / 2 + wall_0_inset);
+        auto diff = part->outline.difference(poly_after);
+       if (part->insets[0].size()>0 && (part->insets[0].size() == 0 || diff.size()>0) && INT2MM2(part->insets[0].area()) < MIN_SINGLE_WALL_AREA)
+        {
+            part->insets[0] = part->outline.offset(-(line_width_0 - thin_line_width_0) / 2 - wall_0_inset);
+            part->real_wall0_line_width = thin_line_width_0;
+            part->real_line_width_changed = true;
+
+#if(0)  
+            Slic3r::ExPolygons expolygons;
+            for (auto& path : part->outline.getOutsidePolygons())
+            {
+                for (auto& path : part->outline.getOutsidePolygons())
+                {
+                    expolygons.push_back(Slic3r::ExPolygon(ClipperPath_to_Slic3rPolygon(path)));
+                }
+            }
+            Polygons polygons;
+            for (auto& ex : expolygons)
+            {
+                Slic3r::Polylines polylines;
+                ex.medial_axis(771238, 0.01, &polylines);
+                for (auto& line : polylines)
+                {
+                    Polygon poly;
+                    for (auto& pp : line.points)
+                    {
+                        poly.add({ pp.x(), pp.y() });
+                    }
+                    polygons.add(poly);
+                }
+            }
+
+            if (polygons.size() > 0)
+            {
+                part->insets[0].clear();
+                part->insets[0].add(polygons);
+            }
+#endif
+        }
+
+
+
+
     }
 }
 

@@ -1,13 +1,5 @@
 
 
-QPushButton{
-    border: 0px;
-    border-radius:4;
-    background-color:#3A3B3F;
-    color:#FFFFFF;
-    font-size:16px
-}
-
 QToolButton#titleCloseButton{
     background-color:#404249;
     color:#FFFFFF;
@@ -15,6 +7,14 @@ QToolButton#titleCloseButton{
 QToolButton#titleCloseButton:hover{
     background-color:#4E5058;
     color:#FFFFFF;
+}
+
+QPushButton{
+    border: 0px;
+    border-radius:4;
+    background-color:#3A3B3F;
+    color:#FFFFFF;
+    font-size:16px
 }
 QPushButton:hover{
     color:#71D78A;
@@ -47,25 +47,25 @@ QPushButton:disabled{
     background-color:#3A3B3F;
     color: #696969;
 }
-QPushButton#hightButton,#m_signIn,#m_printBtn, #PrintButton{
+QPushButton#hightButton,#m_signIn,#m_printBtn, #PrintButton, #m_rightButton{
     background-color:#61D37D;
     color:#FFFFFF;
 }
-QPushButton#hightButton:hover, #m_signIn:hover, #m_printBtn:hover, #PrintButton:hover{
+QPushButton#hightButton:hover, #m_signIn:hover, #m_printBtn:hover, #PrintButton:hover,#m_rightButton::hover{
     background-color:#71D78A;
      color:#FFFFFF;
 }
 
-QPushButton#hightButton:pressed, #m_signIn:pressed, #m_printBtn:pressed, #PrintButton:pressed{
+QPushButton#hightButton:pressed, #m_signIn:pressed, #m_printBtn:pressed, #PrintButton:pressed, #m_rightButton:pressed{
     background-color:#61D37D;
      color:#FFFFFF;
 }
-QPushButton#hightButton:disabled,#m_signIn:disabled{
+QPushButton#hightButton:disabled,#m_signIn:disabled, #m_printBtn:disabled{
     background-color:#3A3B3F;
     color: #696969;
 }
 
-QPushButton#deleteButton, #generateButton, #scaleToFitButton{
+QPushButton#deleteButton, #generateButton, #scaleToFitButton,#m_xButton, #m_yButton, #m_zButton{
     border: 0px;
     border-radius:4;
     background-color:#3A3B3F;
@@ -73,12 +73,12 @@ QPushButton#deleteButton, #generateButton, #scaleToFitButton{
     font-size:12px;
 }
 
-QPushButton#deleteButton:hover, #generateButton:hover, #scaleToFitButton:hover{
+QPushButton#deleteButton:hover, #generateButton:hover, #scaleToFitButton:hover,#m_xButton:hover, #m_yButton:hover, #m_zButton:hover{
     color:#71D78A;
     border: 1px  solid #71D78A;
 }
 
-QPushButton#deleteButton:pressed,#generateButton:pressed, #scaleToFitButton:pressed{
+QPushButton#deleteButton:pressed,#generateButton:pressed, #scaleToFitButton:pressed, #m_xButton:pressed, #m_yButton:pressed, #m_zButton:pressed{
     color:#71D78A;
     border: 1px  solid #71D78A;
 }
@@ -187,12 +187,15 @@ QMenuBar#mainMenuBar {
 QMenuBar::item:selected {
     background-color: #61D37D;
 }
+QMenuBar::item:disabled {
+    background-color: #3A3B3F;
+     color:#999999;
+}
 
 QMenu {
     background-color: #3A3B3F;
     color:#FFFFFF;
     padding: 0px 0px 0px 0px;
-
     border: 0px solid #4C4F56;
     border-radius: 4px;
 }
@@ -265,20 +268,7 @@ QLineEdit {
 QLabel#m_despction{
     color:#999999
 }
-QToolButton {
-    border: none;
-    border-radius:4px;
-    background-color: transparent;
-    color:#FFFFFF
-}
-QToolButton:hover {
-    background:#37393F;
-    border:none;
-}
-QToolButton:checked  {
-    background:#354138;
-    border:none;
-}
+
 /****************************************Transform******************************************************************/
 QLabel#xLabel{
 	color:#E32525;
@@ -378,7 +368,24 @@ QWidget#deviceWraper {
 customTitle  {
     background-color: #343539;
 }
+QPushButton#listItemButton{
+    border: 0px;
+    border-radius:0;
+    background-color:#343539;
+    font-size:14px
+}
 
+QPushButton#listItemButton:checked{
+    border: 0px;
+    border-radius:0;
+    background-color:#5C5E66;
+    font-size:14px
+}
+
+QPushButton:disabled{
+    background-color:#3A3B3F;
+    color: #696969;
+}
 /**********************************network*********************************************************************/
 
 QWidget#netWorkMainWidget {
@@ -473,15 +480,19 @@ QToolButton {
     border: none;
     border-radius:4px;
     background-color: transparent;
+    color:#FFFFFF
 }
 QToolButton:hover {
-    background:#37393F;
+    background-color:#37393F;
     border:none;
+    color:#FFFFFF
 }
 QToolButton:checked  {
-    background:#354138;
+    background-color:#354138;
     border:none;
+     color:#FFFFFF
 }
+
 QMenu::item{
     background-color: #3A3B3F;
     color:#FFFFFF
@@ -492,15 +503,23 @@ QMenu::item:selected{
 }
 
 QComboBox {
-border:1px solid ;
-border-color:#51545F ;
-border-radius:4px;
-padding:6px 3px 6px 3px  ;
-background: #292A2D;
-color:#FFFFFF
+    border:1px solid ;
+    border-color:#51545F ;
+    border-radius:4px;
+    padding:6px 3px 6px 3px  ;
+    background: #292A2D;
+    color:#FFFFFF
 }
-QComboBox QAbstractItemView{border: 1px solid ; border-color:#292A2D ; border-radius:4px; padding:0px 0px 0px 0px; selection-background-color: #FFFFFF; selection-color:
-#333333; background: #292A2D; color:#FFFFFF}
+QComboBox QAbstractItemView{
+    border: 1px solid ;
+    border-color:#292A2D ;
+    border-radius:4px;
+    padding:0px 0px 0px 0px;
+    selection-background-color: #FFFFFF;
+    selection-color:#333333;
+    background: #292A2D;
+    color:#FFFFFF
+}
 QComboBox::down-arrow{width:15px; padding: 0px 0px 0px 0px; image:url(:/images/icon/fdm_an_icon_n.png);}
 QComboBox::drop-down{border:0px;}
 
@@ -546,7 +565,7 @@ QPushButton#m_pushTurkey:hover {
     color:#FFFFFF;
 }
 
-QLineEdit#m_userName {
+QLineEdit#m_userName{
     border:none;
     background-color:#3A3B3F;
 }
@@ -560,7 +579,7 @@ QLineEdit#m_userName:hover { /* 鼠标悬浮在QLineEdit时的状态 */
         selection-color: #F2F2F2;
 }
 
-QLineEdit#m_password {
+QLineEdit#m_password{
     border:none;
 }
 
@@ -659,7 +678,7 @@ QLabel#labelTip1,#m_labelVersion {
 }
 /*==========================PrintControlPage begin==========================*/
 QLabel#addDeviceTitleLabel,#titleChooseFile {
-     font: normal normal 40px "Microsoft YaHei";
+     font: normal normal 20px "Microsoft YaHei";
 }
 
 QLabel#textLabelLoad,#textLabelAddPrinter,#descriptionChooseFile,#timeLabel {
@@ -744,13 +763,13 @@ QPushButton#m_aboutBtn {
 }
 
 QLabel#m_usrNameLabel {
-      font: normal normal 24px "Microsoft YaHei";
+      font: normal normal 20px "Microsoft YaHei";
 }
 
 
 QLabel#m_printMissionLabel, #m_timeAboutLabel, #m_speedLabel, #m_tempLabel, #m_filamentLabel  {
       font: normal normal 14px "Microsoft YaHei";
-      color: rgba(255,255,255,30%);
+      color: #A3A3A4;
 }
 
 QLabel#m_printDisplayLabel, #m_timeDisplayLabel,  #m_speedDisplayLabel, #m_tempNozzleValueLabel ,#m_tempHeatBedValueLabel,#m_filamentDisplayLabel {
@@ -773,20 +792,24 @@ QPushButton#m_cancelBtn, #m_stopBtn{
     height:40px;
 }
 QPushButton#m_buttonRefresh{
-    font: 16px;
+    font: 14px;
     border: 0;
-    border-radius:9px;
-    background-color:#404040;
+    border-radius:0px;
+    background-color:#292A2D;
     color:#71D78A;
-    height:36px;
+    height:48px;
 }
-QPushButton#m_cancelBtn:hover,#m_stopBtn:hover, #m_buttonRefresh:hover{
+
+QPushButton#m_buttonRefresh:hover {
+    background-color: rgba(255, 255, 255, 6%);
+}
+QPushButton#m_cancelBtn:hover,#m_stopBtn:hover {
     color:#71D78A;
     border:1px solid #71D78A;
     background-color:#3A3B3F;
 }
 
-QPushButton#m_cancelBtn:pressed, #m_stopBtn:pressed, ##m_buttonRefresh:pressed {
+QPushButton#m_cancelBtn:pressed, #m_stopBtn:pressed {
     color:#71D78A;
     border:1px solid #71D78A;
     background-color:#3A3B3F;

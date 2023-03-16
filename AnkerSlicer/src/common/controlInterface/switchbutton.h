@@ -5,7 +5,16 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QDebug>
-class SwitchButton : public QWidget
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
+class COMMONLIB_EXPORT SwitchButton : public QWidget
 {
     Q_OBJECT
 public:

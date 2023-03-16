@@ -660,7 +660,7 @@ template<> EWallOverhangExtendType Settings::get<EWallOverhangExtendType>(const 
     }
     else //Default.
     {
-        return EWallOverhangExtendType::NONE;
+        return EWallOverhangExtendType::INSTANT;
     }
 }
 

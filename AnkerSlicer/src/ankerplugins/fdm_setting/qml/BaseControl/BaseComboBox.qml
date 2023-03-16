@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.3
-
+import "../BaseControl" as BaseControl
 ComboBox {
     id: control
     implicitHeight: 30
@@ -10,6 +10,8 @@ ComboBox {
     property bool buttonVisible: true
     property bool buttonAllVisble: false
     property alias backgroundColor: backgroundRectangle.color
+    property int listViewItemHeight: 40
+    property int maxItemCount: 6
     delegate: ItemDelegate {
         Component.onCompleted: {
 
@@ -32,11 +34,10 @@ ComboBox {
             }
         }
         width: control.width
+        height:listViewItemHeight
         contentItem: Rectangle
         {
             anchors.fill: parent
-//            radius: 4
-           // color:  "transparent"
             color: control.highlightedIndex === index ? "#61D37D" :"transparent"
             anchors.margins: 0
             Rectangle {
@@ -45,10 +46,6 @@ ComboBox {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.margins: 0
-//                radius: 4
-                // border.color: "#303030"
-                // border.width: 1
-                 // color: "#F5F6F7"
                 height: 1
                 visible: false
             }
@@ -58,24 +55,26 @@ ComboBox {
                 anchors.right: parent.right
                 anchors.top: line.bottom
                 anchors.bottom: parent.bottom
-                anchors.leftMargin: 12
+                anchors.leftMargin: 0
                 anchors.rightMargin: 12
+                anchors.topMargin: 0
+                anchors.bottomMargin: 0
+                spacing: 0
                 Label {
                     id:myText
                     text: modelData
                     Layout.fillWidth: true
+                    anchors.margins: 0
                     font.weight: Font.Bold
                     color:  "#FFFFFF"
-                    // font: control.font
                     elide: Text.ElideRight
+                    leftPadding: 12
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignLeft
                 }
 
                 Button {
                     id:button
-                    // display: AbstractButton.IconOnly
-                    anchors.margins: 0
                     height: 20
                     width: 20
                     onClicked: {
@@ -83,16 +82,13 @@ ComboBox {
                     }
                     background: Image {
                         id: name
-                        // fillMode:Image.PreserveAspectFit
                         anchors.fill: parent
                         anchors.margins: 0
                         source: "qrc:/images/images/fdm_setting_icon_n.png"
                     }
                 }
-
             }
         }
-        highlighted: control.highlightedIndex === index
     }
 
     indicator:Image {
@@ -103,69 +99,68 @@ ComboBox {
     }
     contentItem:  Rectangle
     {
+        id: rectangle
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: canvas.left
         anchors.bottom: parent.bottom
         color:"transparent"
-        anchors.leftMargin: 12
         Label {
-            anchors.fill: parent
             text: control.displayText
-            //font: control.font
             font.weight: Font.Bold
+            leftPadding: 12
             color: "#FFFFFF"
-            //color:  control.hovered  ? "#71D78A" : (control.pressed ? "#61D37D" : "#E7E7E9") /*"#FFFFFF" : "#333333"*/
-            horizontalAlignment: Text.AlignJustify
+            horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignVCenter
             elide: Text.ElideRight
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
         }
     }
 
     background: Rectangle {
         id:backgroundRectangle
         implicitWidth: 226
-        implicitHeight: 40
+        implicitHeight: listViewItemHeight
         border.color: control.hovered  ? "#71D78A" : (control.pressed ? "#61D37D" : "#3A3B3F")
-        border.width:  control.hovered ? 1 : ( control.pressed ? 1 : 0 ) /*control.visualFocus ? 2 : 1*/
-        radius: 7
+        border.width:  control.hovered ? 1 : ( control.pressed ? 1 : 0 )
+        radius: 4
         color: "#3A3B3F"
     }
 
     popup: Popup {
-        y: control.height - 1
+        id:popupList
+        y: control.height + 4
         width: control.width
-        implicitHeight:/* listview.contentHeight*/ control.delegateModel.count < 6 ? 40 * control.delegateModel.count : 40 * 6
-        padding:1
+        property int extraHeight:  8;
+        implicitHeight:control.delegateModel.count < maxItemCount ? (listViewItemHeight * control.delegateModel.count + extraHeight): (listViewItemHeight * maxItemCount + extraHeight)
+        padding:0
+        bottomInset: 0
+        topInset: 0
 
+        closePolicy:Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
+        background: Rectangle {
+           color: "transparent"
+           anchors.margins: 0
+
+        }
         contentItem: Rectangle{
             color: "#3A3B3F"
             border.width: 0
-           // radius: 4
-            ListView {
+            anchors.margins: 0
+            radius: 4
+            BaseControl.BaseListView {
                 id: listview
-//                anchors.top: parent.top
-//                anchors.left: parent.left
-//                anchors.right: parent.right
                 anchors.fill: parent
                 anchors.topMargin: 4
                 anchors.bottomMargin: 4
-                snapMode: ListView.SnapToItem
-                height:  control.delegateModel.count < 6 ? 40 * control.delegateModel.count : 40 * 6
-                ScrollBar.vertical:  ScrollBar{
-                    policy: ScrollBar.AsNeeded
-                    anchors.right: listview.right
-                    width: 6
-                    active: true
-                    contentItem: Rectangle {
-                        radius: width/2
-                        color: '#D6D6D6'
-                    }
-                }
+                itemHeight:listViewItemHeight
                 clip: true
                 model: control.popup.visible ? control.delegateModel : null
                 currentIndex: control.highlightedIndex
-                ScrollIndicator.vertical: ScrollIndicator { }
+               // ScrollIndicator.vertical: ScrollIndicator { }
             }
         }
     }

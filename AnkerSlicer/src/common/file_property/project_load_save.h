@@ -18,7 +18,7 @@ Revision 0.1  2022/01/07 9:38:03  Aden Hu
 #include "export_project_thread.h"
 #include "import_project_thread.h"
 #include "../common/controlInterface/progressdialog.h"
-class ProjectLoadSave : public QObject
+class COMMONLIB_EXPORT ProjectLoadSave : public QObject
 {
     Q_OBJECT
 public:

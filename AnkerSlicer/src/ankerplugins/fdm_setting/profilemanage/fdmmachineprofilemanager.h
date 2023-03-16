@@ -11,7 +11,8 @@ class FdmMachineProfileManager :public FdmProfileManager<FdmMachineProfile>
 public:
     static FdmMachineProfileManager& Instance()
     {
-        static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/machine");
+        //static QString profileStorePath = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/machine");
+        static QString profileStorePath = ":/fdm/machine";
         static QString customStorePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/machine");
         static FdmMachineProfileManager manager(profileStorePath, customStorePath);
         return manager;

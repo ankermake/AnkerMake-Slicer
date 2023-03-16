@@ -27,7 +27,15 @@
 #include "value.h"
 #include <QDomElement>
 #include <QSharedPointer>
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 
 class MeshDocument;
@@ -48,7 +56,7 @@ class MeshDocument;
  * - bool operator==(const RichParameter& rp): returns true if the two RichParameter are the same
  */
 class RichParameterQObject;
-class RichParameter
+class COMMONLIB_EXPORT RichParameter
 {
 public:
 	RichParameter(const RichParameter& rp);
@@ -107,7 +115,7 @@ protected:
  * add @2022-01-27 by CL
 
  */
-class RichParameterQObject : public QObject {
+class COMMONLIB_EXPORT RichParameterQObject : public QObject {
 	Q_OBJECT
 		RichParameter* param{ nullptr };
 public:
@@ -125,7 +133,7 @@ signals:
 	void valueChange(const Value& value);
 };
 
-class RichBool : public RichParameter
+class COMMONLIB_EXPORT RichBool : public RichParameter
 {
 public:
 	RichBool(
@@ -143,7 +151,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichInt : public RichParameter
+class COMMONLIB_EXPORT RichInt : public RichParameter
 {
 public:
 	RichInt(
@@ -161,7 +169,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichFloat : public RichParameter
+class COMMONLIB_EXPORT RichFloat : public RichParameter
 {
 public:
 	RichFloat(
@@ -179,7 +187,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichString : public RichParameter
+class COMMONLIB_EXPORT RichString : public RichParameter
 {
 public:
 	RichString(
@@ -197,7 +205,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichMatrix44f : public RichParameter
+class COMMONLIB_EXPORT RichMatrix44f : public RichParameter
 {
 public:
 	RichMatrix44f(
@@ -215,7 +223,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichPoint3f : public RichParameter
+class COMMONLIB_EXPORT RichPoint3f : public RichParameter
 {
 public:
 	RichPoint3f(
@@ -233,7 +241,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichShotf : public RichParameter
+class COMMONLIB_EXPORT RichShotf : public RichParameter
 {
 public:
 	RichShotf(
@@ -251,7 +259,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichColor : public RichParameter
+class COMMONLIB_EXPORT RichColor : public RichParameter
 {
 public:
 	RichColor(
@@ -269,7 +277,7 @@ public:
 	bool operator==(const RichParameter& rb);
 };
 
-class RichAbsPerc : public RichParameter
+class COMMONLIB_EXPORT RichAbsPerc : public RichParameter
 {
 public:
 	RichAbsPerc(
@@ -292,7 +300,7 @@ public:
 	Scalarm max;
 };
 
-class RichEnum : public RichParameter
+class COMMONLIB_EXPORT RichEnum : public RichParameter
 {
 public:
 	RichEnum(
@@ -313,7 +321,7 @@ public:
 	QStringList enumvalues;
 };
 
-class RichDynamicFloat : public RichParameter
+class COMMONLIB_EXPORT RichDynamicFloat : public RichParameter
 {
 public:
 	RichDynamicFloat(
@@ -336,7 +344,7 @@ public:
 	Scalarm max;
 };
 
-class RichOpenFile : public RichParameter
+class COMMONLIB_EXPORT RichOpenFile : public RichParameter
 {
 public:
 	RichOpenFile(
@@ -357,7 +365,7 @@ public:
 	QStringList exts;
 };
 
-class RichSaveFile : public RichParameter
+class COMMONLIB_EXPORT RichSaveFile : public RichParameter
 {
 public:
 	RichSaveFile(
@@ -378,7 +386,7 @@ public:
 	QString ext;
 };
 
-class RichMesh : public RichParameter
+class COMMONLIB_EXPORT RichMesh : public RichParameter
 {
 public:
 	RichMesh(
@@ -407,7 +415,7 @@ public:
 };
 
 //TODO!!!Add By Aden Hu
-class RichSceneParam : public RichParameter
+class COMMONLIB_EXPORT RichSceneParam : public RichParameter
 {
 public:
 	RichSceneParam(const QString& nm, const SceneParam& sceneParam);
@@ -439,7 +447,7 @@ private:
 	SceneParam m_sceneParam;
 };
 
-class RichParameterAdapter
+class COMMONLIB_EXPORT RichParameterAdapter
 {
 public:
 	static bool create(const QDomElement& np, RichParameter** par);

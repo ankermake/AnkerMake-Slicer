@@ -6,11 +6,11 @@
 
 bool MeshModelImport_Export::open(const QString& formatName, const QString& fileName, CMeshO& cm, vcg::CallBackPos* cb)
 {
-    QString errorMsgFormat = "Error encountered while loading file:\n\"%1\"\n\nError details: %2";
+    QString errorMsgFormat = tr("Error encountered while loading file") + QString(": \"%1\"\n") + QString(tr("Error details")) + QString(": %2");
 
     if (!QFile::exists(fileName))
     {
-        throw MLException(errorMsgFormat.arg(fileName, "File does not exist"));
+        throw MLException(errorMsgFormat.arg(fileName, tr("File does not exist")));
     }
     // initializing progress bar status
     if (cb != NULL)
@@ -19,18 +19,24 @@ bool MeshModelImport_Export::open(const QString& formatName, const QString& file
     }
 
     std::string filename = QFile::encodeName(fileName).constData();
-
     if ((formatName.toUpper() == QString("OBJ")) || (formatName.toUpper() == QString("QOBJ")))
     {
         vcg::tri::io::ImporterOBJ<CMeshO>::Info oi;
         oi.cb = cb;
-        if (!vcg::tri::io::ImporterOBJ<CMeshO>::LoadMask(filename.c_str(), oi))
+        if (!vcg::tri::io::ImporterOBJ<CMeshO>::LoadMask(fileName, oi))
         {
-            throw MLException("Error while loading OBJ mask.");
+            throw MLException(tr("Error while loading OBJ mask."));
         }
+
+        if (oi.mask & vcg::tri::io::Mask::IOM_VERTTEXCOORD)
+        {
+            // textue data need to enable to alloc extra memory later
+            cm.vert.EnableTexCoord();
+        }
+
         int result = -1;
         try {
-            result = vcg::tri::io::ImporterOBJ<CMeshO>::Open(cm, filename.c_str(), oi);
+            result = vcg::tri::io::ImporterOBJ<CMeshO>::Open(cm, fileName, oi);
         }
         catch (std::exception& e) {
             qDebug() << __FUNCTION__ << __LINE__ << e.what();
@@ -54,13 +60,21 @@ bool MeshModelImport_Export::open(const QString& formatName, const QString& file
     else if ((formatName.toUpper()) == QString("STL") || (formatName.toUpper()) == QString("SUPPORT"))
     {
         int mask = 0;
-        if (!vcg::tri::io::ImporterSTL<CMeshO>::LoadMask(filename.c_str(), mask))
+        if (!vcg::tri::io::ImporterSTL<CMeshO>::LoadMask(fileName, mask))
         {
             throw MLException(errorMsgFormat.arg(fileName, vcg::tri::io::ImporterSTL<CMeshO>::ErrorMsg(vcg::tri::io::ImporterSTL<CMeshO>::E_MALFORMED)));
         }
-        //m.enable(mask);
-        int result = vcg::tri::io::ImporterSTL<CMeshO>::Open(cm, filename.c_str(), mask, cb);
+
+        int result = -1;
+        try {
+            result = vcg::tri::io::ImporterSTL<CMeshO>::Open(cm, fileName, mask, cb);
+        }
+        catch (std::exception& e) {
+            qDebug() << __FUNCTION__ << __LINE__ << e.what();
+            return false;
+        }
         if (result != 0) // all the importers return 0 on success
+
         {
             throw MLException(errorMsgFormat.arg(fileName, vcg::tri::io::ImporterSTL<CMeshO>::ErrorMsg(result)));
         }
@@ -71,25 +85,26 @@ bool MeshModelImport_Export::open(const QString& formatName, const QString& file
 
 void MeshModelImport_Export::save(const QString& formatName, const QString& fileName, CMeshO& cm, int mask, vcg::CallBackPos* cb)
 {
-    QString errorMsgFormat = "Error encountered while exportering file %1:\n%2";
+    QString errorMsgFormat = tr("Error encountered while exportering file") + QString(": \"%1\"\n") + QString(tr("Error details")) + QString(": %2");
     std::string filename = QFile::encodeName(fileName).constData();
     std::string ex = formatName.toUtf8().data();
     bool binaryFlag = false;
-    //    mask = vcg::tri::io::Mask::IOM_VERTCOLOR | vcg::tri::io::Mask::IOM_VERTNORMAL |
-    //        vcg::tri::io::Mask::IOM_FACECOLOR | vcg::tri::io::Mask::IOM_FACENORMAL;
     if (formatName.toUpper() == QString("OBJ"))
     {
+        //mask = vcg::tri::io::ExporterOBJ<CMeshO>::GetExportMaskCapability();// | vcg::tri::io::Mask::IOM_BITPOLYGONAL;
+        mask = vcg::tri::io::Mask::IOM_VERTCOORD; 
         vcg::tri::Allocator<CMeshO>::CompactEveryVector(cm);
+        //vcg::tri::io::Mask::ClampMask(cm, mask);
         int result;
         if (mask & vcg::tri::io::Mask::IOM_BITPOLYGONAL)
         {
             PMesh pm;
             vcg::tri::PolygonSupport<CMeshO, PMesh>::ImportFromTriMesh(pm, cm);
-            result = vcg::tri::io::ExporterOBJ<PMesh>::Save(pm, filename.c_str(), mask, cb);
+            result = vcg::tri::io::ExporterOBJ<PMesh>::Save(pm, fileName, mask, cb);
         }
         else
         {
-            result = vcg::tri::io::ExporterOBJ<CMeshO>::Save(cm, filename.c_str(), mask, cb);
+            result = vcg::tri::io::ExporterOBJ<CMeshO>::Save(cm, fileName, mask, cb);
         }
         if (result != 0)
         {
@@ -98,7 +113,11 @@ void MeshModelImport_Export::save(const QString& formatName, const QString& file
     }
     else if (formatName.toUpper() == QString("STL"))
     {
-        int result = vcg::tri::io::ExporterSTL<CMeshO>::Save(cm, filename.c_str(), true, mask, "STL generated by AnkerMake", false);
+        mask  = vcg::tri::io::ExporterSTL<CMeshO>::GetExportMaskCapability();
+
+        //Save(const SaveMeshType &m, QString filename , bool binary =true, int mask=0, CallBackPos *cb = NULL, const char * objectname=0, bool magicsMode=0)
+
+        int result = vcg::tri::io::ExporterSTL<CMeshO>::MySave(cm, fileName, true, mask, cb, "STL generated by AnkerMake", false);
         if (result != 0)
         {
             throw MLException(errorMsgFormat.arg(fileName, vcg::tri::io::ExporterSTL<CMeshO>::ErrorMsg(result)));

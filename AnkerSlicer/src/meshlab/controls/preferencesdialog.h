@@ -12,14 +12,17 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QEvent>
 #include <QStackedLayout>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStringListModel>
 #include <QAbstractItemView>
+#include <QGraphicsDropShadowEffect>
 #include "common/controlInterface/pagewidget.h"
 #include "common/controlInterface/bubbleWidget.h"
 #include "common/controlInterface/line.h"
+#include <QtMath>
 #include <QDebug>
 namespace  control{
 class PreferencesDialog : public QDialog
@@ -29,6 +32,7 @@ public:
     explicit PreferencesDialog(QWidget *parent = nullptr);
 
     void addWidget(PageWidget *widget, int index = -1);
+    QWidget* getWidget(const int index);
     void openWidget(int index);
     void openWidget(QWidget *widget);
 
@@ -42,7 +46,7 @@ private  slots:
 
 protected:
    void paintEvent(QPaintEvent *event) override;
-
+   void changeEvent(QEvent * event) override;
 private:
     QSet<PageWidget> pages;
     QGridLayout *m_mainlayout;
@@ -53,6 +57,11 @@ private:
     QMap<int,PageWidget> m_map;
     QStringList m_displayNameList;
     QStackedLayout *m_stackLayout;
+    QLabel *m_title = nullptr;
+    QPushButton *m_closeButton = nullptr;
+    QPushButton *m_saveButton = nullptr;
+
+    int SHADOW_WIDTH = 0;
 };
 }
 #endif // PREFERENCESDIALOG_H

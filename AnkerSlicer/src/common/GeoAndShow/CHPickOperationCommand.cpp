@@ -117,29 +117,30 @@ void CHPickOperationCommand::mousePressEvent(QMouseEvent* event)
         }
     };
 
-    
-    auto sceneMenu = [this](){
-        
-        if (m_tmesh && m_tmesh->getStatus() == canPicked)
-        {
-            m_tmesh->setStatus(general);
-            m_tmesh = 0;
-            curScene->refresh();
-        }
 
-        bool hasSelected = (havePickedPrintObjs());//(m_selectedObjs.size() > 0);
-                       
-        rightMenu->setEnabledDelete(hasSelected);
-        rightMenu->setEnabledCopy  (hasSelected);
-        rightMenu->setEnabledHide  (hasSelected);
-        rightMenu->setEnabledShow  (hasSelected);
-        rightMenu->setEnabledReset (hasSelected);
+//    auto sceneMenu = [this](){
 
-        if (m_copiedObjs.size() == 0){
-            rightMenu->setEnabledPaste (false);
-        }
-        rightMenu->popup(QCursor::pos());
-    };
+//        if (m_tmesh && m_tmesh->getStatus() == canPicked)
+//        {
+//            m_tmesh->setStatus(general);
+//            m_tmesh = 0;
+//            curScene->refresh();
+//        }
+
+//        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
+//        rightMenu->setEnabledDelete(hasSelected);
+//        rightMenu->setEnabledCopy  (hasSelected);
+//        rightMenu->setEnabledHide  (hasSelected);
+//        rightMenu->setEnabledShow  (hasSelected);
+//        rightMenu->setEnabledReset (hasSelected);
+//        rightMenu->setEnabled(hasSelected);
+
+//        if (m_copiedObjs.size() == 0){
+//            rightMenu->setEnabledPaste (false);
+//        }
+//        rightMenu->show();
+//        rightMenu->popup(QCursor::pos());
+//    };
 
     
     
@@ -168,7 +169,7 @@ void CHPickOperationCommand::mousePressEvent(QMouseEvent* event)
     }
     else if (event->button() == Qt::RightButton)
     {
-        sceneMenu(); 
+        
     }
 }
 
@@ -182,7 +183,6 @@ void CHPickOperationCommand::mouseMoveEvent(QMouseEvent* event)
 
         CHMeshShowObjPtr pickModel = nullptr;
         float minDis = FLT_MAX;
-
         for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
         {
             
@@ -224,7 +224,6 @@ void CHPickOperationCommand::mouseMoveEvent(QMouseEvent* event)
     }
 
     CHMeshShowObjPtr pickModel = pickMeshes();
-
     if (pickModel && pickModel->getStatus() == general)
     {
         pickModel->setStatus(canPicked);
@@ -250,6 +249,35 @@ void CHPickOperationCommand::mouseReleaseEvent(QMouseEvent* event)
         if(event->isAccepted()){
             return;
         }
+    }
+
+    
+    auto sceneMenu = [this](){
+        
+        if (m_tmesh && m_tmesh->getStatus() == canPicked)
+        {
+            m_tmesh->setStatus(general);
+            m_tmesh = 0;
+            curScene->refresh();
+        }
+
+        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
+        rightMenu->setEnabledDelete(hasSelected);
+        rightMenu->setEnabledCopy  (hasSelected);
+        rightMenu->setEnabledHide  (hasSelected);
+        rightMenu->setEnabledShow  (hasSelected);
+        rightMenu->setEnabledReset (hasSelected);
+        rightMenu->setEnabled(hasSelected);
+
+        if (m_copiedObjs.size() == 0){
+            rightMenu->setEnabledPaste (false);
+        }
+        rightMenu->show();
+        rightMenu->popup(QCursor::pos());
+    };
+    if (event->button() == Qt::RightButton && !mouseRightMoved)
+    {
+        sceneMenu(); 
     }
 }
 
@@ -312,11 +340,14 @@ void CHPickOperationCommand::keyPressEvent(QKeyEvent* event)
 void CHPickOperationCommand::doWithFileListPickedChanged()
 {
     m_selectedObjs.clear();
+    //qDebug() << "doWithFileListPickedChanged.";
     for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
     {
-        if (getDoc()->m_printObjs[i]->getStatus() == selected)
+        //qDebug() << "name: " << getDoc()->m_printObjs[i]->getObjectName() << ", status: " << getDoc()->m_printObjs[i]->getStatus();
+        if (getDoc()->m_printObjs[i]->getStatus() == selected && getDoc()->m_printObjs[i]->getVisuable())
         {
             m_selectedObjs.insert(getDoc()->m_printObjs[i]);
+
         }
     }
 
@@ -340,7 +371,8 @@ void CHPickOperationCommand::selectAllobjs()
     for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
     {
         getDoc()->m_printObjs[i]->setStatus(selected);
-        m_selectedObjs.insert(getDoc()->m_printObjs[i]);
+        if(getDoc()->m_printObjs[i]->getVisuable())
+            m_selectedObjs.insert(getDoc()->m_printObjs[i]);
     }
 
     
@@ -429,7 +461,7 @@ bool CHPickOperationCommand::haveCanPickedObj()
     ObjStatus status = m_tmesh->getStatus();
     if(canPicked == status)
         return true;
-    return true;
+    return false;
 }
 
 void CHPickOperationCommand::doWithDocMeshModelsChanged()
@@ -516,30 +548,35 @@ void CHPickOperationCommand::pasteObjs()
         m_copiedObjs[i]->copy(copymesh);
         
         CH3DPrintModelPtr ttt = std::dynamic_pointer_cast<CH3DPrintModel>(copymesh);
-        if (ttt->m_params.size() == 0)
-        {
-            ttt->m_rotCenter = ttt->getBaseAABB().getCenterPoint();
-            ttt->m_params.resize(9);
-            for (int k = 0; k < 3; k++)
-            {
-                ttt->m_params[k] = 1;
-            }
-            for (int k = 3; k < 9; k++)
-            {
-                ttt->m_params[k] = 0;
-            }
-        }
-        float yOffset = 20;
-        ttt->m_params[7] += yOffset;
-        ttt->setTransform(CHBaseAlg::instance()->calTransformFromParams(ttt->m_rotCenter, ttt->m_params));
-        ttt->m_realAABB.m_Ymin += yOffset;
-        ttt->m_realAABB.m_Ymax += yOffset;
+        QVector3D offset;
+        ttt->calRealAABB();
+        ttt->calBaseAABB();
+        ttt->m_rotCenter = ttt->m_realAABB.getCenterPoint();
+        offset[1] += 20;
 
+        ttt->m_realAABB.m_Xmin = offset[0] + ttt->m_realAABB.m_Xmin;
+        ttt->m_realAABB.m_Ymin = offset[1] + ttt->m_realAABB.m_Ymin;
+        ttt->m_realAABB.m_Zmin = offset[2] + ttt->m_realAABB.m_Zmin;
+
+        ttt->m_realAABB.m_Xmax = offset[0] + ttt->m_realAABB.m_Xmax;
+        ttt->m_realAABB.m_Ymax = offset[1] + ttt->m_realAABB.m_Ymax;
+        ttt->m_realAABB.m_Zmax = offset[2] + ttt->m_realAABB.m_Zmax;
+
+        ttt->m_params.resize(9);
+        ttt->m_params[0] = ttt->m_params[1] = ttt->m_params[2] =  1.0;
+        ttt->m_params[3] = ttt->m_params[4] = ttt->m_params[5] =  0.0;
+        ttt->m_params[6] = offset[0];
+        ttt->m_params[7] = offset[1];
+        ttt->m_params[8] = offset[2];
+
+        QMatrix4x4 trans;
+        trans.translate(offset[0], offset[1], offset[2]);
+        ttt->setTransform(trans * ttt->getTransform());
+        qDebug() << "Copy Transform: " << ttt->getTransform();
         ttt->m_initParams = ttt->m_params;
         ttt->m_initTransform = ttt->getTransform();
         ttt->isSceneIn(ttt->getRealAABB(), getDoc()->m_machineBox->getBaseAABB());
         ttt->updateToScene();
-
         meshes.push_back(ttt);
     }
     if(meshes.size() > 0)
@@ -550,11 +587,9 @@ void CHPickOperationCommand::pasteObjs()
 
 void CHPickOperationCommand::hideSelectedObjs()
 {
-    //std::vector<CH3DPrintModelPtr> meshes;
     std::vector<CHMeshShowObjPtr>  meshes;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_selectedObjs.begin(); it != m_selectedObjs.end(); it++)
     {
-        //meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*it));
         meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(*it));
     }
 
@@ -609,6 +644,7 @@ void SceneRightMenu::changeEvent(QEvent *e)
             actReset->setText(tr("Reset"));
         }
     }
+    QMenu::changeEvent(e);
 }
 
 

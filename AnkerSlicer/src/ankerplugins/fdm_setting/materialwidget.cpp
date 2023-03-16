@@ -9,14 +9,14 @@ MaterialWidget::MaterialWidget(PageWidget *m_servicent)
       m_oldName(QString()),
       m_messageDialog(nullptr)
 {
-    m_displayName = tr("    Material");
-    QQuickView  *quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
-    QWidget *widget = QWidget::createWindowContainer(quickView,this);
-    quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_displayName = QString("    ") + tr("Material");
+    m_quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
+    QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
+    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
 
     m_service = FdmMaterialProfileService::instance();
     if(m_service) {
-        quickView->rootContext()->setContextProperty("materialParameter", m_service);
+        m_quickView->rootContext()->setContextProperty("materialParameter", m_service);
     }
     QStringList keyList;
     keyList << "material_flow"  << "material_print_temperature" <<"material_bed_temperature"
@@ -27,15 +27,15 @@ MaterialWidget::MaterialWidget(PageWidget *m_servicent)
     QVariantMap list2 = findParameters(node,"material",keyList);
 
     if(!list2.isEmpty()) {
-        quickView->rootContext()->setContextProperty("materialList", QVariant::fromValue(list2));
+        m_quickView->rootContext()->setContextProperty("materialList", QVariant::fromValue(list2));
     }
-    quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/MaterialView.qml"));
+    m_quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/MaterialView.qml"));
 
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlCurrentMaterialChanged(QString)),m_service,SLOT(currentMaterialChanged(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlDeleteCustomMaterial(QString)),m_service,SLOT(deleteCustomMaterial(QString)),Qt::QueuedConnection);
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlCreateMaterial(QString)),m_service,SLOT(createMaterial(QString)), Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentMaterialChanged(QString)),m_service,SLOT(currentMaterialChanged(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomMaterial(QString)),m_service,SLOT(deleteCustomMaterial(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateMaterial(QString)),m_service,SLOT(createMaterial(QString)), Qt::QueuedConnection);
     //rename
-    connect((QObject *)(quickView->rootObject()),SIGNAL(qmlRenameCustomMaterial(QString)),this,SLOT(renameCustomMaterial(QString)),Qt::QueuedConnection);
+    connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomMaterial(QString)),this,SLOT(renameCustomMaterial(QString)),Qt::QueuedConnection);
     connect(this,SIGNAL(materialRename(QString,QString)),m_service,SLOT(renameCustomMaterial(QString,QString)), Qt::QueuedConnection);
     QVBoxLayout *layout = new QVBoxLayout(this);
     this->setLayout(layout);
@@ -88,7 +88,8 @@ void MaterialWidget::renameCustomMaterial(const QString &oldName)
     if(!m_messageDialog) {
         m_messageDialog = new MessageDialog(tr("Name These Parameters"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&MaterialWidget::textValid);
-        QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+        QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
+         //QRegExp rx("[^\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
         m_messageDialog->setAutoClosed(false);
@@ -130,8 +131,25 @@ void MaterialWidget::textValid(int flag)
 void MaterialWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
-        m_displayName = tr("    Material");
+        m_displayName = QString("    ") + tr("Material");
+        if (m_quickView) {
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentMaterialChanged(QString)),m_service,SLOT(currentMaterialChanged(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomMaterial(QString)),m_service,SLOT(deleteCustomMaterial(QString)));
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateMaterial(QString)),m_service,SLOT(createMaterial(QString)));
+            //rename
+            disconnect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomMaterial(QString)),this,SLOT(renameCustomMaterial(QString)));
+            disconnect(this,SIGNAL(materialRename(QString,QString)),m_service,SLOT(renameCustomMaterial(QString,QString)));
+            m_quickView->source().clear();
+            m_quickView->setSource(QUrl::fromLocalFile(":/qml/PreferenceSettings/MaterialView.qml"));
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCurrentMaterialChanged(QString)),m_service,SLOT(currentMaterialChanged(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlDeleteCustomMaterial(QString)),m_service,SLOT(deleteCustomMaterial(QString)),Qt::QueuedConnection);
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlCreateMaterial(QString)),m_service,SLOT(createMaterial(QString)), Qt::QueuedConnection);
+            //rename
+            connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlRenameCustomMaterial(QString)),this,SLOT(renameCustomMaterial(QString)),Qt::QueuedConnection);
+            connect(this,SIGNAL(materialRename(QString,QString)),m_service,SLOT(renameCustomMaterial(QString,QString)), Qt::QueuedConnection);
+        }
     }
+    QWidget::changeEvent(e);
 }
 
 

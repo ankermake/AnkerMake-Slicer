@@ -2,38 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
-    <name>AboutDialog</name>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="14"/>
-        <source>About MeshLab</source>
-        <translation>About MeshLab</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="26"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright(C) 2005-2021&lt;/p&gt;&lt;p&gt;Paolo Cignoni&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it/%7Ecignoni&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it/~cignoni&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Visual Computing Lab&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;ISTI - CNR&lt;br/&gt;&lt;a href=&quot;http://www.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://www.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copyright(C) 2005-2021&lt;/p&gt;&lt;p&gt;Paolo Cignoni&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it/%7Ecignoni&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it/~cignoni&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;Visual Computing Lab&lt;br/&gt;&lt;a href=&quot;http://vcg.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://vcg.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;p&gt;ISTI - CNR&lt;br/&gt;&lt;a href=&quot;http://www.isti.cnr.it&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#007af4;&quot;&gt;http://www.isti.cnr.it&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="103"/>
-        <source>MESHLAB VERSION BUILT ON XXX</source>
-        <translation>MESHLAB VERSION BUILT ON XXX</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="113"/>
-        <source>&lt;p&gt;&lt;strong&gt;Contacts&lt;/strong&gt;&lt;br /&gt;For detailed bug reports, meaningful feature requests and grounded technical issues please use the &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/issues&quot;&gt;GitHub services&lt;/a&gt;.&lt;br /&gt;For any other high-level question about MeshLab (&lt;em&gt;no bugs or feature requests, please&lt;/em&gt;) contact:&lt;br /&gt;- Paolo Cignoni (&lt;a href=&quot;mailto:p.cignoni@isti.cnr.it?subject=%5BMeshLab%5D%20Info%20request&quot;&gt;paolo.cignoni@isti.cnr.it&lt;/a&gt;)&lt;br /&gt;The complete list of contributors is available &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/graphs/contributors&quot;&gt;here&lt;/a&gt;.&lt;br /&gt;Some of the contributors of MeshLab have received financial support from various projects, acknowledged &lt;a href=&quot;http://vcg.isti.cnr.it/projects.php&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;strong&gt;Contacts&lt;/strong&gt;&lt;br /&gt;For detailed bug reports, meaningful feature requests and grounded technical issues please use the &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/issues&quot;&gt;GitHub services&lt;/a&gt;.&lt;br /&gt;For any other high-level question about MeshLab (&lt;em&gt;no bugs or feature requests, please&lt;/em&gt;) contact:&lt;br /&gt;- Paolo Cignoni (&lt;a href=&quot;mailto:p.cignoni@isti.cnr.it?subject=%5BMeshLab%5D%20Info%20request&quot;&gt;paolo.cignoni@isti.cnr.it&lt;/a&gt;)&lt;br /&gt;The complete list of contributors is available &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab/graphs/contributors&quot;&gt;here&lt;/a&gt;.&lt;br /&gt;Some of the contributors of MeshLab have received financial support from various projects, acknowledged &lt;a href=&quot;http://vcg.isti.cnr.it/projects.php&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/about_dialog.ui" line="138"/>
-        <source>&lt;p&gt;&lt;strong&gt;General Info:&amp;nbsp;&lt;a href=&quot;http://www.meshlab.net&quot;&gt;www.meshlab.net&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;MeshLab is the most used open source system for processing and editing 3D triangular meshes. It provides a set of tools for editing, cleaning, healing, inspecting, rendering, texturing and converting meshes. It offers features for processing raw data produced by 3D digitization tools/devices and for preparing models for 3D printing. The system is heavily based on the &lt;a href=&quot;http://www.vcglib.net&quot;&gt;VCG library&lt;/a&gt;. &lt;br /&gt;Source code is available on &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab&quot;&gt;GitHub &lt;/a&gt;(protected by GPL).&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;br /&gt;Remember that the simplest way to show your appreciation of the MeshLab system is to cite it whenever you have used some of its functionality. Please check the &lt;a href=&quot;http://www.meshlab.net/#references&quot;&gt;list of the many publications&lt;/a&gt; related with MeshLab.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;&lt;strong&gt;General Info:&amp;nbsp;&lt;a href=&quot;http://www.meshlab.net&quot;&gt;www.meshlab.net&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;MeshLab is the most used open source system for processing and editing 3D triangular meshes. It provides a set of tools for editing, cleaning, healing, inspecting, rendering, texturing and converting meshes. It offers features for processing raw data produced by 3D digitization tools/devices and for preparing models for 3D printing. The system is heavily based on the &lt;a href=&quot;http://www.vcglib.net&quot;&gt;VCG library&lt;/a&gt;. &lt;br /&gt;Source code is available on &lt;a href=&quot;https://github.com/cnr-isti-vclab/meshlab&quot;&gt;GitHub &lt;/a&gt;(protected by GPL).&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;br /&gt;Remember that the simplest way to show your appreciation of the MeshLab system is to cite it whenever you have used some of its functionality. Please check the &lt;a href=&quot;http://www.meshlab.net/#references&quot;&gt;list of the many publications&lt;/a&gt; related with MeshLab.&lt;/p&gt;</translation>
-    </message>
-</context>
-<context>
     <name>AkProgressBar</name>
     <message>
         <location filename="../../ankerplugins/fdm_slicer/akprogressbar.cpp" line="37"/>
@@ -49,20 +17,20 @@
 <context>
     <name>AkSlicePanel</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="27"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="233"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="28"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="542"/>
         <source>Slice</source>
         <translation>Slice</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="34"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="236"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="37"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="545"/>
         <source>Preview</source>
         <translation>Preview</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="46"/>
-        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="239"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="50"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicepanel.cpp" line="548"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
@@ -70,7 +38,7 @@
 <context>
     <name>AkSlicer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="398"/>
+        <location filename="../../ankerplugins/fdm_slicer/akslicer.cpp" line="527"/>
         <source>Slice Engine Error</source>
         <translation>Slice Engine Error</translation>
     </message>
@@ -78,183 +46,160 @@
 <context>
     <name>AnkerMainWindow</name>
     <message>
-        <location filename="../ankermainwindow.cpp" line="440"/>
-        <source>The file  is damaged, please try again.</source>
-        <translation>The file  is damaged, please try again.</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="445"/>
-        <location filename="../ankermainwindow.cpp" line="458"/>
-        <location filename="../ankermainwindow.cpp" line="1394"/>
-        <source>Notice</source>
-        <translation>Notice</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="609"/>
-        <location filename="../ankermainwindow.cpp" line="617"/>
-        <source>Error</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="222"/>
+        <location filename="../ankermainwindow.cpp" line="228"/>
         <source>Plugin Loading Error</source>
         <translation>Plugin Loading Error</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="438"/>
+        <location filename="../ankermainwindow.cpp" line="460"/>
         <source>Tip: Open files one at a time.</source>
         <translation>Tip: Open files one at a time.</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="442"/>
+        <location filename="../ankermainwindow.cpp" line="462"/>
+        <location filename="../ankermainwindow.cpp" line="678"/>
+        <source>The file is damaged. Try again.</source>
+        <translation>The file is damaged. Try again.</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="464"/>
         <source>Only a single project file can be opened at a time.</source>
         <translation>Only a single project file can be opened at a time.</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="458"/>
+        <location filename="../ankermainwindow.cpp" line="467"/>
+        <location filename="../ankermainwindow.cpp" line="480"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
+        <source>Notice</source>
+        <translation>Notice</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="480"/>
         <source>This will overwrite the file. Do you want to continue?</source>
         <translation>This will overwrite the file. Do you want to continue?</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="609"/>
-        <source>The file is damaged. Try again.
-</source>
-        <translation>The file is damaged. Try again.
-</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="617"/>
-        <source>Export File Error</source>
-        <translation>Export File Error</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="467"/>
-        <location filename="../ankermainwindow.cpp" line="807"/>
-        <location filename="../ankermainwindow.cpp" line="888"/>
+        <location filename="../ankermainwindow.cpp" line="489"/>
+        <location filename="../ankermainwindow.cpp" line="899"/>
+        <location filename="../ankermainwindow.cpp" line="984"/>
         <source>Save File</source>
         <translation>Save File</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="842"/>
-        <location filename="../ankermainwindow.cpp" line="869"/>
-        <location filename="../ankermainwindow.cpp" line="1064"/>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="842"/>
-        <location filename="../ankermainwindow.cpp" line="869"/>
-        <source>Model Not Detected</source>
-        <translation>Model Not Detected</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1050"/>
-        <location filename="../ankermainwindow.cpp" line="1057"/>
-        <location filename="../ankermainwindow.cpp" line="1163"/>
-        <location filename="../ankermainwindow.cpp" line="1209"/>
-        <location filename="../ankermainwindow.cpp" line="1217"/>
-        <location filename="../ankermainwindow.cpp" line="1229"/>
-        <location filename="../ankermainwindow.cpp" line="1297"/>
-        <location filename="../ankermainwindow.cpp" line="1308"/>
-        <source>Error While Opening</source>
-        <translation>Error While Opening</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1064"/>
-        <source>Model File Error</source>
-        <translation>Model File Error</translation>
-    </message>
-    <message>
-        <location filename="../ankermainwindow.cpp" line="1394"/>
+        <location filename="../ankermainwindow.cpp" line="567"/>
+        <location filename="../ankermainwindow.cpp" line="1519"/>
         <source>Your changes will be lost without saving. Do you want to save now?</source>
         <translation>Your changes will be lost without saving. Do you want to save now?</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1543"/>
-        <location filename="../ankermainwindow.cpp" line="1595"/>
-        <location filename="../ankermainwindow.cpp" line="1687"/>
-        <source>Error While Saving</source>
-        <translation>Error While Saving</translation>
+        <location filename="../ankermainwindow.cpp" line="678"/>
+        <location filename="../ankermainwindow.cpp" line="686"/>
+        <location filename="../ankermainwindow.cpp" line="847"/>
+        <source>Error</source>
+        <translation>Error</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1614"/>
-        <source>Unknown File Type</source>
-        <translation>Unknown File Type</translation>
+        <location filename="../ankermainwindow.cpp" line="686"/>
+        <source>Export File Error</source>
+        <translation>Export File Error</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1614"/>
-        <source>File extension not supported.</source>
-        <translation>File extension not supported.</translation>
+        <location filename="../ankermainwindow.cpp" line="847"/>
+        <source>acode file name too long</source>
+        <translation>acode file name too long</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="922"/>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="938"/>
+        <location filename="../ankermainwindow.cpp" line="965"/>
+        <source>Model Not Detected</source>
+        <translation>Model Not Detected</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="1007"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="1033"/>
         <source>Open</source>
         <translation>Open</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1023"/>
-        <location filename="../ankermainwindow.cpp" line="1179"/>
+        <location filename="../ankermainwindow.cpp" line="1154"/>
         <source>Import Mesh</source>
         <translation>Import Mesh</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1513"/>
+        <location filename="../ankermainwindow.cpp" line="1181"/>
+        <location filename="../ankermainwindow.cpp" line="1188"/>
+        <location filename="../ankermainwindow.cpp" line="1279"/>
+        <source>Error While Opening</source>
+        <translation>Error While Opening</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="1195"/>
+        <source>Model File Error</source>
+        <translation>Model File Error</translation>
+    </message>
+    <message>
+        <location filename="../ankermainwindow.cpp" line="1646"/>
         <source>Save Model File</source>
         <translation>Save Model File</translation>
     </message>
     <message>
-        <location filename="../ankermainwindow.cpp" line="1595"/>
-        <source>You must specify file extension!!</source>
-        <translation>You must specify file extension!!</translation>
+        <location filename="../ankermainwindow.cpp" line="1681"/>
+        <source>Error While Saving</source>
+        <translation>Error While Saving</translation>
     </message>
 </context>
 <context>
     <name>CHModelMirrorTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="185"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="191"/>
         <source>Mirror</source>
         <translation>Mirror</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="114"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="62"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="92"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="120"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="194"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="197"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="200"/>
         <source>Axis</source>
         <translation>Axis</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="188"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="191"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMirrorTransformParamsSetUI.cpp" line="194"/>
-        <source> Axis</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CHModelMoveTransformParamsSetUI</name>
     <message>
         <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="29"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="288"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="289"/>
         <source>Move</source>
         <translation>Move</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="162"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="164"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="292"/>
         <source>Place On Bed</source>
         <translation>Place On Bed</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelMoveTransformParamsSetUI.cpp" line="291"/>
-        <source>Keeping Lay On Panel</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>CHModelRotationTransformParamsSetUI</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="28"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="311"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="30"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelRotationTransformParamsSetUI.cpp" line="370"/>
         <source>Rotate</source>
         <translation>Rotate</translation>
     </message>
@@ -262,121 +207,79 @@
 <context>
     <name>CHModelSupportParamsSetUi</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="32"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="280"/>
         <source>Manual Support</source>
-        <translation>Manual Support</translation>
+        <translation type="vanished">Manual Support</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="48"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="227"/>
         <source>Global Support enabled.</source>
-        <translation>Global Support enabled.</translation>
+        <translation type="vanished">Global Support enabled.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="283"/>
         <source>Tree</source>
-        <translation>Tree</translation>
+        <translation type="vanished">Tree</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="59"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="286"/>
         <source>Square</source>
-        <translation>Square</translation>
+        <translation type="vanished">Square</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="70"/>
         <source>Topshape</source>
-        <translation>Topshape</translation>
+        <translation type="vanished">Topshape</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="292"/>
         <source>Trapezoid</source>
-        <translation>Trapezoid</translation>
+        <translation type="vanished">Trapezoid</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="293"/>
         <source>Sphere</source>
-        <translation>Sphere</translation>
+        <translation type="vanished">Sphere</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="294"/>
         <source>Cylinder</source>
-        <translation>Cylinder</translation>
+        <translation type="vanished">Cylinder</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="74"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="295"/>
         <source>Wedge</source>
-        <translation>Wedge</translation>
+        <translation type="vanished">Wedge</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="78"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="298"/>
         <source>Strength</source>
-        <translation>Strength</translation>
+        <translation type="vanished">Strength</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="150"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="301"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="304"/>
         <source>Angle</source>
-        <translation>Angle</translation>
+        <translation type="vanished">Angle</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="168"/>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="307"/>
         <source>Delete All</source>
-        <translation>Delete All</translation>
+        <translation type="vanished">Delete All</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="179"/>
         <source>Auto-Generate</source>
-        <translation>Auto-Generate</translation>
+        <translation type="vanished">Auto-Generate</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="227"/>
         <source>Global Support disabled.</source>
-        <translation>Global Support disabled.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="310"/>
-        <source>Auto Generate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="314"/>
-        <source>Disable global support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/chmodelsupportparamssetui.cpp" line="314"/>
-        <source>Enable global support</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Global Support disabled.</translation>
     </message>
 </context>
 <context>
     <name>CHModelZoomTransformParamsSetUI</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="33"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="601"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="34"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="606"/>
         <source>Scale</source>
         <translation>Scale</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="63"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="604"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="66"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="609"/>
         <source>Uniform Scaling</source>
         <translation>Uniform Scaling</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="275"/>
-        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="607"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="276"/>
+        <location filename="../../ankerplugins/anker_edit_model/CHModelZoomTransformParamsSetUI.cpp" line="612"/>
         <source>Scale To Fit</source>
         <translation>Scale To Fit</translation>
     </message>
@@ -384,103 +287,53 @@
 <context>
     <name>ChooseDevice</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="29"/>
         <source>My Printer</source>
-        <translation>My Printer</translation>
+        <translation type="vanished">My Printer</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="56"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="120"/>
         <source>Cancel</source>
-        <translation>Cancel</translation>
+        <translation type="vanished">Cancel</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="63"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="123"/>
         <source>Print</source>
-        <translation>Print</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/choosedevice.cpp" line="117"/>
-        <source>My Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>CongratsDialog</name>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="14"/>
-        <source>Congratulations!</source>
-        <translation>Congratulations!</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="20"/>
-        <source>Close</source>
-        <translation>Close</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="44"/>
-        <source>Send us an email</source>
-        <translation>Send us an email</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="55"/>
-        <source>Share on GitHub</source>
-        <translation>Share on GitHub</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="69"/>
-        <source>Don&apos;t show this message again.</source>
-        <translation>Don&apos;t show this message again.</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="82"/>
-        <source>Congratulations</source>
-        <translation>Congratulations</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/congrats_dialog.ui" line="85"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Congratulations&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-size:18pt;&quot;&gt;Congratulations! &lt;/span&gt;&lt;br /&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;&lt;br /&gt;You have successfully used MeshLab to open and process more than &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;one hundred meshes&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;!&lt;br /&gt;We hope that this means that you have found MeshLab useful.&lt;br /&gt;&lt;br /&gt;Please consider to share your experience on GitHub, or to send a short email to the developers of MeshLab, describing how MeshLab fitted your needs. Attach some screenshots of your processed meshes and tell us your impression about MeshLab. &lt;br /&gt;&lt;br /&gt;MeshLab is developed on public funding and assessment of its impact on the whole community is necessary, so, &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;please&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;, spend a couple of minutes sharing your experience to us (or at least connect with the MeshLab FaceBook page).&lt;br /&gt;&lt;br /&gt;Thanks for using MeshLab&lt;br /&gt;&lt;br /&gt;Paolo Cignoni&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;http://www.facebook.com/MeshLab&quot;&gt;&lt;img src=&quot;:images/facebook.gif&quot; /&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;title&gt;Congratulations&lt;/title&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Ubuntu&apos;; font-size:11pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-size:18pt;&quot;&gt;Congratulations! &lt;/span&gt;&lt;br /&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;&lt;br /&gt;You have successfully used MeshLab to open and process more than &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;one hundred meshes&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;!&lt;br /&gt;We hope that this means that you have found MeshLab useful.&lt;br /&gt;&lt;br /&gt;Please consider to share your experience on GitHub, or to send a short email to the developers of MeshLab, describing how MeshLab fitted your needs. Attach some screenshots of your processed meshes and tell us your impression about MeshLab. &lt;br /&gt;&lt;br /&gt;MeshLab is developed on public funding and assessment of its impact on the whole community is necessary, so, &lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;; font-style:italic;&quot;&gt;please&lt;/span&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt;, spend a couple of minutes sharing your experience to us (or at least connect with the MeshLab FaceBook page).&lt;br /&gt;&lt;br /&gt;Thanks for using MeshLab&lt;br /&gt;&lt;br /&gt;Paolo Cignoni&lt;br /&gt;&lt;br /&gt;&lt;/span&gt;&lt;a href=&quot;http://www.facebook.com/MeshLab&quot;&gt;&lt;img src=&quot;:images/facebook.gif&quot; /&gt;&lt;/a&gt;&lt;span style=&quot; font-family:&apos;Lucida Sans&apos;;&quot;&gt; &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation type="vanished">Print</translation>
     </message>
 </context>
 <context>
     <name>CopyRightWidget</name>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="27"/>
+        <location filename="../controls/copyrightwidget.cpp" line="44"/>
+        <source>Copyright Information</source>
+        <translation>Copyright Information</translation>
+    </message>
+    <message>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>License</source>
         <translation>License</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="56"/>
+        <location filename="../controls/copyrightwidget.cpp" line="66"/>
         <source>Modifications</source>
         <translation>Modifications</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="62"/>
+        <location filename="../controls/copyrightwidget.cpp" line="72"/>
         <source>Copyright@2021 Anker Innovations Limited</source>
         <translation>Copyright@2021 Anker Innovations Limited</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="96"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
     <message>
-        <location filename="../controls/copyrightwidget.cpp" line="96"/>
+        <location filename="../controls/copyrightwidget.cpp" line="106"/>
         <source>No</source>
         <translation>No</translation>
     </message>
@@ -488,561 +341,529 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>DeviceInfoWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="91"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="156"/>
-        <source>Anker 3D Printer</source>
-        <translation>Anker 3D Printer</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="97"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="195"/>
-        <source>Print Mission</source>
-        <translation>Print Mission</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="100"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="204"/>
-        <source>Time About</source>
-        <translation>Time About</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="103"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="213"/>
-        <source>Speed</source>
-        <translation>Speed</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="106"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="225"/>
-        <source>Temp</source>
-        <translation>Temp</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="109"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="269"/>
-        <source>Nozzle</source>
-        <translation>Nozzle</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="112"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="282"/>
-        <source>Heat-Bed</source>
-        <translation>Heat-Bed</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="115"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="294"/>
-        <source>Filament</source>
-        <translation>Filament</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="309"/>
-        <source>Cancel</source>
-        <translation>Cancel</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="121"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="314"/>
-        <source>Print</source>
-        <translation>Print</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="94"/>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">About</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="124"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="341"/>
-        <source>One More</source>
-        <translation>One More</translation>
+        <source>Print Job</source>
+        <translation type="vanished">Print Job</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="127"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="345"/>
+        <source>Approximate Time</source>
+        <translation type="vanished">Approximate Time</translation>
+    </message>
+    <message>
+        <source>Speed</source>
+        <translation type="vanished">Speed</translation>
+    </message>
+    <message>
+        <source>Temperature</source>
+        <translation type="vanished">Temperature</translation>
+    </message>
+    <message>
+        <source>Nozzle</source>
+        <translation type="vanished">Nozzle</translation>
+    </message>
+    <message>
+        <source>Heatbed</source>
+        <translation type="vanished">Heatbed</translation>
+    </message>
+    <message>
+        <source>Filament</source>
+        <translation type="vanished">Filament</translation>
+    </message>
+    <message>
+        <source>Print</source>
+        <translation type="vanished">Print</translation>
+    </message>
+    <message>
+        <source>Reprint</source>
+        <translation type="vanished">Reprint</translation>
+    </message>
+    <message>
         <source>Finish</source>
-        <translation>Finish</translation>
+        <translation type="vanished">Finish</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="547"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="560"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="925"/>
+        <source>Click to create some stuff</source>
+        <translation type="vanished">Click to create some stuff</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Cancel</translation>
+    </message>
+    <message>
+        <source>Time Saved</source>
+        <translation type="vanished">Time Saved</translation>
+    </message>
+    <message>
         <source>Notice</source>
-        <translation>Notice</translation>
+        <translation type="vanished">Notice</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="548"/>
-        <source>Are you sure stop printing?</source>
-        <translation>Are you sure stop printing?</translation>
+        <source>Frequent requests, please try again later.</source>
+        <translation type="vanished">Frequent requests, please try again later.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="561"/>
-        <source>Are you sure pause printing?</source>
-        <translation>Are you sure pause printing?</translation>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="672"/>
-        <source>Printing failed, please check it and try again.</source>
-        <translation>Printing failed, please check it and try again.</translation>
+        <source>Continue</source>
+        <translation type="vanished">Continue</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="798"/>
-        <source>Printing is complete! You can view the print effect remotely via video.</source>
-        <translation>Printing is complete! You can view the print effect remotely via video.</translation>
+        <source>Are you sure you want to stop printing?</source>
+        <translation type="vanished">Are you sure you want to stop printing?</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="836"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="866"/>
-        <source>An error has been detected, please check the device.</source>
-        <translation>An error has been detected, please check the device.</translation>
+        <source>Are you sure you want to pause printing?</source>
+        <translation type="vanished">Are you sure you want to pause printing?</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="842"/>
-        <source>The filament has been broken, please reload new filament.</source>
-        <translation>The filament has been broken, please reload new filament.</translation>
+        <source>A new print job will begin. Clear the heatbed before starting. Are you ready?</source>
+        <translation type="vanished">A new print job will begin. Clear the heatbed before starting. Are you ready?</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/deviceinfowidget.cpp" line="893"/>
-        <source>Printing failed, please check it and try again</source>
-        <translation>Printing failed, please check it and try again</translation>
+        <source>Failed to start the print. Try again.</source>
+        <translation type="vanished">Failed to start the print. Try again.</translation>
+    </message>
+    <message>
+        <source>Process G-Code</source>
+        <translation type="vanished">Process G-Code</translation>
+    </message>
+    <message>
+        <source>Leveling</source>
+        <translation type="vanished">Leveling</translation>
+    </message>
+    <message>
+        <source>Printing...</source>
+        <translation type="vanished">Printing...</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation type="vanished">Paused</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation type="vanished">Finished</translation>
+    </message>
+    <message>
+        <source>Before starting, we suggest running the Auto-Level for a better</source>
+        <translation type="vanished">Before starting, we suggest running the Auto-Level for a better</translation>
+    </message>
+    <message>
+        <source>Auto-Level</source>
+        <translation type="vanished">Auto-Level</translation>
+    </message>
+    <message>
+        <source>You don&apos;t have printer control permissions.</source>
+        <translation type="vanished">You don&apos;t have printer control permissions.</translation>
     </message>
 </context>
 <context>
     <name>EditMeshTransformFactory</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="128"/>
-        <source>transform mesh model</source>
-        <translation>transform mesh model</translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="135"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="353"/>
+        <source>Rotate Mesh Model</source>
+        <translation>Rotate Mesh Model</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="222"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="386"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="241"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="344"/>
         <source>Move</source>
         <translation>Move</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="259"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="390"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="256"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="348"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="263"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="391"/>
-        <source>zoom mesh model</source>
-        <translation>zoom mesh model</translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="260"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="349"/>
+        <source>Zoom Mesh Model</source>
+        <translation>Zoom Mesh Model</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="275"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="394"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="271"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="352"/>
         <source>Rotate</source>
         <translation>Rotate</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="291"/>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="398"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="286"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="356"/>
         <source>Mirror</source>
         <translation>Mirror</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="387"/>
-        <source>move mesh model</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="345"/>
+        <source>Move Mesh Model</source>
+        <translation>Move Mesh Model</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="395"/>
-        <source>rotate mesh model</source>
-        <translation type="unfinished"></translation>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="357"/>
+        <source>Mirror Mesh Model</source>
+        <translation>Mirror Mesh Model</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="399"/>
-        <source>mirror mesh model</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="402"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="360"/>
         <source>Support</source>
         <translation>Support</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="403"/>
+        <location filename="../../ankerplugins/anker_edit_model/edit_meshtransform_factory.cpp" line="361"/>
         <source>Tree Support</source>
         <translation>Tree Support</translation>
     </message>
 </context>
 <context>
+    <name>ErrorMessage</name>
+    <message>
+        <source>Printing failed. Check and try again. </source>
+        <translation type="vanished">Printing failed. Check and try again. </translation>
+    </message>
+    <message>
+        <source>Printer error. Printing has stopped.</source>
+        <translation type="vanished">Printer error. Printing has stopped.</translation>
+    </message>
+    <message>
+        <source>Nozzle heating failure. Printing has stopped.</source>
+        <translation type="vanished">Nozzle heating failure. Printing has stopped.</translation>
+    </message>
+    <message>
+        <source>Heatbed failed to heat. Printing has stopped.</source>
+        <translation type="vanished">Heatbed failed to heat. Printing has stopped.</translation>
+    </message>
+    <message>
+        <source>Auto-Level Error</source>
+        <translation type="vanished">Auto-Level Error</translation>
+    </message>
+    <message>
+        <source>Filament transfer interrupted, printing has paused. Resume printing after checking.</source>
+        <translation type="vanished">Filament transfer interrupted, printing has paused. Resume printing after checking.</translation>
+    </message>
+    <message>
+        <source>An error has been detected. Check your printer.</source>
+        <translation type="vanished">An error has been detected. Check your printer.</translation>
+    </message>
+    <message>
+        <source>An error has been detected, please check the device.</source>
+        <translation type="vanished">An error has been detected, please check the device.</translation>
+    </message>
+    <message>
+        <source>The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</source>
+        <translation type="vanished">The nozzle temperature has exceeded the printer&apos;s upper limit. If you continue, the nozzle will cool to match your printer.</translation>
+    </message>
+    <message>
+        <source>The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</source>
+        <translation type="vanished">The heatbed temperature has exceeded the printer&apos;s upper limit. If you continue, the heatbed temperature will cool to match your printer.</translation>
+    </message>
+    <message>
+        <source>Connection timeout. Try again or contact us for support.</source>
+        <translation type="vanished">Connection timeout. Try again or contact us for support.</translation>
+    </message>
+    <message>
+        <source>Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</source>
+        <translation type="vanished">Power off the printer. An error could cause abnormally high temperatures. Contact the Support Team for help.</translation>
+    </message>
+    <message>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">No network detected. Please check.</translation>
+    </message>
+    <message>
+        <source>Unknown network error.</source>
+        <translation type="vanished">Unknown network error, please check if your computer&apos;s network is connected.</translation>
+    </message>
+</context>
+<context>
+    <name>ExportModelThread</name>
+    <message>
+        <location filename="../../common/file_property/export_model_thread.cpp" line="32"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
+    </message>
+</context>
+<context>
+    <name>ExportProjectWorker</name>
+    <message>
+        <location filename="../../common/file_property/export_project_thread.cpp" line="163"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
+    </message>
+</context>
+<context>
+    <name>ExtruderPage</name>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="16"/>
+        <source>Nozzle Settings</source>
+        <translation>Nozzle Settings</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="44"/>
+        <source>Nozzle Offset X</source>
+        <translation>Nozzle Offset X</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="54"/>
+        <source>Nozzle Offset Y</source>
+        <translation>Nozzle Offset Y</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="64"/>
+        <source>Cooling Fan Number</source>
+        <translation>Cooling Fan Number</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="97"/>
+        <source>Start G-Code</source>
+        <translation>Start G-Code</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ExtruderPage.qml" line="140"/>
+        <source>End G-Code</source>
+        <translation>End G-Code</translation>
+    </message>
+</context>
+<context>
     <name>FdmGcodeParser</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="298"/>
-        <source>load GCode file</source>
-        <translation>load GCode file</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="165"/>
+        <source>can&apos;t open more gcode preview widgt whice numbers must less than 10.</source>
+        <translation>can&apos;t open more gcode preview widgt whice numbers must less than 10.</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/fdm_gcode_parser.cpp" line="257"/>
+        <source>Load G-Code</source>
+        <translation>Load G-Code</translation>
     </message>
 </context>
 <context>
     <name>FdmSlicer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="194"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="201"/>
-        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="227"/>
-        <source>is Slicing...</source>
-        <translation>is Slicing...</translation>
-    </message>
-</context>
-<context>
-    <name>FilterScriptDialog</name>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="321"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="329"/>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="376"/>
+        <source>Slicing</source>
+        <translation>Slicing</translation>
     </message>
     <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="25"/>
-        <source>Move Up</source>
-        <translation>Move Up</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
+        <source>Notice</source>
+        <translation>Notice</translation>
     </message>
     <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="32"/>
-        <source>Move Down</source>
-        <translation>Move Down</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="39"/>
-        <source>Remove</source>
-        <translation>Remove</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="46"/>
-        <source>Edit Parameters</source>
-        <translation>Edit Parameters</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="70"/>
-        <source>Save Script</source>
-        <translation>Save Script</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="77"/>
-        <source>Open Script</source>
-        <translation>Open Script</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="84"/>
-        <source>Clear Script</source>
-        <translation>Clear Script</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="104"/>
-        <source>Apply Script</source>
-        <translation>Apply Script</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.ui" line="111"/>
-        <source>Close</source>
-        <translation>Close</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/filter_script_dialog.cpp" line="75"/>
-        <source>Open Filter Script File</source>
-        <translation>Open Filter Script File</translation>
-    </message>
-</context>
-<context>
-    <name>GLArea</name>
-    <message>
-        <location filename="../glarea.cpp" line="279"/>
-        <source>MeshLab::Appearance::backgroundBotColor</source>
-        <translation>MeshLab::Appearance::backgroundBotColor</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="282"/>
-        <source>MeshLab::Appearance::backgroundTopColor</source>
-        <translation>MeshLab::Appearance::backgroundTopColor</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="2205"/>
-        <source>Load Project</source>
-        <translation>Load Project</translation>
-    </message>
-    <message>
-        <location filename="../glarea.cpp" line="2276"/>
-        <source>Meshlab Saving Error</source>
-        <translation>Meshlab Saving Error</translation>
+        <location filename="../../ankerplugins/fdm_slicer/fdm_slicer.cpp" line="343"/>
+        <source>The model is hovering in the air. Please generate support or switch on [place on bed].</source>
+        <translation>The model is hovering in the air. Please generate support or switch on [place on bed].</translation>
     </message>
 </context>
 <context>
     <name>GcodeViewer</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2613"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="2644"/>
         <source>Load G-Code</source>
         <translation>Load G-Code</translation>
     </message>
+</context>
+<context>
+    <name>ImportModelThread</name>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="3790"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4077"/>
-        <source>OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!</source>
-        <translation>OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!</translation>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="48"/>
+        <location filename="../../common/file_property/import_model_thread.cpp" line="59"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
+    </message>
+</context>
+<context>
+    <name>ImportProjectWorker</name>
+    <message>
+        <location filename="../../common/file_property/import_project_thread.cpp" line="57"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
     </message>
 </context>
 <context>
     <name>LogInWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="50"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="87"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="341"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="501"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="504"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="579"/>
         <source>Region</source>
-        <translation>Region</translation>
+        <translation type="vanished">Region</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="78"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="498"/>
-        <source>Turkey</source>
-        <translation>Turkey</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="138"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="507"/>
-        <source>E-Mail</source>
-        <translation>E-Mail</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="162"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="510"/>
-        <source>Password</source>
-        <translation>Password</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="209"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="513"/>
-        <source>Verification code</source>
-        <translation>Verification code</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="226"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="516"/>
-        <source>Sign in</source>
-        <translation>Sign in</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="266"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="519"/>
-        <source>AnkerMake stores and managed yours personal information according to you country’s data privacy laws. Make sure the region you choose is the same as the region you use the decice in.</source>
-        <translation>AnkerMake stores and managed yours personal information according to you country’s data privacy laws. Make sure the region you choose is the same as the region you use the decice in.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="273"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="522"/>
-        <source>search your region</source>
-        <translation>search your region</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="330"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="525"/>
         <source>Email</source>
-        <translation>Email</translation>
+        <translation type="vanished">Email</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="352"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="528"/>
+        <source>Password</source>
+        <translation type="vanished">Password</translation>
+    </message>
+    <message>
+        <source>Forget Password</source>
+        <translation type="vanished">Forget Password</translation>
+    </message>
+    <message>
+        <source>Verification Code</source>
+        <translation type="vanished">Verification Code</translation>
+    </message>
+    <message>
+        <source>Sign In</source>
+        <translation type="vanished">Sign In</translation>
+    </message>
+    <message>
+        <source>No Account?</source>
+        <translation type="vanished">No Account?</translation>
+    </message>
+    <message>
+        <source>Sign Up</source>
+        <translation type="vanished">Sign Up</translation>
+    </message>
+    <message>
+        <source>To protect your data privacy and security, your printer&apos;s information will only be stored on a server in your region.</source>
+        <translation type="vanished">To protect your data privacy and security, your printer&apos;s information will only be stored on a server in your region.</translation>
+    </message>
+    <message>
+        <source>Please make sure to select the region where you live.You cannot access your devices if you choose a new region.</source>
+        <translation type="vanished">Please make sure to select the region where you live.You cannot access your devices if you choose a new region.</translation>
+    </message>
+    <message>
+        <source>Search for your region</source>
+        <translation type="vanished">Search for your region</translation>
+    </message>
+    <message>
         <source>Server</source>
-        <translation>Server</translation>
+        <translation type="vanished">Server</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="368"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="531"/>
         <source>Log Out</source>
-        <translation>Log Out</translation>
+        <translation type="vanished">Log Out</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="462"/>
-        <source>Invaild email fomat.Please enter again</source>
-        <translation>Invaild email fomat.Please enter again</translation>
+        <source>Invalid email format. Try again.</source>
+        <translation type="vanished">Invalid email format. Try again.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="466"/>
         <source>Enter password.</source>
-        <translation>Enter password.</translation>
+        <translation type="vanished">Enter password.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="606"/>
         <source>Notice</source>
-        <translation>Notice</translation>
+        <translation type="vanished">Notice</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/loginwidget.cpp" line="606"/>
-        <source>In order to protect your data and comply with local raw, please ensure you select the region that you currently live in.</source>
-        <translation>In order to protect your data and comply with local raw, please ensure you select the region that you currently live in.</translation>
+        <source>You cannot access your devices if you choose a new region.</source>
+        <translation type="vanished">You cannot access your devices if you choose a new region.</translation>
+    </message>
+</context>
+<context>
+    <name>LoginApi</name>
+    <message>
+        <source>Notice</source>
+        <translation type="vanished">Notice</translation>
+    </message>
+    <message>
+        <source>Running diagnostics Estimated time remaining: </source>
+        <translation type="vanished">Running diagnostics Estimated time remaining: </translation>
     </message>
 </context>
 <context>
     <name>MachineView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="65"/>
         <source>Printer</source>
         <translation>Printer</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="100"/>
-        <source>Printer Settings</source>
-        <translation>Printer Settings</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="145"/>
-        <source>Build Plate Shape</source>
-        <translation>Build Plate Shape</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="178"/>
-        <source>G-Code Flavor</source>
-        <translation>G-Code Flavor</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="207"/>
-        <source>Printhead Settings</source>
-        <translation>Printhead Settings</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="120"/>
-        <source>X (Length)</source>
-        <translation>X (Length)</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="130"/>
-        <source>Y (Width)</source>
-        <translation>Y (Width)</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="138"/>
-        <source>Z (Height)</source>
-        <translation>Z (Height)</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="155"/>
-        <source>Origin at Center</source>
-        <translation>Origin at Center</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="163"/>
-        <source>Heated Build Plate</source>
-        <translation>Heated Build Plate</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="171"/>
-        <source>Build Temperature Stabilization</source>
-        <translation>Build Temperature Stabilization</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="227"/>
-        <source>Amount of Extruders</source>
-        <translation>Amount of Extruders</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="237"/>
-        <source>Apply Extruder Offsets to G-Code?</source>
-        <translation>Apply Extruder Offsets to G-Code?</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="255"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="416"/>
-        <source>Start G-Code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>tart G-Code</source>
-        <translation type="vanished">tart G-Code</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="288"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="459"/>
-        <source>End G-Code</source>
-        <translation>End G-Code</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="340"/>
-        <source>Nozzle Settings</source>
-        <translation>Nozzle Settings</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="354"/>
-        <source>Compatible Material Diameter</source>
-        <translation>Compatible Material Diameter</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="365"/>
-        <source>Nozzle Offset X</source>
-        <translation>Nozzle Offset X</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="374"/>
-        <source>Nozzle Offset Y</source>
-        <translation>Nozzle Offset Y</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="383"/>
-        <source>Cooling Fan Number</source>
-        <translation>Cooling Fan Number</translation>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MachineView.qml" line="71"/>
+        <source>Extruder</source>
+        <translation>Extruder</translation>
     </message>
 </context>
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/mainwindow.cpp" line="45"/>
         <source>AnkerMake</source>
-        <translation>AnkerMake</translation>
+        <translation type="vanished">AnkerMake</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/mainwindow.cpp" line="75"/>
-        <source>refresh</source>
-        <translation>refresh</translation>
+        <source>Refresh</source>
+        <translation type="vanished">Refresh</translation>
+    </message>
+    <message>
+        <source>Disconnect</source>
+        <translation type="vanished">Disconnect</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="vanished">Error</translation>
+    </message>
+    <message>
+        <source>Click to create some stuff</source>
+        <translation type="vanished">Click to create some stuff</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation type="vanished">Paused</translation>
+    </message>
+    <message>
+        <source>Finished</source>
+        <translation type="vanished">Finished</translation>
+    </message>
+    <message>
+        <source>Printing...</source>
+        <translation type="vanished">Printing...</translation>
     </message>
 </context>
 <context>
     <name>ManualTreeSupportTool</name>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_manualtreesupport.cpp" line="298"/>
-        <source>Support Generating</source>
-        <translation>Support Generating</translation>
+        <source>Support preprocessing...</source>
+        <translation type="vanished">Support preprocessing...</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_edit_model/edit_manualtreesupport.cpp" line="803"/>
         <source>Generating support...</source>
-        <translation>Generating support...</translation>
+        <translation type="vanished">Generating support...</translation>
     </message>
 </context>
 <context>
     <name>MaterialView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="79"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="64"/>
         <source>Global</source>
         <translation>Global</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="88"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="173"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="73"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="158"/>
         <source>Flow</source>
         <translation>Flow</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="105"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="187"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="90"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="172"/>
         <source>Printing Temperature</source>
         <translation>Printing Temperature</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="119"/>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="201"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="104"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="186"/>
         <source>Plate Temperature</source>
         <translation>Plate Temperature</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="134"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="119"/>
         <source>Fan Speed</source>
         <translation>Fan Speed</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="163"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/MaterialView.qml" line="148"/>
         <source>Initial Layer</source>
         <translation>Initial Layer</translation>
     </message>
@@ -1050,99 +871,80 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MeshLabApplication</name>
     <message>
-        <location filename="../../common/mlapplication.h" line="19"/>
+        <location filename="../../common/mlapplication.h" line="22"/>
         <source>AnkerMake</source>
         <translation>AnkerMake</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="29"/>
+        <location filename="../../common/mlapplication.h" line="32"/>
         <source>http://vcg.isti.cnr.it</source>
         <translation>http://vcg.isti.cnr.it</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="30"/>
+        <location filename="../../common/mlapplication.h" line="33"/>
         <source>http://www.meshlab.net/</source>
         <translation>http://www.meshlab.net/</translation>
     </message>
     <message>
-        <location filename="../../common/mlapplication.h" line="31"/>
+        <location filename="../../common/mlapplication.h" line="34"/>
         <source>http://www.meshlab.net/#download</source>
         <translation>http://www.meshlab.net/#download</translation>
     </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="33"/>
-        <source>pluginsPath</source>
-        <translation>pluginsPath</translation>
-    </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="34"/>
-        <source>version</source>
-        <translation>version</translation>
-    </message>
-    <message>
-        <location filename="../../common/mlapplication.h" line="35"/>
-        <source>wordSize</source>
-        <translation>wordSize</translation>
-    </message>
 </context>
 <context>
-    <name>MeshLabOptionsDialog</name>
+    <name>MeshModelImport_Export</name>
     <message>
-        <location filename="../dialogs/options_dialog.cpp" line="53"/>
-        <location filename="../dialogs/options_dialog.cpp" line="179"/>
-        <source>Global Parameters Window</source>
-        <translation>Global Parameters Window</translation>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="9"/>
+        <source>Error encountered while loading file</source>
+        <translation>Error encountered while loading file</translation>
     </message>
-</context>
-<context>
-    <name>MultiViewer_Container</name>
     <message>
-        <location filename="../multiViewer_Container.cpp" line="362"/>
-        <source>MeshLab</source>
-        <translation>MeshLab</translation>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="9"/>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="88"/>
+        <source>Error details</source>
+        <translation>Error details</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="13"/>
+        <source>File does not exist</source>
+        <translation>File does not exist</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="28"/>
+        <source>Error while loading OBJ mask.</source>
+        <translation>Error while loading OBJ mask.</translation>
+    </message>
+    <message>
+        <location filename="../../common/file_property/mesh_model_import_export.cpp" line="88"/>
+        <source>Error encountered while exportering file</source>
+        <translation>Error encountered while exportering file</translation>
     </message>
 </context>
 <context>
     <name>OnlinePathWidgt</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="120"/>
         <source>Cloud</source>
-        <translation>Cloud</translation>
+        <translation type="vanished">Cloud</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="138"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="225"/>
-        <source>Device Local</source>
-        <translation>Device Local</translation>
+        <source>Internal</source>
+        <translation type="vanished">Internal</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="147"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="228"/>
         <source>Device USB</source>
-        <translation>Device USB</translation>
+        <translation type="vanished">Device USB</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="160"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="231"/>
-        <source>search your region</source>
-        <translation>search your region</translation>
+        <source>Search for your model</source>
+        <translation type="vanished">Search for your model</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="186"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="234"/>
         <source>Cancel</source>
-        <translation>Cancel</translation>
+        <translation type="vanished">Cancel</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="193"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="237"/>
         <source>Print</source>
-        <translation>Print</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/onlinepathwidgt.cpp" line="222"/>
-        <source>Online Path</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Print</translation>
     </message>
 </context>
 <context>
@@ -1156,94 +958,45 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ParametersView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="89"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="74"/>
         <source>Machine</source>
         <translation>Machine</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="114"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="99"/>
+        <source>Nozzle</source>
+        <translation>Nozzle</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/ParametersView.qml" line="133"/>
         <source>Material</source>
         <translation>Material</translation>
     </message>
 </context>
 <context>
-    <name>PluginInfoDialog</name>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="14"/>
-        <source>Plugin Information</source>
-        <translation>Plugin Information</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="20"/>
-        <source>Load Plugins</source>
-        <translation>Load Plugins</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="37"/>
-        <source>Plugins</source>
-        <translation>Plugins</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="42"/>
-        <source>Enabled</source>
-        <translation>Enabled</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="47"/>
-        <source>Type</source>
-        <translation>Type</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="52"/>
-        <source>Vendor</source>
-        <translation>Vendor</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="57"/>
-        <source>File</source>
-        <translation>File</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="62"/>
-        <source>Uninstall</source>
-        <translation>Uninstall</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.ui" line="80"/>
-        <source>Number of plugin loaded: </source>
-        <translation>Number of plugin loaded: </translation>
-    </message>
-    <message>
-        <location filename="../dialogs/plugin_info_dialog.cpp" line="157"/>
-        <source>No plugin has been loaded.</source>
-        <translation>No plugin has been loaded.</translation>
-    </message>
-</context>
-<context>
     <name>PreferencesListView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="33"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="42"/>
         <source>Default</source>
         <translation>Default</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="82"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="90"/>
         <source>Custom</source>
         <translation>Custom</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="124"/>
         <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="132"/>
         <source>Import</source>
         <translation>Import</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="154"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="146"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="178"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PreferencesListView.qml" line="169"/>
         <source>Create</source>
         <translation>Create</translation>
     </message>
@@ -1251,165 +1004,170 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>PrintControlPage</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="318"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="745"/>
-        <source>How to Add a device</source>
-        <translation>How to Add a device</translation>
+        <source>How to Add a Printer</source>
+        <translation type="vanished">How to Add a Printer</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="335"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="748"/>
-        <source>Download and install the AnkerMake app, then sign up for an account.</source>
-        <translation>Download and install the AnkerMake app, then sign up for an account.</translation>
+        <source>Download and install the AnkerMake app, and then sign up for an account.</source>
+        <translation type="vanished">Download and install the AnkerMake app, and then sign up for an account.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="355"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="751"/>
-        <source>Follow on-screen instructions to add the printer to your device list and connect it to Wi-Fi.</source>
-        <translation>Follow on-screen instructions to add the printer to your device list and connect it to Wi-Fi.</translation>
+        <source>Follow on-screen instructions to add the printer to your printer list and connect it to Wi-Fi.</source>
+        <translation type="vanished">Follow on-screen instructions to add the printer to your printer list and connect it to Wi-Fi.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="381"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="754"/>
-        <source>How to connect the device&apos;s network</source>
-        <translation>How to connect the device&apos;s network</translation>
+        <source>How to Connect to the Printer Network</source>
+        <translation type="vanished">How to Connect to the Printer Network</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="399"/>
-        <source>Open AnkerMake APP</source>
-        <translation>Open AnkerMake APP</translation>
+        <source>Open AnkerMake App</source>
+        <translation type="vanished">Open AnkerMake App</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="419"/>
         <source>Check the printer&apos;s settings and reconnect to the network.</source>
-        <translation>Check the printer&apos;s settings and reconnect to the network.</translation>
+        <translation type="vanished">Check the printer&apos;s settings and reconnect to the network.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="452"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="763"/>
-        <source>Choose a file to start print</source>
-        <translation>Choose a file to start print</translation>
+        <source>Choose a file to start printing.</source>
+        <translation type="vanished">Choose a file to start printing.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="456"/>
         <source>You can choose a local computer file or go to AnkerMake.com to download.</source>
-        <translation>You can choose a local computer file or go to AnkerMake.com to download.</translation>
+        <translation type="vanished">You can choose a local computer file or go to AnkerMake.com to download.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="468"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="769"/>
         <source>My Computer</source>
-        <translation>My Computer</translation>
+        <translation type="vanished">My Computer</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="478"/>
         <source>Cloud</source>
-        <translation>Cloud</translation>
+        <translation type="vanished">Cloud</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="544"/>
-        <source>load GCode file</source>
-        <translation>load GCode file</translation>
+        <source>Load G-Code</source>
+        <translation type="vanished">Load G-Code</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="656"/>
         <source>Open</source>
-        <translation>Open</translation>
+        <translation type="vanished">Open</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="669"/>
-        <source>File Open Error!</source>
-        <translation>File Open Error!</translation>
+        <source>File Open Error</source>
+        <translation type="vanished">File Open Error</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="696"/>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="735"/>
         <source>Notice</source>
-        <translation>Notice</translation>
+        <translation type="vanished">Notice</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="698"/>
-        <source>Print is running.</source>
-        <translation>Print is running.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="757"/>
-        <source>Open the AnkerMake APP</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="760"/>
-        <source>Click device&apos;s setting to reconnect the network</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="766"/>
-        <source>You can choose a local file on your computer or jump to the anker official website to download the file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/printcontrolpage.cpp" line="772"/>
-        <source>Online path</source>
-        <translation type="unfinished"></translation>
+        <source>Your printer is on.</source>
+        <translation type="vanished">Your printer is on.</translation>
     </message>
 </context>
 <context>
     <name>PrintResultWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="49"/>
         <source>Print Analysis</source>
-        <translation>Print Analysis</translation>
+        <translation type="vanished">Print Analysis</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="21"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="63"/>
-        <source>One More</source>
-        <translation>One More</translation>
+        <source>Reprint</source>
+        <translation type="vanished">Reprint</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="18"/>
-        <source>Result</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="24"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="27"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="67"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="91"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="121"/>
         <source>Finished</source>
-        <translation>Finished</translation>
+        <translation type="vanished">Finished</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="30"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="94"/>
-        <source>Heat- Bed heating failure,printing has stopped,please start over!</source>
-        <translation>Heat- Bed heating failure,printing has stopped,please start over!</translation>
+        <source>Heating failed. Printing has stopped. Please restart your print.</source>
+        <translation type="vanished">Heating failed. Printing has stopped. Please restart your print.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="33"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="125"/>
         <source>Time Saved</source>
-        <translation>Time Saved</translation>
+        <translation type="vanished">Time Saved</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="36"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="131"/>
         <source>Filament</source>
-        <translation>Filament</translation>
+        <translation type="vanished">Filament</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="39"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/printresultwidget.cpp" line="139"/>
         <source>Print Time</source>
-        <translation>Print Time</translation>
+        <translation type="vanished">Print Time</translation>
+    </message>
+</context>
+<context>
+    <name>PrinterPage</name>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="24"/>
+        <source>Printer Settings</source>
+        <translation>Printer Settings</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="39"/>
+        <source>X (Width)</source>
+        <translation>X (Width)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="49"/>
+        <source>Y (Depth)</source>
+        <translation>Y (Depth)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="57"/>
+        <source>Z (Height)</source>
+        <translation>Z (Height)</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="64"/>
+        <source>Build Plate Shape</source>
+        <translation>Build Plate Shape</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="82"/>
+        <source>Heated Build Plate</source>
+        <translation>Heated Build Plate</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="90"/>
+        <source>Build Temperature Stabilization</source>
+        <translation>Build Temperature Stabilization</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="97"/>
+        <source>G-Code Flavor</source>
+        <translation>G-Code Flavor</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="126"/>
+        <source>Printhead Settings</source>
+        <translation>Printhead Settings</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="144"/>
+        <source>Amount of Extruders</source>
+        <translation>Amount of Extruders</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="154"/>
+        <source>Apply Extruder Offsets to G-Code</source>
+        <translation>Apply Extruder Offsets to G-Code</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="172"/>
+        <source>Start G-Code</source>
+        <translation>Start G-Code</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/PreferenceSettings/PrinterPage.qml" line="206"/>
+        <source>End G-Code</source>
+        <translation>End G-Code</translation>
     </message>
 </context>
 <context>
     <name>ProgressDialog</name>
     <message>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="26"/>
-        <location filename="../../common/controlInterface/progressdialog.cpp" line="49"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="28"/>
+        <location filename="../../common/controlInterface/progressdialog.cpp" line="51"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
@@ -1417,205 +1175,237 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>ProjectLoadSave</name>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="316"/>
-        <source>Warning</source>
-        <translation>Warning</translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="316"/>
-        <source>Save Path Not Found</source>
-        <translation>Save Path Not Found</translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="321"/>
-        <source>Save File</source>
-        <translation>Save File</translation>
-    </message>
-    <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="722"/>
-        <location filename="../../common/file_property/project_load_save.cpp" line="730"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="686"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="694"/>
         <source>Error</source>
         <translation>Error</translation>
     </message>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="722"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="686"/>
         <source>Import Project Error</source>
         <translation>Import Project Error</translation>
     </message>
     <message>
-        <location filename="../../common/file_property/project_load_save.cpp" line="730"/>
+        <location filename="../../common/file_property/project_load_save.cpp" line="694"/>
         <source>Export Project Error</source>
         <translation>Export Project Error</translation>
     </message>
 </context>
 <context>
+    <name>QHttpsSelect</name>
+    <message>
+        <source>HTTP 407 Authentication Required Error. Please log in again.</source>
+        <translation type="vanished">HTTP 407 Authentication Required Error. Please log in again.</translation>
+    </message>
+    <message>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">No network detected. Please check.</translation>
+    </message>
+    <message>
+        <source>Operation canceled.</source>
+        <translation type="vanished">Operation canceled.</translation>
+    </message>
+    <message>
+        <source>Unknown network error.</source>
+        <translation type="vanished">Unknown network error.</translation>
+    </message>
+    <message>
+        <source>Timeout error.</source>
+        <translation type="vanished">Timeout error.</translation>
+    </message>
+</context>
+<context>
     <name>QNetworkObject</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="740"/>
-        <source>The system is abnormal</source>
-        <translation>The system is abnormal</translation>
+        <source>HTTP 407 Authentication Required Error. Please log in again.</source>
+        <translation type="vanished">HTTP 407 Authentication Required Error. Please log in again.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="743"/>
-        <source>Input Param Invalid</source>
-        <translation>Input Param Invalid</translation>
+        <source>No network detected. Please check.</source>
+        <translation type="vanished">No network detected. Please check.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="746"/>
-        <source>Third-party login failure</source>
-        <translation>Third-party login failure</translation>
+        <source>Something&apos;s wrong. Try again later.</source>
+        <translation type="vanished">Something&apos;s wrong. Try again later.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="749"/>
-        <source>The account or password is incorrect</source>
-        <translation>The account or password is incorrect</translation>
+        <source>Invalid Parameters</source>
+        <translation type="vanished">Invalid Parameters</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="752"/>
-        <source>The account has not been activated </source>
-        <translation>The account has not been activated </translation>
+        <source>Third-Party Login Failure</source>
+        <translation type="vanished">Third-Party Login Failure</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="755"/>
+        <source>Due to 5 failed login attempts, your account has been disabled for 10 minutes. Please try again later.</source>
+        <translation type="vanished">Due to 5 failed login attempts, your account has been disabled for 10 minutes. Please try again later.</translation>
+    </message>
+    <message>
+        <source>The account or password is incorrect.</source>
+        <translation type="vanished">The account or password is incorrect.</translation>
+    </message>
+    <message>
+        <source>The account has not been activated.</source>
+        <translation type="vanished">The account has not been activated.</translation>
+    </message>
+    <message>
         <source>The login mode is restricted</source>
-        <translation>The login mode is restricted</translation>
+        <translation type="vanished">The login mode is restricted</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="758"/>
-        <source>Need Captcha</source>
-        <translation>Need Captcha</translation>
+        <source>Captcha Needed</source>
+        <translation type="vanished">Captcha Needed</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="762"/>
         <source>Captcha Error</source>
-        <translation>Captcha Error</translation>
+        <translation type="vanished">Captcha Error</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="766"/>
-        <source>If the number of incorrect passwords reaches the maximum within 24 hours </source>
-        <translation>If the number of incorrect passwords reaches the maximum within 24 hours </translation>
+        <source>Incorrect password login limit reached. Try again in 24 hours.</source>
+        <translation type="vanished">Incorrect password login limit reached. Try again in 24 hours.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="769"/>
         <source>Header parameters incorrect</source>
-        <translation>Header parameters incorrect</translation>
+        <translation type="vanished">Header parameters incorrect</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="772"/>
-        <source>Blacklisted users are prohibited from logging in</source>
-        <translation>Blacklisted users are prohibited from logging in</translation>
+        <source>Something&apos;s wrong. Please contact customer support.</source>
+        <translation type="vanished">Something&apos;s wrong. Please contact customer support.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="775"/>
-        <source>The maximum number of logins reached within 24 hours</source>
-        <translation>The maximum number of logins reached within 24 hours</translation>
+        <source>You&apos;ve reached the max number of daily logins. Try again in 24 hours.</source>
+        <translation type="vanished">You&apos;ve reached the max number of daily logins. Try again in 24 hours.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="967"/>
-        <source>No device available, please use AnkerMake App to add a new device.</source>
-        <translation>No device available, please use AnkerMake App to add a new device.</translation>
+        <source>No printer available. Add a new printer via the AnkerMake App.</source>
+        <translation type="vanished">No printer available. Add a new printer via the AnkerMake App.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1821"/>
-        <source>Failed to start the print mission, please try again.</source>
-        <translation>Failed to start the print mission, please try again.</translation>
+        <source>AnkerMake is up to date.</source>
+        <translation type="vanished">AnkerMake is up to date.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1850"/>
+        <source>Downloading...</source>
+        <translation type="vanished">Downloading...</translation>
+    </message>
+    <message>
         <source>Notice</source>
-        <translation>Notice</translation>
+        <translation type="vanished">Notice</translation>
+    </message>
+    <message>
+        <source>The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</source>
+        <translation type="vanished">The speed has exceeded the printer&apos;s upper limit. If you continue, the speed will slow down to match your printer.</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="vanished">Cancel</translation>
+    </message>
+    <message>
+        <source>Continue</source>
+        <translation type="vanished">Continue</translation>
+    </message>
+    <message>
+        <source>Failed to start the print. Try again.</source>
+        <translation type="vanished">Failed to start the print. Try again.</translation>
     </message>
 </context>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../settingmanager.cpp" line="137"/>
+        <source>Ready to Print</source>
+        <translation type="vanished">Ready to Print</translation>
+    </message>
+    <message>
+        <source>Printing...</source>
+        <translation type="vanished">Printing...</translation>
+    </message>
+    <message>
+        <source>Paused</source>
+        <translation type="vanished">Paused</translation>
+    </message>
+    <message>
+        <source>Print Stopped</source>
+        <translation type="vanished">Print Stopped</translation>
+    </message>
+    <message>
+        <source>Print&apos;s done</source>
+        <translation type="vanished">Print&apos;s done</translation>
+    </message>
+    <message>
+        <source>Leveling</source>
+        <translation type="vanished">Leveling</translation>
+    </message>
+    <message>
+        <source>Downloading...</source>
+        <translation type="vanished">Downloading...</translation>
+    </message>
+    <message>
+        <source>Leveling and Heating...</source>
+        <translation type="vanished">Leveling and Heating...</translation>
+    </message>
+    <message>
+        <source>Preheating...</source>
+        <translation type="vanished">Preheating...</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4200"/>
+        <source>Failed to create background FBO. There may be insufficient memory.</source>
+        <translation>Failed to create background FBO. There may be insufficient memory.</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/GcodeViewer.cpp" line="4309"/>
+        <source>An unknown error has occurred, please try again</source>
+        <translation>An unknown error has occurred, please try again</translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="277"/>
+        <source>This version of OpenGL is not compatible with your setup. Upgrade your graphics driver.</source>
+        <translation>This version of OpenGL is not compatible with your setup. Upgrade your graphics driver.</translation>
+    </message>
+    <message>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>English</source>
         <translation>English</translation>
     </message>
     <message>
-        <location filename="../settingmanager.cpp" line="137"/>
+        <location filename="../settingmanager.cpp" line="179"/>
         <source>Chinese</source>
-        <translation>Chinese</translation>
+        <translation>中文</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1832"/>
-        <source>Ready to Print</source>
-        <translation>Ready to Print</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1833"/>
-        <source>Printing.</source>
-        <translation>Printing.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1834"/>
-        <source>Paused.</source>
-        <translation>Paused.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1835"/>
-        <source>Stopped.</source>
-        <translation>Stopped.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1836"/>
-        <source>Finished.</source>
-        <translation>Finished.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1837"/>
-        <source>The leveling.</source>
-        <translation>The leveling.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1838"/>
-        <source>Downloading.</source>
-        <translation>Downloading.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1839"/>
-        <source>Leveling and Heating...</source>
-        <translation>Leveling and Heating...</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/qnetworkobject.cpp" line="1840"/>
-        <source>Printing heating.</source>
-        <translation>Printing heating.</translation>
+        <location filename="../settingmanager.cpp" line="179"/>
+        <source>Japanese</source>
+        <translation>日本語</translation>
     </message>
 </context>
 <context>
     <name>QP2PWriteWork</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="561"/>
-        <source>File Not Found!</source>
-        <translation>File Not Found!</translation>
+        <source>File not found</source>
+        <translation type="vanished">File not found</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="568"/>
-        <source>Open File Failed!</source>
-        <translation>Open File Failed!</translation>
+        <source>Failed to open file</source>
+        <translation type="vanished">Failed to open file</translation>
     </message>
 </context>
 <context>
     <name>QWorkerThreadWrite</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="194"/>
-        <source>File Not Found!</source>
-        <translation>File Not Found!</translation>
+        <source>File not found</source>
+        <translation type="vanished">File not found</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/P2P/qworkerthreadwrite.cpp" line="201"/>
-        <source>Open File Failed!</source>
-        <translation>Open File Failed!</translation>
+        <source>Failed to open file</source>
+        <translation type="vanished">Failed to open file</translation>
     </message>
 </context>
 <context>
     <name>RadioButtonItem</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/RadioButtonItem.qml" line="35"/>
-        <source>Layer Height </source>
-        <translation>Layer Height </translation>
+        <source>Layer Height</source>
+        <translation>Layer Height</translation>
     </message>
 </context>
 <context>
@@ -1627,289 +1417,77 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>SaveMeshAttributesDialog</name>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="14"/>
-        <source>Dialog</source>
-        <translation>Dialog</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="22"/>
-        <source>Vert</source>
-        <translation>Vert</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="40"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="116"/>
-        <source>Flags</source>
-        <translation>Flags</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="47"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="123"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="178"/>
-        <source>Color</source>
-        <translation>Color</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="54"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="130"/>
-        <source>Quality</source>
-        <translation>Quality</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="61"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="137"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="185"/>
-        <source>Normal</source>
-        <translation>Normal</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="68"/>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="192"/>
-        <source>TexCoord</source>
-        <translation>TexCoord</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="75"/>
-        <source>Radius</source>
-        <translation>Radius</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="98"/>
-        <source>Face</source>
-        <translation>Face</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="160"/>
-        <source>Wedge</source>
-        <translation>Wedge</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="215"/>
-        <source>Texture Name</source>
-        <translation>Texture Name</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="236"/>
-        <source>Rename Texture</source>
-        <translation>Rename Texture</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="243"/>
-        <source>Save Texture File(s)</source>
-        <translation>Save Texture File(s)</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="280"/>
-        <source>Texture Quality:</source>
-        <translation>Texture Quality:</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="287"/>
-        <source> (default)</source>
-        <translation> (default)</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="311"/>
-        <source>Additional Parameters</source>
-        <translation>Additional Parameters</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="331"/>
-        <source>All</source>
-        <translation>All</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="344"/>
-        <source>None</source>
-        <translation>None</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="355"/>
-        <source>Camera</source>
-        <translation>Camera</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="365"/>
-        <source>Polygonal</source>
-        <translation>Polygonal</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="374"/>
-        <source>Help</source>
-        <translation>Help</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="397"/>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_mesh_attributes_dialog.ui" line="407"/>
-        <source>Cancel</source>
-        <translation>Cancel</translation>
-    </message>
-</context>
-<context>
     <name>SavePanel</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="32"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="181"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="39"/>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="112"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="40"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="113"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="178"/>
         <source>Save As</source>
         <translation>Save As</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="112"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="113"/>
         <source>Input a name before you save.</source>
         <translation>Input a name before you save.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="144"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="145"/>
         <source>Input a name.</source>
         <translation>Input a name.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="151"/>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="152"/>
         <source>Name is longer than 128 characters. Create a shorter one.</source>
         <translation>Name is longer than 128 characters. Create a shorter one.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="159"/>
-        <source>The Name Already Exists. Please Try Another Name.</source>
-        <translation>The Name Already Exists. Please Try Another Name.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="177"/>
-        <source>Save As Parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SaveSnapShotDialog</name>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="14"/>
-        <source>Save Snapshot</source>
-        <translation>Save Snapshot</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="22"/>
-        <source>Output folder  </source>
-        <translation>Output folder  </translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="48"/>
-        <source>...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="72"/>
-        <source>Base name  </source>
-        <translation>Base name  </translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="95"/>
-        <source>Counter</source>
-        <translation>Counter</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="125"/>
-        <source>Snap All Layers</source>
-        <translation>Snap All Layers</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="145"/>
-        <source>If checked, save each image independently, allowing to later combine the saved images into a very very large image</source>
-        <translation>If checked, save each image independently, allowing to later combine the saved images into a very very large image</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="148"/>
-        <source>Tiled Save</source>
-        <translation>Tiled Save</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="172"/>
-        <source>Background</source>
-        <translation>Background</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="180"/>
-        <source>MeshLab Gradient</source>
-        <translation>MeshLab Gradient</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="185"/>
-        <source>Alpha Transparent</source>
-        <translation>Alpha Transparent</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="190"/>
-        <source>Solid White</source>
-        <translation>Solid White</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="195"/>
-        <source>Solid Black</source>
-        <translation>Solid Black</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="216"/>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="226"/>
-        <source>The resolution of the screenshot is the resolution of the current window multiplied by this number</source>
-        <translation>The resolution of the screenshot is the resolution of the current window multiplied by this number</translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="219"/>
-        <source>Screen Multiplier  </source>
-        <translation>Screen Multiplier  </translation>
-    </message>
-    <message>
-        <location filename="../dialogs/save_snapshot_dialog.ui" line="249"/>
-        <source>Add Snapshot as new Raster Layer</source>
-        <translation>Add Snapshot as new Raster Layer</translation>
+        <location filename="../../ankerplugins/fdm_setting/savepanel.cpp" line="160"/>
+        <source>This name already exists. Try another name.</source>
+        <translation>This name already exists. Try another name.</translation>
     </message>
 </context>
 <context>
     <name>SceneRightMenu</name>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="20"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="594"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="629"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="27"/>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="32"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="597"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="632"/>
         <source>Copy</source>
         <translation>Copy</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="36"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="600"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="635"/>
         <source>Paste</source>
         <translation>Paste</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="42"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="603"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="638"/>
         <source>Hide</source>
         <translation>Hide</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="48"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="606"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="641"/>
         <source>Show</source>
         <translation>Show</translation>
     </message>
     <message>
         <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="54"/>
-        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="609"/>
+        <location filename="../../common/GeoAndShow/CHPickOperationCommand.cpp" line="644"/>
         <source>Reset</source>
         <translation>Reset</translation>
     </message>
@@ -1917,78 +1495,78 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>SettingView</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="77"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="76"/>
         <source>Machine</source>
         <translation>Machine</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="97"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="96"/>
         <source>Nozzle</source>
         <translation>Nozzle</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="120"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="119"/>
         <source>Material</source>
         <translation>Material</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="158"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="155"/>
         <source>Parameters</source>
         <translation>Parameters</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="241"/>
-        <source>Infill</source>
-        <translation>Infill</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="290"/>
-        <source>Global Support have been disabled by Manual Support.</source>
-        <translation>Global Support have been disabled by Manual Support.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="290"/>
-        <source>Global Support and Manual Support will take effect at the same time.</source>
-        <translation>Global Support and Manual Support will take effect at the same time.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="302"/>
-        <source>Start Adhesion</source>
-        <translation>Start Adhesion</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="209"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="203"/>
         <source>Layer Height</source>
         <translation>Layer Height</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="273"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="234"/>
+        <source>Infill</source>
+        <translation>Infill</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="261"/>
         <source>Global Support</source>
         <translation>Global Support</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="405"/>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
+        <source>Global Support have been disabled by Manual Support.</source>
+        <translation>Global Support have been disabled by Manual Support.</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
+        <source>Global Support and Manual Support will take effect at the same time.</source>
+        <translation>Global Support and Manual Support will take effect at the same time.</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="278"/>
         <source></source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_setting/qml/FdmParameter/SettingView.qml" line="288"/>
+        <source>Start Adhesion</source>
+        <translation>Start Adhesion</translation>
     </message>
 </context>
 <context>
     <name>ShotfWidget</name>
     <message>
         <location filename="../rich_parameter_gui/richparameterwidgets.cpp" line="812"/>
-        <source>Load xml camera</source>
-        <translation>Load xml camera</translation>
+        <source>Load XML Camera</source>
+        <translation>Load XML Camera</translation>
     </message>
 </context>
 <context>
     <name>ToolTip</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="20"/>
-        <source>Affects </source>
-        <translation>Affects </translation>
+        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="19"/>
+        <source>Affects</source>
+        <translation>Affects</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="24"/>
+        <location filename="../../ankerplugins/fdm_setting/tooltip.cpp" line="26"/>
         <source>Affected By</source>
         <translation>Affected By</translation>
     </message>
@@ -1998,650 +1576,542 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../translator.cpp" line="9"/>
         <source>English</source>
-        <translation type="unfinished">English</translation>
+        <translation>English</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="10"/>
-        <source>German</source>
-        <translation type="unfinished"></translation>
+        <source>Deutsch</source>
+        <translation>Deutsch</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="11"/>
-        <source>Spanish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="12"/>
-        <source>French</source>
-        <translation type="unfinished"></translation>
+        <source>Français</source>
+        <translation>Français</translation>
     </message>
     <message>
         <location filename="../translator.cpp" line="13"/>
-        <source>Italian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="14"/>
-        <source>Japanese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="15"/>
-        <source>Chinese Simplified</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="16"/>
-        <source>Chinese Traditional</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="17"/>
-        <location filename="../translator.cpp" line="39"/>
-        <source>Korean</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="18"/>
-        <source>Russian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="19"/>
-        <source>Swedish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="20"/>
-        <source>Afrikaans</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="21"/>
-        <source>Norwegian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="22"/>
-        <source>Portuguese, Brazilian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="23"/>
-        <source>Portuguese</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="24"/>
-        <source>Dutch</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="25"/>
-        <source>Ukrainian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="26"/>
-        <source>Finnish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="27"/>
-        <source>Croatian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="28"/>
-        <source>Polish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="29"/>
-        <source>Czech</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="30"/>
-        <source>Hungarian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="31"/>
-        <source>Romanian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="32"/>
-        <source>Slovak</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="33"/>
-        <source>Turkish</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="34"/>
-        <source>Slovenian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="35"/>
-        <source>Basque</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="36"/>
-        <source>Catalan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="37"/>
-        <source>Galician</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="38"/>
-        <source>Kabyle</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="40"/>
-        <source>Filipino</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="41"/>
-        <source>Indonesian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="42"/>
-        <source>Lithuanian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="43"/>
-        <source>Valencian</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="44"/>
-        <source>Arabic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../translator.cpp" line="45"/>
-        <source>Vietnamese</source>
-        <translation type="unfinished"></translation>
+        <source>Italiano</source>
+        <translation>Italiano</translation>
     </message>
 </context>
 <context>
     <name>UpdateWidget</name>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="26"/>
-        <source>Check For Update</source>
-        <translation>Check For Update</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="35"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="115"/>
-        <source>Installsing Updates for AnkerMake</source>
-        <translation>Installsing Updates for AnkerMake</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="40"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="118"/>
-        <source>The software will install automatically after finishing the download.</source>
-        <translation>The software will install automatically after finishing the download.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="59"/>
-        <source>The download will continue in the background after you close the window.</source>
-        <translation>The download will continue in the background after you close the window.</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="66"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="124"/>
-        <source>Close</source>
-        <translation>Close</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="73"/>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="127"/>
-        <source>Stop</source>
-        <translation>Stop</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="112"/>
         <source>Check for Update</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Check for Update</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/anker_plugin_network/Control/updatewidget.cpp" line="121"/>
-        <source>The download will continue in the background when you close.</source>
-        <translation type="unfinished"></translation>
+        <source>Installing Updates for</source>
+        <translation type="vanished">Installing Updates for</translation>
+    </message>
+    <message>
+        <source>The software will install automatically after finishing the download.</source>
+        <translation type="vanished">The software will install automatically after finishing the download.</translation>
+    </message>
+    <message>
+        <source>The download will continue in the background after you close the window.</source>
+        <translation type="vanished">The download will continue in the background after you close the window.</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">Close</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="vanished">Stop</translation>
+    </message>
+    <message>
+        <source>Downloading...</source>
+        <translation type="vanished">Downloading...</translation>
+    </message>
+</context>
+<context>
+    <name>UploadLogWidget</name>
+    <message>
+        <source>Log Upload</source>
+        <translation type="vanished">Log Upload</translation>
+    </message>
+    <message>
+        <source>Upload log to diagnose issues.We only see the error history, date, and system information.</source>
+        <translation type="vanished">Upload log to diagnose issues.We only see the error history, date, and system information.</translation>
+    </message>
+    <message>
+        <source>Downloading...</source>
+        <translation type="vanished">Downloading...</translation>
+    </message>
+    <message>
+        <source>The upload will continue in the background when you close.</source>
+        <translation type="vanished">The upload will continue in the background when you close.</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="vanished">Close</translation>
+    </message>
+    <message>
+        <source>Stop</source>
+        <translation type="vanished">Stop</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation type="vanished">Upload</translation>
+    </message>
+    <message>
+        <source>Installing Updates for</source>
+        <translation type="vanished">Installing Updates for</translation>
+    </message>
+    <message>
+        <source>Uploading...</source>
+        <translation type="vanished">Uploading...</translation>
     </message>
 </context>
 <context>
     <name>UserAgreementWidget</name>
     <message>
         <location filename="../controls/useragreementwidget.cpp" line="10"/>
-        <location filename="../controls/useragreementwidget.cpp" line="65"/>
+        <location filename="../controls/useragreementwidget.cpp" line="89"/>
         <source>User Agreement</source>
         <translation>User Agreement</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="18"/>
-        <location filename="../controls/useragreementwidget.cpp" line="67"/>
+        <location filename="../controls/useragreementwidget.cpp" line="19"/>
+        <location filename="../controls/useragreementwidget.cpp" line="91"/>
         <source>Welcome to AnkerMake</source>
         <translation>Welcome to AnkerMake</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="24"/>
-        <location filename="../controls/useragreementwidget.cpp" line="70"/>
-        <source>&lt;body&gt;Please click to read the &lt;a href=&quot;https://ankermake.com/terms-of-use&quot;&gt;&lt;font color = #61D37D&gt;&lt;text-decoration: none&gt;Terms of Use&lt;/a&gt; and &lt;a href=&quot;https://ankermake.com/privacy-policy&quot;&gt;&lt;font color = #61D37D&gt;&lt;&gt;Privacy Policy&lt;/a&gt; &lt;/body&gt;</source>
-        <translation>&lt;body&gt;Please click to read the &lt;a href=&quot;https://ankermake.com/terms-of-use&quot;&gt;&lt;font color = #61D37D&gt;&lt;text-decoration: none&gt;Terms of Use&lt;/a&gt; and &lt;a href=&quot;https://ankermake.com/privacy-policy&quot;&gt;&lt;font color = #61D37D&gt;&lt;&gt;Privacy Policy&lt;/a&gt; &lt;/body&gt;</translation>
-    </message>
-    <message>
-        <location filename="../controls/useragreementwidget.cpp" line="34"/>
-        <location filename="../controls/useragreementwidget.cpp" line="73"/>
+        <location filename="../controls/useragreementwidget.cpp" line="36"/>
+        <location filename="../controls/useragreementwidget.cpp" line="97"/>
         <source>Accept</source>
         <translation>Accept</translation>
     </message>
     <message>
-        <location filename="../controls/useragreementwidget.cpp" line="40"/>
-        <location filename="../controls/useragreementwidget.cpp" line="76"/>
+        <location filename="../controls/useragreementwidget.cpp" line="42"/>
+        <location filename="../controls/useragreementwidget.cpp" line="100"/>
         <source>Decline</source>
         <translation>Decline</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Read the </source>
+        <translation>Read the </translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <source>Please read and accept</source>
+        <translation>Please read and accept</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Terms of Use</source>
+        <translation>Terms of Use</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <source>and</source>
+        <translation>and</translation>
+    </message>
+    <message>
+        <location filename="../controls/useragreementwidget.cpp" line="60"/>
+        <location filename="../controls/useragreementwidget.cpp" line="94"/>
+        <source>Privacy Policy</source>
+        <translation>Privacy Policy</translation>
     </message>
 </context>
 <context>
     <name>VSliderRange</name>
     <message>
         <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="14"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="593"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/slider2/sliderrange_vertical.cpp" line="600"/>
         <source>Arial</source>
         <translation>Arial</translation>
     </message>
 </context>
 <context>
-    <name>XmlStream</name>
-    <message>
-        <location filename="../../common/file_property/xml_stream.cpp" line="694"/>
-        <location filename="../../common/file_property/xml_stream.cpp" line="753"/>
-        <source>Get File Property Failed.</source>
-        <translation>Get File Property Failed.</translation>
-    </message>
-</context>
-<context>
     <name>control::FdmMainWidget</name>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="87"/>
-        <location filename="../controls/mainwidget.cpp" line="821"/>
-        <source>Device</source>
-        <translation>Device</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="182"/>
-        <location filename="../controls/mainwidget.cpp" line="824"/>
-        <source>File</source>
-        <translation>File</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="192"/>
-        <location filename="../controls/mainwidget.cpp" line="284"/>
-        <location filename="../controls/mainwidget.cpp" line="826"/>
-        <location filename="../controls/mainwidget.cpp" line="911"/>
-        <source>Open</source>
-        <translation>Open</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="196"/>
-        <location filename="../controls/mainwidget.cpp" line="838"/>
-        <source>Export...</source>
-        <translation>Export...</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="198"/>
-        <location filename="../controls/mainwidget.cpp" line="213"/>
-        <location filename="../controls/mainwidget.cpp" line="217"/>
-        <location filename="../controls/mainwidget.cpp" line="844"/>
-        <location filename="../controls/mainwidget.cpp" line="866"/>
-        <location filename="../controls/mainwidget.cpp" line="875"/>
-        <source>Select Object</source>
-        <translation>Select Object</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="200"/>
-        <location filename="../controls/mainwidget.cpp" line="238"/>
-        <location filename="../controls/mainwidget.cpp" line="829"/>
-        <location filename="../controls/mainwidget.cpp" line="884"/>
-        <source>Save</source>
-        <translation>Save</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="201"/>
-        <source>Save As</source>
-        <translation>Save As</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="205"/>
-        <location filename="../controls/mainwidget.cpp" line="848"/>
-        <source>Edit</source>
-        <translation>Edit</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="206"/>
-        <location filename="../controls/mainwidget.cpp" line="851"/>
-        <source>Undo</source>
-        <translation>Undo</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="207"/>
-        <location filename="../controls/mainwidget.cpp" line="854"/>
-        <source>Redo</source>
-        <translation>Redo</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="211"/>
-        <location filename="../controls/mainwidget.cpp" line="860"/>
-        <source>Copy</source>
-        <translation>Copy</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="197"/>
-        <location filename="../controls/mainwidget.cpp" line="215"/>
-        <location filename="../controls/mainwidget.cpp" line="218"/>
-        <location filename="../controls/mainwidget.cpp" line="869"/>
-        <location filename="../controls/mainwidget.cpp" line="878"/>
-        <source>All Objects</source>
-        <translation>All Objects</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="49"/>
+        <location filename="../controls/mainwidget.cpp" line="50"/>
+        <location filename="../controls/mainwidget.cpp" line="939"/>
         <source>Slice</source>
         <translation>Slice</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="61"/>
+        <location filename="../controls/mainwidget.cpp" line="67"/>
+        <location filename="../controls/mainwidget.cpp" line="940"/>
         <source>Preview</source>
         <translation>Preview</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="193"/>
+        <location filename="../controls/mainwidget.cpp" line="94"/>
+        <location filename="../controls/mainwidget.cpp" line="941"/>
+        <source>Device</source>
+        <translation>Device</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="191"/>
+        <location filename="../controls/mainwidget.cpp" line="976"/>
+        <source>File</source>
+        <translation>File</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="201"/>
+        <location filename="../controls/mainwidget.cpp" line="356"/>
+        <location filename="../controls/mainwidget.cpp" line="978"/>
+        <location filename="../controls/mainwidget.cpp" line="1063"/>
+        <source>Open</source>
+        <translation>Open</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="202"/>
+        <location filename="../controls/mainwidget.cpp" line="987"/>
         <source>Open Recent</source>
         <translation>Open Recent</translation>
     </message>
     <message>
+        <location filename="../controls/mainwidget.cpp" line="205"/>
+        <location filename="../controls/mainwidget.cpp" line="990"/>
+        <source>Export</source>
+        <translation>Export</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="206"/>
+        <location filename="../controls/mainwidget.cpp" line="225"/>
+        <location filename="../controls/mainwidget.cpp" line="228"/>
+        <location filename="../controls/mainwidget.cpp" line="993"/>
+        <location filename="../controls/mainwidget.cpp" line="1021"/>
+        <location filename="../controls/mainwidget.cpp" line="1030"/>
+        <source>All Objects</source>
+        <translation>All Objects</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="208"/>
+        <location filename="../controls/mainwidget.cpp" line="223"/>
+        <location filename="../controls/mainwidget.cpp" line="227"/>
+        <location filename="../controls/mainwidget.cpp" line="996"/>
+        <location filename="../controls/mainwidget.cpp" line="1018"/>
+        <location filename="../controls/mainwidget.cpp" line="1027"/>
+        <source>Select Object</source>
+        <translation>Select Object</translation>
+    </message>
+    <message>
         <location filename="../controls/mainwidget.cpp" line="210"/>
+        <location filename="../controls/mainwidget.cpp" line="248"/>
+        <location filename="../controls/mainwidget.cpp" line="981"/>
+        <location filename="../controls/mainwidget.cpp" line="1036"/>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="211"/>
+        <location filename="../controls/mainwidget.cpp" line="984"/>
+        <source>Save As</source>
+        <translation>Save As</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="215"/>
+        <location filename="../controls/mainwidget.cpp" line="1000"/>
+        <source>Edit</source>
+        <translation>Edit</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="216"/>
+        <location filename="../controls/mainwidget.cpp" line="1003"/>
+        <source>Undo</source>
+        <translation>Undo</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="217"/>
+        <location filename="../controls/mainwidget.cpp" line="1006"/>
+        <source>Redo</source>
+        <translation>Redo</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="220"/>
+        <location filename="../controls/mainwidget.cpp" line="1009"/>
         <source>Select Project</source>
         <translation>Select Project</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="212"/>
+        <location filename="../controls/mainwidget.cpp" line="221"/>
+        <location filename="../controls/mainwidget.cpp" line="1012"/>
+        <source>Copy</source>
+        <translation>Copy</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="222"/>
+        <location filename="../controls/mainwidget.cpp" line="1015"/>
         <source>Delete</source>
         <translation>Delete</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="216"/>
-        <source>Default Settings</source>
-        <translation>Default Settings</translation>
+        <location filename="../controls/mainwidget.cpp" line="226"/>
+        <location filename="../controls/mainwidget.cpp" line="1024"/>
+        <source>Revert to Original</source>
+        <translation>Revert to Original</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="221"/>
+        <location filename="../controls/mainwidget.cpp" line="231"/>
+        <location filename="../controls/mainwidget.cpp" line="1033"/>
         <source>Settings</source>
         <translation>Settings</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="227"/>
-        <location filename="../controls/mainwidget.cpp" line="914"/>
+        <location filename="../controls/mainwidget.cpp" line="237"/>
+        <location filename="../controls/mainwidget.cpp" line="1066"/>
         <source>General</source>
         <translation>General</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="229"/>
-        <location filename="../controls/mainwidget.cpp" line="917"/>
+        <location filename="../controls/mainwidget.cpp" line="239"/>
+        <location filename="../controls/mainwidget.cpp" line="1069"/>
         <source>Machine</source>
         <translation>Machine</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="231"/>
-        <location filename="../controls/mainwidget.cpp" line="920"/>
+        <location filename="../controls/mainwidget.cpp" line="241"/>
+        <location filename="../controls/mainwidget.cpp" line="1072"/>
         <source>Material</source>
         <translation>Material</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="233"/>
-        <location filename="../controls/mainwidget.cpp" line="923"/>
+        <location filename="../controls/mainwidget.cpp" line="243"/>
+        <location filename="../controls/mainwidget.cpp" line="1075"/>
         <source>Parameters</source>
         <translation>Parameters</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="249"/>
-        <location filename="../controls/mainwidget.cpp" line="887"/>
+        <location filename="../controls/mainwidget.cpp" line="259"/>
+        <location filename="../controls/mainwidget.cpp" line="1039"/>
         <source>Help</source>
         <translation>Help</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="252"/>
-        <location filename="../controls/mainwidget.cpp" line="890"/>
+        <location filename="../controls/mainwidget.cpp" line="265"/>
+        <location filename="../controls/mainwidget.cpp" line="1042"/>
         <source>Tutorial</source>
         <translation>Tutorial</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="256"/>
-        <location filename="../controls/mainwidget.cpp" line="893"/>
+        <location filename="../controls/mainwidget.cpp" line="276"/>
+        <location filename="../controls/mainwidget.cpp" line="1045"/>
         <source>Feedback</source>
         <translation>Feedback</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="259"/>
-        <location filename="../controls/mainwidget.cpp" line="896"/>
+        <location filename="../controls/mainwidget.cpp" line="289"/>
+        <location filename="../controls/mainwidget.cpp" line="1048"/>
         <source>Software Update</source>
         <translation>Software Update</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="262"/>
-        <location filename="../controls/mainwidget.cpp" line="899"/>
+        <location filename="../controls/mainwidget.cpp" line="292"/>
+        <location filename="../controls/mainwidget.cpp" line="1051"/>
         <source>Privacy Policy</source>
         <translation>Privacy Policy</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="266"/>
-        <location filename="../controls/mainwidget.cpp" line="902"/>
+        <location filename="../controls/mainwidget.cpp" line="312"/>
+        <location filename="../controls/mainwidget.cpp" line="1054"/>
         <source>Terms of Use</source>
         <translation>Terms of Use</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="270"/>
-        <location filename="../controls/mainwidget.cpp" line="905"/>
+        <location filename="../controls/mainwidget.cpp" line="332"/>
+        <location filename="../controls/mainwidget.cpp" line="946"/>
+        <source>Log Upload</source>
+        <translation>Log Upload</translation>
+    </message>
+    <message>
+        <location filename="../controls/mainwidget.cpp" line="342"/>
+        <location filename="../controls/mainwidget.cpp" line="1057"/>
         <source>Copyright Information</source>
         <translation>Copyright Information</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="279"/>
-        <location filename="../controls/mainwidget.cpp" line="280"/>
-        <location filename="../controls/mainwidget.cpp" line="908"/>
-        <location filename="../controls/mainwidget.cpp" line="926"/>
+        <location filename="../controls/mainwidget.cpp" line="351"/>
+        <location filename="../controls/mainwidget.cpp" line="352"/>
+        <location filename="../controls/mainwidget.cpp" line="1060"/>
+        <location filename="../controls/mainwidget.cpp" line="1078"/>
         <source>Account</source>
         <translation>Account</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="368"/>
+        <location filename="../controls/mainwidget.cpp" line="450"/>
         <source>Clear</source>
         <translation>Clear</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="396"/>
+        <location filename="../controls/mainwidget.cpp" line="481"/>
+        <location filename="../controls/mainwidget.cpp" line="949"/>
         <source>3D View</source>
         <translation>3D View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="400"/>
+        <location filename="../controls/mainwidget.cpp" line="485"/>
+        <location filename="../controls/mainwidget.cpp" line="952"/>
         <source>Front View</source>
         <translation>Front View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="404"/>
+        <location filename="../controls/mainwidget.cpp" line="489"/>
+        <location filename="../controls/mainwidget.cpp" line="955"/>
         <source>Rear View</source>
         <translation>Rear View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="408"/>
+        <location filename="../controls/mainwidget.cpp" line="493"/>
+        <location filename="../controls/mainwidget.cpp" line="958"/>
         <source>Left View</source>
         <translation>Left View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="412"/>
+        <location filename="../controls/mainwidget.cpp" line="497"/>
+        <location filename="../controls/mainwidget.cpp" line="961"/>
         <source>Right View</source>
         <translation>Right View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="416"/>
+        <location filename="../controls/mainwidget.cpp" line="501"/>
+        <location filename="../controls/mainwidget.cpp" line="964"/>
         <source>Top View</source>
         <translation>Top View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="420"/>
+        <location filename="../controls/mainwidget.cpp" line="505"/>
+        <location filename="../controls/mainwidget.cpp" line="967"/>
         <source>Bottom View</source>
         <translation>Bottom View</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="476"/>
-        <source>The file can&apos;t be found. Please check.</source>
-        <translation>The file can&apos;t be found. Please check.</translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="476"/>
+        <location filename="../controls/mainwidget.cpp" line="561"/>
         <source>Notice</source>
         <translation>Notice</translation>
     </message>
     <message>
-        <location filename="../controls/mainwidget.cpp" line="832"/>
-        <source>Save as</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="835"/>
-        <source>Open Recent...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="841"/>
-        <source>All Object</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="857"/>
-        <source>Select Project...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="863"/>
-        <source>Delete..</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="872"/>
-        <source>Reset Transformations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/mainwidget.cpp" line="881"/>
-        <source>Setting</source>
-        <translation type="unfinished"></translation>
+        <location filename="../controls/mainwidget.cpp" line="561"/>
+        <source>The file can&apos;t be found. Please check.</source>
+        <translation>The file can&apos;t be found. Please check.</translation>
     </message>
 </context>
 <context>
     <name>control::GeneralWidget</name>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="18"/>
-        <location filename="../controls/generalwidget.cpp" line="172"/>
-        <source>    General</source>
-        <translation>    General</translation>
+        <location filename="../controls/generalwidget.cpp" line="23"/>
+        <location filename="../controls/generalwidget.cpp" line="283"/>
+        <source>General</source>
+        <translation>General</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="37"/>
-        <location filename="../controls/generalwidget.cpp" line="174"/>
+        <location filename="../controls/generalwidget.cpp" line="42"/>
+        <location filename="../controls/generalwidget.cpp" line="285"/>
         <source>Language</source>
         <translation>Language</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="48"/>
+        <location filename="../controls/generalwidget.cpp" line="53"/>
+        <location filename="../controls/generalwidget.cpp" line="288"/>
         <source>Language will change after software restarts.</source>
         <translation>Language will change after software restarts.</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="79"/>
-        <source>AI Detection</source>
-        <translation>AI Detection</translation>
+        <location filename="../controls/generalwidget.cpp" line="84"/>
+        <location filename="../controls/generalwidget.cpp" line="291"/>
+        <source>Create AI File</source>
+        <translation>Create AI File</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="83"/>
-        <location filename="../controls/generalwidget.cpp" line="183"/>
-        <source>Keeping Creat Ai File When Slice</source>
-        <translation>Keeping Creat Ai File When Slice</translation>
+        <location filename="../controls/generalwidget.cpp" line="88"/>
+        <location filename="../controls/generalwidget.cpp" line="294"/>
+        <source>Create AI file when slicing.</source>
+        <translation>Create AI file when slicing.</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="99"/>
-        <location filename="../controls/generalwidget.cpp" line="193"/>
+        <location filename="../controls/generalwidget.cpp" line="105"/>
+        <location filename="../controls/generalwidget.cpp" line="304"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="109"/>
-        <location filename="../controls/generalwidget.cpp" line="189"/>
+        <location filename="../controls/generalwidget.cpp" line="115"/>
+        <location filename="../controls/generalwidget.cpp" line="300"/>
         <source>Check</source>
         <translation>Check</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="118"/>
+        <location filename="../controls/generalwidget.cpp" line="128"/>
+        <location filename="../controls/generalwidget.cpp" line="307"/>
         <source>Auto-Check for Updates</source>
         <translation>Auto-Check for Updates</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="177"/>
-        <source>The language change takes effect after the software is restarted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="180"/>
-        <source>AI Detect</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="196"/>
-        <source>Automatically Check For Updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="263"/>
-        <source>Close Auto-Update</source>
-        <translation>Close Auto-Update</translation>
-    </message>
-    <message>
-        <location filename="../controls/generalwidget.cpp" line="148"/>
-        <location filename="../controls/generalwidget.cpp" line="187"/>
-        <location filename="../controls/generalwidget.cpp" line="342"/>
-        <location filename="../controls/generalwidget.cpp" line="361"/>
+        <location filename="../controls/generalwidget.cpp" line="231"/>
+        <location filename="../controls/generalwidget.cpp" line="298"/>
+        <location filename="../controls/generalwidget.cpp" line="522"/>
+        <location filename="../controls/generalwidget.cpp" line="544"/>
         <source>Update</source>
         <translation>Update</translation>
     </message>
     <message>
-        <location filename="../controls/generalwidget.cpp" line="263"/>
-        <source>Notice</source>
-        <translation>Notice</translation>
+        <location filename="../controls/generalwidget.cpp" line="250"/>
+        <source>AnkerMake is up to date.</source>
+        <translation>AnkerMake is up to date.</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="476"/>
+        <location filename="../controls/generalwidget.cpp" line="693"/>
+        <source>is ready, the changes will effective once you restart the app.</source>
+        <translation>is ready, the changes will effective once you restart the app.</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="478"/>
+        <location filename="../controls/generalwidget.cpp" line="603"/>
+        <location filename="../controls/generalwidget.cpp" line="696"/>
+        <source>Check for Update</source>
+        <translation>Check for Update</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="481"/>
+        <location filename="../controls/generalwidget.cpp" line="699"/>
+        <source>Later</source>
+        <translation>Later</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="482"/>
+        <location filename="../controls/generalwidget.cpp" line="700"/>
+        <source>Restart</source>
+        <translation>Restart</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="489"/>
+        <location filename="../controls/generalwidget.cpp" line="614"/>
+        <location filename="../controls/generalwidget.cpp" line="707"/>
+        <source>What&apos;s new</source>
+        <translation>What&apos;s new</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="603"/>
+        <source>is ready, click to download new version</source>
+        <translation>is ready, click to download new version</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="606"/>
+        <source>Close</source>
+        <translation>Close</translation>
+    </message>
+    <message>
+        <location filename="../controls/generalwidget.cpp" line="607"/>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
     <name>control::MachineWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="14"/>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="146"/>
-        <source>    Machine</source>
-        <translation>    Machine</translation>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="147"/>
+        <source>Machine</source>
+        <translation>Machine</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="102"/>
@@ -2654,12 +2124,12 @@ p, li { white-space: pre-wrap; }
         <translation>Input a name before you save.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="128"/>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="129"/>
         <source>Input a name.</source>
         <translation>Input a name.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="135"/>
+        <location filename="../../ankerplugins/fdm_setting/machinewidget.cpp" line="136"/>
         <source>Name already exists. Try another.</source>
         <translation>Name already exists. Try another.</translation>
     </message>
@@ -2668,9 +2138,9 @@ p, li { white-space: pre-wrap; }
     <name>control::MaterialWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="12"/>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="133"/>
-        <source>    Material</source>
-        <translation>    Material</translation>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="134"/>
+        <source>Material</source>
+        <translation>Material</translation>
     </message>
     <message>
         <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="89"/>
@@ -2683,12 +2153,12 @@ p, li { white-space: pre-wrap; }
         <translation>Input a name before you save.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="115"/>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="116"/>
         <source>Input a name.</source>
         <translation>Input a name.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="122"/>
+        <location filename="../../ankerplugins/fdm_setting/materialwidget.cpp" line="123"/>
         <source>Name already exists. Try another.</source>
         <translation>Name already exists. Try another.</translation>
     </message>
@@ -2696,8 +2166,8 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>control::MeshInfoWidget</name>
     <message>
-        <location filename="../controls/meshinfowidget.cpp" line="16"/>
-        <location filename="../controls/meshinfowidget.cpp" line="327"/>
+        <location filename="../controls/meshinfowidget.cpp" line="17"/>
+        <location filename="../controls/meshinfowidget.cpp" line="363"/>
         <source>Object List</source>
         <translation>Object List</translation>
     </message>
@@ -2705,34 +2175,36 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>control::MessageDialog</name>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="102"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="108"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="114"/>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="121"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="120"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="127"/>
         <source>Cancel</source>
         <translation>Cancel</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="116"/>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="123"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="122"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="129"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="142"/>
         <source>Save</source>
         <translation>Save</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="125"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="131"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="140"/>
         <source>Don&apos;t Save</source>
         <translation>Don&apos;t Save</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="134"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="147"/>
         <source>No</source>
         <translation>No</translation>
     </message>
     <message>
-        <location filename="../../common/controlInterface/messageDialog.cpp" line="137"/>
+        <location filename="../../common/controlInterface/messageDialog.cpp" line="150"/>
         <source>Yes</source>
         <translation>Yes</translation>
     </message>
@@ -2741,42 +2213,42 @@ p, li { white-space: pre-wrap; }
     <name>control::ParametersWidget</name>
     <message>
         <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="11"/>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="149"/>
-        <source>    Parameters</source>
-        <translation>    Parameters</translation>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="162"/>
+        <source>Parameters</source>
+        <translation>Parameters</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="76"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Name These Parameters</source>
         <translation>Name These Parameters</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="76"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="81"/>
         <source>Input a name before you save.</source>
         <translation>Input a name before you save.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="101"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="106"/>
         <source>Input a name.</source>
         <translation>Input a name.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="108"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="114"/>
         <source>Name is longer than 128 characters. Create a shorter one.</source>
         <translation>Name is longer than 128 characters. Create a shorter one.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="115"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="121"/>
         <source>Name already exists. Try another.</source>
         <translation>Name already exists. Try another.</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="126"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="132"/>
         <source>Import</source>
         <translation>Import</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="138"/>
+        <location filename="../../ankerplugins/fdm_setting/parameterswidget.cpp" line="148"/>
         <source>Export</source>
         <translation>Export</translation>
     </message>
@@ -2784,83 +2256,105 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>control::PreferencesDialog</name>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="30"/>
+        <location filename="../controls/preferencesdialog.cpp" line="51"/>
+        <location filename="../controls/preferencesdialog.cpp" line="227"/>
         <source>Preferences</source>
         <translation>Preferences</translation>
     </message>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="54"/>
+        <location filename="../controls/preferencesdialog.cpp" line="75"/>
+        <location filename="../controls/preferencesdialog.cpp" line="236"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../controls/preferencesdialog.cpp" line="60"/>
+        <location filename="../controls/preferencesdialog.cpp" line="81"/>
+        <location filename="../controls/preferencesdialog.cpp" line="239"/>
         <source>Save</source>
         <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>General</source>
+        <translation>General</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Machine</source>
+        <translation>Machine</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Material</source>
+        <translation>Material</translation>
+    </message>
+    <message>
+        <location filename="../controls/preferencesdialog.cpp" line="231"/>
+        <source>Parameters</source>
+        <translation>Parameters</translation>
+    </message>
+</context>
+<context>
+    <name>control::updateMessageDialog</name>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="140"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="152"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="159"/>
+        <source>Cancel</source>
+        <translation>Cancel</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="154"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="161"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="174"/>
+        <source>Save</source>
+        <translation>Save</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="163"/>
+        <location filename="../controls/updateMessageDialog.cpp" line="172"/>
+        <source>Don&apos;t Save</source>
+        <translation>Don&apos;t Save</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="179"/>
+        <source>No</source>
+        <translation>No</translation>
+    </message>
+    <message>
+        <location filename="../controls/updateMessageDialog.cpp" line="182"/>
+        <source>Yes</source>
+        <translation>Yes</translation>
     </message>
 </context>
 <context>
     <name>fdmsettings::FdmParamSettingsWidget</name>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="121"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Reset Parameters</source>
         <translation>Reset Parameters</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="121"/>
+        <location filename="../../ankerplugins/fdm_setting/fdmparamsettingswidget.cpp" line="171"/>
         <source>Parameters will be reset. Continue?</source>
         <translation>Parameters will be reset. Continue?</translation>
     </message>
 </context>
 <context>
-    <name>layerDialog</name>
+    <name>fdmsettings::FdmSettingPlugin</name>
     <message>
-        <location filename="../ui/layerDialog.ui" line="20"/>
-        <source>Layer Dialog</source>
-        <translation>Layer Dialog</translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="51"/>
-        <location filename="../ui/layerDialog.ui" line="101"/>
-        <location filename="../ui/layerDialog.ui" line="182"/>
-        <source>2</source>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="510"/>
+        <source>Import ini config </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/layerDialog.ui" line="56"/>
-        <location filename="../ui/layerDialog.ui" line="118"/>
-        <location filename="../ui/layerDialog.ui" line="199"/>
-        <source>3</source>
+        <location filename="../../ankerplugins/fdm_setting/fdm_setting.cpp" line="520"/>
+        <source>Export ini config file</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="61"/>
-        <location filename="../ui/layerDialog.ui" line="135"/>
-        <location filename="../ui/layerDialog.ui" line="216"/>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="81"/>
-        <location filename="../ui/layerDialog.ui" line="98"/>
-        <location filename="../ui/layerDialog.ui" line="115"/>
-        <location filename="../ui/layerDialog.ui" line="132"/>
-        <source>CTRL-click to store view, click to recall</source>
-        <translation>CTRL-click to store view, click to recall</translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="84"/>
-        <location filename="../ui/layerDialog.ui" line="165"/>
-        <source>1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../ui/layerDialog.ui" line="162"/>
-        <location filename="../ui/layerDialog.ui" line="179"/>
-        <location filename="../ui/layerDialog.ui" line="196"/>
-        <location filename="../ui/layerDialog.ui" line="213"/>
-        <source>CTRL-click to store layer visibility, click to recall</source>
-        <translation>CTRL-click to store layer visibility, click to recall</translation>
     </message>
 </context>
 <context>
@@ -2871,147 +2365,242 @@ p, li { white-space: pre-wrap; }
         <translation>Form</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="72"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2161"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="68"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2096"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3240"/>
         <source>Print</source>
         <translation>Print</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="332"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="369"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="404"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="438"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="472"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="506"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="540"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="572"/>
-        <source>Camera View</source>
-        <translation>Camera View</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="167"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="172"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3242"/>
         <source>AnkerMake G-Code Preview</source>
         <translation>AnkerMake G-Code Preview</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="708"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="717"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="341"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3339"/>
+        <source>AI View</source>
+        <translation>AI View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="370"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3342"/>
+        <source>3D View</source>
+        <translation>3D View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="394"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3336"/>
+        <source>Front View</source>
+        <translation>Front View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="417"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3345"/>
+        <source>Rear View</source>
+        <translation>Rear View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="440"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3348"/>
+        <source>Left View</source>
+        <translation>Left View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="463"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3351"/>
+        <source>Right View</source>
+        <translation>Right View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3354"/>
+        <source>Top View</source>
+        <translation>Top View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="507"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3357"/>
+        <source>Bottom View</source>
+        <translation>Bottom View</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="625"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="634"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3247"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3294"/>
         <source>Line Type</source>
         <translation>Line Type</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="709"/>
-        <source>speed</source>
-        <translation>speed</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="626"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3248"/>
+        <source>Speed</source>
+        <translation>Speed</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="710"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="627"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3249"/>
         <source>Trapezoid</source>
         <translation>Trapezoid</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="711"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="628"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3250"/>
         <source>Flow</source>
         <translation>Flow</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="749"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1133"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1436"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1740"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="667"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1060"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1362"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1666"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3263"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3297"/>
         <source>Inner Wall</source>
         <translation>Inner Wall</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="796"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1166"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1469"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1773"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="715"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1093"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1395"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1699"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3266"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3300"/>
         <source>Outer Wall</source>
         <translation>Outer Wall</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="959"/>
-        <source>Travel</source>
-        <translation>Travel</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="757"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1123"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1425"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1729"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3269"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3272"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3303"/>
+        <source>Skin</source>
+        <translation>Skin</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1041"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1288"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1591"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1895"/>
-        <source>Support</source>
-        <translation>Support</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2025"/>
-        <source>Consumables</source>
-        <translation>Consumables</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2931"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3217"/>
-        <source>Generate AI Image</source>
-        <translation>Generate AI Image</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="837"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1196"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1499"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1803"/>
-        <source>skin</source>
-        <translation>skin</translation>
-    </message>
-    <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="878"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1226"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1529"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1833"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="799"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1153"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1455"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1759"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3275"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3306"/>
         <source>Adhesion</source>
         <translation>Adhesion</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="919"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1257"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1560"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1864"/>
-        <source>fill</source>
-        <translation>fill</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="841"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1184"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1486"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1790"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3278"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3309"/>
+        <source>Fill</source>
+        <translation>Fill</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1001"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="882"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3321"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3324"/>
+        <source>Travel</source>
+        <translation>Travel</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="925"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3327"/>
+        <source>Zlap</source>
+        <translation>Zlap</translation>
+    </message>
+    <message>
         <source>zlap</source>
-        <translation>zlap</translation>
+        <translation type="vanished">zlap</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1082"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1319"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1622"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1926"/>
-        <source>unkonwn</source>
-        <translation>unkonwn</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="967"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1215"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1517"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1821"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3254"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3281"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3284"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3330"/>
+        <source>Support</source>
+        <translation>Support</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1360"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1663"/>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1967"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1009"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1246"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1548"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1852"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3257"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3287"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3333"/>
+        <source>Unknown</source>
+        <translation>Unknown</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1286"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1589"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1892"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3260"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3290"/>
         <source>mm/s</source>
         <translation>mm/s</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2044"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1950"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3312"/>
+        <source>Consumables</source>
+        <translation>Consumables</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="1969"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3315"/>
         <source>Filament</source>
         <translation>Filament</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2087"/>
-        <source>time</source>
-        <translation>time</translation>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2012"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3318"/>
+        <source>Time</source>
+        <translation>Time</translation>
     </message>
     <message>
-        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2122"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2049"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3237"/>
         <source>Export</source>
         <translation>Export</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2878"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3392"/>
+        <source>Generate AI Image</source>
+        <translation>Generate AI Image</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="2880"/>
+        <source>Export G-Code</source>
+        <translation>Export G-Code</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
+        <source>Warning</source>
+        <translation>Warning</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3132"/>
+        <source>G-Code failed to open. Try again.</source>
+        <translation>G-Code failed to open. Try again.</translation>
+    </message>
+    <message>
+        <location filename="../../ankerplugins/fdm_gcode_parser/glview/viewwidget.cpp" line="3385"/>
+        <source>No GCODE here!</source>
+        <translation>No GCODE here!</translation>
     </message>
 </context>
 </TS>

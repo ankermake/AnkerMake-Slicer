@@ -5,6 +5,7 @@
 #include "edit_meshzoomtransform.h"
 #include "edit_meshmirrortransform.h"
 #include "vcg/space/box3.h"
+#include <common/utilities/tlogger.h>
 
 
 bool m_lockToPrintPlatform = false;
@@ -19,6 +20,7 @@ EditMeshTransformFactory::EditMeshTransformFactory() {
     __initActionEditTools();
 }
 EditMeshTransformFactory::~EditMeshTransformFactory() {
+    AkUtil::TFunction("");
 }
 
 
@@ -31,7 +33,7 @@ QString EditMeshTransformFactory::pluginName() const
 
 void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 {
-
+    
 //    if (metaData.from == AkConst::Plugin::FDM_SETTING
 //        && metaData.msg == AkConst::Msg::GET_GLOBAL_SUPPORT_DISABLED_STATUS){
 //        for (auto* action : actionList) {
@@ -48,7 +50,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //                    return;
 //                }
 
-
+                
 //                PluginMessageData data;
 //                data.from = AkConst::Plugin::FDM_EDIT_MODEL;
 //                data.dest = AkConst::Plugin::FDM_SETTING;
@@ -60,7 +62,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //        }
 //    }
 
-
+    
 //    else if (metaData.from == AkConst::Plugin::FDM_SLICER
 //             && metaData.msg == AkConst::Msg::GET_GLOBAL_SUPPORT_DISABLED_STATUS)
 //    {
@@ -78,7 +80,7 @@ void EditMeshTransformFactory::recMsgfromManager(PluginMessageData metaData)
 //                    return;
 //                }
 
-
+                
 //                PluginMessageData data;
 //                data.from = AkConst::Plugin::FDM_EDIT_MODEL;
 //                data.dest = AkConst::Plugin::FDM_SLICER;
@@ -105,6 +107,12 @@ void EditMeshTransformFactory::initialize(ControlInterface* controlmanager, Rich
         m_conInt->addActionToModelTranform(action);
     }
     m_currAction = m_moveMeshTransform;
+
+//  add  @2023-01-13 by ChunLian
+    if(m_moveMeshTransform  ){ m_moveMeshTransform  ->ankerEditTool->initInMainUI(); }
+    if(m_rotateMeshTransform){ m_rotateMeshTransform->ankerEditTool->initInMainUI(); }
+    if(m_scaleMeshTransform ){ m_scaleMeshTransform ->ankerEditTool->initInMainUI(); }
+    if(m_mirrorMeshTransform){ m_mirrorMeshTransform->ankerEditTool->initInMainUI(); }
 }
 
 ///  AnkerEditPlugin interface
@@ -124,7 +132,7 @@ QString EditMeshTransformFactory::getEditToolDescription(const QAction* action)
     if (actionEditTool) {
         return actionEditTool->getDescription();
     }
-    return tr("transform mesh model");
+    return tr("Rotate Mesh Model");
 }
 
 
@@ -149,12 +157,19 @@ void EditMeshTransformFactory::setEditToolsEnable(QVariant var)
         }
     }
 }
-
+#include "edit_meshzoomtransform.h"
 bool EditMeshTransformFactory::startAnkerEdit(ActionEditTool *action, void *arg1, void *arg2)
 {
     bool res = action->ankerEditTool->startAnkerEdit(action, arg1, arg2);
     if(res){
         m_currAction  = action;
+        qDebug() << "start Edit: " << action->getDescription() << ", " << dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool);
+        if(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool) != nullptr)
+        {
+            connect(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool), &EditMeshZoomTransformTool::restartEditToolSignal, this, &EditMeshTransformFactory::restartCurrentAction);
+        }
+        m_arg1 = arg1;
+        m_arg2 = arg2;
         m_isActivated = true  ;
     }
     return res;
@@ -165,6 +180,18 @@ void EditMeshTransformFactory::endAnkerEdit(ActionEditTool *action, void *arg1, 
     if(action->ankerEditTool->isActivated()){
         action->ankerEditTool->endAnkerEdit(action, arg1, arg2);
         m_isActivated = false ;
+        if(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool) != nullptr)
+        {
+            disconnect(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool), &EditMeshZoomTransformTool::restartEditToolSignal, this, &EditMeshTransformFactory::restartCurrentAction);
+        }
+    }
+}
+
+void EditMeshTransformFactory::restartCurrentAction()
+{
+    if(m_currAction != nullptr){
+       endAnkerEdit(m_currAction, m_arg1, m_arg2);
+       startAnkerEdit(m_currAction, m_arg1, m_arg2);
     }
 }
 
@@ -207,98 +234,81 @@ void EditMeshTransformFactory::tableEvent(QTabletEvent *event, void *arg1, void 
 void EditMeshTransformFactory::__initActionEditTools()
 {
     {
-        QIcon icon_n(":/images/fdm_move_icon_n.png");
-        QIcon icon_s(":/images/fdm_move_icon_s.png");
-//        QIcon *pMoveIcon = new QIcon(":/images/fdm_move_icon_n.png");//Active
-////        pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_n.png"), QIcon::Disabled, QIcon::On);
-////        pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_s.png"), QIcon::Disabled, QIcon::Off);
-//        pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_s.png"), QIcon::Selected, QIcon::On);
-//        pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_s.png"), QIcon::Active, QIcon::On);
-//        pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_n.png"), QIcon::Normal, QIcon::On);
-// //       pMoveIcon->addPixmap(QPixmap(":/images/fdm_move_icon_n.png"), QIcon::Normal, QIcon::Off);
-
-        //QIcon icon_e = QIcon(":/images/fdm_move_icon_e.png"); // is hovered
-        m_moveMeshTransform = new ActionEditTool(icon_n, tr("Move"), this);
-        //m_moveMeshTransform = new ActionEditTool(*pMoveIcon, tr("Move"), this);
+        QIcon iconMove;
+        iconMove.addPixmap(QPixmap(":/images/fdm_move_icon_n.png"),QIcon::Normal, QIcon::Off);
+        iconMove.addPixmap(QPixmap(":/images/fdm_move_icon_s.png"),QIcon::Normal, QIcon::On);
+        iconMove.addPixmap(QPixmap(":/images/fdm_move_icon_e.png"),QIcon::Disabled);
+        m_moveMeshTransform = new ActionEditTool(iconMove, tr("Move"), this);
         m_moveMeshTransform->setObjectName("Move");
         auto ankerEditTool  = new EditMeshMoveTransformTool();
-        m_moveMeshTransform->setDescription("move mesh model");//QActionEvent
-
+        m_moveMeshTransform->setDescription("Move Mesh Model");//QActionEvent
         ankerEditTool->setParent(m_moveMeshTransform);
         m_moveMeshTransform->ankerEditTool   = ankerEditTool;
         m_moveMeshTransform->ankerEditPlugin = this;
-        QObject::connect(m_moveMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
-            QIcon tmpIcon = m_moveMeshTransform->icon();
-            m_moveMeshTransform->setIcon(check ? icon_s : icon_n);
-        });
-
-        /*
-        QEvent *event= nullptr;
-        m_moveMeshTransform->eventFilter(this, event);
-        event->type()
-*/
-//        QObject::connect(m_moveMeshTransform, &QAction::changed, [this, icon_s, icon_n]{
-//            QEvent *event1= nullptr;
-//            //m_moveMeshTransform->eventFilter(this, event);
-//            this->event(event1);
-
-//            if(event1)
-//            {
-//                qDebug() << "Changed: " << event1->type();
-//            }
-
-//        });
-
         actionList.push_back(m_moveMeshTransform);
     }
 
     {
-        QIcon icon_s = QIcon(":/images/fdm_scale_icon_s.png"); // is strat
-        QIcon icon_n = QIcon(":/images/fdm_scale_icon_n.png"); // is end
-        m_scaleMeshTransform = new ActionEditTool(icon_n, tr("Zoom"), this);
+        QIcon iconScale;
+        iconScale.addPixmap(QPixmap(":/images/fdm_scale_icon_n.png"),QIcon::Normal, QIcon::Off);
+        iconScale.addPixmap(QPixmap(":/images/fdm_scale_icon_s.png"),QIcon::Normal, QIcon::On);
+        iconScale.addPixmap(QPixmap(":/images/fdm_scale_icon_e.png"),QIcon::Disabled);
+        m_scaleMeshTransform = new ActionEditTool(iconScale, tr("Zoom"), this);
         m_scaleMeshTransform->setObjectName("Zoom");
         auto ankerEditTool = new EditMeshZoomTransformTool();
         ankerEditTool->setParent(m_scaleMeshTransform);
-        m_scaleMeshTransform->setDescription(tr("zoom mesh model"));
+        m_scaleMeshTransform->setDescription(tr("Zoom Mesh Model"));
         m_scaleMeshTransform->ankerEditTool   = ankerEditTool;
         m_scaleMeshTransform->ankerEditPlugin = this;
-        QObject::connect(m_scaleMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
-            m_scaleMeshTransform->setIcon(check ? icon_s : icon_n);
-        });
         actionList.push_back(m_scaleMeshTransform);
     }
 
     {
-        QIcon icon_s = QIcon(":/images/fdm_rotate_icon_s.png"); // is strat
-        QIcon icon_n = QIcon(":/images/fdm_rotate_icon_n.png"); // is end
-        m_rotateMeshTransform = new ActionEditTool(icon_n, tr("Rotate"), this);
+        QIcon iconRotate;
+        iconRotate.addPixmap(QPixmap(":/images/fdm_rotate_icon_n.png"),QIcon::Normal, QIcon::Off);
+        iconRotate.addPixmap(QPixmap(":/images/fdm_rotate_icon_s.png"),QIcon::Normal, QIcon::On);
+        iconRotate.addPixmap(QPixmap(":/images/fdm_rotate_icon_e.png"),QIcon::Disabled);
+        m_rotateMeshTransform = new ActionEditTool(iconRotate, tr("Rotate"), this);
         m_rotateMeshTransform->setObjectName("Rotate");
         auto ankerEditTool = new EditMeshRotationTransformTool();
         ankerEditTool->setParent(m_rotateMeshTransform);
-        m_rotateMeshTransform->setDescription("rotate mesh model");
+        m_rotateMeshTransform->setDescription("Rotate Mesh Model");
         m_rotateMeshTransform->ankerEditTool   = ankerEditTool;
         m_rotateMeshTransform->ankerEditPlugin = this;
-        QObject::connect(m_rotateMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
-            m_rotateMeshTransform->setIcon(check ? icon_s : icon_n);
-        });
         actionList.push_back(m_rotateMeshTransform);
     }
 
     {
-        QIcon icon_s = QIcon(":/images/fdm_mirror_icon_s.png"); // is strat
-        QIcon icon_n = QIcon(":/images/fdm_mirror_icon_n.png"); // is end
-        m_mirrorMeshTransform = new ActionEditTool(icon_n, tr("Mirror"), this);
+        QIcon iconMirror;
+        iconMirror.addPixmap(QPixmap(":/images/fdm_mirror_icon_n.png"),QIcon::Normal, QIcon::Off);
+        iconMirror.addPixmap(QPixmap(":/images/fdm_mirror_icon_s.png"),QIcon::Normal, QIcon::On);
+        iconMirror.addPixmap(QPixmap(":/images/fdm_mirror_icon_e.png"),QIcon::Disabled);
+        m_mirrorMeshTransform = new ActionEditTool(iconMirror, tr("Mirror"), this);
         m_mirrorMeshTransform->setObjectName("Mirror");
         auto ankerEditTool = new EditMeshMirrorTransformTool();
         ankerEditTool->setParent(m_mirrorMeshTransform);
-        m_mirrorMeshTransform->setDescription("mirror mesh model");
+        m_mirrorMeshTransform->setDescription("Mirror Mesh Model");
         m_mirrorMeshTransform->ankerEditTool   = ankerEditTool;
         m_mirrorMeshTransform->ankerEditPlugin = this;
-        QObject::connect(m_mirrorMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
-            m_mirrorMeshTransform->setIcon(check ? icon_s : icon_n);
-        });
         actionList.push_back(m_mirrorMeshTransform);
     }
+
+
+//    {
+//        QIcon iconTreeSupport;
+//        iconTreeSupport.addPixmap(QPixmap(":/images/fdm_manual_icon_n.png"),QIcon::Normal, QIcon::Off);
+//        iconTreeSupport.addPixmap(QPixmap(":/images/fdm_manual_icon_s.png"),QIcon::Normal, QIcon::On);
+//        iconTreeSupport.addPixmap(QPixmap(":/images/fdm_manual_icon_e.png"),QIcon::Disabled);
+//        m_manualTreeSupport = new ActionEditTool(iconTreeSupport, tr("Support"), this);
+//        m_manualTreeSupport->setObjectName("Support");
+//        auto ankerEditTool = new ManualTreeSupportTool();
+
+//        ankerEditTool->setParent(m_manualTreeSupport);
+//        m_manualTreeSupport->setDescription(tr("Tree Support"));
+//        m_manualTreeSupport->ankerEditTool = ankerEditTool;
+//        m_manualTreeSupport->ankerEditPlugin = this;
+//        actionList.push_back(m_manualTreeSupport);
+//    }
 
 }
 
@@ -332,19 +342,19 @@ void EditMeshTransformFactory::changeEvent(QEvent *e)
     if (e->type() == QEvent::LanguageChange) {
         if (m_moveMeshTransform != nullptr) {
             m_moveMeshTransform->setText(tr("Move"));
-            m_moveMeshTransform->setDescription(tr("move mesh model"));
+            m_moveMeshTransform->setDescription(tr("Move Mesh Model"));
         }
         if (m_scaleMeshTransform != nullptr) {
             m_scaleMeshTransform->setText(tr("Zoom"));
-            m_scaleMeshTransform->setDescription(tr("zoom mesh model"));
+            m_scaleMeshTransform->setDescription(tr("Zoom Mesh Model"));
         }
         if (m_rotateMeshTransform != nullptr) {
             m_rotateMeshTransform->setText(tr("Rotate"));
-            m_rotateMeshTransform->setDescription(tr("rotate mesh model"));
+            m_rotateMeshTransform->setDescription(tr("Rotate Mesh Model"));
         }
         if (m_mirrorMeshTransform != nullptr) {
             m_mirrorMeshTransform->setText(tr("Mirror"));
-            m_mirrorMeshTransform->setDescription(tr("mirror mesh model"));
+            m_mirrorMeshTransform->setDescription(tr("Mirror Mesh Model"));
         }
         if (m_manualTreeSupport != nullptr) {
             m_manualTreeSupport->setText(tr("Support"));

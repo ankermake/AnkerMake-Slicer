@@ -11,7 +11,7 @@
 
 
 DEF_PTR(CHCone)
-class CHCone :public CHMeshShowObj
+class COMMONLIB_EXPORT CHCone :public CHMeshShowObj
 {
 public:
 	CHCone();

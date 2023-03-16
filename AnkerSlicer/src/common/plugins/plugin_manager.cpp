@@ -140,6 +140,7 @@ void PluginManager::loadPlugins()
 {
 	// without adding the correct library path in the mac the loading of jpg (done via qt plugins) fails
 	// ToDo: get rid of any qApp here
+    if(meshlab::defaultPluginPath().isEmpty()){ return; }
 	qApp->addLibraryPath(meshlab::defaultPluginPath());
 	loadPlugins(QDir(meshlab::defaultPluginPath()));
 }
@@ -169,9 +170,9 @@ void PluginManager::loadPlugins(QDir pluginsDirectory)
 			}
 		}
 		if (errors.size() > 0){
-			QString singleError = "Unable to load the following plugins:\n\n";
+            QString singleError = "Unable to load the following plugins:";
 			for (const auto& p : errors){
-				singleError += "\t" + p.first + ": " + p.second + "\n";
+                singleError += "\t" + p.first + ": " + p.second ;
 			}
 			throw MLException(singleError);
 		}

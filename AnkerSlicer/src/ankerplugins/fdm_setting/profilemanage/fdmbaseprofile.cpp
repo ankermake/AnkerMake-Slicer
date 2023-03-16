@@ -9,6 +9,7 @@
 #include "common/ak_const.h"
 #include <QDebug>
 #include <QTextCodec>
+#include "common/utilities/tlogger.h"
 using namespace AkUtil;
 
 
@@ -98,7 +99,7 @@ void FdmBaseProfile::load()
     this->categories.clear();
     this->categoryDict.clear();
 
-    //if(dataSource == "C:/Users/Administrator/AppData/Local/AnkerSlicer/AnkerMake_64bit_fp/setting/fdm/parameter/custom/{0c3cbb5d-dd46-46d2-8c8c-42932ca69c0a}.ini")
+    //if(dataSource == "C:/Users/Administrator/AppData/Local/AnkerMake/AnkerMake_64bit_fp/setting/fdm/parameter/custom/{0c3cbb5d-dd46-46d2-8c8c-42932ca69c0a}.ini")
     //{
     //    int x = 0;
     //}
@@ -201,7 +202,26 @@ void FdmBaseProfile::save(QString path)
             
             if (item.value.type() == QVariant::Type::Double || item.value.type() == QMetaType::Float)
             {
-                ini.setValue(item.name, QString::number(item.value.toDouble(), 'f', 2));
+                //ini.setValue(item.name, QString::number(item.value.toDouble(), 'f', 2));
+                auto dValue = item.value.toDouble();
+                if (((int)(dValue * 100)) * 10 == (int)(dValue * 1000))
+                {
+                    
+                    if (((int)(dValue * 10)) * 10 == (int)(dValue * 100)
+                        && ((int)(dValue * 1)) * 10 == (int)(dValue * 10))
+                    {
+                        
+                        ini.setValue(item.name, (int)(dValue));
+                    }
+                    else
+                    {
+                        ini.setValue(item.name, QString::number(item.value.toDouble(), 'f', 2));
+                    }
+                }
+                else
+                {
+                    ini.setValue(item.name, QString::number(item.value.toDouble(), 'f', 3));
+                }
             }
             else
             {
@@ -464,6 +484,13 @@ void FdmBaseProfile::setSetting(const QString& cateName, const FdmSettingItem& i
     {
         qDebug() << QString("*** file %1 content changed. categoryName %2 key=%3").arg(getName()).arg(categoryName).arg(item.name)
             << originValue << item.value;
+
+        
+        if (item.name.length() > AkConst::SettingKey::MAX_NAME_SIZE)
+        {
+            AkUtil::TWarning("skip unexpected setting " + item.name);
+            return;
+        }
 
         categoryDict[categoryName]->set(item.name, item.value);
         addStatus(EProfileStatus::NodeValueChanged);

@@ -87,10 +87,10 @@ private:
 public slots:
     void setOriginalStlName(const QString& oStlName);
     void setAimode(bool _isAimode);
+    void setLoggingStatus(bool);
     void pauseGcodePlay(int);
 private slots:
     void initForm();
-
     void setSavePicTrue();
     void setExportPic();
     void verticalSliderValueChanged(int, int);
@@ -116,6 +116,8 @@ private slots:
     void unkonwncheckButton();
     void updatePlayViewer();
     void spinBoxUpValueChanged(int);
+    
+    void setLoadingProgress();
 #ifdef USE_EXTRA_UI
     void linetypeComboxChange(int);
 #endif
@@ -144,6 +146,8 @@ public:
     void getGcodeSize();
     void setGcodeSize();
     void setPerformance(bool);
+    void getGcodeTargetTemperature(float&, float&);
+    bool checkLastFileComplete();
 
     std::shared_ptr<Anker::GCodeProcessor> processor;
     GcodeViewer* getGcodeView(){return this->ui->openGLWidget;}
@@ -156,241 +160,267 @@ public:
     QSharedPointer<QRemoteObjectDynamicReplica> m_rpc;
     QRemoteObjectNode *m_node = nullptr;
     QString oStlName;
-
     
     bool printMode = false;
     //inner mode
     bool innerMode = false;
+
+    
+    double timer_value = 0.0;
+    QTimer  *tp_timer = nullptr;
+    double f_size = 0.0;
 private:
     //bool offRenderLock = false;
     bool isHighPerformance = true;
+    bool innerModeInit = true;
+    bool printModeInit = true;
+    //when layer < 1 . lastShowFileComplete = false
+    bool lastShowFileComplete = true;
+    QString lastExportPath;
     QString saveTempPath ;
     ProgressDialog *mpDlg;
 #ifdef USE_EXTRA_UI
     QComboBox *linetypeCombox;
+    QLabel *colorPatch_label_unit;
+    QLabel *colorPatch_label_unit_Flow;
 #endif
-    QStackedLayout* typeLayout;
+    QStackedLayout* typeLayout =nullptr;
 
     
     
-    QHBoxLayout  *innerWallLayout;              
-    QPushButton  *innerWallLabelC;              
-    QLabel       *innerWallLabel;               
-    QSpacerItem  *horizontalSpacer_innerWall;   //
-    SwitchButton *innerWallcheckBox;            
+    QHBoxLayout  *innerWallLayout =nullptr;            
+    QPushButton  *innerWallLabelC =nullptr;             
+    QLabel       *innerWallLabel =nullptr;               
+    QSpacerItem  *horizontalSpacer_innerWall =nullptr;   //
+    SwitchButton *innerWallcheckBox =nullptr;            
+    QLabel* linetypelabel =nullptr;
+    QLabel* ConsumedLabelabel = nullptr;
+    QLabel* filamentLabel = nullptr;
+    QLabel* timelabel = nullptr;
+    
+    QHBoxLayout  *outerWallLayout = nullptr;
+    QPushButton  *outerWallLabelC = nullptr;
+    QLabel       *outerWallLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_outerWall = nullptr;
+    SwitchButton *outerWallcheckBox = nullptr;
 
     
-    QHBoxLayout  *outerWallLayout;
-    QPushButton  *outerWallLabelC;
-    QLabel       *outerWallLabel;
-    QSpacerItem  *horizontalSpacer_outerWall;
-    SwitchButton *outerWallcheckBox;
+    QHBoxLayout  *skinLayout = nullptr;
+    QPushButton  *skinLabelC = nullptr;
+    QLabel       *skinLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_skin = nullptr;
+    SwitchButton *skincheckBox = nullptr;
 
     
-    QHBoxLayout  *skinLayout;
-    QPushButton  *skinLabelC;
-    QLabel       *skinLabel;
-    QSpacerItem  *horizontalSpacer_skin;
-    SwitchButton *skincheckBox;
+    QHBoxLayout  *helperLayout = nullptr;
+    QPushButton  *helperLabelC = nullptr;
+    QLabel       *helperLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_helper = nullptr;
+    SwitchButton *helpercheckBox = nullptr;
 
     
-    QHBoxLayout  *helperLayout;
-    QPushButton  *helperLabelC;
-    QLabel       *helperLabel;
-    QSpacerItem  *horizontalSpacer_helper;
-    SwitchButton *helpercheckBox;
+    QHBoxLayout  *fillLayout = nullptr;
+    QPushButton  *fillLabelC = nullptr;
+    QLabel       *fillLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_fill = nullptr;
+    SwitchButton *fillcheckBox = nullptr;
 
     
-    QHBoxLayout  *fillLayout;
-    QPushButton  *fillLabelC;
-    QLabel       *fillLabel;
-    QSpacerItem  *horizontalSpacer_fill;
-    SwitchButton *fillcheckBox;
+    QHBoxLayout  *travelLayout = nullptr;
+    QPushButton  *travelLabelC = nullptr;
+    QLabel       *travelLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_travel = nullptr;
+    SwitchButton *travelcheckBox = nullptr;
 
     
-    QHBoxLayout  *travelLayout;
-    QPushButton  *travelLabelC;
-    QLabel       *travelLabel;
-    QSpacerItem  *horizontalSpacer_travel;
-    SwitchButton *travelcheckBox;
+    QHBoxLayout  *supportLayout = nullptr;
+    QPushButton  *supportLabelC = nullptr;
+    QLabel       *supportLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_support = nullptr;
+    SwitchButton *supportcheckBox = nullptr;
 
     
-    QHBoxLayout  *supportLayout;
-    QPushButton  *supportLabelC;
-    QLabel       *supportLabel;
-    QSpacerItem  *horizontalSpacer_support;
-    SwitchButton *supportcheckBox;
+    QHBoxLayout  *unkonwnLayout = nullptr;
+    QPushButton  *unkonwnLabelC = nullptr;
+    QLabel       *unkonwnLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_unkonwn = nullptr;
+    SwitchButton *unkonwncheckBox = nullptr;
 
     
-    QHBoxLayout  *unkonwnLayout;
-    QPushButton  *unkonwnLabelC;
-    QLabel       *unkonwnLabel;
-    QSpacerItem  *horizontalSpacer_unkonwn;
-    SwitchButton *unkonwncheckBox;
-
-    
-    QHBoxLayout  *zlapLayout;
-    QPushButton  *zlapLabelC;
-    QLabel       *zlapLabel;
-    QSpacerItem  *horizontalSpacer_zlap;
-    SwitchButton *zlapcheckBox;
+    QHBoxLayout  *zlapLayout = nullptr;
+    QPushButton  *zlapLabelC = nullptr;
+    QLabel       *zlapLabel = nullptr;
+    QSpacerItem  *horizontalSpacer_zlap = nullptr;
+    SwitchButton *zlapcheckBox = nullptr;
 
 #ifdef USE_EXTRA_UI
     
-    QHBoxLayout *innerWallLayout_speed;
-    QLabel *innerWallLabel_speed;
-    QSpacerItem *horizontalSpacer_innerWall_speed;
-    SwitchButton *innerWallcheckBox_speed;
+    QHBoxLayout *innerWallLayout_speed = nullptr;
+    QLabel *innerWallLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_innerWall_speed = nullptr;
+    SwitchButton *innerWallcheckBox_speed = nullptr;
 
-    QHBoxLayout *outerWallLayout_speed;
-    QLabel *outerWallLabel_speed;
-    QSpacerItem *horizontalSpacer_outerWall_speed;
-    SwitchButton *outerWallcheckBox_speed;
+    QHBoxLayout *outerWallLayout_speed = nullptr;
+    QLabel *outerWallLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_outerWall_speed = nullptr;
+    SwitchButton *outerWallcheckBox_speed = nullptr;
 
-    QHBoxLayout *skinLayout_speed;
-    QLabel *skinLabel_speed;
-    QSpacerItem *horizontalSpacer_skin_speed;
-    SwitchButton *skincheckBox_speed;
+    QHBoxLayout *skinLayout_speed = nullptr;
+    QLabel *skinLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_skin_speed = nullptr;
+    SwitchButton *skincheckBox_speed = nullptr;
 
-    QHBoxLayout *helperLayout_speed;
-    QLabel *helperLabel_speed;
-    QSpacerItem *horizontalSpacer_helper_speed;
-    SwitchButton *helpercheckBox_speed;
+    QHBoxLayout *helperLayout_speed = nullptr;
+    QLabel *helperLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_helper_speed = nullptr;
+    SwitchButton *helpercheckBox_speed = nullptr;
 
-    QHBoxLayout *fillLayout_speed;
-    QLabel *fillLabel_speed;
-    QSpacerItem *horizontalSpacer_fill_speed;
-    SwitchButton *fillcheckBox_speed;
+    QHBoxLayout *fillLayout_speed = nullptr;
+    QLabel *fillLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_fill_speed = nullptr;
+    SwitchButton *fillcheckBox_speed = nullptr;
 
-    QHBoxLayout *travelLayout_speed;
-    QLabel *travelLabel_speed;
-    QSpacerItem *horizontalSpacer_travel_speed;
-    SwitchButton *travelcheckBox_speed;
+    QHBoxLayout *travelLayout_speed = nullptr;
+    QLabel *travelLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_travel_speed = nullptr;
+    SwitchButton *travelcheckBox_speed = nullptr;
 
-    QHBoxLayout *supportLayout_speed;
-    QLabel *supportLabel_speed;
-    QSpacerItem *horizontalSpacer_support_speed;
-    SwitchButton *supportcheckBox_speed;
+    QHBoxLayout *supportLayout_speed = nullptr;
+    QLabel *supportLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_support_speed = nullptr;
+    SwitchButton *supportcheckBox_speed = nullptr;
 
-    QHBoxLayout *unkonwnLayout_speed;
-    QLabel *unkonwnLabel_speed;
-    QSpacerItem *horizontalSpacer_unkonwn_speed;
-    SwitchButton *unkonwncheckBox_speed;
+    QHBoxLayout *unkonwnLayout_speed = nullptr;
+    QLabel *unkonwnLabel_speed = nullptr;
+    QSpacerItem *horizontalSpacer_unkonwn_speed = nullptr;
+    SwitchButton *unkonwncheckBox_speed = nullptr;
 
-
-    
-    QHBoxLayout *innerWallLayout_trapezoid;
-    QLabel *innerWallLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_innerWall_trapezoid;
-    SwitchButton *innerWallcheckBox_trapezoid;
-
-    QHBoxLayout *outerWallLayout_trapezoid;
-    QLabel *outerWallLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_outerWall_trapezoid;
-    SwitchButton *outerWallcheckBox_trapezoid;
-
-    QHBoxLayout *skinLayout_trapezoid;
-    QLabel *skinLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_skin_trapezoid;
-    SwitchButton *skincheckBox_trapezoid;
-
-    QHBoxLayout *helperLayout_trapezoid;
-    QLabel *helperLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_helper_trapezoid;
-    SwitchButton *helpercheckBox_trapezoid;
-
-    QHBoxLayout *fillLayout_trapezoid;
-    QLabel *fillLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_fill_trapezoid;
-    SwitchButton *fillcheckBox_trapezoid;
-
-    QHBoxLayout *travelLayout_trapezoid;
-    QLabel *travelLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_travel_trapezoid;
-    SwitchButton *travelcheckBox_trapezoid;
-
-    QHBoxLayout *supportLayout_trapezoid;
-    QLabel *supportLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_support_trapezoid;
-    SwitchButton *supportcheckBox_trapezoid;
-
-    QHBoxLayout *unkonwnLayout_trapezoid;
-    QLabel *unkonwnLabel_trapezoid;
-    QSpacerItem *horizontalSpacer_unkonwn_trapezoid;
-    SwitchButton *unkonwncheckBox_trapezoid;
 
     
-    QHBoxLayout *innerWallLayout_Flow;
-    QLabel *innerWallLabel_Flow;
-    QSpacerItem *horizontalSpacer_innerWall_Flow;
-    SwitchButton *innerWallcheckBox_Flow;
+    QHBoxLayout *innerWallLayout_trapezoid = nullptr;
+    QLabel *innerWallLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_innerWall_trapezoid = nullptr;
+    SwitchButton *innerWallcheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *outerWallLayout_Flow;
-    QLabel *outerWallLabel_Flow;
-    QSpacerItem *horizontalSpacer_outerWall_Flow;
-    SwitchButton *outerWallcheckBox_Flow;
+    QHBoxLayout *outerWallLayout_trapezoid = nullptr;
+    QLabel *outerWallLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_outerWall_trapezoid = nullptr;
+    SwitchButton *outerWallcheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *skinLayout_Flow;
-    QLabel *skinLabel_Flow;
-    QSpacerItem *horizontalSpacer_skin_Flow;
-    SwitchButton *skincheckBox_Flow;
+    QHBoxLayout *skinLayout_trapezoid = nullptr;
+    QLabel *skinLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_skin_trapezoid = nullptr;
+    SwitchButton *skincheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *helperLayout_Flow;
-    QLabel *helperLabel_Flow;
-    QSpacerItem *horizontalSpacer_helper_Flow;
-    SwitchButton *helpercheckBox_Flow;
+    QHBoxLayout *helperLayout_trapezoid = nullptr;
+    QLabel *helperLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_helper_trapezoid = nullptr;
+    SwitchButton *helpercheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *fillLayout_Flow;
-    QLabel *fillLabel_Flow;
-    QSpacerItem *horizontalSpacer_fill_Flow;
-    SwitchButton *fillcheckBox_Flow;
+    QHBoxLayout *fillLayout_trapezoid = nullptr;
+    QLabel *fillLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_fill_trapezoid = nullptr;
+    SwitchButton *fillcheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *travelLayout_Flow;
-    QLabel *travelLabel_Flow;
-    QSpacerItem *horizontalSpacer_travel_Flow;
-    SwitchButton *travelcheckBox_Flow;
+    QHBoxLayout *travelLayout_trapezoid = nullptr;
+    QLabel *travelLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_travel_trapezoid = nullptr;
+    SwitchButton *travelcheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *supportLayout_Flow;
-    QLabel *supportLabel_Flow;
-    QSpacerItem *horizontalSpacer_support_Flow;
-    SwitchButton *supportcheckBox_Flow;
+    QHBoxLayout *supportLayout_trapezoid = nullptr;
+    QLabel *supportLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_support_trapezoid = nullptr;
+    SwitchButton *supportcheckBox_trapezoid = nullptr;
 
-    QHBoxLayout *unkonwnLayout_Flow;
-    QLabel *unkonwnLabel_Flow;
-    QSpacerItem *horizontalSpacer_unkonwn_Flow;
-    SwitchButton *unkonwncheckBox_Flow;
-
-    QLabel* colorPatch_label_start_trapezoid;
-    QLabel* colorPatch_label_end_trapezoid;
+    QHBoxLayout *unkonwnLayout_trapezoid = nullptr;
+    QLabel *unkonwnLabel_trapezoid = nullptr;
+    QSpacerItem *horizontalSpacer_unkonwn_trapezoid = nullptr;
+    SwitchButton *unkonwncheckBox_trapezoid = nullptr;
 
     
-    QLabel* colorPatch_label_start;
-    QLabel* colorPatch_label_end;
-    QLabel* colorPatch_label_start_Flow;
-    QLabel* colorPatch_label_end_Flow;
+    QHBoxLayout *innerWallLayout_Flow = nullptr;
+    QLabel *innerWallLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_innerWall_Flow = nullptr;
+    SwitchButton *innerWallcheckBox_Flow = nullptr;
+
+    QHBoxLayout *outerWallLayout_Flow = nullptr;
+    QLabel *outerWallLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_outerWall_Flow = nullptr;
+    SwitchButton *outerWallcheckBox_Flow = nullptr;
+
+    QHBoxLayout *skinLayout_Flow = nullptr;
+    QLabel *skinLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_skin_Flow = nullptr;
+    SwitchButton *skincheckBox_Flow = nullptr;
+
+    QHBoxLayout *helperLayout_Flow = nullptr;
+    QLabel *helperLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_helper_Flow = nullptr;
+    SwitchButton *helpercheckBox_Flow = nullptr;
+
+    QHBoxLayout *fillLayout_Flow = nullptr;
+    QLabel *fillLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_fill_Flow = nullptr;
+    SwitchButton *fillcheckBox_Flow = nullptr;
+
+    QHBoxLayout *travelLayout_Flow = nullptr;
+    QLabel *travelLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_travel_Flow = nullptr;
+    SwitchButton *travelcheckBox_Flow = nullptr;
+
+    QHBoxLayout *supportLayout_Flow = nullptr;
+    QLabel *supportLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_support_Flow = nullptr;
+    SwitchButton *supportcheckBox_Flow = nullptr;
+
+    QHBoxLayout *unkonwnLayout_Flow = nullptr;
+    QLabel *unkonwnLabel_Flow = nullptr;
+    QSpacerItem *horizontalSpacer_unkonwn_Flow = nullptr;
+    SwitchButton *unkonwncheckBox_Flow = nullptr;
+
+    QLabel* colorPatch_label_start_trapezoid = nullptr;
+    QLabel* colorPatch_label_end_trapezoid = nullptr;
+
+    
+    QLabel* colorPatch_label_start = nullptr;
+    QLabel* colorPatch_label_end = nullptr;
+    QLabel* colorPatch_label_start_Flow = nullptr;
+    QLabel* colorPatch_label_end_Flow = nullptr;
 #endif
 
-    QLabel* filamentValue;
-    QLabel* timeValue;
+    QLabel* filamentValue = nullptr;
+    QLabel* timeValue = nullptr;
 
-    QLabel* allTimeLabel;
-    QLabel* allfilamentLabel;
-    QLabel* allSizeLabel;
+    QLabel* allTimeLabel = nullptr;
+    QLabel* allfilamentLabel = nullptr;
+    QLabel* allSizeLabel = nullptr;
 
-    gcodeLabelEdit* spinBox_2;//up
-    gcodeLabelEdit* spinBox;//down
+    float allTimeValue;
+    double allFilamentValue;
+
+    gcodeLabelEdit* spinBox_2 = nullptr;//up
+    gcodeLabelEdit* spinBox = nullptr;//down
 
     QTimer* mPlayTimer = nullptr;
-    QPushButton* pushButton_9; //paly view button
+    QPushButton* pushButton_9 = nullptr; //paly view button
 
     std::array<double, featureType::Count> showLabelCount{ 0 };
     std::array<float, featureType::Count> showTimeLabelCount{ 0 };
     std::array<int, 3> showAllSize{ 0 };
     SceneParam m_sceneParam;
     bool isAiMode = false;
+    bool loggingStatus = false;
     int runTimesId;
     const qint64 qs_id = QDateTime::currentSecsSinceEpoch();
-    ProgressDialog *m_progessDlg;
+    ProgressDialog *m_progessDlg = nullptr;
+    QAction *m_actiona_ai = nullptr;
+    QAction *m_actiona_just = nullptr;
+    QAction *m_actiona_front = nullptr;
+    QAction *m_actiona_back = nullptr;
+    QAction *m_actiona_left = nullptr;
+    QAction *m_actiona_right = nullptr;
+    QAction *m_actiona_top = nullptr;
+    QAction *m_actiona_bottom = nullptr;
 private:
     QColorDialog* colorDlg;
     const std::map<uint8_t, QString> roleDict = {

@@ -9,7 +9,7 @@
 #include <qthreadpool.h>
 namespace  control{
 FdmMainWidget::FdmMainWidget(MessageProcessing *messageProcessing, customTitle *title, ControlManager *controlManager, QWidget *parent)
-    : QWidget(parent),
+    : BubbleWidget(parent),
       m_messageProcessing(messageProcessing),
       m_controlManager(controlManager),
       m_tabWidget(new BaseTabWidget(this)),
@@ -20,12 +20,13 @@ FdmMainWidget::FdmMainWidget(MessageProcessing *messageProcessing, customTitle *
 
 FdmMainWidget::~FdmMainWidget()
 {
-    qDebug() << "~FdmMainWidget.";
 }
 
 void FdmMainWidget::initWindow(ControlManager *controlManager)
 {
     AkUtil::TFunction("");
+    this->setBackgroundColor(QColor("#343539"));
+    this->setRadius(0);
     QGridLayout *gridLayout = new QGridLayout(this);
     setLayout(gridLayout);
     gridLayout->setSpacing(0);
@@ -50,15 +51,20 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
 
     controlManager->setGlareaWidget(this);
     controlManager->setMainWindow(this->parentWidget());
-    GeneralWidget *widget = new GeneralWidget(m_messageProcessing);
-    controlManager->addPageToPreferences(widget,0);
+    m_widget = new GeneralWidget(m_messageProcessing);
+    connect(m_widget, &GeneralWidget::unloadPluginsSignal, this, &FdmMainWidget::unloadPlugins);
+    connect(m_widget, &GeneralWidget::otaNeedSaveProjectSignal, this, &FdmMainWidget::otaNeedSaveProjectSignal);
+
+    
+    connect(this, &FdmMainWidget::pluginsUnloaded, m_widget, &GeneralWidget::doPluginUnloaded);
+    controlManager->addPageToPreferences(m_widget,0);
 
     m_messageProcessing->sendMsg2Preview();
     connect(m_messageProcessing,&MessageProcessing::sendMsg2GetpreviewWid,[=](QObject *object){
         m_gcodeWidget = qobject_cast<QWidget *>(object);
         if(m_gcodeWidget != nullptr)
         {
-            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/previewTab.png"), tr("Preview"));
+            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/previewTab.png"), tr("Preview"), 1);
             connect(m_tabWidget,SIGNAL(currentChanged(int)),m_gcodeWidget,SLOT(pauseGcodePlay(int)));
         }
     });
@@ -79,12 +85,13 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     connect(m_messageProcessing,&MessageProcessing::networkSendWid2AnkerMake,[=](QObject *object){
         AkUtil::TFunction("");
         m_netWorkWidget = qobject_cast<QWidget *>(object);
+         qDebug() <<" add tab networkWidget";
         QString str;
         QDebug(&str) << "m_netWorkWidget: " << m_netWorkWidget << ", object: " << object;
         AkUtil::TDebug("network insert tab widget display: " + str);
         if(m_netWorkWidget != nullptr)
         {
-            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/deviceTab.png"), tr("Device"));
+            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/deviceTab.png"), tr("Device"), 2);
         }
 
         //WId _wid = wid.toInt();
@@ -170,6 +177,8 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     QString mwStr;
     QDebug(&mwStr) << mwData.object;
     AkUtil::TDebug("mwData.object: " + mwStr);
+
+
 }
 
 void FdmMainWidget::initTool()
@@ -193,8 +202,9 @@ void FdmMainWidget::initTool()
     m_recentMenu = m_menuFile->addMenu(QIcon(), tr("Open Recent"));
 
     createRecentProject(m_settings.readRecent(), m_recentMenu);
-    m_exportMenu = m_menuFile->addMenu(QIcon(), tr("Export..."));
+    m_exportMenu = m_menuFile->addMenu(QIcon(), tr("Export"));
     m_exportAllObjectAction = m_exportMenu->addAction(QIcon(), tr("All Objects"), this, &FdmMainWidget::saveAllMesh);
+    connect(getDoc().get(), &CHDoc::visibleModelCountChanged, this, &FdmMainWidget::visibleModelCountChanged);
     m_exportSelectObjectAction = m_exportMenu->addAction(QIcon(), tr("Select Object"), this, &FdmMainWidget::saveMesh);
     //m_exportMenu->addAction(QIcon(), tr("G-code"));
     m_actionFileSave = m_menuFile->addAction(QIcon(), tr("Save"), this, &FdmMainWidget::slotSaveProject);
@@ -249,23 +259,85 @@ void FdmMainWidget::initTool()
      m_menuHelp = m_titleBar->addMenu(tr("Help"));
      //QMenu* menuHelp= new QMenu(tr("Help"));
      //menuHelp->setIcon(QIcon(":/images/icon/fdm_tool_help_icon_n.png"));
+     QLocale local = QLocale::system();
+     QLocale::Language lang = local.language();
+
      m_tutorial = m_menuHelp->addAction(QIcon(), tr("Tutorial"),[=]{
-         const QUrl regUrl(QLatin1String("https://support.ankermake.com"));
+         QString str;
+         if(lang == QLocale::Japanese) {
+             str = AkConst::WebAddress::TutorialJapanese;
+         }
+         else {
+             str = AkConst::WebAddress::TutorialEnglish;
+         }
+         QUrl regUrl(str);
          QDesktopServices::openUrl(regUrl);
      });
-     m_feedback = m_menuHelp->addAction(QIcon(), tr("Feedback"));
+     m_feedback = m_menuHelp->addAction(QIcon(), tr("Feedback"),[=] {
+         QString str;
+         if(lang == QLocale::Japanese) {
+             str = AkConst::WebAddress::FeedBackJapanese;
+         }
+         else {
+             str = AkConst::WebAddress::FeedBackEnglish;
+         }
+         QUrl regUrl(str);
+         QDesktopServices::openUrl(regUrl);
+     });
 
      //menuHelp->addAction(QIcon(), tr("Software Update"));
      m_actionUpdate = m_menuHelp->addAction(QIcon(), tr("Software Update"),this,&FdmMainWidget::openPreferencesDialog);
      m_actionUpdate->setObjectName("actionUpdate");
      m_controlManager->addMenuToToolBar(m_menuHelp,Qt::AlignRight);
      m_priPolicy = m_menuHelp->addAction(QIcon(), tr("Privacy Policy"),[=]() {
-         const QUrl regUrl(QLatin1String("https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html"));
-         QDesktopServices::openUrl(regUrl);
+//         QString str;
+//         if(lang == QLocale::Japanese) {
+//             str = AkConst::WebAddress::PrivacyPolicyURLJapanese;
+//         }
+//         else {
+//             str = AkConst::WebAddress::PrivacyPolicyURLEnglish;
+//         }
+//         QUrl regUrl(str);
+//         QDesktopServices::openUrl(regUrl);
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::PRIVACY_PROTOCOL;
+         mwData.map.insert("Language", (int)lang);
+         mwData.map.insert("type", "AnkerMake-privacy");
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
      });
      m_termsOfUse = m_menuHelp->addAction(QIcon(), tr("Terms of Use"),[=] {
-         const QUrl regUrl(QLatin1String("https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html"));
-         QDesktopServices::openUrl(regUrl);
+//         QString str;
+//         if(lang ==QLocale::Japanese) {
+//             str = AkConst::WebAddress::TermOfUseURLJapanese;
+//         }
+//         else {
+//             str = AkConst::WebAddress::TermOfUseURLEnglish;
+//         }
+//         QUrl regUrl(str);
+//         QDesktopServices::openUrl(regUrl);
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::PRIVACY_PROTOCOL;
+         mwData.map.insert("Language", (int)lang);
+         mwData.map.insert("type", "AnkerMake-terms-of-service");
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
+     });
+     m_logUpload = m_menuHelp->addAction(QIcon(), tr("Log Upload"),[=] {
+
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::LOG_UPLOAD;
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
      });
      m_copyright = m_menuHelp->addAction(QIcon(), tr("Copyright Information"),this, &FdmMainWidget::openCopyrightWidget);
 
@@ -276,8 +348,8 @@ void FdmMainWidget::initTool()
      //m_controlManager->addMenuToToolBar(menuAccount,Qt::AlignRight);
     // QAction *accountAction = new QAction(tr("Account"));
     // m_titleBar->addAction(accountAction);
-//     m_accoutMenu = m_titleBar->addMenu(tr("Account"));
-//     m_accountAction = m_accoutMenu->addAction(QIcon(), tr("Account"));
+     m_accoutMenu = m_titleBar->addMenu(tr("Account"));
+     m_accountAction = m_accoutMenu->addAction(QIcon(), tr("Account"));
      connect(m_accountAction,&QAction::triggered,this, &FdmMainWidget::loginWidgetDisplaySlot);
      m_controlManager->addAction(m_accountAction,Qt::AlignRight);
 
@@ -321,11 +393,21 @@ void FdmMainWidget::initScene(QMdiArea* mdiarea)
                      &MessageProcessing::receiveModelSupportNumberChangedFromDoc);
 
     
+    QObject::connect(docWindow->m_doc.get(), &CHDoc::ModelSuspendStatusChanged, m_messageProcessing,
+                &MessageProcessing::receiveModelSuspendStatusChangedFromDoc);
+
+
+//    QObject::connect(docWindow->m_doc.get(), &CHDoc::GenerateSupportButtonStatus, m_messageProcessing,
+
+
+    
     //  m_meshSuffixList << "obj" << "stl";
     connect(docWindow->m_pickCommand.get(), &CHPickOperationCommand::selectedObjsChanged,
             this, &FdmMainWidget::setButtonEnableByPickStatus);
     connect(docWindow->m_doc.get(), &CHDoc::modelObjsStatusChanged,
             this, &FdmMainWidget::setButtonEnableByDocument);
+    connect(docWindow->m_doc.get(), &CHDoc::visibleModelCountChanged,
+            this, &FdmMainWidget::setButtonEnableByVisible);
 
     connect(docWindow, &CHChildDocWindow::openFiles, this, &FdmMainWidget::fdmOpeFileList);
 
@@ -383,43 +465,46 @@ void FdmMainWidget::insertRecent(const QStringList &fileList)
 void FdmMainWidget::setActionEnble(bool enble)
 {
     m_exportSelectObjectAction->setEnabled(enble);
+   // m_exportAllObjectAction->setEnabled(enble);
     m_copyAction->setEnabled(enble);
     m_undo->setEnabled(enble);
     m_redo->setEnabled(enble);
     m_deleteSelectedObjectAction->setEnabled(enble);
+   // m_deleteAllObjectAction->setEnabled(enble);
     m_resetSelectedAction->setEnabled(enble);
+   // m_resetAllAction->setEnabled(enble);
 }
 
 
 void FdmMainWidget::initViewTransformAction()
 {
-    QAction* viewAction = new QAction(QIcon(":/images/icon/fdm_full_icon_n.png"), tr("3D View"));
-    connect(viewAction, &QAction::toggled, this, &FdmMainWidget::viewChanged);
-    m_viewTransform.append(viewAction);
+    m_viewAction = new QAction(QIcon(":/images/icon/fdm_full_icon_n.png"), tr("3D View"));
+    connect(m_viewAction, &QAction::toggled, this, &FdmMainWidget::viewChanged);
+    m_viewTransform.append(m_viewAction);
 
-    QAction* frontAction = new QAction(QIcon(":/images/icon/fdm_front_icon_n.png"), tr("Front View"));
-    connect(frontAction, &QAction::toggled, this, &FdmMainWidget::frontViewChanged);
-    m_viewTransform.append(frontAction);
+    m_frontAction = new QAction(QIcon(":/images/icon/fdm_front_icon_n.png"), tr("Front View"));
+    connect(m_frontAction, &QAction::toggled, this, &FdmMainWidget::frontViewChanged);
+    m_viewTransform.append(m_frontAction);
 
-    QAction* rearAction = new QAction(QIcon(":/images/icon/fdm_rear_icon_n.png"), tr("Rear View"));
-    connect(rearAction, &QAction::toggled, this, &FdmMainWidget::rearViewChanged);
-    m_viewTransform.append(rearAction);
+    m_rearAction = new QAction(QIcon(":/images/icon/fdm_rear_icon_n.png"), tr("Rear View"));
+    connect(m_rearAction, &QAction::toggled, this, &FdmMainWidget::rearViewChanged);
+    m_viewTransform.append(m_rearAction);
 
-    QAction* leftAction = new QAction(QIcon(":/images/icon/fdm_left_icon_n.png"), tr("Left View"));
-    connect(leftAction, &QAction::toggled, this, &FdmMainWidget::leftViewChanged);
-    m_viewTransform.append(leftAction);
+    m_leftAction = new QAction(QIcon(":/images/icon/fdm_left_icon_n.png"), tr("Left View"));
+    connect(m_leftAction, &QAction::toggled, this, &FdmMainWidget::leftViewChanged);
+    m_viewTransform.append(m_leftAction);
 
-    QAction* rightAction = new QAction(QIcon(":/images/icon/fdm_right_icon_n.png"), tr("Right View"));
-    connect(rightAction, &QAction::toggled, this, &FdmMainWidget::rightViewChanged);
-    m_viewTransform.append(rightAction);
+    m_rightAction = new QAction(QIcon(":/images/icon/fdm_right_icon_n.png"), tr("Right View"));
+    connect(m_rightAction, &QAction::toggled, this, &FdmMainWidget::rightViewChanged);
+    m_viewTransform.append(m_rightAction);
 
-    QAction* topAction = new QAction(QIcon(":/images/icon/fdm_on_icon_n.png"), tr("Top View"));
-    connect(topAction, &QAction::toggled, this, &FdmMainWidget::topViewChanged);
-    m_viewTransform.append(topAction);
+    m_topAction = new QAction(QIcon(":/images/icon/fdm_on_icon_n.png"), tr("Top View"));
+    connect(m_topAction, &QAction::toggled, this, &FdmMainWidget::topViewChanged);
+    m_viewTransform.append(m_topAction);
 
-    QAction* bottomAction = new QAction(QIcon(":/images/icon/fdm_bottom_icon_n.png"), tr("Bottom View"));
-    connect(bottomAction, &QAction::toggled, this, &FdmMainWidget::bottomViewChanged);
-    m_viewTransform.append(bottomAction);
+    m_bottomAction = new QAction(QIcon(":/images/icon/fdm_bottom_icon_n.png"), tr("Bottom View"));
+    connect(m_bottomAction, &QAction::toggled, this, &FdmMainWidget::bottomViewChanged);
+    m_viewTransform.append(m_bottomAction);
 
     for (auto action : m_viewTransform) {
         action->setCheckable(true);
@@ -507,6 +592,18 @@ void FdmMainWidget::openPreferencesDialog()
         currentIndex = AkConst::EWidgetType::General;
     }
     // qDebug() << " index ==" << currentIndex;
+    AkUtil::TDebug("openPreferencesDialog, text:"+text+"  index:"+QString::number(currentIndex));
+    if (text == "actionUpdate")
+    {
+        QWidget* widget = m_controlManager -> getPageWidgetFromPreferences(currentIndex);
+        GeneralWidget* GeneralPageWidget = dynamic_cast<GeneralWidget*>(widget);
+        AkUtil::TDebug(" software Update clicked, GeneralPageWidget:0x"+QString::number((long long)GeneralPageWidget, 16));
+        if (GeneralPageWidget)
+        {
+            GeneralPageWidget -> manualUpdate();
+        }
+    }
+
     m_controlManager->openPreferences(currentIndex);
 }
 
@@ -593,8 +690,11 @@ void FdmMainWidget::loginWidgetDisplayFeedBackSlot(qint64 cmdId, int result)
 
 void FdmMainWidget::setButtonEnableByPickStatus()
 {
+    AkUtil::TFunction("");
+    // qDebug() << "setButtonEnableByPickStatus doc->m_printObjs.size()";
     auto pick = getGlobalPick();
     auto selected = pick.get()->m_selectedObjs;
+    AkUtil::TDebug("selected size: " + QString::number(selected.size()));
     if (selected.size() <= 0) {
         setActionEnble(false);
     }
@@ -606,7 +706,7 @@ void FdmMainWidget::setButtonEnableByPickStatus()
 void FdmMainWidget::setButtonEnableByDocument()
 {
       auto doc = getDoc();
-     //qDebug() << "doc->m_printObjs.size() = " << doc->m_printObjs.size();
+     //qDebug() << "setButtonEnableByDocument doc->m_printObjs.size() = " << doc->m_printObjs.size();
 
     if (doc->m_printObjs.size() > 0) {
         m_exportAllObjectAction->setEnabled(true);
@@ -618,6 +718,23 @@ void FdmMainWidget::setButtonEnableByDocument()
         m_deleteAllObjectAction->setEnabled(false);
         m_resetAllAction->setEnabled(false);
     }
+}
+
+
+
+void FdmMainWidget::setButtonEnableByVisible(int visbleModelNumber)
+{
+    if (visbleModelNumber > 0) {
+        m_exportAllObjectAction->setEnabled(true);
+        m_deleteAllObjectAction->setEnabled(true);
+        m_resetAllAction->setEnabled(true);
+    }
+    else {
+        m_exportAllObjectAction->setEnabled(false);
+        m_deleteAllObjectAction->setEnabled(false);
+        m_resetAllAction->setEnabled(false);
+    }
+    // qDebug() << "setButtonEnableByVisible doc->m_printObjs.size() = ";
 }
 
 void FdmMainWidget::viewChanged(bool checked)
@@ -759,7 +876,7 @@ void FdmMainWidget::openCopyrightWidget()
 void FdmMainWidget::tabCurrentPageChanged(int index)
 {
     AkUtil::TFunction("");
-    AkUtil::TDebug(QString("m_tabWidget index =").arg(index));
+    AkUtil::TDebug(QString("m_tabWidget index = %1").arg(index));
     if(index < 0 || (index >= m_tabWidget->count())) {
         return;
     }
@@ -776,6 +893,13 @@ void FdmMainWidget::tabCurrentPageChanged(int index)
         break;
     }
    // qDebug() << " current ===" << m_tabWidget->currentIndex();
+}
+void FdmMainWidget::visibleModelCountChanged(int count)
+{
+    if(count <= 0)
+    {
+        m_exportAllObjectAction->setDisabled(true);
+    }
 }
 
 void FdmMainWidget::currentPageChanged(int index)
@@ -811,6 +935,36 @@ void FdmMainWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         retranslateUi();
+        QVector<QString> TAB_TITLE = { tr("Slice"),
+                                     tr("Preview"),
+                                     tr("Device")};
+        for (int i = 0; i < m_tabWidget->titleLabels().size(); i++) {
+            m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
+        }
+        if (m_logUpload) {
+            m_logUpload->setText(tr("Log Upload"));
+        }
+        if (m_viewAction) {
+            m_viewAction->setText(tr("3D View"));
+        }
+        if (m_frontAction) {
+            m_frontAction->setText(tr("Front View"));
+        }
+        if (m_rearAction) {
+            m_rearAction->setText(tr("Rear View"));
+        }
+        if (m_leftAction) {
+            m_leftAction->setText(tr("Left View"));
+        }
+        if (m_rightAction) {
+            m_rightAction->setText(tr("Right View"));
+        }
+        if (m_topAction) {
+            m_topAction->setText(tr("Top View"));
+        }
+        if (m_bottomAction) {
+            m_bottomAction->setText(tr("Bottom View"));
+        }
     }
     QWidget::changeEvent(e);
 }
@@ -826,16 +980,16 @@ void FdmMainWidget::retranslateUi()
             m_actionFileSave->setText(tr("Save"));
         }
         if (m_actionFileSaveAs != nullptr) {
-            m_actionFileSaveAs->setText(tr("Save as"));
+            m_actionFileSaveAs->setText(tr("Save As"));
         }
         if (m_recentMenu != nullptr) {
-            m_recentMenu->setTitle(tr("Open Recent..."));
+            m_recentMenu->setTitle(tr("Open Recent"));
         }
         if (m_exportMenu != nullptr) {
-            m_exportMenu->setTitle(tr("Export..."));
+            m_exportMenu->setTitle(tr("Export"));
         }
         if (m_exportAllObjectAction != nullptr) {
-            m_exportAllObjectAction->setText(tr("All Object"));
+            m_exportAllObjectAction->setText(tr("All Objects"));
         }
         if (m_exportSelectObjectAction != nullptr) {
             m_exportSelectObjectAction->setText(tr("Select Object"));
@@ -851,13 +1005,13 @@ void FdmMainWidget::retranslateUi()
         m_redo->setText(tr("Redo"));
     }
     if (m_selPro != nullptr) {
-        m_selPro->setText(tr("Select Project..."));
+        m_selPro->setText(tr("Select Project"));
     }
     if (m_copyAction != nullptr) {
         m_copyAction->setText(tr("Copy"));
     }
     if (m_deleteMenu != nullptr) {
-        m_deleteMenu->setTitle(tr("Delete.."));
+        m_deleteMenu->setTitle(tr("Delete"));
     }
     if (m_deleteSelectedObjectAction != nullptr) {
         m_deleteSelectedObjectAction->setText(tr("Select Object"));
@@ -866,7 +1020,7 @@ void FdmMainWidget::retranslateUi()
         m_deleteAllObjectAction->setText(tr("All Objects"));
     }
     if (m_resetMenu != nullptr) {
-        m_resetMenu->setTitle(tr("Reset Transformations"));
+        m_resetMenu->setTitle(tr("Revert to Original"));
     }
     if (m_resetSelectedAction != nullptr) {
         m_resetSelectedAction->setText(tr("Select Object"));
@@ -875,7 +1029,7 @@ void FdmMainWidget::retranslateUi()
         m_resetAllAction->setText(tr("All Objects"));
     }
     if (m_menuSetting != nullptr) {
-        m_menuSetting->setTitle(tr("Setting"));
+        m_menuSetting->setTitle(tr("Settings"));
     }
     if (m_actionSave != nullptr) {
         m_actionSave->setText(tr("Save"));

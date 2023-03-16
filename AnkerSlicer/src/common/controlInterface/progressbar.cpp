@@ -9,6 +9,7 @@ ProgressBar::ProgressBar(QWidget *parent) : QWidget(parent),
     m_backgroundColor("#404249"),
     m_progressCheckedColor(QColor(97, 211, 125)),
     m_progressUncheckedColor("#4F5F53"),
+    m_progressValueTextColor("#FFFFFF"),
     m_valuePointSize(32)
 {
     this->setMinimumSize(150,150);
@@ -22,10 +23,13 @@ void ProgressBar::setValue(int value)
         this->repaint();
        // this->update();
     }
-    else if(value >= m_maxValue && m_autoClosed) {
+    else if(value >= m_maxValue) {
         m_value = m_maxValue;
         this->repaint();
-        emit closeProgress();
+        if (m_autoClosed)
+        {
+            emit closeProgress();
+        }
     }
 }
 
@@ -49,6 +53,12 @@ void ProgressBar::setProgressCheckedColor(QColor color)
 void ProgressBar::setProgressUncheckedColor(QColor color)
 {
     m_progressUncheckedColor = color;
+    this->repaint();
+}
+
+void ProgressBar::setProgressValueTextColor(QColor color)
+{
+    m_progressValueTextColor = color;
     this->repaint();
 }
 
@@ -88,7 +98,7 @@ void ProgressBar::paintEvent(QPaintEvent *event)
     QFont font = this->font();
     font.setPixelSize(m_valuePointSize);
     painter.setFont(font);
-    painter.setPen(QColor(255, 255, 255));
+    painter.setPen(m_progressValueTextColor);
     painter.drawText(inRect, Qt::AlignCenter, QString("%1%").arg(m_value));
     QWidget::paintEvent(event);
 }

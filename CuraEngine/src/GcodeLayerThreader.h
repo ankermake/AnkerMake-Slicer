@@ -123,12 +123,12 @@ GcodeLayerThreader<T>::GcodeLayerThreader(
 template <typename T>
 void GcodeLayerThreader<T>::run()
 {
-    #pragma omp parallel
+   // #pragma omp parallel
     {
 #ifdef _OPENMP
-        #pragma omp master
+        //#pragma omp master
         log("Multithreading GcodeLayerThreader with %i threads.\n", omp_get_num_threads());
-#endif // _OPENMP
+#endif  //_OPENMP 
         while (true)
         {
             if (finished())

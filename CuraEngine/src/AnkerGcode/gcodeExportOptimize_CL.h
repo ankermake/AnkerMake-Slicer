@@ -3,62 +3,24 @@
 
 #include "../gcodeExport.h"
 #include "../utils/string.h" // MMtoStream, PrecisionedDouble
+#include "../LayerPlan.h"
+#include "../utils/logoutput.h"
 
 namespace CL {
     using Position = cura::TimeEstimateCalculator::Position;
-    //using Block = TimeEstimateCalculator::Block;
+    using Block    = cura::TimeEstimateCalculator::Block;
+    using UM2MM    = cura::MMtoStream;
+    using double2SS= cura::PrecisionedDouble;
+    using UM       = cura::coord_t;
 
-
-class PathTurnBackCalculator {
-public:
-
-    Position posPrevious, posCurrent, posNew;
-    Position deltaVec0, deltaVec1;
-
-    bool _hasTurnBack(Position newPos);
-
-    bool hasTurnBack_45(Position newPos);
-
-    bool hasTurnBack_0_90(Position newPos);
-};
-
-
-/*
-
-
-
-
-    enum M1024_MASK: uint64{
-        M1024_TakePicture = 1 << 0;    //  0b01
-        M1024_AiContrast  = 1 << 1;    //  0b10
+    template<typename BaseType>
+    bool std_contain(const std::vector<BaseType> & container, const BaseType & it ){
+        return std::find(container.begin(), container.end(), it) != container.end();
     }
-
-    ((; layer (\d+).*\r\n)((.*\r\n){0, 10}?)(G1 X\d+.*\r\n)(G1 Z\d+.*\r\n)?)
-    $1M1024 L$3/1200 3\r\n
-*/
-class SnapshotLayerCommand {
-    int m_layer_count{  0 };    
-    int m_layer_index{ -1 };    
-    int m_snapCount  { 0 };     
-    float step{ 1 };            
-    int N     { 1 };            
-    int m_layer_nr{ 0 };        
-
-    std::stringstream ss;       
-public:
-    SnapshotLayerCommand();
-
-    std::string getLayerList();
-
-    void setLayerCount(const int layer_count);
-
-    
-    bool hasSnapshotByLayer(const int layer_nr);
-    std::string getCmdSnapshotByLayer(cura::Point3 xyzPos, const int layer_nr);
-    std::string getCmdSnapshotByLayer(cura::Point3 xyzPos);
-
-    int finalize();
-};
+    template<typename BaseType>
+   void std_sort(std::vector<BaseType> & container){
+        std::sort(container.begin(), container.end());
+    }
 
 
 class VAJK_K_Cmd{
@@ -74,24 +36,56 @@ public:
     double ak_K_skirt_brim   {0.0};
     double ak_K_layer_0      {0.0};
 
-    void init(const cura::Settings& settings){
-        ak_VAJK_K_enabled= settings.get<bool>("ak_VAJK_K_enabled");
-        ak_K_print       = settings.get<double>("ak_K_print");
-        ak_K_infill      = settings.get<double>("ak_K_infill");
-        ak_K_wall        = settings.get<double>("ak_K_wall");
-        ak_K_wall_0      = settings.get<double>("ak_K_wall_0");
-        ak_K_wall_x      = settings.get<double>("ak_K_wall_x");
-        ak_K_support     = settings.get<double>("ak_K_support");
-        ak_K_topbottom   = settings.get<double>("ak_K_topbottom");
-        ak_K_skirt_brim  = settings.get<double>("ak_K_skirt_brim");
-        ak_K_layer_0     = settings.get<double>("ak_K_layer_0");
-    };
+    void init(const cura::Settings& settings);              
     double getK_byType(const cura::PrintFeatureType &type);
-    /*
-
-    */
 };
 
+
+
+
+/*
+
+
+
+
+    enum M1024_MASK: uint64{
+        M1024_TakePicture = 1 << 0;    //  0b01
+        M1024_AiContrast  = 1 << 1;    //  0b10
+    }
+
+    ((; layer (\d+).*\r\n)((.*\r\n){0, 10}?)(G1 X\d+.*\r\n)(G1 Z\d+.*\r\n)?)
+    $1M1024 L$3/1200 3\r\n
+*/
+//  add @2023-02-02 by ChunLian
+class SnapshotLayerCommand{
+    cura::GCodeExport* m_gcodeExport{ nullptr };
+
+    
+public:
+    bool snapshot_layer_M1024_enable    {false};            const std::string key_snapshot_layer_M1024_enable   {"anker_param_ai_camera"};
+    bool snapshot_uplayer_enable        {false};
+
+    double               anker_camera_take_picture_time{1}; const std::string key_camera_take_picture_time      {"camera_take_picture_time"};
+    std::vector<int>     anker_param_ai_uplayer_array;      const std::string key_snapshot_uplayer_array        {"anker_abc_1"};  
+    std::vector<double>  anker_param_ai_height_array ;      const std::string key_snapshot_height_array         {"anker_abc_2"};  //  @2023-02-23 by ChunLian
+
+    int snapshot_count {0};
+
+public:
+
+    
+    void init(cura::GCodeExport* gcodeExport);
+
+    //  Snapshot 1  GCodeExport::writeLayerCountComment
+    bool snapshot_writeLayerCountComment(const size_t layer_count);
+
+    //  Snapshot 2  GCodeExport::writeLayerComment
+    bool snapshot_writeLayerComment(const int layer_nr);//  end of function snapshot_writeLayerComment
+
+    
+    bool snapshot_finalize();
+
+};
 
 }
 
@@ -99,141 +93,63 @@ public:
 
 class CL_GCodeExportOptinize {
     cura::GCodeExport* m_gcodeExport{ nullptr };
-    CL::PathTurnBackCalculator m_pathTurnBackCalculator;
-    CL::SnapshotLayerCommand   m_snapshotLayerCommand;
     CL::VAJK_K_Cmd             m_VAJK_K_Cmd;
+    CL::SnapshotLayerCommand   m_M1024_Cmd;
 
-    bool enable_pathTurnBackCalculator;
-    bool enable_snapshotLayerCommand;
-    bool enable_VAJK_K;
+
 public:
     CL_GCodeExportOptinize(cura::GCodeExport* gcodeExport) :m_gcodeExport(gcodeExport) {
         const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
 
-        enable_pathTurnBackCalculator = false;
-        enable_snapshotLayerCommand   = settingsScene.get<bool>("anker_param_ai_camera");
-        enable_VAJK_K                 = settingsScene.get<bool>("ak_VAJK_K_enabled");
-
-        m_VAJK_K_Cmd.init(settingsScene);
-    }
-
-    //  GCodeExport::writeFXYZE
-    void TurnBackDelay_writeFXYZE(CL::Position newPos) {
-        if (!enable_pathTurnBackCalculator) { return; }
-        cura::Duration delayMs = 30;
-        if (m_pathTurnBackCalculator.hasTurnBack_45(newPos)) {
-            (*m_gcodeExport->output_stream) << "G4 P" << int(delayMs) << " ;-----------------" << m_gcodeExport->new_line;
-        }
+        m_VAJK_K_Cmd.init   (settingsScene);    //  Snapshot 0
+        m_M1024_Cmd.init    (m_gcodeExport);
     }
 
     //  Snapshot 1  GCodeExport::writeLayerCountComment
-    bool Snapshot_writeLayerCountComment(const size_t layer_count) {
-        m_snapshotLayerCommand.setLayerCount(layer_count);
-        return true;
+    bool GCodeExport_writeLayerCountComment(const size_t layer_count) {
+        if(m_M1024_Cmd.snapshot_layer_M1024_enable){
+            return m_M1024_Cmd.snapshot_writeLayerCountComment(layer_count);
+        }
+
+        {
+            return false;
+        }
     }
 
     //  Snapshot 2  GCodeExport::writeLayerComment
-    bool Snapshot_writeLayerComment(const int layer_nr){
-        if (!enable_snapshotLayerCommand) {
-            //  fix @2022-05-25 by CL
+    bool GCodeExport_writeLayerComment(const int layer_nr){
+        if(m_M1024_Cmd.snapshot_layer_M1024_enable){
+            return m_M1024_Cmd.snapshot_writeLayerComment(layer_nr);
+        }
+
+        {
             auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index();
             auto new_line   = m_gcodeExport->new_line;
-
             (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line;
-            
             return false;
         }
-
-        {   //  chenge @2022-05-12 by CL
-            const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
-
-            auto Z          = m_gcodeExport->getPositionZ();
-            auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index();
-            auto L_Nr       = m_gcodeExport->clCurrentStatus->getL_Nr();
-            auto L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
-            auto new_line   = m_gcodeExport->new_line;
-
-            
-            double ms = settingsScene.get<double>("camera_take_picture_time"); // = min *60
-            if(ms < 1){ms=1;}
-            double oldF = m_gcodeExport->clCurrentStatus->getF_block();
-            double F = 1.0;    //  120 mm/min = 2mm/s   um/ms == mm/s
-            int Z_um = F * ms;
-
-            
-            
-            if(layer_nr == 1){ 
-                
-                cura::coord_t first_photo_z_offset = 50 * 1000;
-                (*(m_gcodeExport->output_stream)) << "; Z_TakePictureStart: " << L_Nr << new_line;
-
-                    
-                    (*(m_gcodeExport->output_stream)) << "G0 F1200 Z" << cura::MMtoStream{Z + first_photo_z_offset + Z_um} << new_line;
-                (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Index << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
-                (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line; // writeLayerComment(layer_nr);
-
-                    (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,    F * 60} <<  " Z" << cura::MMtoStream{Z + first_photo_z_offset} << new_line;
-                    (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,   20 * 60} <<  " Z" << cura::MMtoStream{Z} << new_line;
-                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1, oldF * 60} << new_line;
-            }
-            else{
-                (*(m_gcodeExport->output_stream)) << "; Z_TakePictureStart: " << L_Nr << new_line;
-                (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Index << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
-                (*(m_gcodeExport->output_stream)) << "G0 Z" << cura::MMtoStream{Z +Z_um} << new_line;
-                (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line; // writeLayerComment(layer_nr);
-                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,    F * 60} <<  " Z" << cura::MMtoStream{Z} << new_line;
-                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1, oldF * 60} << new_line;
-            }
-            return true;
-        }
-
-        //if(clCurrentStatus->getL_Nr() > 0)
-
-        //cura::Point3 xyzPos = m_gcodeExport->getPosition();
-        //std::string m1024cmd = m_snapshotLayerCommand.getCmdSnapshotByLayer(xyzPos, layer_nr);
-        //m_gcodeExport->writeLine(m1024cmd.c_str());
     }
 
     
-    bool Snapshot_finalize() {
-        if (!enable_snapshotLayerCommand) {
-            //  fix @2022-05-25 by CL
+    bool GCodeExport_finalize() {
+        if(m_M1024_Cmd.snapshot_layer_M1024_enable){
+            return m_M1024_Cmd.snapshot_finalize();
+        }
+
+        {
             auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index() + 1;
             auto new_line   = m_gcodeExport->new_line;
-
             (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line;
-            //(*(m_gcodeExport->output_stream)) << ";End Of Model Gcode" << new_line;
-            
             return false;
         }
-
-
-        {   //  chenge @2022-05-12 by CL
-            auto Z          = m_gcodeExport->getPositionZ();
-            auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index() + 1;
-            auto L_Nr       = m_gcodeExport->clCurrentStatus->getL_Nr() + 1;
-            auto L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
-            auto new_line   = m_gcodeExport->new_line;
-
-            (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Index << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
-            (*(m_gcodeExport->output_stream)) << "G0 Z" << cura::MMtoStream{Z + 2000} << "; Z_TakePictureStart: " << L_Nr << new_line;
-            (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line; // writeLayerComment(layer_nr);
-            return true;
-        }
-
-        //int layer_nr = m_snapshotLayerCommand.finalize();
-        //cura::Point3 xyzPos = m_gcodeExport->getPosition();
-        //std::string m1024cmd = m_snapshotLayerCommand.getCmdSnapshotByLayer(xyzPos);
-        //m_gcodeExport->writeLine(m1024cmd.c_str());
-        //this->writeComment(m_snapshotLayerCommand.getLayerList());
     }
 
     
-    void VAJK_K_writeTypeComment(const cura::PrintFeatureType &type){
-        if(!enable_VAJK_K){return;}
-
-        double K = m_VAJK_K_Cmd.getK_byType(type);
-        m_gcodeExport->writePrintK_M900(K);
+    void GCodeExport_writeTypeComment(const cura::PrintFeatureType &type){
+        if(m_VAJK_K_Cmd.ak_VAJK_K_enabled){
+            double K = m_VAJK_K_Cmd.getK_byType(type);
+            m_gcodeExport->writePrintK_M900(K);
+        }
     }
 };
 

@@ -21,6 +21,8 @@
 namespace cura {
 
 
+int CL_CurrentStatus::akLayerNumber = -1;
+
 GCodeExport::GCodeExport():BaseType()
 {
 
@@ -74,7 +76,7 @@ void GCodeExport::writeCodeStored(const char *str,int pos, int reserve)
 
 void GCodeExport::writeLayerCountComment(const size_t layer_count){
     clCurrentStatus->getL_Count() = layer_count;
-    clOptinize->Snapshot_writeLayerCountComment(layer_count);
+    clOptinize->GCodeExport_writeLayerCountComment(layer_count);
     { //  BaseType
         //*output_stream << ";LAYER_COUNT:" << layer_count << new_line;
         BaseType::writeLayerCountComment(layer_count);
@@ -94,7 +96,7 @@ void GCodeExport::writeLayerComment(const LayerIndex layer_nr){
         
     }
     else{
-        clOptinize->Snapshot_writeLayerComment(layer_nr);
+        clOptinize->GCodeExport_writeLayerComment(layer_nr);
     }
 }
 
@@ -106,7 +108,7 @@ void GCodeExport::writeTypeComment(const PrintFeatureType& type)
         BaseType::writeTypeComment(type);
     }
 
-    clOptinize->VAJK_K_writeTypeComment(type);
+    clOptinize->GCodeExport_writeTypeComment(type);
 }
 void GCodeExport::writePrintAcceleration(const Acceleration& acceleration){
     clCurrentStatus->getA_block() = acceleration;
@@ -147,7 +149,7 @@ void GCodeExport::writePrintK_M900(double K, double L, int S, int T)
 }
 
 void GCodeExport::finalize(const char* endCode){
-    clOptinize->Snapshot_finalize();
+    clOptinize->GCodeExport_finalize();
     { //  BaseType
         BaseType::finalize(endCode);
     }
@@ -233,6 +235,9 @@ void GCodeExport::writeFXYZE_CL(const char *G, const Velocity &speed, const int 
     currentSpeed = speed;
     estimateCalculator.plan(TimeEstimateCalculator::Position(INT2MM(x), INT2MM(y), INT2MM(z), eToMm(e)), speed, feature);
 
+    if( (hasX ||hasY) && hasE ){
+        clOptinize;
+    }
     //logAlways("%s", strline.str().c_str());
     //fprintf(stdout, "%s", strline.str().c_str());
 }

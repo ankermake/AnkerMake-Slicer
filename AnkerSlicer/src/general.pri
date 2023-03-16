@@ -8,11 +8,19 @@
 # it can be double or float according to user needs.
 DEFINES += MESHLAB_SCALAR=float
 
+# defining meshlab version
+# defining meshlab version
+#exists($$PWD/../ML_VERSION){
+#	MESHLAB_VERSION = $$cat($$PWD/../ML_VERSION)
+#	DEFINES += "MESHLAB_VERSION=$$MESHLAB_VERSION"
+#}
+
 MESHLAB_VERSION = V0.3.x_2022a
 DEFINES += "MESHLAB_VERSION=$$MESHLAB_VERSION"
 #macx:CONFIG += MAC_M1_BUILD_X86
-macx:DEFINES += FORCE_ARM
+#macx:DEFINES += FORCE_ARM
 
+win32-msvc: QMAKE_CXXFLAGS += /wd4819 /wd4100 /wd4267 /wd4828
 win32-g++{
 CONFIG += warn_off
 QMAKE_CXXFLAGS += -Wall
@@ -67,10 +75,38 @@ macx:QMAKE_CXXFLAGS += -Wno-inconsistent-missing-override
 # Flags for OpenMP
 macx:QMAKE_CXXFLAGS += -Xpreprocessor -fopenmp
 macx:{
-    QMAKE_LFLAGS += -L/opt/homebrew/Cellar/libomp/14.0.6/lib/ -lomp #brew install libomp
-    INCLUDEPATH += /opt/homebrew/Cellar/libomp/14.0.6/include/
+#    contains(QMAKE_HOST.arch, arm64){
+#    message("---"$$QMAKE_HOST.arch)
+#    QMAKE_LFLAGS += -L/opt/homebrew/Cellar/libomp/14.0.6/lib/ -lomp #brew install libomp
+#    INCLUDEPATH += /opt/homebrew/Cellar/libomp/14.0.6/include/
+#    }else{
+#    message("***"$$QMAKE_HOST.arch)
+#    #QMAKE_LFLAGS += -L/usr/local/opt/libomp/lib/ -lomp #brew install libomp
+#    #INCLUDEPATH += /usr/local/include/
+#    #/usr/local/Cellar/libomp/14.0.0/
+#    #/opt/homebrew/Cellar/libomp/14.0.6/
+#    QMAKE_LFLAGS += -L/usr/local/Cellar/libomp/14.0.0/lib/ -lomp #brew install libomp
+#    INCLUDEPATH += /usr/local/Cellar/libomp/14.0.0/include/
+#    }
+
+#    QMAKE_LFLAGS += -L/opt/homebrew/Cellar/libomp/14.0.6/lib/ -lomp #brew install libomp
+#    INCLUDEPATH += /opt/homebrew/Cellar/libomp/14.0.6/include/
+    MAC_M1_BUILD_X86{
+        message("build omp, MAC_M1_BUILD_X86 is set")
+        LIBS += /Users/anker/mac_x64_86/libomp/14.0.0/lib/libomp.a #brew install libomp
+        INCLUDEPATH += /Users/anker/mac_x64_86/libomp/14.0.0/include/
+    }else{
+        message("build omp, MAC_M1_BUILD_X86 is not set")
+        QMAKE_LFLAGS += -L/usr/local/Cellar/libomp/14.0.0/lib/ -lomp #brew install libomp
+        INCLUDEPATH += /usr/local/Cellar/libomp/14.0.0/include/
+    }
 }
 
+#macx:QMAKE_LFLAGS += -L/usr/local/opt/libomp/lib/ -lomp #brew install libomp
+#macx:INCLUDEPATH += /usr/local/include/
+
+# Set up library search paths
+#macx:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib/macx64 -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 macx:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 
 
@@ -84,6 +120,14 @@ linux:QMAKE_RPATHDIR += $$MESHLAB_DISTRIB_DIRECTORY/lib
 linux:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib/linux -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 linux:QMAKE_LFLAGS+= -L$$MESHLAB_DISTRIB_DIRECTORY/lib/linux -L$$MESHLAB_DISTRIB_DIRECTORY/lib
 
+CONFIG(debug  , debug|release){ LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/../common/debug  }
+CONFIG(release, debug|release){ LIBS += -L$$MESHLAB_DISTRIB_DIRECTORY/../common/release}
+
+win32-msvc:LIBS +=  -lopengl32	\
+                    -lGLU32
+#win32-g++:LIBS += -lmeshlab-common -lopengl32 -lGLU32
+win32-g++:LIBS += -lopengl32	\
+                    -lGLU32
 #DEFINES += USE_EXTRA_UI
 
 

@@ -37,12 +37,13 @@ void CHScene::updateDoc()
 
     while (bIt != eIt)
     {
-//        (*bIt)->cmeshToMyModel();
+        //(*bIt)->cmeshToMyModel();
         (*bIt)->cmeshoToMeshShowObj(*(*bIt)->m_oldMesh);
         (*bIt)->calBaseAABB();
         (*bIt)->calRealAABB();
         (*bIt)->updateToScene();
         (*bIt)->updateSupportMeshes();
+
         bIt++;
     }
     m_doc->modelCheckSceneIn();

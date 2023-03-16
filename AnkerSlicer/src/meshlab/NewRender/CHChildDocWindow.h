@@ -31,6 +31,9 @@ public:
 	virtual void getCurNearFarPoint(int x, int y, QVector3D& np, QVector3D& fp);
 	virtual void pixelToWorld(float x, float y, float z, QVector3D& worldCoord);
 	virtual void worldToPixel(QVector3D worldCoord, float& x, float& y, float& z);
+    virtual bool getCurMouseInWidget(int x, int y);
+    virtual bool isActivteAppWindow();
+    virtual void getMechineBoxSize(float &length, float &width, float &height);
 
 	QOpenGLShaderProgram& getShaderProgram();
 	CHRenderDataPtr getRenderData();
@@ -39,6 +42,7 @@ public:
 	void generateBasePointBuffer();
 
 	void createMachineBox(const QString& logPath, float x, float y, float z, QColor color = QColor(229, 229, 229));
+    void updateMechineBox(float x, float y, float z);
 
 	void setView(const CH3dView::ViewType& _type, const CHAABB3D& aabb);
 
@@ -51,6 +55,8 @@ protected:
 
 signals:
 	void openFiles(QStringList fileList);
+    void machinePlatformSizeSignal(float length, float width, float height);
+
 private:
 	virtual void resizeEvent(QResizeEvent* event);
 

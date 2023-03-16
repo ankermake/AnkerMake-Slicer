@@ -3,10 +3,10 @@
 #include <QLocalSocket>
 #include "../common/utilities/tlogger.h"
 #ifdef _WIN32
-#define NETWORKEXE "AnkerSlicerNetWork.exe"
+#define NETWORKEXE "AnkerMakeNetWork.exe"
 
 #elif __APPLE__
-#define NETWORKEXE "AnkerSlicerNetWork.app"
+#define NETWORKEXE "AnkerMakeNetWork.app"
 #endif
 
 HeartBeatThread::HeartBeatThread(QObject *parent) : QThread(parent) , m_process(nullptr)

@@ -31,6 +31,7 @@
 #include <common/plugins/interfaces/edit_plugin.h>
 #include "common/GeoAndShow/CHLineSegment3DShowObj.h"
 #include "common/GeoAndShow/CHPointShowObj.h"
+#include "common/GeoAndShow/CHScene.h"
 #include "CHModelZoomTransformParamsSetUI.h"
 
 
@@ -43,6 +44,7 @@ public:
 
     EditMeshZoomTransformTool();
     virtual ~EditMeshZoomTransformTool() {}
+    void initInMainUI  () override ; //  add  @2023-01-13 by ChunLian
     bool startAnkerEdit(ActionEditTool* action, void* arg1 = nullptr, void* arg2 = nullptr) override;
     void endAnkerEdit(ActionEditTool* action, void* arg1 = nullptr, void* arg2 = nullptr) override;
 
@@ -51,22 +53,21 @@ public:
     void mouseReleaseEvent(QMouseEvent* event, void* arg1 = nullptr, void* arg2 = nullptr) override;
 
 public Q_SLOTS:
-    void receiveParams(std::vector<float> params);
-    void receiveBoxParams(std::vector<float> params);
+    void receiveParams(std::vector<float> params, ZoomAxisType axisType);
+    void receiveBoxParams(std::vector<float> params, ZoomAxisType axisType);
     void scaleToFitClicked();
     void resetBtnClicked();
     void resetSelectedObjsClicked();
     void updateLock(bool);
 
-    void viewValuesChanged(std::vector<double> params, ZoomChangedType type);
+    void viewValuesChanged(std::vector<double> params, ZoomChangedType type, ZoomAxisType axisType);
 
 Q_SIGNALS:
     void sendParams(std::vector<float> params);
     void sendBoxSizeParam(std::vector<float > params);
     void boxSizeParamsChanged(std::vector<double> params, ZoomChangedType type);
     void scaleParamsChanged(std::vector<double> params, ZoomChangedType type);
-
-
+    void restartEditToolSignal();
 private:
 
     
@@ -77,9 +78,10 @@ private:
     void refreshBoxSizeUI();
     void createFrame(const QVector3D& origin, float len, float width, float height);
     void stickOnBottom(); 
+    void resetSelectedScale();
 
 private:
-    CHModelZoomTransformParamsSetUI* m_paramUI;
+    CHModelZoomTransformParamsSetUI* m_paramUI{nullptr};
     std::set<CHMeshShowObjPtr> m_editMeshModels;
     CHMeshShowObjPtr m_firstMesh;
     QVector3D m_operationCenter;

@@ -43,15 +43,15 @@ bool MeshLabApplication::notify( QObject * rec, QEvent * ev )
 //  change @2022-06-06 by CL
 const QString MeshLabApplication::appVer(bool includeName, bool includeDate)
 {
-    QString ver("V0.7.5");
+    QString ver("V0.9.14");
 #if USE_EXTRA_UI
-    ver = ver + ".1";    
+    ver = ver + ".1";
 #endif
 
     if(includeName){
         ver = appName() + "_" + ver;
     }
-    if(includeDate){    
+    if(includeDate){
         ver +=  "_" + QLocale("en_US").toDate(QString(__DATE__).simplified(), "MMM d yyyy").toString("yyyyMMdd");
     }
     qDebug() << __DATE__ << ver ;

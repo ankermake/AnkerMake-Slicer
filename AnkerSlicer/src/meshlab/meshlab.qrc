@@ -111,5 +111,6 @@
         <file>images/icon/fdmSlicerTab.png</file>
         <file>images/icon/logo_icon.png</file>
         <file>images/icon/fdm_title_close_icon.png</file>
+        <file>qss/NotoSansJP-Regular.ttf</file>
     </qresource>
 </RCC>

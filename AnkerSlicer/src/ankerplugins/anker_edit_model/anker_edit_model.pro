@@ -5,26 +5,24 @@ HEADERS += \
 	CHModelMirrorTransformParamsSetUI.h\
 	CHModelMoveTransformParamsSetUI.h\
 	CHModelRotationTransformParamsSetUI.h\
-	CHModelZoomTransformParamsSetUI.h\
+    CHModelZoomTransformParamsSetUI.h\
 	edit_meshmirrortransform.h\
 	edit_meshmovetransform.h\
 	edit_meshrotationtransform.h\
 	edit_meshtransform_factory.h\
-	edit_meshzoomtransform.h\
-        BoxBorder.h
+    edit_meshzoomtransform.h
 
 SOURCES += \
     CHCustomLineEdit.cpp\
 	CHModelMirrorTransformParamsSetUI.cpp\
 	CHModelMoveTransformParamsSetUI.cpp\
 	CHModelRotationTransformParamsSetUI.cpp\
-	CHModelZoomTransformParamsSetUI.cpp\
+    CHModelZoomTransformParamsSetUI.cpp\
 	edit_meshmirrortransform.cpp\
 	edit_meshmovetransform.cpp\
 	edit_meshrotationtransform.cpp\
 	edit_meshtransform_factory.cpp\
-	edit_meshzoomtransform.cpp\
-        BoxBorder.cpp
+    edit_meshzoomtransform.cpp
 
 RESOURCES += \
     anker_edit_model.qrc

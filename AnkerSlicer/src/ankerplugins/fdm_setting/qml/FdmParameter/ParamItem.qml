@@ -6,14 +6,15 @@ Item {
     id: root
     implicitWidth: parent.width
     implicitHeight: 42
-    visible: true
+    visible: model.visible
+    //visible: true
     anchors.leftMargin: 2
     anchors.rightMargin: 15
 
     signal showAllChildern(string category)
     signal showTooltip(string description, point p)
     signal hideTooltip()
-    //when item is children node，use tab
+    //当item为子节点时， 缩进 占位
     Item {
         id: itemSpace
         anchors.left: parent.left
@@ -25,8 +26,16 @@ Item {
         id :label
         anchors.left: itemSpace.right
         anchors.verticalCenter: parent.verticalCenter
-        color: "#999999"
-        text: model.label
+        //color: "#999999"
+        Text {
+            id: name
+            text: model.label
+            elide:Text.ElideRight
+            color: "#999999"
+            width: 300
+           // wrapMode: Text.Wrap.Overflow
+        }
+//        text: model.label
     }
 
     Loader {
@@ -54,21 +63,15 @@ Item {
         hoverEnabled:true
         onEntered: {
         //   console.log("enterrrrrrrrrrrrrrrrrr", "mouse_X = ", mouseX, "mouse_y = " ,mouseY, "gloabal = " , mapToGlobal(0,0));
-            //showTooltip()
            FdmParamSettingsWidget.showToolTip(model.label, model.description, model.affects, model.affectedBy, mapToGlobal(0,0));
-//            typeLoder.item.int
         }
-        //onPressed: {mouse.accepted = false}
 
         onClicked: {
             mouse.accepted = false
         }
         onExited:  {
-            // mouse.accepted=false
           //  console.log("exited................");
-           // hideTooltip()
             FdmParamSettingsWidget.hideToolTip();
-            //mouse.accepted=false
         }
 
     }

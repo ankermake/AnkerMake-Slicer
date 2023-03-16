@@ -23,13 +23,13 @@
 #include <common/mlapplication.h>
 #include <common/GLExtensionsManager.h>
 #include <QMessageBox>
-#include "mainwindow.h"
+//#include "mainwindow.h"
 #include "translator.h"
 #include <QGLFormat>
 #include <QSurfaceFormat>
 #include <QString>
 #include <QTextCodec>
-
+#include <QOffscreenSurface>
 #include <clocale>
 #ifdef _WIN32
 #include <windows.h>
@@ -44,11 +44,19 @@
 #include "controls/useragreementwidget.h"
 #include "common/utilities/ioapi.h"
 #include "common/Socket/HeartBeatThead.h"
+#include "dbgcrash.h"
+#include <QDebug>
+#include <QFontDatabase>
 
 #ifdef _WIN32
-#define ANKERMAKE_EXE "AnkerSlicer.exe"
+#define ANKERMAKE "AnkerMake"
 #elif __APPLE__
-#define ANKERMAKE_EXE "AnkerSlicer.app"
+#define ANKERMAKE "AnkerMake"
+#endif
+
+#if defined(Q_OS_WIN32)   // Q_OS_WIN32
+#include <windows.h>
+#include <Dbghelp.h>
 #endif
 
 char LocalSeverName[]="AnkerMakerLocalServer";
@@ -74,41 +82,66 @@ int AmdPowerXpressRequestHighPerformance = 1;
 void handleCriticalError(const MLException& exc);
 void wait(unsigned int TimeMS);
 
-
-
 int main(int argc, char *argv[]){
+// QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+//    MeshLabApplication app(argc, argv);
+
+//    int clearLogCreatedMoreThanXDays = 5;
+//    QString logPath = TLogger::instance()->getLogPath();
+//    QStringList filter;
+//    filter << "*.log";
+//    QSet<QString> excludeSet;
+//    IoApi::clearFilesUnderPath(clearLogCreatedMoreThanXDays*24*60*AkConst::Time::MINUTE_SECOND, logPath, filter,excludeSet);
+
+//    AkUtil::TWarning("\n\n\n\n");
+//    QString dbgStr;
+//    {QDebug debug(&dbgStr); debug.noquote(); for(int i=0; i<argc;++i){debug<<argv[i];} qDebug() << dbgStr;}
+//    AkUtil::TWarning(dbgStr);
+//    TDebug("Application exec Start...");
+
+#if defined(Q_OS_WIN32)
+    //SetUnhandledExceptionFilter(crashStackCallback);
+    SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ApplicationCrashHandler);
+#endif
+
 
     
     {
         bool ret = false;
 #ifdef _WIN32
         QProcess process;
-        process.start("tasklist", QStringList() << "/FI" << "imagename eq " + QString(ANKERMAKE_EXE));
+        process.start("tasklist", QStringList() << "/FI" << "imagename eq " + QString(ANKERMAKE)+ "*");
         process.waitForFinished();
 
         QString outputStr = QString::fromLocal8Bit(process.readAllStandardOutput());
         ret = outputStr.contains("PID");
-        ret &= outputStr.count(ANKERMAKE_EXE) > 1; 
-        qDebug() << "outputStr: " << outputStr;
+        ret &= outputStr.count(ANKERMAKE) > 1; 
+        qDebug() << "outputStr: " << outputStr << ", ret: " << ret;
+        //TDebug("outputStr: " + outputStr);
 #elif __APPLE__
-/*         std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE_EXE).toStdString() + " |grep -v grep |awk '{print $2}'";
+        std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE).toStdString() + "* |grep -v grep |awk '{print $8}'";
         const char* strFindName = strCmd.c_str();
         FILE *pPipe = popen(strFindName, "r");
+        int count = 0;
         if(pPipe != NULL)
         {
             char name[512] = { 0 };
             while(fgets(name, sizeof(name), pPipe) != NULL)
             {
                 int nLen = strlen(name);
-                if(nLen > 0 && name[nLen - 1] == '\n')
+                //TDebug("nLen: " + nLen + ", name: " + QString::fromUtf8(name));
+                qDebug() << "nLen: " << nLen << ", name: " << QString::fromUtf8(name);
+                if(QString::fromUtf8(name).contains(ANKERMAKE))
                 {
-                    name[nLen - 1] = '\0';
-                    ret = true;
-                    break;
+                    count++;
                 }
             }
+            if(count > 1)
+            {
+                ret = true;
+            }
             pclose(pPipe);
-        } */
+        }
 #endif
         if(ret)
         {
@@ -127,7 +160,7 @@ int main(int argc, char *argv[]){
                     for(int i=1; i<argc;++i)
                     {
                         wait(500);
-                        client.sendMessage(QString::fromLocal8Bit(argv[i]));
+                        client.sendMessage(QString::fromLocal8Bit(argv[i]).replace("\\", "/"));
                         qDebug() <<"tell the existing process to open:"<<QString::fromLocal8Bit(argv[i]) ;
                     }
                 }
@@ -153,13 +186,9 @@ int main(int argc, char *argv[]){
 
     }
 
-
     MeshLabApplication app(argc, argv);
-
-
-
     
-    int clearLogCreatedMoreThanXDays = 5;
+    int clearLogCreatedMoreThanXDays = 2;
     QString logPath = TLogger::instance()->getLogPath();
     QStringList filter;
     filter << "*.log";
@@ -173,7 +202,7 @@ int main(int argc, char *argv[]){
     TDebug("Application exec Start...");
 
     
-    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+    // QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
 
 //    QStringList m_fontList;
 //    int lcdFontId = QFontDatabase::addApplicationFont(":/qss/Roboto-Regular-14.ttf");
@@ -184,25 +213,86 @@ int main(int argc, char *argv[]){
 //        font.setPixelSize(14);
 //        app.setFont(font);
 //    }
-    QFont font("Microsoft YaHei");
-    font.setPixelSize(14);
-    app.setFont(font);
+    
+//    QFontDatabase::addApplicationFont(":/qss/SourceHanSansCN-VF.ttf");
+//    QFont font("Noto Sans");
+//    font.setPixelSize(14);
+//    app.setFont(font);
+
+    {
+        int index =  SettingManager().getCurrentLanguage();
+        QFontDatabase::addApplicationFont(":/qss/NotoSansJP-Regular.ttf");
+        QFont font("Microsoft YaHei");
+        if (index == 2) {
+            font = QFont("Noto Sans");
+        }
+        font.setPixelSize(14);
+        app.setFont(font);
+    }
 
 
-    auto m_translator =  Translator::instance();
-    SettingManager setting;
-    int index =  setting.getCurrentLanguage();
-    if(index == 1) {
-        m_translator->loadLanguage(Language::CH);
-    }
-    else {
-        m_translator->loadLanguage(Language::EN);
-    }
+    //set font
+//    {
+//        int index =  SettingManager().getCurrentLanguage();
+//        int lcdFontId = 0;
+//        if (index == 2) {
+//            lcdFontId = QFontDatabase::addApplicationFont(":/qss/SourceHanSansJP-VF.ttf");
+//        }
+//        else
+//        {
+//            lcdFontId = QFontDatabase::addApplicationFont(":/qss/SourceHanSansCN-VF.ttf");
+//        }
+
+//        if(lcdFontId != -1) {
+//            QStringList fontList;
+//            fontList << QFontDatabase::applicationFontFamilies(lcdFontId);
+//            QFont font(fontList.at(0));
+//            font.setPixelSize(14);
+//            app.setFont(font);
+//        }
+//    }
+
+
     //add qss
     QFile file(":/qss/default.qss");
     file.open(QFile::ReadOnly);
     QString styleSheet = QString::fromLatin1(file.readAll());
     qApp->setStyleSheet(styleSheet);
+#ifdef __APPLE__
+#else
+    //query the version of opengl ,and
+    QString openglVersion;
+    {
+        QOffscreenSurface surf;
+        surf.create();
+        QOpenGLContext ctx;
+        ctx.create();
+        ctx.makeCurrent(&surf);
+        openglVersion = QString::fromStdString((const char*)ctx.functions()->glGetString(GL_VERSION));
+    }
+    QStringList glVersion = openglVersion.split(u' ')[0].split(u'.');
+    AkUtil::TWarning("openglVersion :"+openglVersion);
+    assert(glVersion.size() >= 2);
+    if(glVersion[0].toInt() <= 3 && glVersion[1].toInt() < 3){
+        control::MessageDialog a("notice",QObject::tr("This version of OpenGL is not compatible with your setup. Upgrade your graphics driver."), control::MessageDialog::BUTTONFLAG::OK);
+        bool re = a.exec();
+        return 0;
+    }
+#endif
+    SettingManager setting;
+
+    auto m_translator =  Translator::instance();
+
+    int index =  setting.getCurrentLanguage();
+    if(index == 1) {
+        m_translator->loadLanguage(Language::CH);
+    }
+    else if (index == 0) {
+        m_translator->loadLanguage(Language::EN);
+    } else if (index == 2) {
+        m_translator->loadLanguage(Language::JA);
+    }
+
 
     bool flag = setting.getAcceptUserAgreement();
     if(!flag) {
@@ -212,10 +302,12 @@ int main(int argc, char *argv[]){
         int i = userAgreementWidget.exec();
         if(i == QDialog::Rejected) {
             setting.setAcceptUserAgreement(false);
-            return -1;
+            return 0;
         }
         setting.setAcceptUserAgreement(true);
     }
+
+
 #ifdef __APPLE__
     QSurfaceFormat glFormat;
     glFormat.setVersion(3, 3);
@@ -236,20 +328,25 @@ int main(int argc, char *argv[]){
     }
 
     window->showMaximized();
+    app.processEvents();
 
     // click .stl startup exe
     QStringList argvFileList;
     for(int i=1; i<argc;++i)
     {
-       argvFileList.append(QString::fromLocal8Bit(argv[i]));
+       argvFileList.append(QString::fromLocal8Bit(argv[i]).replace("\\", "/") );
     }
+#ifdef _WIN32
+
+#elif __APPLE__
+    argvFileList = app.fileList;
+#endif
     window->openFileList(argvFileList);
+    QObject::connect(&app, &MeshLabApplication::openFileSignal, window.get(), &AnkerMainWindow::openFileFromAppRaram, Qt::QueuedConnection);
 
-    LocalServer server;
-    QObject::connect(&server, &LocalServer::processArgvfileNameMsg, window.get(), &AnkerMainWindow::openFileList);
-    server.RunServer(LocalSeverName);
-
-    app.processEvents();
+//    LocalServer server;
+//    QObject::connect(&server, &LocalServer::processArgvfileNameMsg, window.get(), &AnkerMainWindow::openFileList);
+//    server.RunServer(LocalSeverName);
 
 	return app.exec();
 }

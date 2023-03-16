@@ -96,7 +96,7 @@ QString meshlab::defaultPluginPath()
 #endif
 	//QMessageBox::warning(0,"Meshlab Initialization","Serious error. Unable to find the plugins directory.");
 	qDebug("Meshlab Initialization: Serious error. Unable to find the plugins directory.");
-	return {};
+    return QString();
 }
 
 QString meshlab::defaultShadersPath()
@@ -114,12 +114,6 @@ PluginManager& meshlab::pluginManagerInstance()
 {
 	static PluginManager pm;
 	return pm;
-}
-
-pymeshlab::FunctionSet& pymeshlab::functionSetInstance()
-{
-	static FunctionSet fs(meshlab::pluginManagerInstance());
-	return fs;
 }
 
 QVariantMap &meshlab::AppInfo()

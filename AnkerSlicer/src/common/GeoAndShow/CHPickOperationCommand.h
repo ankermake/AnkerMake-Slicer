@@ -15,6 +15,15 @@
 #include "CH3DPrintModel.h"
 #include <QMenu>
 
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 class SceneRightMenu : public QMenu{
     Q_OBJECT
@@ -29,6 +38,7 @@ public:
     inline void setEnabledHide  (bool enable) {if(actHide  ) actHide  ->setEnabled(enable);}
     inline void setEnabledShow  (bool enable) {if(actShow  ) actShow  ->setEnabled(enable);}
     inline void setEnabledReset (bool enable) {if(actReset ) actReset ->setEnabled(enable);}
+
 protected:
     void changeEvent(QEvent *e);
 protected:
@@ -42,7 +52,7 @@ protected:
 
 
 DEF_PTR(CHPickOperationCommand)
-class CHPickOperationCommand : public QObject
+class COMMONLIB_EXPORT CHPickOperationCommand : public QObject
 {
     Q_OBJECT
 
@@ -99,6 +109,8 @@ Q_SLOTS:
 
 public:
     std::set<CHMeshShowObjPtr> m_selectedObjs;
+    bool rightBtnPressed = false;
+    bool mouseRightMoved = false;
 
 private:
     std::vector<CHMeshShowObjPtr> m_copiedObjs;

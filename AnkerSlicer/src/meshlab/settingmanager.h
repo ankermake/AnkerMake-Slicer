@@ -15,6 +15,8 @@ public:
     void insertRecent(const QString &fileName);
     void insertRecent(const QStringList &fileList);
     void clearRecent();
+    QString readExportRecent();
+    void writeExportRecent(const QString &fileName);
 
     void setAiMode(bool flag);
     bool getAiMode();

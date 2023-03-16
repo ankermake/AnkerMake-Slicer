@@ -92,6 +92,7 @@ public:
     void selectProfile(QString name);
     void selectMachine(QString name);
     void selectMaterial(QString name);
+    void selectNozzle(QString name);
 
     void applySimpleModeData();
     void setDefaultValueFromExpertMode();
@@ -161,6 +162,9 @@ signals:
     void globalSupportStateChanged();
     void generateAdhesionStateChanged();
     void globalSupportTextCodeChanged();
+
+    
+    void setSupportEnabled(bool enable);
 
 private:
     QList<float> getAiQualityList();

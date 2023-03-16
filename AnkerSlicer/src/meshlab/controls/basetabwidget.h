@@ -7,6 +7,24 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QDebug>
+#include <QPushButton>
+#include <QButtonGroup>
+class BaseListWidgetItem : public QListWidgetItem
+{
+public:
+    explicit BaseListWidgetItem(QListWidget *listview = nullptr, int type = Type)
+    {
+         QListWidgetItem(listview,type);
+    }
+
+    bool operator<(const QListWidgetItem &other) const
+    {
+        int a = -1, b =-1;
+        a = this->data(Qt::UserRole + 1).toInt();
+        b = other.data(Qt::UserRole + 1).toInt();
+        return a < b;
+    }
+};
 
 class BaseTabWidget : public QWidget
 {
@@ -18,9 +36,9 @@ public:
    // Q_PROPERTY(TabPosition tabPosition READ tabPosition WRITE setTabPosition);
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentChanged)
     //int addTab(QWidget *page, const QString &label);
-    int addTab(QWidget *page, const QIcon &icon, const QString &label);
+    int addTab(QWidget *page, const QIcon &icon, const QString &label, int index = -1);
     int count() const;
-
+    QMap<int, QLabel *> &titleLabels() { return m_titleLabels; };
 //    const QSize &iconSize() const;
 //    void setIconSize(const QSize &newIconSize);
 
@@ -37,18 +55,22 @@ Q_SIGNALS:
 public Q_SLOTS:
     void setCurrentWidget(QWidget *widget);
     void setCurrentIndex(int newCurrentIndex);
+    void slot_btnGroupClicked(int index);
 
 private:
-    void setCurrentPage(QListWidgetItem *item);
+    //void setCurrentPage(QListWidgetItem *item);
+    void setButtonId();
 private:
     QGridLayout *m_mainLayout;
-    QListWidget *m_baseListWidget;
     QStackedLayout *m_stackLayout;
 
     int m_count;
 //    QSize m_iconSize;
 //    TabPosition m_tabPosition;
     int m_currentIndex;
+    QHBoxLayout *m_topHboxLayout;
+    QButtonGroup *m_buttonGroup;
+    QMap<int, QLabel *> m_titleLabels;
 };
 
 #endif // BASETABWIDGET_H

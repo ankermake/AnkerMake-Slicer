@@ -41,6 +41,7 @@ HEADERS += \
     service/fdmmaterialprofileservice.h \
     service/fdmparameterprofileservice.h \
     service/fdmpreferencedialogservice.h \
+    service/fdmprofilebackupservice.h \
     service/fdmrightparameterservice.h \
     tooltip.h
 
@@ -77,6 +78,7 @@ SOURCES += \
     service/fdmmaterialprofileservice.cpp \
     service/fdmparameterprofileservice.cpp \
     service/fdmpreferencedialogservice.cpp \
+    service/fdmprofilebackupservice.cpp \
     service/fdmrightparameterservice.cpp \
     tooltip.cpp
 

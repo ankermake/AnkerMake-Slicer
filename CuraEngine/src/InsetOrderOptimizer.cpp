@@ -82,15 +82,16 @@ void InsetOrderOptimizer::processHoleInsets()
     const unsigned int num_insets = part.insets.size();
     constexpr float flow = 1.0;
 
-    do{ 
-        if(!outer_inset_first)  ; else{break;}
-        bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
-        const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
-        //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
-        //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
-        if(optimize_wall_hole && overhang_hole_mask.empty())  
-            outer_inset_first = true;
-    }while(false);
+    //delete by Binary for inset order bug
+    
+    //    if(!outer_inset_first)  ; else{break;}
+    //    bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
+    //    const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
+    //    //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
+    //    //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
+    
+    //        outer_inset_first = true;
+    //}while(false);
 
     if (!outer_inset_first && mesh.settings.get<bool>("infill_before_walls"))
     {
@@ -460,7 +461,8 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
                 orderOptimizer.addPolygons(part_inner_walls);
                 orderOptimizer.optimize();
 
-                constexpr coord_t wall_0_wipe_dist = 0;
+                
+                //constexpr coord_t wall_0_wipe_dist = 0;
                 constexpr float flow_ratio = 1.0;
                 constexpr bool always_retract = false;
 
@@ -474,7 +476,7 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
                     // oo hh
                     // T  T  1234 -> 4[0]123   0,1,  1,e
                     // F  F  4321 -> 321[0]4   1,e,  0,1
-                    // T  T  1234 -> 4[0]123   0,1,  1,e
+                    // T  F  1234 -> 4[0]123   0,1,  1,e
                     // F  T  4321 -> 432[0]1   0,c,  c,e
                 }
                 bool oo = !outer_inset_first;

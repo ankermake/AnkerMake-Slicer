@@ -4,7 +4,15 @@
 #include <QQuaternion>
 #include <QMatrix4x4>
 #include <QtMath>
-
+#if defined(QT_SHARED)
+#ifdef COMMONLIB
+#define COMMONLIB_EXPORT Q_DECL_EXPORT
+#else
+#define COMMONLIB_EXPORT Q_DECL_IMPORT
+#endif
+#else
+#define COMMONLIB_EXPORT
+#endif
 
 inline QVector3D operator*(const QMatrix3x3 & matrix, const QVector3D & vector){
     float x, y, z;
@@ -15,7 +23,7 @@ inline QVector3D operator*(const QMatrix3x3 & matrix, const QVector3D & vector){
 };
 
 
-class AkTransformMath
+class COMMONLIB_EXPORT AkTransformMath
 {
 public:
     //  TRS <==> Matrix4x4
