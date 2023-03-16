@@ -141,14 +141,13 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
     int p = 0;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        (*it)->m_params[index] = -(*it)->m_params[index];
+        //(*it)->m_params[index] = -(*it)->m_params[index];
         //if (m_editMeshModels.size() > 1)
         {
-            float t1 = (*it)->m_rotCenter[index] + (*it)->m_params[index + 6];
-            (*it)->m_params[index + 6] += 2 * ((m_operationCenter + QVector3D(0, 0, m_operateMoveZ))[index] - t1);
+            //float t1 = (*it)->m_rotCenter[index] + (*it)->m_params[index + 6];
+            //(*it)->m_params[index + 6] += 2 * ((m_operationCenter + QVector3D(0, 0, m_operateMoveZ))[index] - t1);
 
             QVector3D curCenter = m_operationCenter + QVector3D(0, 0, m_operateMoveZ);
-            qDebug() << "curCenter: " << curCenter;
             QMatrix4x4 tran1, tran2, tran3;
             tran1.translate(-curCenter);
             QVector3D scaleValue(1, 1, 1);
@@ -156,16 +155,30 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             tran2.scale(scaleValue);
             tran3.translate(curCenter);
             QMatrix4x4 newSumMatrix = tran3 * tran2 * tran1 * (*it)->getTransform();
-            double angleX, angleY, angleZ;
-            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(newSumMatrix, angleX, angleY, angleZ);
-            float angles[3];
-            angles[0] = angleX / CH_PI * 180.0;
-            angles[1] = angleY / CH_PI * 180.0;
-            angles[2] = angleZ / CH_PI * 180.0;
-            adjustSingleAngle(angles[0]);
-            adjustSingleAngle(angles[1]);
-            adjustSingleAngle(angles[2]);
             (*it)->setTransform(newSumMatrix);
+            QVector3D position, scale;
+            QQuaternion orientation;
+            double pitch, yaw, roll;
+            
+            AkTransformMath::decomposeQMatrix4x4(newSumMatrix, position, orientation, scale);
+            QMatrix4x4 tmpRotMat(orientation.toRotationMatrix());
+            CHBaseAlg::instance()->calEulerAnglesFromRotMatrix(tmpRotMat, pitch, yaw, roll);
+            
+            pitch = pitch / CH_PI * 180.0;
+            yaw = yaw / CH_PI * 180.0;
+            roll = roll / CH_PI * 180.0;
+            (*it)->m_params[0] = scale[0];
+            (*it)->m_params[1] = scale[1];
+            (*it)->m_params[2] = scale[2];
+            (*it)->m_params[3] = pitch;
+            (*it)->m_params[4] = yaw;
+            (*it)->m_params[5] = roll;
+
+            QVector3D newCenter = (*it)->getTransform() * (*it)->m_rotCenter;
+            QVector3D offset = newCenter - (*it)->m_rotCenter;
+            (*it)->m_params[6] = offset[0];
+            (*it)->m_params[7] = offset[1];
+            (*it)->m_params[8] = offset[2];
         }
 
         //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
@@ -295,12 +308,17 @@ void EditMeshMirrorTransformTool::reset()
         }
         if (m_editMeshModels.size() == 1)
         {
-            qDebug() << "reset m_params: " << (*it)->m_params[0] << ", " << (*it)->m_params[1] << ", " << (*it)->m_params[2];
+//            qDebug() << "reset m_params: " << (*it)->m_params[0] << ", " << (*it)->m_params[1] << ", " << (*it)->m_params[2];
             for (int i = 0; i < 3; i++)
             {
-                (*it)->m_params[i] = fabs((*it)->m_params[i]);
+                //(*it)->m_params[i] = fabs((*it)->m_params[i]);
+                if((*it)->m_params[i] < 0)
+                {
+                    receiveButtonClicked(i);
+                }
             }
             //(*it)->m_params = m_initValues[0];
+
         }
         else
         {
@@ -311,7 +329,7 @@ void EditMeshMirrorTransformTool::reset()
             //(*it)->m_params = m_initValues[p];
         }
 
-        (*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
+        //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
 
         if (true/*m_lockToPrintPlatform*/)
         {

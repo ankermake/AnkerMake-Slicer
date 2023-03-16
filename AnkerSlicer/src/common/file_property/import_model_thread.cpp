@@ -1,5 +1,7 @@
 #include "import_model_thread.h"
 #include <QDebug>
+#include <QFile>
+#include <QStandardPaths>
 
 ImportModelThread::ImportModelThread(QObject* parent) : m_exit(false), m_cm(NULL)
 {
@@ -14,12 +16,22 @@ void ImportModelThread::run()
     }
     successful = true;
     try {
-        bool ret = MeshModelImport_Export::open(m_formatName, m_fileName, *m_cm, m_cb);
+        QString tmpFileName = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/";
+        QFile tmpFile(m_fileName);
+        int index = m_fileName.lastIndexOf("/") + 1;
+        tmpFileName += m_fileName.mid(index, m_fileName.length() - index);
+        bool ret = tmpFile.copy(tmpFileName);
+        //qDebug() << "copy " << ret << ", source: " << m_fileName << ", target: " << tmpFileName;
+        if(ret)
+        {
+            ret = MeshModelImport_Export::open(m_formatName, tmpFileName, *m_cm, m_cb);
+        }
         if (!ret)
         {
             successful = false;
             emit  errorEncountered(0, QString::fromLocal8Bit("Other Error"));
         }
+        QFile::remove(tmpFileName);
     }
     catch (std::exception& e) {
         qDebug() << __FUNCTION__ << __LINE__ << e.what();

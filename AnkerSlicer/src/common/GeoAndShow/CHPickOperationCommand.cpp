@@ -127,17 +127,18 @@ void CHPickOperationCommand::mousePressEvent(QMouseEvent* event)
             curScene->refresh();
         }
 
-        bool hasSelected = (havePickedPrintObjs());//(m_selectedObjs.size() > 0);
-                       
+        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
         rightMenu->setEnabledDelete(hasSelected);
         rightMenu->setEnabledCopy  (hasSelected);
         rightMenu->setEnabledHide  (hasSelected);
         rightMenu->setEnabledShow  (hasSelected);
         rightMenu->setEnabledReset (hasSelected);
+        rightMenu->setEnabled(hasSelected);
 
         if (m_copiedObjs.size() == 0){
             rightMenu->setEnabledPaste (false);
         }
+        rightMenu->show();
         rightMenu->popup(QCursor::pos());
     };
 
@@ -314,9 +315,10 @@ void CHPickOperationCommand::doWithFileListPickedChanged()
     for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
     {
         //qDebug() << "name: " << getDoc()->m_printObjs[i]->getObjectName() << ", status: " << getDoc()->m_printObjs[i]->getStatus();
-        if (getDoc()->m_printObjs[i]->getStatus() == selected)
+        if (getDoc()->m_printObjs[i]->getStatus() == selected && getDoc()->m_printObjs[i]->getVisuable())
         {
             m_selectedObjs.insert(getDoc()->m_printObjs[i]);
+
         }
     }
 
@@ -429,7 +431,7 @@ bool CHPickOperationCommand::haveCanPickedObj()
     ObjStatus status = m_tmesh->getStatus();
     if(canPicked == status)
         return true;
-    return true;
+    return false;
 }
 
 void CHPickOperationCommand::doWithDocMeshModelsChanged()
@@ -516,24 +518,31 @@ void CHPickOperationCommand::pasteObjs()
         m_copiedObjs[i]->copy(copymesh);
         
         CH3DPrintModelPtr ttt = std::dynamic_pointer_cast<CH3DPrintModel>(copymesh);
-        if (ttt->m_params.size() == 0)
-        {
-            ttt->m_rotCenter = ttt->getBaseAABB().getCenterPoint();
-            ttt->m_params.resize(9);
-            for (int k = 0; k < 9; k++)
-            {
-                ttt->m_params[k] = m_copiedObjs[i]->m_params[k];
-            }
-        }
-        float yOffset = 20;
-        ttt->m_params[7] += yOffset;
-        ttt->m_rotCenter[1] += yOffset;
-        ttt->setTransform(CHBaseAlg::instance()->calTransformFromParams(ttt->m_rotCenter, ttt->m_params));
-        ttt->m_realAABB.m_Ymin += yOffset;
-        ttt->m_realAABB.m_Ymax += yOffset;
-        ttt->m_baseAABB.m_Ymax += yOffset;
-        ttt->m_baseAABB.m_Ymin += yOffset;
-        //ttt->m_baseAABB = ttt->m_realAABB;
+        QVector3D offset;
+        ttt->calRealAABB();
+        ttt->calBaseAABB();
+        ttt->m_rotCenter = ttt->m_realAABB.getCenterPoint();
+        offset[1] += 20;
+
+        ttt->m_realAABB.m_Xmin = offset[0] + ttt->m_realAABB.m_Xmin;
+        ttt->m_realAABB.m_Ymin = offset[1] + ttt->m_realAABB.m_Ymin;
+        ttt->m_realAABB.m_Zmin = offset[2] + ttt->m_realAABB.m_Zmin;
+
+        ttt->m_realAABB.m_Xmax = offset[0] + ttt->m_realAABB.m_Xmax;
+        ttt->m_realAABB.m_Ymax = offset[1] + ttt->m_realAABB.m_Ymax;
+        ttt->m_realAABB.m_Zmax = offset[2] + ttt->m_realAABB.m_Zmax;
+
+        ttt->m_params.resize(9);
+        ttt->m_params[0] = ttt->m_params[1] = ttt->m_params[2] =  1.0;
+        ttt->m_params[3] = ttt->m_params[4] = ttt->m_params[5] =  0.0;
+        ttt->m_params[6] = offset[0];
+        ttt->m_params[7] = offset[1];
+        ttt->m_params[8] = offset[2];
+
+        QMatrix4x4 trans;
+        trans.translate(offset[0], offset[1], offset[2]);
+        ttt->setTransform(trans * ttt->getTransform());
+        qDebug() << "Copy Transform: " << ttt->getTransform();
         ttt->m_initParams = ttt->m_params;
         ttt->m_initTransform = ttt->getTransform();
         ttt->isSceneIn(ttt->getRealAABB(), getDoc()->m_machineBox->getBaseAABB());
@@ -548,11 +557,9 @@ void CHPickOperationCommand::pasteObjs()
 
 void CHPickOperationCommand::hideSelectedObjs()
 {
-    //std::vector<CH3DPrintModelPtr> meshes;
     std::vector<CHMeshShowObjPtr>  meshes;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_selectedObjs.begin(); it != m_selectedObjs.end(); it++)
     {
-        //meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*it));
         meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(*it));
     }
 

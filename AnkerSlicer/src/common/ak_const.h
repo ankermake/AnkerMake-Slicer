@@ -188,6 +188,7 @@ namespace Category
 
 namespace SettingKey
 {
+    const int MAX_NAME_SIZE = 80;
     //ak_meta
     //const QString META_PROFILE_ID = "meta_profile_id";
     const QString META_PROFILE_NAME = "meta_profile_name";

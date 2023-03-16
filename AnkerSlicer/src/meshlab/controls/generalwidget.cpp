@@ -19,7 +19,7 @@ GeneralWidget::GeneralWidget(MessageProcessing *messageProcessing, PageWidget *p
       //m_translator(nullptr)
 {
     setObjectName("GeneralWidget");
-    m_displayName = tr("    General");
+    m_displayName = QString("    ") + tr("General");
     m_messageProcessing = messageProcessing;
     connect(m_messageProcessing, &MessageProcessing::sendMsg2Update, this, &GeneralWidget::receiveMsgFromNetwork);
     init();
@@ -80,7 +80,7 @@ void GeneralWidget::init()
     QVBoxLayout *aiLayout = new QVBoxLayout();
     aiLayout->setSpacing(12);
     aiLayout->setContentsMargins(0,0,0,0);
-    m_aiLabel = new QLabel(tr("AI Detection"),this);
+    m_aiLabel = new QLabel(tr("Create AI File"),this);
     m_aiLabel->setFont(font);
     aiLayout->addWidget(m_aiLabel);
 
@@ -173,7 +173,7 @@ void GeneralWidget::init()
 void GeneralWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
-        m_displayName = tr("    General");
+        m_displayName = QString("    ") + tr("General");
         if (m_languageLabel != nullptr) {
             m_languageLabel->setText(tr("Language"));
         }
@@ -181,16 +181,16 @@ void GeneralWidget::changeEvent(QEvent *e)
              m_languageCombox->setToolTip(tr("Language will change after software restarts."));
         }
         if (m_aiLabel != nullptr) {
-            m_aiLabel->setText(tr("AI Detect"));
+            m_aiLabel->setText(tr("Create AI File"));
         }
         if (m_aiCheckBox != nullptr) {
             m_aiCheckBox->setText(tr("Create AI file when slicing."));
         }
-        if (m_updateCheckBox != nullptr) {
+        if (m_checkButton != nullptr) {
             if (m_updateFlag) {
-                m_updateCheckBox->setText(tr("Update"));
+                m_checkButton->setText(tr("Update"));
             } else {
-                 m_updateCheckBox->setText(tr("Check"));
+                 m_checkButton->setText(tr("Check"));
             }
         }
         if (m_versionLabel != nullptr) {
@@ -309,14 +309,13 @@ void GeneralWidget::checkButtonClicked()
     }
 }
 
-
 void GeneralWidget::update_app(const QString& fileName)
 {
 #ifdef __APPLE__
      //TODO:
     QString cmdStr = QString("open \"") + fileName + QString("\"");
     system(cmdStr.toStdString().c_str());
-    qDebug() << "Mac update_app: " << cmdStr;
+    emit unloadPluginsSignal();
     sleep(1);
     QApplication::exit(0);
 #else
@@ -357,6 +356,7 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
         m_settings.setRecentDownloadNetworkVersion(version);
         m_settings.setRecentDownloadNetworkPath(fileName);
         m_checkButton->setText(tr("Update"));
+        m_updateFlag = true;
         m_checkButton->setProperty("type",Update);
         m_filePath = fileName;
         AkUtil::TDebug("Local Version: " + MeshLabApplication::appVer(false, false) + ", Current Version: " + version);
@@ -376,6 +376,7 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
         m_settings.setRecentDownloadNetworkVersion(version);
         m_settings.setRecentDownloadNetworkPath(fileName);
         m_checkButton->setText(tr("Update"));
+        m_updateFlag = true;
         m_checkButton->setProperty("type",Update);
         m_filePath = fileName;
         AkUtil::TDebug("Local Version: " + MeshLabApplication::appVer(false, false) + ", Current Version: " + version);

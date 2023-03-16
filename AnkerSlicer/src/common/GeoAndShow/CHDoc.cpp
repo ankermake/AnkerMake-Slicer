@@ -375,6 +375,49 @@ void CHDoc::deleteObj(CH3DPrintModelPtr obj)
     deleteObjs(objs);
 }
 
+void CHDoc::getRealObjectName(const CH3DPrintModelPtr &modelPtr)
+{
+    QString meshName = modelPtr->getObjectName();
+    int index1 = meshName.indexOf("(");
+    int index2 = meshName.indexOf(")");
+    if(index1 > 0 && index2 > 0)
+    {
+       meshName = meshName.mid(0, index1);
+    }
+    int maxNum = 0;
+    int num = 0;
+    for(int p = 0; p < m_printObjs.size(); p++)
+    {
+        QString tmpName = m_printObjs[p]->getObjectName();
+        if(tmpName.contains(meshName))
+        {
+            num++;
+            index1 = tmpName.indexOf("(") + 1;
+            index2 = tmpName.indexOf(")");
+            if(index1 >= 1 && index2 > 1)
+            {
+                int tmpNum = tmpName.mid(index1, index2 - index1).toInt();
+                if(tmpNum >= maxNum)
+                {
+                   maxNum = tmpNum+1;
+                }
+            }
+        }
+    }
+
+    if(maxNum > 0)
+    {
+        modelPtr->setObjectName(meshName + QString("(") + QString::number(maxNum) + QString(")"));
+    }
+    else
+    {
+        if(num == 1)
+        {
+            modelPtr->setObjectName(meshName + QString("(") + QString::number(num) + QString(")"));
+        }
+    }
+}
+
 void CHDoc::addObjs(std::vector<CH3DPrintModelPtr> objs)
 
 {
@@ -406,22 +449,23 @@ void CHDoc::addObjs(std::vector<CH3DPrintModelPtr> objs)
         {
             pureName = pureName.left(match.capturedStart(0));
         }*/
-        int num = 0;
-        QString meshName = ttt->getObjectName();
-        int index1 = meshName.indexOf("(");
-        int index2 = meshName.indexOf(")");
-        if(index1 > 0 && index2 > 0)
-        {
-           meshName = meshName.mid(0, index1);
-        }
-        for(int p = 0; p < m_printObjs.size(); p++)
-        {
-            if(m_printObjs[p]->getObjectName().contains(meshName))
-            {
-                num++;
-                ttt->setObjectName(meshName + QString("(") + QString::number(num) + QString(")"));
-            }
-        }
+//        int num = 0;
+//        QString meshName = ttt->getObjectName();
+//        int index1 = meshName.indexOf("(");
+//        int index2 = meshName.indexOf(")");
+//        if(index1 > 0 && index2 > 0)
+//        {
+//           meshName = meshName.mid(0, index1);
+//        }
+//        for(int p = 0; p < m_printObjs.size(); p++)
+//        {
+//            if(m_printObjs[p]->getObjectName().contains(meshName))
+//            {
+//                num++;
+//                ttt->setObjectName(meshName + QString("(") + QString::number(num) + QString(")"));
+//            }
+//        }
+        getRealObjectName(ttt);
 //        while (true)
 //        {
 //            bool flag = true;

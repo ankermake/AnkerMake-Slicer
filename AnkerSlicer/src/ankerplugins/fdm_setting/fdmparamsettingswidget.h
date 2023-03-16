@@ -34,7 +34,7 @@ public:
 
     Q_INVOKABLE void showToolTip(const QString &titlte, const QString &description, const QString &affects, const QString &affectedBy, QPoint point);
     Q_INVOKABLE void hideToolTip();
-
+    void changeEvent(QEvent *event) override;
 signals:
    void openPreferenceIndex(int index);
    void currentIndexClicked(AkConst::EWidgetType widgetType, QString name);
@@ -52,8 +52,12 @@ private:
     ToolTip *m_toolTip;
     QTimer *m_timer;
     QPoint m_point;
+    QString m_titlte;
+    QString m_description;
+    QString m_affects;
+    QString m_affectedBy;
 
-
+    QQuickWidget *m_quickView = nullptr;
 };
 
 

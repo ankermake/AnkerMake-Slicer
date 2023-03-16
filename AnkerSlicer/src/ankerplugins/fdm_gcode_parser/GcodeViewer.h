@@ -813,6 +813,7 @@ public:
 
     ~GcodeViewer();
     void offPaint();
+    void offRenderSingle();
     void load_toolpaths(const GCodeProcessor::Result& gcode_result);
     void reset();
     void resetGpu(bool needModel = false);

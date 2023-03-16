@@ -52,6 +52,7 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     controlManager->setGlareaWidget(this);
     controlManager->setMainWindow(this->parentWidget());
     GeneralWidget *widget = new GeneralWidget(m_messageProcessing);
+    connect(widget, &GeneralWidget::unloadPluginsSignal, this, &FdmMainWidget::unloadPlugins);
     controlManager->addPageToPreferences(widget,0);
 
     m_messageProcessing->sendMsg2Preview();
@@ -172,6 +173,8 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     QString mwStr;
     QDebug(&mwStr) << mwData.object;
     AkUtil::TDebug("mwData.object: " + mwStr);
+
+
 }
 
 void FdmMainWidget::initTool()
@@ -221,7 +224,7 @@ void FdmMainWidget::initTool()
     m_resetAllAction = m_resetMenu->addAction(QIcon(), tr("All Objects"), this, &FdmMainWidget::resetAllMeshModels);
     m_controlManager->addMenuToToolBar(m_menuEdit);
 
-    m_menuSetting = m_titleBar->addMenu(tr("Setting"));
+    m_menuSetting = m_titleBar->addMenu(tr("Settings"));
     //QMenu* menuSetting= new QMenu(tr("Setting"));
    // menuSetting->setIcon(QIcon(":/images/icon/fdm_tool_setting_icon_n.png"));
     //     QAction* languageAction = menuSetting->addAction(QIcon(), tr("Language"), this, &FdmMainWidget::openPreferencesDialog);
@@ -785,7 +788,7 @@ void FdmMainWidget::openCopyrightWidget()
 void FdmMainWidget::tabCurrentPageChanged(int index)
 {
     AkUtil::TFunction("");
-    AkUtil::TDebug(QString("m_tabWidget index =").arg(index));
+    AkUtil::TDebug(QString("m_tabWidget index = %1").arg(index));
     if(index < 0 || (index >= m_tabWidget->count())) {
         return;
     }
@@ -847,7 +850,7 @@ void FdmMainWidget::changeEvent(QEvent *e)
         QVector<QString> TAB_TITLE = { tr("Slice"),
                                      tr("Preview"),
                                      tr("Device")};
-        for (int i = 0; i < TAB_TITLE.size(); i++) {
+        for (int i = 0; i < m_tabWidget->titleLabels().size(); i++) {
             m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
         }
     }
@@ -865,7 +868,7 @@ void FdmMainWidget::retranslateUi()
             m_actionFileSave->setText(tr("Save"));
         }
         if (m_actionFileSaveAs != nullptr) {
-            m_actionFileSaveAs->setText(tr("Save as"));
+            m_actionFileSaveAs->setText(tr("Save As"));
         }
         if (m_recentMenu != nullptr) {
             m_recentMenu->setTitle(tr("Open Recent"));
@@ -874,7 +877,7 @@ void FdmMainWidget::retranslateUi()
             m_exportMenu->setTitle(tr("Export"));
         }
         if (m_exportAllObjectAction != nullptr) {
-            m_exportAllObjectAction->setText(tr("All Object"));
+            m_exportAllObjectAction->setText(tr("All Objects"));
         }
         if (m_exportSelectObjectAction != nullptr) {
             m_exportSelectObjectAction->setText(tr("Select Object"));
@@ -890,7 +893,7 @@ void FdmMainWidget::retranslateUi()
         m_redo->setText(tr("Redo"));
     }
     if (m_selPro != nullptr) {
-        m_selPro->setText(tr("Select Project..."));
+        m_selPro->setText(tr("Select Project"));
     }
     if (m_copyAction != nullptr) {
         m_copyAction->setText(tr("Copy"));
@@ -914,7 +917,7 @@ void FdmMainWidget::retranslateUi()
         m_resetAllAction->setText(tr("All Objects"));
     }
     if (m_menuSetting != nullptr) {
-        m_menuSetting->setTitle(tr("Setting"));
+        m_menuSetting->setTitle(tr("Settings"));
     }
     if (m_actionSave != nullptr) {
         m_actionSave->setText(tr("Save"));

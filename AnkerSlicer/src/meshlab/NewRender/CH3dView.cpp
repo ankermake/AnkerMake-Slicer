@@ -300,7 +300,6 @@ void CH3dView::paintGL()
     painter.setPen(pen);
 
     QFont font;
-    font.setPixelSize(15);
 
     font.setLetterSpacing(QFont::AbsoluteSpacing, 0);
     painter.setFont(this->font());
@@ -327,29 +326,34 @@ void CH3dView::mouseMoveEvent(QMouseEvent* event)
 
     if (m_viewRotating)
     {
-        if (getGlobalPick()->m_selectedObjs.size() > 0)
-        {
-            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-        }
-        else
-        {
-            //refTranPoint = QVector3D(0, 0, 0);
-            refTranPoint = m_sceneBox.getCenterPoint();
-        }
+//        if (getGlobalPick()->m_selectedObjs.size() > 0)
+//        {
+//            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
+//        }
+//        else
+//        {
+//            //refTranPoint = QVector3D(0, 0, 0);
+//            refTranPoint = m_sceneBox.getCenterPoint();
+//            refTranPoint[2] = 0.0;
+//        }
+        refTranPoint = m_sceneBox.getCenterPoint();
+        refTranPoint[2] = 0.0;
         xyRotate(qPoint.x(), qPoint.y());
         update();
     }
     else if (m_viewMoving)
     {
-        if (getGlobalPick()->m_selectedObjs.size() > 0)
-        {
-            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-        }
-        else
-        {
-            //refTranPoint = QVector3D(0, 0, 0);
-            refTranPoint = m_sceneBox.getCenterPoint();
-        }
+//        if (getGlobalPick()->m_selectedObjs.size() > 0)
+//        {
+//            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
+//        }
+//        else
+//        {
+//            //refTranPoint = QVector3D(0, 0, 0);
+//            refTranPoint = m_sceneBox.getCenterPoint();
+//        }
+        refTranPoint = m_sceneBox.getCenterPoint();
+        refTranPoint[2] = 0.0;
         xyTranslate(qPoint.x(), qPoint.y());
         update();
     }
@@ -426,7 +430,7 @@ void CH3dView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
 
-    if (getGlobalPick()->haveCanPickedObj() || getGlobalPick()->havePickedObjs())
+    if ((getGlobalPick()->haveCanPickedObj() || getGlobalPick()->havePickedObjs()) || (event->button() == Qt::RightButton))
     {
         getGlobalPick()->mousePressEvent(event);
     }
@@ -455,15 +459,17 @@ void CH3dView::wheelEvent(QWheelEvent* event)
 {
     setFocus();
 
-    if (getGlobalPick()->m_selectedObjs.size() > 0)
-    {
-        refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-    }
-    else
-    {
-        refTranPoint = m_sceneBox.getCenterPoint();
-        //refTranPoint = QVector3D(0, 0, 0);
-    }
+//    if (getGlobalPick()->m_selectedObjs.size() > 0)
+//    {
+//        refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
+//    }
+//    else
+//    {
+//        refTranPoint = m_sceneBox.getCenterPoint();
+//        //refTranPoint = QVector3D(0, 0, 0);
+//    }
+    refTranPoint = m_sceneBox.getCenterPoint();
+    refTranPoint[2] = 0.0;
     int qwheel = event->delta();  // positive when wheel up, delta +/- 120 when wheel +/- 1
     double zoomscale = (double)(qwheel) / 2000.0;
     Scale(event->x(), event->y(), zoomscale);
@@ -512,6 +518,7 @@ void CH3dView::calcSceneParamsFromBox(const CHAABB3D& aabb)
     m_up = QVector3D(-0.0115033, 0.57665, 0.81691);
 
     refTranPoint = center;
+    refTranPoint[2] = 0.0;
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
         tan(m_verticalAngle / 360.0 * CH_PI);
     m_bMove = true;
@@ -715,8 +722,8 @@ void CH3dView::xyRotate(int dx, int dy)
 
     double H1 = QVector3D::dotProduct(lastmousept - refTranPoint, lockU);
     double H2 = QVector3D::dotProduct(lastmousept - refTranPoint, lockV);
-    double L1 = QVector3D::dotProduct(moveVec, lockU);
-    double L2 = QVector3D::dotProduct(moveVec, lockV);
+    double L1 = QVector3D::dotProduct(moveVec, lockU) * 5.0;
+    double L2 = QVector3D::dotProduct(moveVec, lockV) * 5.0;
     double Angle1 = L2 / senseRadius;
     double Angle2 = L1 / senseRadius;
     double A1 = H1 / senseRadius;
@@ -994,7 +1001,7 @@ void CH3dView::getZoomVec(int dx, int dy, QVector3D& move)
 
 void CH3dView::getCurrentProjMat(QMatrix4x4& matrix)
 {
-    matrix.perspective(m_verticalAngle, (double)width() / height(), m_near, m_far);
+    matrix.perspective(m_verticalAngle, (double)m_w / m_h, m_near, m_far);
     return;
 
     int w = width();

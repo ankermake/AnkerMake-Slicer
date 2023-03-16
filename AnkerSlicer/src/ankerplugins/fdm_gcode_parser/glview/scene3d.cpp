@@ -34,7 +34,8 @@ void Scene3D::reset()
     m_mousepress = false;
     m_front = QVector3D(0, 1.0, 0);
     m_up = QVector3D(0, 0, 1.0);
-    refTranPoint = QVector3D(0, 0, 0);
+    refTranPoint = m_mainBox.getCenterPoint();
+    refTranPoint[2] = 0.0;
 
     float length = m_sceneParam.m_printMachineBox.m_length;
     float width = m_sceneParam.m_printMachineBox.m_width;
@@ -63,6 +64,7 @@ void Scene3D::calcSceneParamsFromBox(const CHAABB3D& aabb)
     m_up = QVector3D(-0.0115033, 0.57665, 0.81691);
 
     refTranPoint = center;
+    refTranPoint[2] = 0.0;
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
         tan(m_verticalAngle / 360.0 * CH_PI);
     m_bMove = true;
@@ -81,6 +83,7 @@ void Scene3D::setView(const ViewType& _type)
 {
     m_verticalAngle = 30;
     QVector3D center = refTranPoint = m_mainBox.getCenterPoint();
+    refTranPoint[2] = 0.0;
     m_viewType = _type;
     switch (_type)
     {
@@ -191,6 +194,7 @@ void Scene3D::setCenter()
         0.0f, 0.0f, 0.0f, 1.0f);
 
     refTranPoint = center;
+    refTranPoint[2] = 0.0;
     /*td::vector<QVector3D> points;
     getBoxPoints(m_mainBox, points);
     showObjectsCentral(points, m_front, m_up, m_eye, m_up, m_front);  */
@@ -484,8 +488,8 @@ void Scene3D::xyRotate(int dx, int dy)
     double H1 = QVector3D::dotProduct(lastmousept - refTranPoint, lockU);
     double H2 = QVector3D::dotProduct(lastmousept - refTranPoint, lockV);
     
-    double L1 = QVector3D::dotProduct(moveVec, lockU) * 6.0 ;
-    double L2 = QVector3D::dotProduct(moveVec, lockV) * 6.0 ;
+    double L1 = QVector3D::dotProduct(moveVec, lockU) * 5.0 ;
+    double L2 = QVector3D::dotProduct(moveVec, lockV) * 5.0 ;
     double angle1 = L2 / senseRadius;
     double angle2 = L1 / senseRadius;
     double A1 = H1 / senseRadius;
@@ -535,6 +539,7 @@ void Scene3D::getNearFarPoint(int x, int y, QVector3D& np, QVector3D& fp)
 void Scene3D::setPerspectiveTransformationRef(QVector3D rotCenter)
 {
     refTranPoint = rotCenter;
+    refTranPoint[2] = 0.0;
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) *
         (float)(m_w / m_h) * tan(m_verticalAngle / 360.0 * PI);
 }
@@ -598,6 +603,19 @@ void Scene3D::getZoomVec(int dx, int dy, QVector3D& move)
     double B = A / QVector3D::dotProduct(fp - m_eye, m_front);
     fp = m_eye * (1 - B) + fp * B;
     move = fp - m_eye;
+}
+
+
+void Scene3D::getCurrentProjMat_ssp(QMatrix4x4 &matrix)
+{
+    matrix.perspective(88, (double)m_w / m_h, m_near, m_far);
+    return;
+}
+
+void Scene3D::getCurrentProjMat_sp(QMatrix4x4 &matrix)
+{
+    matrix.perspective(m_verticalAngle, (double)m_w / m_h, m_near, m_far);
+    return;
 }
 
 void Scene3D::getCurrentProjMat(QMatrix4x4& matrix)

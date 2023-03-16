@@ -59,6 +59,10 @@ public:
     Polygons outline_gaps; //!< The gaps between the outline of the mesh and the first wall. a.k.a. thin walls.
     std::vector<SkinPart> skin_parts;     //!< The skin parts which are filled for 100% with lines and/or insets.
 
+
+    //2022/11/23 Binary for variable line width
+    bool            real_line_width_changed=false;
+    coord_t         real_wall0_line_width=0;
     /*!
      * The areas inside of the mesh.
      * Like SliceLayerPart::outline, this class member is not used to actually determine the feature area,

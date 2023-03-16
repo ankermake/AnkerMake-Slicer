@@ -75,6 +75,8 @@ protected:
         double filament_area; //!< in mm^2 for non-volumetric, cylindrical filament
 
         double totalFilament; //!< total filament used per extruder in mm^3
+
+
         Temperature currentTemperature;
         bool waited_for_temperature; //!< Whether the most recent temperature command has been a heat-and-wait command (M109) or not (M104).
         Temperature initial_temp; //!< Temperature this nozzle needs to be at the start of the print.
@@ -113,6 +115,9 @@ protected:
     std::string machine_buildplate_type;
 
     double current_e_value; //!< The last E value written to gcode (in mm or mm^3)
+
+    //2022/11/18 Binary for start or end path lack of materials;
+    coord_t current_travel_len;
 
     // flow-rate compensation
     double current_e_offset; //!< Offset to compensate for flow rate (mm or mm^3)

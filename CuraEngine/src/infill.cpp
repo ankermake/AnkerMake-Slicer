@@ -461,6 +461,7 @@ void Infill::generateLineInfill(Polygons& result, int line_distance, const doubl
     NoZigZagConnectorProcessor lines_processor(rotation_matrix, result);
     bool connected_zigzags = false;
     generateLinearBasedInfill(outline_offset, result, line_distance, rotation_matrix, lines_processor, connected_zigzags, shift);
+
 }
 
 

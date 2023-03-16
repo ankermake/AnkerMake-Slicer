@@ -22,14 +22,16 @@ void UserAgreementWidget::initUi()
     m_label->setFont(font);
     m_label->setGeometry(169,62,380,35);
   //  QLabel *privacyLabel = new QLabel(frame);
-    m_privacyLabel = new QLabel(tr("<body>Please click to read the <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>Terms of Use</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>Privacy Policy</a> </body>"),frame);
+    m_privacyLabel = new QLabel(QString("<body>") + tr("Read the Terms of Use and Privacy Policy.") + QString("<a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>") + tr("Terms of Use") + QString("</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>") + tr("Privacy Policy") +QString("</a> </body>"),frame);
     m_privacyLabel->setOpenExternalLinks(true);
     //privacyLabel->setText(QString::fromLocal8Bit("Please click to read the <a href= https://ankermake.com/terms-of-use>Terms of Use</a> and <a href=\"https://ankermake.com/privacy-policy\"><font color = #61D37D>Privacy Policy</a>"));
     //privacyLabel->setText("<body>Please click to read the <a href=\"https://ankermake.com/account/login\"><font color = #61D37D><>Terms of Use</a></body>");
     QFont fontPrivacy(this->font());
     fontPrivacy.setPixelSize(16);
     m_privacyLabel->setFont(fontPrivacy);
-    m_privacyLabel->setGeometry(134,117,440,19);
+    m_privacyLabel->setGeometry(48,117,562,40);
+    m_privacyLabel->setWordWrap(true);
+    m_privacyLabel->setAlignment(Qt::AlignCenter);
 //Please click to read the Terms of Use and Privacy Policy
 //    <body>No Acount <a href=\"https://ankermake.com/account/login\"><font color = #61D37D><>Create one</a></body>
     m_acceptButton = new QPushButton(tr("Accept"),frame);
@@ -68,7 +70,7 @@ void UserAgreementWidget::changeEvent(QEvent *e)
             m_label->setText(tr("Welcome to AnkerMake"));
         }
         if (m_privacyLabel != nullptr) {
-            m_privacyLabel->setText(tr("<body>Please click to read the <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>Terms of Use</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>Privacy Policy</a> </body>"));
+            m_privacyLabel->setText(QString("<body>") + tr("Read the Terms of Use and Privacy Policy.") + QString("<a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>") + tr("Terms of Use") + QString("</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>") + tr("Privacy Policy") +QString("</a> </body>"));
         }
         if (m_acceptButton != nullptr) {
             m_acceptButton->setText(tr("Accept"));

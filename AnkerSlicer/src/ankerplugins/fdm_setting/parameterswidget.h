@@ -45,7 +45,7 @@ private:
     FdmParameterProfileService *m_service;
     QString m_oldName;
     MessageDialog *m_messageDialog;
-
+    QQuickView *m_quickView = nullptr;
     QString m_newName;
 };
 }

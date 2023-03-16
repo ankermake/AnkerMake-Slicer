@@ -21,6 +21,8 @@ class fdmRpc
     PROP(QString oStlName);
     PROP(bool isAiMode = true);
     PROP(bool loggingStatus = false);
-    PROP(float gcodeTotalTime = false);
-    PROP(float gcodeTotalFilament = false);
+    PROP(float gcodeTotalTime);
+    PROP(float gcodeTotalFilament);
+    PROP(float gcodeExtruderTargetTemperature);
+    PROP(float gcodeBedTargetTemperature);
 }

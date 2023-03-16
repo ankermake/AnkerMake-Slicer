@@ -12,6 +12,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QHBoxLayout>
+#include <QEvent>
 #include <QStackedLayout>
 #include <QPainter>
 #include <QPainterPath>
@@ -42,7 +43,7 @@ private  slots:
 
 protected:
    void paintEvent(QPaintEvent *event) override;
-
+   void changeEvent(QEvent * event) override;
 private:
     QSet<PageWidget> pages;
     QGridLayout *m_mainlayout;
@@ -53,6 +54,9 @@ private:
     QMap<int,PageWidget> m_map;
     QStringList m_displayNameList;
     QStackedLayout *m_stackLayout;
+    QLabel *m_title = nullptr;
+    QPushButton *m_closeButton = nullptr;
+    QPushButton *m_saveButton = nullptr;
 };
 }
 #endif // PREFERENCESDIALOG_H

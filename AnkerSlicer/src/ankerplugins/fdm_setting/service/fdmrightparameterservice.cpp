@@ -9,6 +9,9 @@
 #include "fdmparameterprofileservice.h"
 #include "fdmpreferencedialogservice.h"
 #include "common/utilities/tlogger.h"
+#include "profilemanage/ifdmprofile.h"
+#include "common/utilities/tlogger.h"
+
 using namespace AkConst;
 
 
@@ -44,14 +47,35 @@ void FdmRightParameterService::init()
 void FdmRightParameterService::doMainWindowInitFinished()
 {
     
+    auto paramProfile = FdmParameterProfileManager::Instance().getProfileByName(m_realTimeProfile->getProfileName());
+    if (nullptr == paramProfile)
+    {
+        m_realTimeProfile->setProfileName("");
+    }
+    auto machineProfile = FdmMachineProfileManager::Instance().getProfileByName(m_realTimeProfile->getMachineName());
+    if (nullptr == machineProfile)
+    {
+        m_realTimeProfile->setMachineName("");
+    }
+    auto materialProfile = FdmMaterialProfileManager::Instance().getProfileByName(m_realTimeProfile->getMaterialName());
+    if (nullptr == materialProfile)
+    {
+        m_realTimeProfile->setMaterialName("");
+    }
+
+    
     if (m_realTimeProfile->getMachineName().isEmpty()
         || m_realTimeProfile->getMaterialName().isEmpty()
         || m_realTimeProfile->getProfileName().isEmpty()
-        
-        || m_realTimeProfile->getProfileName() == ProfileName::SIMPLE_MODE)
+        )
     {
         selectProfile(m_realTimeProfile->getProfileName());
     }
+    if (m_realTimeProfile->getProfileName() == ProfileName::SIMPLE_MODE)
+    {
+        applySimpleModeData();
+    }
+
     refreshTree();
     
     syncRightTreeToRealtimeprofile();
@@ -331,6 +355,7 @@ void FdmRightParameterService::applySimpleModeData()
     onAiInfillDensityIdxChanged(getAiInfillDensityCurrentIdx());
     onGlobalSupportStateChanged(getGlobalSupportState());
     onGenerateAdhesionStateChanged(getGenerateAdhesionState());
+    m_updateTime++;
 }
 
 
@@ -936,6 +961,7 @@ void FdmRightParameterService::onResetBtnClicked()
 
 void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
 {
+    AkUtil::TFunction("");
     
     QString oriProfileName = m_realTimeProfile->getProfileName();
     QString oriMachineName = m_realTimeProfile->getMachineName();
@@ -955,6 +981,7 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
         m_realTimeProfile->updateNozzleSize(0.4);
         m_updateTime++;
         selectProfile(m_realTimeProfile->getProfileName());
+        AkUtil::TDebug(oriProfileName + " was deleted. enter simple mode");
         return;
     }
 
@@ -966,28 +993,32 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
         {
             auto newName = operLogPtr->getCurrentName(EProfileType::Parameter, oriProfileName);
             m_realTimeProfile->setProfileName(newName);
+            AkUtil::TDebug("operlog: rename " + oriProfileName + " -> " + newName);
         }
 
         
         if (operLogPtr->constainsRemoveOper(EProfileType::Machine, oriMachineName))
         {
             m_realTimeProfile->setMachineName("");
+            AkUtil::TDebug("operlog: delete " + oriMachineName);
         }
         else if (operLogPtr->constainsRenameOper(EProfileType::Machine, oriMachineName))
         {
             auto newName = operLogPtr->getCurrentName(EProfileType::Machine, oriMachineName);
             m_realTimeProfile->setMachineName(newName);
+            AkUtil::TDebug("operlog: rename " + oriMachineName + " -> " + newName);
         }
 
         
-        if (operLogPtr->constainsRemoveOper(EProfileType::Material, m_realTimeProfile->getMaterialName()))
+        if (operLogPtr->constainsRemoveOper(EProfileType::Material, oriMaterialName))
         {
             m_realTimeProfile->setMaterialName("");
         }
-        else if (operLogPtr->constainsRenameOper(EProfileType::Material, m_realTimeProfile->getMaterialName()))
+        else if (operLogPtr->constainsRenameOper(EProfileType::Material, oriMaterialName))
         {
-            auto newName = operLogPtr->getCurrentName(EProfileType::Material, m_realTimeProfile->getMaterialName());
+            auto newName = operLogPtr->getCurrentName(EProfileType::Material, oriMaterialName);
             m_realTimeProfile->setMaterialName(newName);
+            AkUtil::TDebug("operlog: rename " + oriMaterialName + " -> " + newName);
         }
     };
 
@@ -998,28 +1029,32 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
         || m_realTimeProfile->getMaterialName().isEmpty())
     {
         selectProfile(m_realTimeProfile->getProfileName());
+        AkUtil::TDebug("operlog: machine or material is null. reset to origin parameter ");
         return;
     }
 
     
     auto reloadData = [&]()->void {
         
-        if (operLogPtr->constainsValueChangeOper(EProfileType::Parameter, oriProfileName))
+        if (operLogPtr->constainsManuallyValueChangeOper(EProfileType::Parameter, oriProfileName))
         {
             selectProfile(m_realTimeProfile->getProfileName());
+            AkUtil::TDebug("operlog: manually value change in file " + oriProfileName);
         }
 
         
         
-        if (operLogPtr->constainsValueChangeOper(EProfileType::Machine, oriMachineName))
+        if (operLogPtr->constainsManuallyValueChangeOper(EProfileType::Machine, oriMachineName))
         {
             selectMachine(m_realTimeProfile->getMachineName());
+            AkUtil::TDebug("operlog: manually value change in file " + oriMachineName);
         }
 
         
-        if (operLogPtr->constainsValueChangeOper(EProfileType::Material, oriMaterialName))
+        if (operLogPtr->constainsManuallyValueChangeOper(EProfileType::Material, oriMaterialName))
         {
             selectMaterial(m_realTimeProfile->getMaterialName());
+            AkUtil::TDebug("operlog: manually value change in file " + oriMaterialName);
         }
     };
 
@@ -1029,6 +1064,7 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
     emit currentParameterNameChanged();
     emit machineNameChanged();
     emit materialNameChanged();
+    AkUtil::TDebug("operlog: refresh ui ");
 }
 
 
@@ -1552,16 +1588,16 @@ QString FdmRightParameterService::getNozzleSize()
 
 QStringList FdmRightParameterService::getNozzleSizeList()
 {
-    QStringList resultList;
-    resultList << AkConst::NozzleSizeName::SIZE4;
-    return resultList;
-
 //    QStringList resultList;
-//    resultList << AkConst::NozzleSizeName::SIZE2;
 //    resultList << AkConst::NozzleSizeName::SIZE4;
-//    resultList << AkConst::NozzleSizeName::SIZE6;
-//    resultList << AkConst::NozzleSizeName::SIZE8;
 //    return resultList;
+
+    QStringList resultList;
+    resultList << AkConst::NozzleSizeName::SIZE2;
+    resultList << AkConst::NozzleSizeName::SIZE4;
+    resultList << AkConst::NozzleSizeName::SIZE6;
+    resultList << AkConst::NozzleSizeName::SIZE8;
+    return resultList;
 }
 
 

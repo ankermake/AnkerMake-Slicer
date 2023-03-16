@@ -54,6 +54,7 @@ public:
     void deleteObjs(std::vector<CH3DPrintModelPtr> objs);
     void deleteObj(CH3DPrintModelPtr obj);
 
+    void getRealObjectName(const CH3DPrintModelPtr &modelPtr);
     void addObjs(std::vector<CH3DPrintModelPtr> objs);
     void addObj(CH3DPrintModelPtr obj);
     void appendObj(CH3DPrintModelPtr obj);

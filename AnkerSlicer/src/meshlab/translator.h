@@ -7,7 +7,8 @@
 enum class Language
 {
     EN,
-    CH
+    CH,
+    JA
 };
 
 typedef std::list<std::string> TStringList;

@@ -98,6 +98,7 @@ public:
 	virtual void setStatus(ObjStatus status);
 	ObjStatus getStatus();
 
+    virtual void setPickPriority(PickPriority priority);
 	PickPriority getPickPriority();
 
 public:

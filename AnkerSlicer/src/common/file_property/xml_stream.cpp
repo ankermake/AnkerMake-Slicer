@@ -413,6 +413,7 @@ void XmlStream::writeDocumentXmlElement()
         m_writer.writeAttribute(QString("meshColor"), QString("%1 %2 %3 %4").
             arg((*it)->getColor().red()).arg((*it)->getColor().green()).arg((*it)->getColor().blue()).arg((*it)->getColor().alpha()));
 
+        qDebug() << "Write Transform: " << (*it)->getTransform();
         const float* data = (*it)->getTransform().data();
         QString tmpMatStr = QString("%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 %16").
             arg(data[0]).arg(data[4]).arg(data[8]).arg(data[12]).
@@ -509,6 +510,7 @@ bool XmlStream::readDocumentXmlElement()
                     tmpMatrix.setRow(3, QVector4D(matList[12].toDouble(), matList[13].toDouble(), matList[14].toDouble(), matList[15].toDouble()));
                 }
                 meshObjPtr->setTransform(tmpMatrix);
+                qDebug() << "Read Matrix: " << tmpMatrix;
 
                 QMatrix4x4 tmpIniMatrix;
                 QStringList intMatList = attributes.value(QString("iniMatrix44")).toString().trimmed().split(QString(" "));

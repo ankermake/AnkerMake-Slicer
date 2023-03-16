@@ -89,6 +89,9 @@ public:
     void getMoveVec(int dx, int dy, QVector3D& move);
     void getZoomVec(int dx, int dy, QVector3D& move);
 
+    
+    void getCurrentProjMat_ssp(QMatrix4x4& matrix);
+    void getCurrentProjMat_sp(QMatrix4x4& matrix);
     void getCurrentProjMat(QMatrix4x4& matrix);
     void getCurrentViewMat(QMatrix4x4& matrix);
     void getZoomViewMat(QMatrix4x4& matrix);

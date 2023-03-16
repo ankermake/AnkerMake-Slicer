@@ -167,7 +167,9 @@ std::string GCodeExportBase::getFileHeader(const std::vector<bool>& extruder_is_
 {
     std::ostringstream prefix;
     
-    prefix << ";Recompiled by AnkerMake " << "V0.7.6 " << cura::Date::getDate().toStringDashed() << new_line;
+    //prefix << ";Recompiled by AnkerMake " << "V0.8.3 " << cura::Date::getDate().toStringDashed() << new_line;
+    
+    prefix << ";Recompiled by AnkerMake " << new_line;
     if (nullptr != LogWithChars::getFuncEngineLogCallback())
     {
         prefix << ";CompileMode: Static Libary" << new_line;
@@ -294,6 +296,41 @@ std::string GCodeExportBase::getFileHeader(const std::vector<bool>& extruder_is_
         prefix << ";MAXY:" << INT2MM(total_bounding_box.max.y) << new_line;
         prefix << ";MAXZ:" << INT2MM(total_bounding_box.max.z) << new_line;
     }
+
+    
+    {
+        double maxSpeed = -9999;
+        const double speed_print = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_print");
+        maxSpeed = maxSpeed < speed_print ? speed_print : maxSpeed;
+        const double speed_infill = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_infill");
+        maxSpeed = maxSpeed < speed_infill ? speed_infill : maxSpeed;
+        const double speed_wall_0 = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_wall_0");
+        maxSpeed = maxSpeed < speed_wall_0 ? speed_wall_0 : maxSpeed;
+        const double speed_wall_x = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_wall_x");
+        maxSpeed = maxSpeed < speed_wall_x ? speed_wall_x : maxSpeed;
+        const double speed_roofing = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_roofing");
+        maxSpeed = maxSpeed < speed_roofing ? speed_roofing : maxSpeed;
+        const double speed_print_layer_0 = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_print_layer_0");
+        maxSpeed = maxSpeed < speed_print_layer_0 ? speed_print_layer_0 : maxSpeed;
+        const double skirt_brim_speed = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("skirt_brim_speed");
+        maxSpeed = maxSpeed < skirt_brim_speed ? skirt_brim_speed : maxSpeed;
+        
+        const bool support_enable = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<bool>("support_enable");
+        if (support_enable)
+        {
+            const double speed_support_infill = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_support_infill");
+            maxSpeed = maxSpeed < speed_support_infill ? speed_support_infill : maxSpeed;
+            const double speed_support_interface = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_support_interface");
+            maxSpeed = maxSpeed < speed_support_interface ? speed_support_interface : maxSpeed;
+            const double speed_support_roof = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_support_roof");
+            maxSpeed = maxSpeed < speed_support_roof ? speed_support_roof : maxSpeed;
+            const double speed_support_bottom = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<double>("speed_support_bottom");
+            maxSpeed = maxSpeed < speed_support_bottom ? speed_support_bottom : maxSpeed;
+        }
+
+        prefix << ";MAXSPEED:" << maxSpeed*60 << new_line;
+    }
+
 
     return prefix.str();
 }
@@ -744,6 +781,12 @@ void GCodeExportBase::writeTravel(const coord_t& x, const coord_t& y, const coor
 
     //*output_stream << "G0";
     //writeFXYZE(speed, x, y, z, current_e_value, travel_move_type);
+
+    //2022/11/18 Binary for start or end path lack of materials;
+    if (extruder_attr[current_extruder].prime_volume > 0)
+    {
+        current_travel_len += vSize((x - currentPosition.x, y - currentPosition.y));
+    }
     writeFXYZE_CL("G0", speed, x, y, z, current_e_value, travel_move_type);
 }
 
@@ -817,6 +860,7 @@ void GCodeExportBase::writeExtrusion(const int x, const int y, const int z, cons
     //*output_stream << "G1";
     //writeFXYZE(speed, x, y, z, new_e_value, feature);
     writeFXYZE_CL("G1", speed, x, y, z, new_e_value, feature);
+    current_travel_len = 0;
 }
 
 void GCodeExportBase::writeFXYZE(const Velocity& speed, const int x, const int y, const int z, const double e, const PrintFeatureType& feature)
@@ -849,7 +893,23 @@ void GCodeExportBase::writeFXYZE(const Velocity& speed, const int x, const int y
 
 void GCodeExportBase::writeUnretractionAndPrime()
 {
-    const double prime_volume = extruder_attr[current_extruder].prime_volume;
+    double prime_volume = extruder_attr[current_extruder].prime_volume;
+    //2022/11/18 Binary for start or end path lack of materials;
+    if (prime_volume != 0.0)
+    {
+        double prime_min_distance = Application::getInstance().current_slice->scene.extruders[current_extruder].settings.get<double>("retraction_prime_min_travel");
+        if (INT2MM(current_travel_len) < prime_min_distance)
+        {
+            prime_volume == 0.0;
+        }
+#ifdef _DEBUG
+        else
+        {
+            printf("use unretraction layer_nr: %d , Position: %d,%d, Prime value : %f", layer_nr, currentPosition.x,currentPosition.y, prime_volume);
+
+        }
+#endif
+    }
     const double prime_volume_e = mm3ToE(prime_volume);
     current_e_value += prime_volume_e;
     if (extruder_attr[current_extruder].retraction_e_amount_current)
@@ -878,11 +938,12 @@ void GCodeExportBase::writeUnretractionAndPrime()
     }
     else if (prime_volume != 0.0)
     {
-        const double output_e = (relative_extrusion)? prime_volume_e : current_e_value;
-        *output_stream << "G1 F" << PrecisionedDouble{1, extruder_attr[current_extruder].last_retraction_prime_speed * 60} << " " << extruder_attr[current_extruder].extruderCharacter;
-        *output_stream << PrecisionedDouble{5, output_e} << new_line;
-        currentSpeed = extruder_attr[current_extruder].last_retraction_prime_speed;
-        estimateCalculator.plan(TimeEstimateCalculator::Position(INT2MM(currentPosition.x), INT2MM(currentPosition.y), INT2MM(currentPosition.z), eToMm(current_e_value)), currentSpeed, PrintFeatureType::NoneType);
+            const double output_e = (relative_extrusion) ? prime_volume_e : current_e_value;
+            *output_stream << "G1 F" << PrecisionedDouble{ 1, extruder_attr[current_extruder].last_retraction_prime_speed * 60 } << " " << extruder_attr[current_extruder].extruderCharacter;
+            *output_stream << PrecisionedDouble{ 5, output_e } << new_line;
+            currentSpeed = extruder_attr[current_extruder].last_retraction_prime_speed;
+            estimateCalculator.plan(TimeEstimateCalculator::Position(INT2MM(currentPosition.x), INT2MM(currentPosition.y), INT2MM(currentPosition.z), eToMm(current_e_value)), currentSpeed, PrintFeatureType::NoneType);
+
     }
     extruder_attr[current_extruder].prime_volume = 0.0;
     

@@ -371,14 +371,14 @@ void CHModelZoomTransformParamsSetUI::setLock(bool checked)
     m_lockScaleRatio = checked;
 }
 
-void CHModelZoomTransformParamsSetUI::viewValueChanged(double value, ZoomChangedType type)
+void CHModelZoomTransformParamsSetUI::viewValueChanged(double value, ZoomChangedType type, ZoomAxisType axisType)
 {
     std::vector<double> params(3);
 
-    params[0] = ((fabs(m_xScaleBox->value()) < ZERO ? 1 : m_xScaleBox->value()) / 100.0);
-    params[1] = ((fabs(m_yScaleBox->value()) < ZERO ? 1 : m_yScaleBox->value()) / 100.0);
-    params[2] = ((fabs(m_zScaleBox->value()) < ZERO ? 1 : m_zScaleBox->value()) / 100.0);
-    emit viewValuesChanged(params, type);
+    params[0] = ((fabs(m_xScaleBox->value()) < ZERO ? 0.01 : m_xScaleBox->value()) / 100.0);
+    params[1] = ((fabs(m_yScaleBox->value()) < ZERO ? 0.01 : m_yScaleBox->value()) / 100.0);
+    params[2] = ((fabs(m_zScaleBox->value()) < ZERO ? 0.01 : m_zScaleBox->value()) / 100.0);
+    emit viewValuesChanged(params, type, axisType);
 }
 
 void CHModelZoomTransformParamsSetUI::boxSizeValuesChanged(std::vector<double> values, ZoomChangedType type)
@@ -423,9 +423,9 @@ void CHModelZoomTransformParamsSetUI::boxSizeValuesChanged(std::vector<double> v
     }
     else
     {
-        m_xSizeBox->sizeValueChanged((fabs(values[0]) < ZERO ? 1 : values[0]), type);
-        m_ySizeBox->sizeValueChanged((fabs(values[1]) < ZERO ? 1 : values[1]), type);
-        m_zSizeBox->sizeValueChanged((fabs(values[2]) < ZERO ? 1 : values[2]), type);
+        m_xSizeBox->sizeValueChanged((fabs(values[0]) < ZERO ? m_xSizeBox->initValue * 0.01 : values[0]), type);
+        m_ySizeBox->sizeValueChanged((fabs(values[1]) < ZERO ? m_ySizeBox->initValue * 0.01 : values[1]), type);
+        m_zSizeBox->sizeValueChanged((fabs(values[2]) < ZERO ? m_zSizeBox->initValue * 0.01 : values[2]), type);
     }
 
 }
@@ -447,9 +447,9 @@ void CHModelZoomTransformParamsSetUI::scaleValuesChanged(std::vector<double> val
     }
     else
     {
-        m_xScaleBox->scaleValueChanged((fabs(values[0]) < ZERO ? 1 : values[0]) * 100.0, type);
-        m_yScaleBox->scaleValueChanged((fabs(values[1]) < ZERO ? 1 : values[1]) * 100.0, type);
-        m_zScaleBox->scaleValueChanged((fabs(values[2]) < ZERO ? 1 : values[2]) * 100.0, type);
+        m_xScaleBox->scaleValueChanged((fabs(values[0]) < ZERO ? 0.01 : values[0]) * 100.0, type);
+        m_yScaleBox->scaleValueChanged((fabs(values[1]) < ZERO ? 0.01 : values[1]) * 100.0, type);
+        m_zScaleBox->scaleValueChanged((fabs(values[2]) < ZERO ? 0.01 : values[2]) * 100.0, type);
     }
 }
 
@@ -459,7 +459,7 @@ void CHModelZoomTransformParamsSetUI::sizeRatioChanged(double value, ZoomChanged
     {
         int dir[3] = {1};
         value = fabs(value);
-        value = value < ZERO ? 1 : value;
+        value = value < ZERO ? 0.01 : value;
         dir[0] = (m_xSizeBox->value() > 0 ? 1 : -1);
         dir[1] = (m_ySizeBox->value() > 0 ? 1 : -1);
         dir[2] = (m_zSizeBox->value() > 0 ? 1 : -1);
@@ -495,7 +495,7 @@ void CHModelZoomTransformParamsSetUI::scaleRatioChanged(double value, ZoomChange
 {
     if(m_lockScaleRatio)
     {
-        value = fabs(value) < ZERO ? 1 : value;
+        value = fabs(value) < ZERO ? 0.01 : value;
         m_xScaleBox->setOnlyValue(value);
         m_yScaleBox->setOnlyValue(value);
         m_zScaleBox->setOnlyValue(value);
@@ -588,7 +588,7 @@ void ScaleDoubleSpinBox::scaleValueChanged(double value, ZoomChangedType type)
             return;
         }
     }
-    emit viewValueChanged(value / 100.0, type);
+    emit viewValueChanged(value / 100.0, type, axis);
 }
 
 void ScaleDoubleSpinBox::setOnlyValue(double value)

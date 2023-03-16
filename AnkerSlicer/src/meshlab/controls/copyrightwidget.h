@@ -11,7 +11,7 @@
 #include <QTableWidget>
 #include <QTableWidgetItem>
 #include <QAbstractItemView>
-
+#include <QEvent>
 struct CopyRightInforMation {
     QString name = QString();
     QString nameLink = QString();
@@ -28,6 +28,7 @@ public:
 
 protected:
    void paintEvent(QPaintEvent *event) override;
+   void changeEvent(QEvent *event) override;
 signals:
 
 private:
@@ -39,7 +40,7 @@ private:
     QList<CopyRightInforMation *> m_dataList;
 
     QTableWidget *m_tableWidget ;
-
+    TitleWidget *m_titleWidget = nullptr;
 };
 
 #endif // COPYRIGHTWIDGET_H

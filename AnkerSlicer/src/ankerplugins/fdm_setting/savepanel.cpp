@@ -176,5 +176,8 @@ void SavePanel::changeEvent(QEvent *e)
         if (saveAsBtn != nullptr) {
             saveAsBtn->setText(tr("Save As"));
         }
+        if (saveBtn) {
+            saveBtn->setText(tr("Save"));
+        }
     }
 }

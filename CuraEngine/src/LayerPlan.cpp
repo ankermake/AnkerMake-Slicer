@@ -1153,7 +1153,10 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
     
     coord_t bridgeSplitMinLength = mesh.settings.get<coord_t>("bridge_split_min_length");
-    //coord_t bridgeShrinkLength = mesh.settings.get<coord_t>("bridge_shrink_length");
+    coord_t bridgeShrinkLength = mesh.settings.get<coord_t>("bridge_shrink_length");
+
+    
+    bool overhangRelatedInnerWallSlowDown = mesh.settings.get<bool>("overhang_related_inner_wall_slow_down");
 
     
     auto spliteWall = [&](coord_t splitMinLineLength, int offsetLen, Polygons& slowMask,PolygonRef singleWall){
@@ -1218,10 +1221,10 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
                         auto dir = b1-b0;
                         auto lineLength =  vSize(dir);
                         
-                        if (offsetLen != 0)
+                        //int offsetLen = bridgeShrinkLength;
+                        if (offsetLen*2>lineLength)
                         {
-                            //int offsetLen = (lineLength - bridgeShrinkLength)/2 > 0 ? (lineLength - bridgeShrinkLength)/2 : 0 ;
-                            offsetLen = lineLength/4;
+                            offsetLen = lineLength/2;
                         }
 
                         Point offset(dir.X / lineLength * offsetLen, dir.Y / lineLength * offsetLen);
@@ -1365,6 +1368,7 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
 
     EWallOverhangExtendType extType = mesh.settings.get<EWallOverhangExtendType>("wall_overhang_extend_type");
     double overhangeBufferRange = MM2INT(mesh.settings.get<double>("wall_overhang_extend_xy_distance"));
+    int wallLineCount = mesh.settings.get<int>("wall_line_count");
     
     Polygons speedDownMask = overhang_mask;
 //    if (layer_nr == 25 && speedDownMask.size() > 0)
@@ -1454,12 +1458,12 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
         {
             
             
-            speedDownMask = overhang_mask.offset(non_bridge_config.getLineWidth()*8);
+            auto expendOverhangMask = overhang_mask.offset(non_bridge_config.getLineWidth()*2*wallLineCount);
             //calcDistanceToOverhangMap(overhang_min_line_length, speedDownMask, constWall, distanceToOverhangMap);
 
             
             //auto shrinkWall2 = tempWalls.difference(expendOverhangMask);//0.075
-            auto diffmask = speedDownMask.difference(tempWalls);//0.075
+            auto diffmask = expendOverhangMask.difference(tempWalls);//0.075
             diffmask = diffmask.offset(overhang_inner_wall_shrink);//0.075
             auto shrinkWall = tempWalls.difference(diffmask);
 
@@ -1493,55 +1497,7 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
         //    calcDistanceToOverhangMap(overhang_min_line_length, overhang_mask, constWall, distanceToOverhangMap);
         //}
 
-        
-        auto addSkinMaskToSpeedDownMask = [&](int layerNumber)->void {
-            Polygons the_skin_mask;
-            for (int p = 0; p < mesh.layers[layerNumber].parts.size(); p++)
-            {
-                for (size_t q = 0; q < mesh.layers[layerNumber].parts[p].skin_parts.size(); q++)
-                {
-                    
-                    const PolygonsPart & skinOutline = mesh.layers[layerNumber].parts[p].skin_parts[q].outline;
-                    auto inWallSkin = tempWalls.intersection(skinOutline);
-                    
-                    double diffArea = inWallSkin.area() - skinOutline.area();
-                    //SVGHelper::writePolygons(inWallSkin);
-                    if (std::abs(diffArea) > 10)
-                    {
-                        continue;
-                    }
-                    
-                    auto touchWallArea = skinOutline.offset(non_bridge_config.getLineWidth()*4).difference(tempWalls);
-                    
-                    if (touchWallArea.polygonLength() > MM2INT(20)*2)
-                    {
-                        continue;
-                    }
-                    the_skin_mask.add(skinOutline);
-                }
-            }
-            //SVGHelper::writePolygons(upper_skin_mask);
 
-            the_skin_mask = the_skin_mask.offset(non_bridge_config.getLineWidth() * 3);
-            //speedDownMask.add(the_skin_mask);
-            if (the_skin_mask.size()>0)
-            {
-                speedDownMask = speedDownMask.unionPolygons(the_skin_mask);
-            }
-        };
-
-        
-        if (non_bridge_config.type == PrintFeatureType::InnerWall)
-        {
-            
-            if (layer_nr < mesh.layers.size() - 1)
-            {
-                addSkinMaskToSpeedDownMask(layer_nr + 1);
-                //calcDistanceToOverhangMap(overhang_min_line_length, upper_skin_mask, constWall, distanceToOverhangMap);
-            }
-            
-            addSkinMaskToSpeedDownMask(layer_nr);
-        }
 
 //        if (layer_nr == 25 && speedDownMask.size() > 0)
 //        {
@@ -1551,19 +1507,102 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
     }
 
     
+    if (overhangRelatedInnerWallSlowDown)
+    {
+        auto expendOverhangMask = overhang_mask.offset(non_bridge_config.getLineWidth()*2*wallLineCount);
+        auto slowMask = expendOverhangMask.intersection(tempWalls).offset(non_bridge_config.getLineWidth());;//0.075
+        if (non_bridge_config.type == PrintFeatureType::InnerWall)
+        {
+            if (slowMask.size()>0)
+            {
+                speedDownMask = speedDownMask.unionPolygons(slowMask);
+
+//                if (layer_nr == 79)
+//                {
+//                    SVGHelper::appendPolygons(tempWalls);
+//                    SVGHelper::appendPolygons(speedDownMask, SVG::Color::RED);
+
+//                    SVGHelper::appendPolygons(bridge_wall_mask, SVG::Color::YELLOW);
+//                    SVGHelper::appendPolygons(overhang_mask, SVG::Color::GREEN);
+//                }
+            }
+        }
+    }
+
+//    if (skinRelatedWallSlowDown)
+//    {
+
+//        auto addSkinMaskToSpeedDownMask = [&](int layerNumber)->void {
+//            Polygons the_skin_mask;
+//            for (int p = 0; p < mesh.layers[layerNumber].parts.size(); p++)
+//            {
+//                for (size_t q = 0; q < mesh.layers[layerNumber].parts[p].skin_parts.size(); q++)
+//                {
+
+//                    const PolygonsPart & skinOutline = mesh.layers[layerNumber].parts[p].skin_parts[q].outline;
+//                    auto inWallSkin = tempWalls.intersection(skinOutline);
+
+//                    double diffArea = inWallSkin.area() - skinOutline.area();
+//                    //SVGHelper::writePolygons(inWallSkin);
+//                    if (std::abs(diffArea) > 10)
+//                    {
+//                        continue;
+//                    }
+
+//                    auto touchWallArea = skinOutline.offset(non_bridge_config.getLineWidth()*4).difference(tempWalls);
+
+//                    if (touchWallArea.polygonLength() > MM2INT(20)*2)
+//                    {
+//                        continue;
+//                    }
+//                    //the_skin_mask.add(skinOutline);
+//                    auto overhangSkinArea = skinOutline.intersection(getSkinOverhangMask());
+//                    if (overhangSkinArea.size()> 0)
+//                    {
+//                        the_skin_mask.add(overhangSkinArea);
+//                    }
+//                }
+//            }
+//            //SVGHelper::writePolygons(upper_skin_mask);
+
+//            the_skin_mask = the_skin_mask.offset(non_bridge_config.getLineWidth() * 3);
+
+
+//            //speedDownMask.add(the_skin_mask);
+//            if (the_skin_mask.size()>0)
+//            {
+//                speedDownMask = speedDownMask.unionPolygons(the_skin_mask);
+//            }
+//        };
+
+
+//        if (non_bridge_config.type == PrintFeatureType::InnerWall)
+//        {
+
+//            if (layer_nr < mesh.layers.size() - 1)
+//            {
+//                addSkinMaskToSpeedDownMask(layer_nr + 1);
+//                //calcDistanceToOverhangMap(overhang_min_line_length, upper_skin_mask, constWall, distanceToOverhangMap);
+//            }
+
+//            addSkinMaskToSpeedDownMask(layer_nr);
+//        }
+//    }
+
+    
     std::unordered_map<int, double> distanceToBridgeMap;
     if (bridge_wall_mask.empty())
     {
         
         if (!speedDownMask.empty())
         {
-            spliteWall(bridgeSplitMinLength, 0, speedDownMask,wall);
+            spliteWall(bridgeSplitMinLength,0, speedDownMask,wall);
         }
     }
     else
     {
         
-        spliteWall(bridgeSplitMinLength, -1, speedDownMask,wall);
+        spliteWall(bridgeSplitMinLength, bridgeShrinkLength, speedDownMask,wall);
         
         calcDistanceToMaskMap(min_bridge_line_len, bridge_wall_mask, wall, distanceToBridgeMap);
     }

@@ -52,14 +52,14 @@ public:
     void mouseReleaseEvent(QMouseEvent* event, void* arg1 = nullptr, void* arg2 = nullptr) override;
 
 public Q_SLOTS:
-    void receiveParams(std::vector<float> params);
-    void receiveBoxParams(std::vector<float> params);
+    void receiveParams(std::vector<float> params, ZoomAxisType axisType);
+    void receiveBoxParams(std::vector<float> params, ZoomAxisType axisType);
     void scaleToFitClicked();
     void resetBtnClicked();
     void resetSelectedObjsClicked();
     void updateLock(bool);
 
-    void viewValuesChanged(std::vector<double> params, ZoomChangedType type);
+    void viewValuesChanged(std::vector<double> params, ZoomChangedType type, ZoomAxisType axisType);
 
 Q_SIGNALS:
     void sendParams(std::vector<float> params);

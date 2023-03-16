@@ -59,7 +59,7 @@ public:
 
     //get the description for the given action
     virtual QString getEditToolDescription(const QAction *) = 0;
-
+    virtual void changeEvent(QEvent *e) = 0;
 protected:
     QList<QAction*> actionList;
 };

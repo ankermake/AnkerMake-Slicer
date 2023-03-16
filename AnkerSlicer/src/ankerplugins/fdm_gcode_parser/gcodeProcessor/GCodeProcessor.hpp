@@ -453,6 +453,7 @@ namespace Anker {
             float layer_duration{ 0.0f }; // s
             float time{ 0.0f }; // s
             float temperature{ 0.0f }; // deg
+            float bed_temperature{ 0.0f }; //deg
             TrapezoidFeedrateProfile motor_process;
             unsigned int g1_line_id{ 0 };
             float volumetric_rate() const { return feedrate * mm3_per_mm; }
@@ -619,6 +620,7 @@ namespace Anker {
         unsigned int m_layer_id;
         CpColor m_cp_color;
         float m_temperature;
+        float m_bed_temperature;
 #if ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
         bool m_use_volumetric_e;
 #endif // ENABLE_VOLUMETRIC_EXTRUSION_PROCESSING
@@ -756,6 +758,9 @@ namespace Anker {
 
         // Set tool (MakerWare)
         void process_M135(const GCodeReader::GCodeLine& line);
+
+        // Set bed temp
+        void process_M140(const GCodeReader::GCodeLine& line);
 
         // Set max printing acceleration
         void process_M201(const GCodeReader::GCodeLine& line);

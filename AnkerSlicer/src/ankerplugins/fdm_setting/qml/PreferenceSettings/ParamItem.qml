@@ -2,15 +2,17 @@ import QtQuick 2.0
 import QtQuick.Controls 2.12
 import QtQuick.Layouts 1.15
 
-Item {
+Rectangle {
     id: root
     implicitHeight:30
     implicitWidth: 465
-    visible: true
+    visible: model.visible
+    //visible: true
     anchors.leftMargin: 2
+    color: "transparent"
 
-     signal showAllChildern(string category)
-    //当item为子节点时， 缩进 占位
+    signal showAllChildern(string category)
+
     Item {
         id: itemSpace
         anchors.left: parent.left

@@ -181,7 +181,7 @@ void MeshInfoWidget::showMesh()
         return;
     }
 
-    bool visble = modelPtr->getVisuable();
+    bool visuable = modelPtr->getVisuable();
     ObjStatus status = modelPtr->getStatus();
     std::vector<CHMeshShowObjPtr>  meshes;
     //qDebug() <<" status ===" << status  << " name =" << modelPtr->getObjectName();
@@ -195,13 +195,17 @@ void MeshInfoWidget::showMesh()
         CHPickOperationCommandPtr pickPtr =  getGlobalPick();
         std::set<CHMeshShowObjPtr> ptr = pickPtr->m_selectedObjs;
         if(ptr.empty()) {
+            meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(modelPtr));
+            modelPtr->setStatus(general);
+            getDoc()->setObjsVisuable(meshes, !visuable);
             return;
         }
+
         for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
             meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(*iter));
         }
     }
-    getDoc()->setObjsVisuable(meshes, !visble);
+    getDoc()->setObjsVisuable(meshes, !visuable);
 }
 
 void MeshInfoWidget::deleteMesh()

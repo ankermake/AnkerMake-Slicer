@@ -140,7 +140,13 @@ FORMS += \
 #        dialogs/save_snapshot_dialog.ui \
 #        ui/layerDialog.ui
 
-RESOURCES += \
+win32:RESOURCES += \
+        DisplayResolution.qrc \
+        ankerimages/ankermake.qrc \
+        meshlab.qrc \
+        translator.qrc
+
+macx:RESOURCES += \
         ankerimages/ankermake.qrc \
         meshlab.qrc \
         translator.qrc
@@ -287,5 +293,7 @@ CONFIG(system_glew): LIBS += -lGLEW
 # The following define is needed in gcc to remove the asserts
 win32-g++:DEFINES += NDEBUG
 CONFIG(debug, debug|release):win32-g++:release:DEFINES -= NDEBUG
+
+win32:LIBS += -lDbgHelp
 
 

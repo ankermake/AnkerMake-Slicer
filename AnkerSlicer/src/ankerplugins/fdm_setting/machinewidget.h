@@ -38,6 +38,7 @@ private:
     QString m_oldName;
     MessageDialog *m_messageDialog;
     QString m_newName;
+    QQuickView *m_quickView = nullptr;
 };
 }
 

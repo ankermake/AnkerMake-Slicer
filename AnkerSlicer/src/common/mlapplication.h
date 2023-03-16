@@ -33,9 +33,9 @@ public:
 	static const QString webSite() {return tr("http://www.meshlab.net/");}
 	static const QString downloadSite() {return tr("http://www.meshlab.net/#download");}
 	
-	static const QString pluginsPathRegisterKeyName() {return tr("pluginsPath");}
-	static const QString versionRegisterKeyName() {return tr("version");}
-	static const QString wordSizeKeyName() {return tr("wordSize");}
+    static const QString pluginsPathRegisterKeyName() {return "pluginsPath";}
+    static const QString versionRegisterKeyName() {return "version";}
+    static const QString wordSizeKeyName() {return "wordSize";}
 	
 	static const QString extraPluginsLocation();
 	static const QString extraShadersLocation();

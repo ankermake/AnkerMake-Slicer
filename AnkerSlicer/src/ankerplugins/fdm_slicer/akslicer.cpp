@@ -361,6 +361,8 @@ void AkSlicer::newStdErrGeneratedChars(QByteArray res)
     static int count = 0;
 
     QString msg = QString::fromLocal8Bit(res);
+    
+    TDebug(msg);
     //qWarning().noquote().nospace() << "[[SlicerEngine]]" << msg;
 //    TInfo(msg);
 //    TInfo(QString("================== %1 ").arg(++count));
@@ -381,6 +383,7 @@ void AkSlicer::newStdErrGeneratedChars(QByteArray res)
             qDebug() << line;
         }
 #endif
+
         
         if (line.indexOf("[ERROR]") >= 0)
         {

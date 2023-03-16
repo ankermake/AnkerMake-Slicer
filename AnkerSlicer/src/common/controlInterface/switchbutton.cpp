@@ -4,7 +4,7 @@ SwitchButton::SwitchButton(QWidget* parent)
     : QWidget(parent),
     m_isChecked(false),
     m_startX(1),
-    m_backgroundColor(QColor(224, 224, 224))
+    m_backgroundColor(QColor(81, 81, 81))
 {
     this->setMinimumSize(50, 26);
 }
@@ -48,7 +48,7 @@ void SwitchButton::drawSlider(QPainter* painter)
     else {
         m_startX = 1;
     }
-    QRect rect(m_startX, 1, sliderWidth, sliderWidth);
+    QRect rect(m_startX, 2, sliderWidth, sliderWidth);
     painter->drawEllipse(rect);
     painter->restore();
 
@@ -64,7 +64,7 @@ void SwitchButton::updateState(bool state)
         m_backgroundColor = QColor(97, 211, 125);
     }
     else {
-        m_backgroundColor = QColor(224, 224, 224);
+        m_backgroundColor = QColor(81, 81, 81);
     }
     // this->repaint();
     update();

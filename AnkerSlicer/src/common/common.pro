@@ -67,7 +67,7 @@ HEADERS += 	\
     GeoAndShow/CHObject.h \
     GeoAndShow/CHPickOperationCommand.h \
     GeoAndShow/CHPlane.h \
-    GeoAndShow/CHPointShowOobj.h \
+    GeoAndShow/CHPointShowObj.h \
     GeoAndShow/CHPrintMachineBox.h \
     GeoAndShow/CHScene.h \
     GeoAndShow/CHShowObj.h \
@@ -131,6 +131,9 @@ HEADERS += 	\
 	python/function_parameter.h \
 	python/function_set.h \
 	python/python_utils.h \
+    support/supportdata.h \
+    support/supportline.h \
+    support/supportmeshfactory.h \
     utilities/AkMatrix3i.h \
     utilities/AkPoint3i.h \
     utilities/akUtilSpace.h \
@@ -241,6 +244,9 @@ SOURCES += \
 	python/function_parameter.cpp \
 	python/function_set.cpp \
 	python/python_utils.cpp \
+	support/supportdata.cpp \
+	support/supportline.cpp \
+	support/supportmeshfactory.cpp \
     utilities/AkMatrix3i.cpp \
     utilities/AkPoint3i.cpp \
 	utilities/eigen_mesh_conversions.cpp \

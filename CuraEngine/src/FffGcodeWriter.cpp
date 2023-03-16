@@ -625,7 +625,8 @@ void FffGcodeWriter::processStartingCode(const SliceDataStorage& storage, const 
         std::string prefix = gcode.getFileHeader(extruder_is_used);
         
         //gcode.writeCode(prefix.c_str());
-        gcode.writeCodeStored(prefix.c_str(), 0, 300);
+        
+        gcode.writeCodeStored(prefix.c_str(), 0, 400);
     }
 
     gcode.writeComment("Generated with AnkerSlicer " VERSION);
@@ -1979,8 +1980,17 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
     const bool compensate_overlap_0 = mesh.settings.get<bool>("travel_compensate_overlapping_walls_0_enabled");
     const bool compensate_overlap_x = mesh.settings.get<bool>("travel_compensate_overlapping_walls_x_enabled");
     const bool retract_before_outer_wall = mesh.settings.get<bool>("travel_retract_before_outer_wall");
+
+
+    //2022/11/23 Binary for variable part line width
+    PathConfigStorage::MeshPathConfigs mesh_config1 = const_cast<PathConfigStorage::MeshPathConfigs&>(mesh_config);
     if (mesh.settings.get<size_t>("wall_line_count") > 0)
     {
+        if (part.real_line_width_changed)
+        {
+             mesh_config1.inset0_config.setLineWidth(part.real_wall0_line_width);
+        }
+
         bool spiralize = false;
         if(Application::getInstance().current_slice->scene.current_mesh_group->settings.get<bool>("magic_spiralize"))
         {
@@ -2036,7 +2046,8 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 }
             }
 
-            const coord_t layer_height = mesh_config.inset0_config.getLayerThickness();
+
+            const coord_t layer_height = mesh_config1.inset0_config.getLayerThickness();
 
             // if support is enabled, add the support outlines also so we don't generate bridges over support
 
@@ -2073,7 +2084,7 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 }
             }
 
-            const int half_outer_wall_width = mesh_config.inset0_config.getLineWidth() / 2;
+            const int half_outer_wall_width = mesh_config1.inset0_config.getLineWidth() / 2;
 
             // remove those parts of the layer below that are narrower than a wall line width as they will not be printed
 
@@ -2098,7 +2109,6 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 gcode_layer.setBridgeWallMask(compressed_air.offset(max_air_gap + half_outer_wall_width));
 
 
-
 //                {
 //                    Polygons  outlines_below_a   = outlines_below;  // outlines_below.offset(-max_air_gap);
 //                    Polygons  part_outline_a     = part.outline;    // part.outline.offset(-max_air_gap);
@@ -2120,10 +2130,13 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
             }
 
             
-            if(mesh.settings.get<bool>("skin_overhang_enable")){
+            if(mesh.settings.get<bool>("skin_overhang_enable") && gcode_layer.getLayerNr() < mesh.layers.size()-1)
+            {
                 const coord_t max_air_gap = half_outer_wall_width;
+                
                 Polygons compressed_air(part.outline.difference(outlines_below).offset(-max_air_gap));
                 gcode_layer.setSkinOverhangMask(compressed_air.offset(max_air_gap + half_outer_wall_width));
+
             }
             else{
                 gcode_layer.setSkinOverhangMask(Polygons());
@@ -2289,7 +2302,7 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
         }
         else if (InsetOrderOptimizer::optimizingInsetsIsWorthwhile(mesh, part))
         {
-            InsetOrderOptimizer ioo(*this, storage, gcode_layer, mesh, extruder_nr, mesh_config, part, gcode_layer.getLayerNr());
+            InsetOrderOptimizer ioo(*this, storage, gcode_layer, mesh, extruder_nr, mesh_config1, part, gcode_layer.getLayerNr());
             if(0x2 & mesh.settings.get<int>("optimize_single_part_z_seam"))
                 ioo.z_seam_config.isPathOrPolygon = true;   
             return ioo.processInsetsWithOptimizedOrdering();
@@ -2325,12 +2338,12 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                         if (!compensate_overlap_0)
                         {
                             WallOverlapComputation* wall_overlap_computation(nullptr);
-                            gcode_layer.addWalls(outer_wall, mesh, mesh_config.inset0_config, mesh_config.bridge_inset0_config, wall_overlap_computation, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), flow, retract_before_outer_wall);
+                            gcode_layer.addWalls(outer_wall, mesh, mesh_config1.inset0_config, mesh_config1.bridge_inset0_config, wall_overlap_computation, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), flow, retract_before_outer_wall);
                         }
                         else
                         {
-                            WallOverlapComputation wall_overlap_computation(outer_wall, mesh_config.inset0_config.getLineWidth());
-                            gcode_layer.addWalls(outer_wall, mesh, mesh_config.inset0_config, mesh_config.bridge_inset0_config, &wall_overlap_computation, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), flow, retract_before_outer_wall);
+                            WallOverlapComputation wall_overlap_computation(outer_wall, mesh_config1.inset0_config.getLineWidth());
+                            gcode_layer.addWalls(outer_wall, mesh, mesh_config1.inset0_config, mesh_config1.bridge_inset0_config, &wall_overlap_computation, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), flow, retract_before_outer_wall);
                         }
                     }
                 }
@@ -2345,12 +2358,12 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                     if (!compensate_overlap_x)
                     {
                         WallOverlapComputation* wall_overlap_computation(nullptr);
-                        gcode_layer.addWalls(part.insets[processed_inset_number], mesh, mesh_config.insetX_config, mesh_config.bridge_insetX_config, wall_overlap_computation, z_seam_config);
+                        gcode_layer.addWalls(part.insets[processed_inset_number], mesh, mesh_config1.insetX_config, mesh_config1.bridge_insetX_config, wall_overlap_computation, z_seam_config);
                     }
                     else
                     {
-                        WallOverlapComputation wall_overlap_computation(inner_wall, mesh_config.insetX_config.getLineWidth());
-                        gcode_layer.addWalls(inner_wall, mesh, mesh_config.insetX_config, mesh_config.bridge_insetX_config, &wall_overlap_computation, z_seam_config);
+                        WallOverlapComputation wall_overlap_computation(inner_wall, mesh_config1.insetX_config.getLineWidth());
+                        gcode_layer.addWalls(inner_wall, mesh, mesh_config1.insetX_config, mesh_config1.bridge_insetX_config, &wall_overlap_computation, z_seam_config);
                     }
                 }
             }
@@ -2599,6 +2612,7 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
     const Ratio support_threshold = bridge_settings_enabled ? mesh.settings.get<Ratio>("bridge_skin_support_threshold") : 0.0_r;
     const size_t bottom_layers = mesh.settings.get<size_t>("bottom_layers");
 
+
     // if support is enabled, consider the support outlines so we don't generate bridges over support
 
     int support_layer_nr = -1;
@@ -2612,7 +2626,7 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
         support_layer_nr = layer_nr - z_distance_top_layers;
     }
 
-    // helper function that detects skin regions that have no support and modifies their print settings (config, line angle, density, etc.)
+    //// helper function that detects skin regions that have no support and modifies their print settings (config, line angle, density, etc.)
 
     auto handle_bridge_skin = [&](const int bridge_layer, const GCodePathConfig* config, const float density) // bridge_layer = 1, 2 or 3
     {
@@ -2669,21 +2683,26 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
     };
 
     bool is_bridge_skin = false;
-    if (layer_nr > 0)
-    {
-        is_bridge_skin = handle_bridge_skin(1, &mesh_config.bridge_skin_config, mesh.settings.get<Ratio>("bridge_skin_density"));
-    }
-    if (bridge_enable_more_layers && !is_bridge_skin && layer_nr > 1 && bottom_layers > 1)
-    {
-        is_bridge_skin = handle_bridge_skin(2, &mesh_config.bridge_skin_config2, mesh.settings.get<Ratio>("bridge_skin_density_2"));
 
-        if (!is_bridge_skin && layer_nr > 2 && bottom_layers > 2)
+    //do not deal with the surface skin
+    if (layer_nr < mesh.layers.size() - 1 && skin_part.outline.difference(mesh.layers[layer_nr + 1].getOutlines()).size() == 0)
+    {
+        if (layer_nr > 0)
         {
-            is_bridge_skin = handle_bridge_skin(3, &mesh_config.bridge_skin_config3, mesh.settings.get<Ratio>("bridge_skin_density_3"));
+            is_bridge_skin = handle_bridge_skin(1, &mesh_config.bridge_skin_config, mesh.settings.get<Ratio>("bridge_skin_density"));
+        }
+
+        if (bridge_enable_more_layers && !is_bridge_skin && layer_nr > 1 && bottom_layers > 1)
+        {
+            is_bridge_skin = handle_bridge_skin(2, &mesh_config.bridge_skin_config2, mesh.settings.get<Ratio>("bridge_skin_density_2"));
+
+            if (!is_bridge_skin && layer_nr > 2 && bottom_layers > 2)
+            {
+                is_bridge_skin = handle_bridge_skin(3, &mesh_config.bridge_skin_config3, mesh.settings.get<Ratio>("bridge_skin_density_3"));
+            }
         }
     }
-
-    double fan_speed = GCodePathConfig::FAN_SPEED_DEFAULT;
+      double fan_speed = GCodePathConfig::FAN_SPEED_DEFAULT;
 
     if (layer_nr > 0 && skin_config == &mesh_config.skin_config && support_layer_nr >= 0 && mesh.settings.get<bool>("support_fan_enable"))
     {
@@ -2738,7 +2757,10 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
             const Polygons& mask = gcode_layer.getSkinOverhangMask();
             const Polygons& part = skin_part.inner_infill;
 
-            Polygons part_mask = part.intersection(mask);
+
+            Polygons part_mask = Polygons();// part.intersection(mask);
+
+
 
             if(part_mask.empty()){break;}
 
@@ -2749,7 +2771,19 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
             //      skin_config->speed_derivatives.speed, skin_overlap);
 
             skin_config = overhang_skin_config;
+                        
             skin_overlap = skin_overlap_overhang_mm;
+
+            
+            if (layer_nr > 1 && layer_nr < mesh.layers.size() - 1)
+            {
+                Polygons poly = part_mask.offset(skin_overlap_overhang_mm).intersection(mesh.layers[layer_nr - 1].getOutlines());
+                if (poly.size() > 0 && poly.difference(mesh.layers[layer_nr - 1].getOutlines()).size() == 0)
+                {
+                    skin_overlap = 200;
+                }
+            }
+
 
             logCL("$CL$ D speed=%f, skin_overlap=%d um\n",
                   skin_config->speed_derivatives.speed, skin_overlap);
@@ -2760,6 +2794,26 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
     Polygons* perimeter_gaps_output = (generate_perimeter_gaps) ? &concentric_perimeter_gaps : nullptr;
 
     const bool monotonic = mesh.settings.get<bool>("skin_monotonic");
+
+
+    ////Binary 2022/11/16 for top_surface begin
+    if (layer_nr < mesh.layers.size()-1 && layer_nr > bottom_layers+1)
+    {
+        Polygons down_skin_area;
+        for (auto& part : mesh.layers[layer_nr - 1].parts)
+        {
+            for (auto& skinpart : part.skin_parts)
+            {
+                down_skin_area.add(skinpart.outline);
+            }
+        }
+        if (skin_part.inner_infill.intersection(down_skin_area).size()==0)
+        {
+            skin_config = &mesh_config.bridge_skin_config;
+        }
+    }
+    //Binary 2022/11/16 for top_surface end
+    
     processSkinPrintFeature(storage, gcode_layer, mesh, extruder_nr, skin_part.inner_infill, *skin_config, pattern, skin_angle, skin_overlap, skin_density, monotonic, perimeter_gaps_output, added_something, fan_speed);
 }
 
@@ -3344,7 +3398,8 @@ void FffGcodeWriter::finalize()
         log("End of gcode header.\n");
         {
             
-            gcode.writeCodeStored(prefix.c_str(), 0, 300);
+            
+            gcode.writeCodeStored(prefix.c_str(), 0, 400);
         }
     }
 

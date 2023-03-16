@@ -241,6 +241,7 @@ void AnkerMainWindow::initFdmWidget()
     qDebug() << "MainWindow Widget: " << this << "WindId: " << window()->winId();
     FdmMainWidget* mainwidget = new FdmMainWidget(messageProcessing, m_mainTitleBar, m_controlManager, this);
     mainwidget->setMainWindowId(window()->winId());
+    connect(mainwidget, &FdmMainWidget::unloadPlugins, this, &AnkerMainWindow::unloadPluginsSlot);
     connect(mainwidget, SIGNAL(fdmOpenFile()), this, SLOT(open()));
     connect(mainwidget, SIGNAL(fdmSaveAllMesh()), this, SLOT(saveAllMesh()));
     connect(mainwidget, SIGNAL(fdmSaveMesh()), this, SLOT(saveMesh()));
@@ -249,6 +250,15 @@ void AnkerMainWindow::initFdmWidget()
     connect(mainwidget, SIGNAL(fdmOpenRecent(QStringList)), this, SLOT(openFileList(QStringList)));
     connect(this, SIGNAL(openFileSucessful(QStringList)), mainwidget, SLOT(insertRecent(QStringList)));
     this->setCentralWidget(mainwidget);
+}
+
+void AnkerMainWindow::changeEvent(QEvent *e)
+{
+    if (e->type() == QEvent::LanguageChange) {
+        for (AnkerEditPlugin *iEditFactory : PM.getAnkerEditPlugins()) {
+            iEditFactory->changeEvent(e);
+        }
+    }
 }
 
 void AnkerMainWindow::initEditTool()
@@ -435,7 +445,7 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
         if(resultInt == -3) {
             errorString = QString(tr("Tip: Open files one at a time."));
         } else if(resultInt == -2) {
-            errorString = QString(tr("The file  is damaged, please try again."));
+            errorString = QString(tr("The file is damaged. Try again."));
         } else if(resultInt == -1) {
             errorString = QString(tr("Only a single project file can be opened at a time."));
         }
@@ -452,7 +462,7 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
         QString suffix = info.suffix();
         if (suffix == m_projectSuffix) {
 
-            if ((!m_projectPath.isEmpty() || !m_meshPath.isEmpty()) && (getDoc()->m_printObjs.size() > 0)) {
+            if ((!m_projectPath.isEmpty() || !m_meshPath.isEmpty())) {
                 control::MessageDialog box(tr("Notice"), tr("This will overwrite the file. Do you want to continue?"), MessageDialog::CANCEL | MessageDialog::SAVE, nullptr);
                 if (box.exec() == MessageDialog::SAVE) {
                     if (!m_projectPath.isEmpty()) {
@@ -604,7 +614,7 @@ void AnkerMainWindow::openFileError(int type, QString errorString)
 {
     // m_openFileSuccess = false;
     AkUtil::TError(errorString);
-    control::MessageDialog box(tr("Error"), tr("The file is damaged. Try again.\n").append(errorString), MessageDialog::OK, nullptr);
+    control::MessageDialog box(tr("Error"), tr("The file is damaged. Try again.").append(errorString), MessageDialog::OK, nullptr);
     box.exec();
 }
 
@@ -1108,7 +1118,7 @@ void AnkerMainWindow::importMesh(QString fileName)
             connect(importModelThread, &ImportModelThread::openData, this, &AnkerMainWindow::importModelProgress);
             connect(importModelThread, &ImportModelThread::exitThreadSignal, this, &AnkerMainWindow::importModelProgressFinished);
             connect(importModelThread, &ImportModelThread::errorEncountered, this, &AnkerMainWindow::openFileError);
-            connect(this, &AnkerMainWindow::usbStateChanged, importModelThread, &ImportModelThread::usbChanged);
+            //connect(this, &AnkerMainWindow::usbStateChanged, importModelThread, &ImportModelThread::usbChanged);
             importModelThread->start();
             m_importProgress->exec();
 
@@ -1128,8 +1138,6 @@ void AnkerMainWindow::importMesh(QString fileName)
             if(importModelThread->openFileSuccessful()){  //
 
                 tmpPrintModelPtr->cmeshoToMeshShowObj(*tmpPrintModelPtr->m_oldMesh);
-
-                qDebug() << "Import Main Thread m_cm.VertexNumber(): " << tmpPrintModelPtr->m_oldMesh->VertexNumber();
                 int index1 = fileName.lastIndexOf("/") + 1;
                 int index2 = fileName.lastIndexOf(".");
                 QString meshName = fileName.mid(index1, index2 - index1);
@@ -1416,16 +1424,16 @@ void AnkerMainWindow::closeEvent(QCloseEvent* event)
             qDebug() << " button ==" << button << "save  ==" << MessageDialog::SAVE  << " not save ==" <<  MessageDialog::DoNotSave;
              slotSaveProject();
         }
-        QList<MeshLabPlugin*> plugins;
-        for (MeshLabPlugin* fp : PM.pluginIterator()) {
-            plugins.append(fp);
-        }
-        currActionEdit = nullptr;
+//        QList<MeshLabPlugin*> plugins;
+//        for (MeshLabPlugin* fp : PM.pluginIterator()) {
+//            plugins.append(fp);
+//        }
+//        currActionEdit = nullptr;
 
-        for (auto fp : plugins) {
-            PM.unloadPlugin(fp);
-        }
-
+//        for (auto fp : plugins) {
+//            PM.unloadPlugin(fp);
+//        }
+        unloadPluginsSlot();
         QMainWindow::closeEvent(event);
         return;
 
@@ -1525,7 +1533,12 @@ void AnkerMainWindow::getMask(int& mask, const CMeshO& cm)
 
 bool AnkerMainWindow::exportMesh_ak(const QString& _fileName, CMeshO& cm)
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Model File"), QApplication::applicationDirPath(), QString("Model Files(*.stl) ;; Model Files(*.obj)"));
+    QStringList recentList = m_settings->readRecent();
+        QString lastPath = QApplication::applicationDirPath() + "//document";
+        if (!recentList.isEmpty()) {
+            lastPath = recentList.first();
+        }
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save Model File"), lastPath, QString("Model Files(*.stl) ;; Model Files(*.obj)"));
     if (fileName.isEmpty())
         return false;
     QFileInfo fi(fileName);
@@ -1754,6 +1767,19 @@ void AnkerMainWindow::onButtonMaxClicked()
 void AnkerMainWindow::onButtonCloseClicked()
 {
     close();
+}
+
+void AnkerMainWindow::unloadPluginsSlot()
+{
+    QList<MeshLabPlugin*> plugins;
+    for (MeshLabPlugin* fp : PM.pluginIterator()) {
+        plugins.append(fp);
+    }
+    currActionEdit = nullptr;
+
+    for (auto fp : plugins) {
+        PM.unloadPlugin(fp);
+    }
 }
 
 bool AnkerMainWindow::eventFilter(QObject *watched, QEvent *event)

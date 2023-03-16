@@ -101,4 +101,5 @@ fdm_setting.depends = common
 
 
 TRANSLATIONS += meshlab/language/tr_zh.ts\
-                meshlab/language/tr_en.ts
+                meshlab/language/tr_en.ts\
+                meshlab/language/tr_ja.ts

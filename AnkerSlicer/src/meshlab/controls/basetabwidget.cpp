@@ -1,5 +1,5 @@
 #include "basetabwidget.h"
-
+#include <QHBoxLayout>
 BaseTabWidget::BaseTabWidget(QWidget *parent)
     : QWidget(parent),
       m_mainLayout(new QGridLayout(this)),
@@ -35,42 +35,39 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
     listItemButton->setFixedSize(QSize(136,40));
     listItemButton->setCheckable(true);
     listItemButton->setAutoExclusive(true);
-
     QWidget *Widget = new QWidget(listItemButton);
-    QGridLayout *mainLayout = new QGridLayout(Widget);
+
+    QHBoxLayout *mainLayout = new QHBoxLayout(Widget);
     //mainLayout->setSpacing(7);
    // mainLayout->setContentsMargins(0,0,0,0);
     QLabel *iconLabel = new QLabel(Widget);
-    iconLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
-    //iconLabel->setFixedSize(24,24);
-    QPixmap pix = icon.pixmap(iconLabel->size());;
-    //pix.scaled(iconLabel->size(),Qt::KeepAspectRatio);
+    iconLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
+    QPixmap pix = icon.pixmap(iconLabel->size());
     iconLabel->setScaledContents(true);
     iconLabel->setPixmap(pix);
-    mainLayout->addWidget(iconLabel,0,0,Qt::AlignRight);
-    QLabel *itemTextLabel = new QLabel(Widget);
+    mainLayout->addWidget(iconLabel);
+    QLabel *itemTextLabel = new QLabel();
+    itemTextLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    itemTextLabel->setFixedWidth(80);
     if (index == -1) {
-           if (m_topHboxLayout->isEmpty()) {
-               m_titleLabels.insert(0, itemTextLabel);
-           } else {
-               m_titleLabels.insert(m_topHboxLayout->count() - 1, itemTextLabel);
-           }
+       if (m_topHboxLayout->isEmpty()) {
+           m_titleLabels.insert(0, itemTextLabel);
        } else {
-           if (!m_titleLabels.contains(index)) {
-               m_titleLabels.insert(index, itemTextLabel);
-           } else {
-               for (int i = index; i < m_titleLabels.size(); i++) {
-                   m_titleLabels.insert(i+1, m_titleLabels[i]);
-               }
-               m_titleLabels.insert(index, itemTextLabel);
-           }
+           m_titleLabels.insert(m_topHboxLayout->count() - 1, itemTextLabel);
        }
-    itemTextLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+    } else {
+       if (!m_titleLabels.contains(index)) {
+           m_titleLabels.insert(index, itemTextLabel);
+       } else {
+           for (int i = m_titleLabels.size() - 1; i >= index; i--) {
+               m_titleLabels.insert(i+1, m_titleLabels[i]);
+           }
+           m_titleLabels.insert(index, itemTextLabel);
+       }
+    }
     itemTextLabel->setText(label);
     itemTextLabel->setObjectName("itemTextLabel");
-    mainLayout->addWidget(itemTextLabel,0,1,Qt::AlignLeft);
-    mainLayout->setColumnStretch(0,1);
-    mainLayout->setColumnStretch(1,1);
+    mainLayout->addWidget(itemTextLabel);
     Widget->setLayout(mainLayout);
     int addIndex = -1;
     if(index != -1) {
@@ -84,7 +81,7 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
               //qDebug() << " lay count = " << m_topHboxLayout->count()  << " index ==" << index;
           }
           addIndex = m_stackLayout->insertWidget(index,page);
-    }else {
+    } else {
         // m_baseListWidget->setItemWidget(item,Widget);
         if(m_topHboxLayout->isEmpty()) {
             m_topHboxLayout->addWidget(listItemButton);
@@ -102,8 +99,8 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
     //qDebug() << "m_buttonGroup list =" << m_buttonGroup->buttons();
     QList <QAbstractButton* > buttonList = m_buttonGroup->buttons();
 
-    for(auto button: buttonList) {
-    int i =    m_topHboxLayout->indexOf(button);
+    for (auto button: buttonList) {
+    int i = m_topHboxLayout->indexOf(button);
     m_buttonGroup->setId(button,i);
     }
     if(m_currentIndex < 0) {

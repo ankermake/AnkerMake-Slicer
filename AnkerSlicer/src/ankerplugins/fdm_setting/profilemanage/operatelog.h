@@ -79,7 +79,8 @@ public:
 		Add,
 		Remove,
 		Rename,
-		ValueChange
+		ValueChange,
+		ValueChangeManually,
 	};
 	//enum EContentOperType
 	//{
@@ -96,12 +97,14 @@ public:
 	void AddRemoveSet(EProfileType profileType, QSet<QString> removedSet);
 	
 	void AddValueChangedSet(EProfileType profileType, QSet<QString> valueChangeSet);
+	void AddManuallyValueChangedSet(EProfileType profileType, QSet<QString> valueChangeSet);
 
 	
 	bool constainsOper(EProfileType profileType, QString profileName);
 	bool constainsRemoveOper(EProfileType profileType, QString profileName);
 	bool constainsRenameOper(EProfileType profileType, QString profileName);
 	bool constainsValueChangeOper(EProfileType profileType, QString profileName);
+	bool constainsManuallyValueChangeOper(EProfileType profileType, QString profileName);
 
 	
 	

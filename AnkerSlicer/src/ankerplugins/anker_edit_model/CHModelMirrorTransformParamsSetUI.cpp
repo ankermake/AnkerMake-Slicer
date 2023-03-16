@@ -185,13 +185,13 @@ void CHModelMirrorTransformParamsSetUI::changeEvent(QEvent * event)
             m_mirrorLabel->setText(tr("Mirror"));
         }
         if (m_xStrLabel != nullptr) {
-            m_xStrLabel->setText(X_STR + tr(" Axis"));
+            m_xStrLabel->setText(X_STR + tr("Axis"));
         }
         if (m_yStrLabel != nullptr) {
-            m_yStrLabel->setText(Y_STR + tr(" Axis"));
+            m_yStrLabel->setText(Y_STR + tr("Axis"));
         }
         if (m_zStrLabel != nullptr) {
-            m_zStrLabel->setText(Z_STR + tr(" Axis"));
+            m_zStrLabel->setText(Z_STR + tr("Axis"));
         }
     }
 }

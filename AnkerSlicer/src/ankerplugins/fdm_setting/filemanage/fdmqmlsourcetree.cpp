@@ -303,8 +303,15 @@ void FdmQmlSourceTree::setLanguage(int index)
 
     QString qmlFile_en = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All.qml");
     QString qmlFile_zh = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All_zh.qml");
+    QString qmlFile_jp = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/FdmJsonObjTree_All_jp.qml");
 
-    QString qmlFile = (index == 1) ? qmlFile_zh : qmlFile_en;
+    //QString qmlFile = (index == 1) ? qmlFile_zh : qmlFile_en;
+    QString qmlFile = qmlFile_zh;
+    switch (index) {
+        case 0: qmlFile = qmlFile_en;break;
+        case 1: qmlFile = qmlFile_zh;break;
+        case 2: qmlFile = qmlFile_jp;break;
+    }
 
     
     QObject * qmlRoot = FdmQmlEngine::instance()->loadQmlFile(qmlFile);

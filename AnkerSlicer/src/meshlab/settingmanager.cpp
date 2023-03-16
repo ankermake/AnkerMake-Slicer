@@ -134,7 +134,8 @@ void SettingManager::setLanguageList(const QStringList &languageList)
 
 QStringList SettingManager::getLanguageList()
 {
-    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese"));
+    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese") << QObject::tr("Janpenese"));
+    //setLanguageList(QStringList() << QString("English")  << QString("中文") << QString("日本語"));
     return  m_settings.value("LanguageList").toStringList();
 }
 

@@ -53,7 +53,7 @@
                 },
                 "machine_start_gcode":
                 {
-                    "label": "Start G-code",
+                    "label": "Start G-Code",
                     "description": "G-code commands to be executed at the very start - separated by \\n.",
                     "default_value": "",
                     "type": "str",

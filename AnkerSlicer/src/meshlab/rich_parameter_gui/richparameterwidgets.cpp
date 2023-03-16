@@ -809,7 +809,7 @@ void ShotfWidget::getShot()
 	case 2 : emit askRasterShot(paramName); break;
 	case 3:
 		{
-            QString filename = QFileDialog::getOpenFileName(this, tr("Load xml camera"), "./", "Xml Files (*.xml)");
+            QString filename = QFileDialog::getOpenFileName(this, tr("Load XML Camera"), "./", "Xml Files (*.xml)");
 			QFile qf(filename);
 			QFileInfo qfInfo(filename);
 

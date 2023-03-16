@@ -9,6 +9,7 @@
 #include "common/ak_const.h"
 #include <QDebug>
 #include <QTextCodec>
+#include "common/utilities/tlogger.h"
 using namespace AkUtil;
 
 
@@ -483,6 +484,13 @@ void FdmBaseProfile::setSetting(const QString& cateName, const FdmSettingItem& i
     {
         qDebug() << QString("*** file %1 content changed. categoryName %2 key=%3").arg(getName()).arg(categoryName).arg(item.name)
             << originValue << item.value;
+
+        
+        if (item.name.length() > AkConst::SettingKey::MAX_NAME_SIZE)
+        {
+            AkUtil::TWarning("skip unexpected setting " + item.name);
+            return;
+        }
 
         categoryDict[categoryName]->set(item.name, item.value);
         addStatus(EProfileStatus::NodeValueChanged);

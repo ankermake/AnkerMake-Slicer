@@ -675,22 +675,18 @@ void viewWidget::initForm()
     QFrame* line_11; //zlap line
     QVBoxLayout* verticalLayout;   
     QHBoxLayout* linetypeLabelLayout;
-#ifndef USE_EXTRA_UI
-    QLabel* linetypelabel;
-#endif
+
     QHBoxLayout* ConsumedLabelLayout;
-    QLabel* ConsumedLabelabel;
 
 
 
     QHBoxLayout* filamentLayout;
     QLabel* filamentPicLabel;
-    QLabel* filamentLabel;
+
     QSpacerItem* horizontalSpacer_filamentLayout10;
 
     QHBoxLayout* timeLayout;
     QLabel* timePiclabel;
-    QLabel* timelabel;
     QSpacerItem* horizontalSpacer_time11;
 
     QVBoxLayout* lineTypeLayout;
@@ -702,7 +698,7 @@ void viewWidget::initForm()
 #ifdef   USE_EXTRA_UI
     linetypeCombox = new QComboBox(ui->widget);
     linetypeCombox->addItem(tr("Line Type"));
-    linetypeCombox->addItem(tr("speed"));
+    linetypeCombox->addItem(tr("Speed"));
     linetypeCombox->addItem(tr("Trapezoid"));
     linetypeCombox->addItem(tr("Flow"));
     verticalLayout->addWidget(linetypeCombox);
@@ -830,7 +826,7 @@ void viewWidget::initForm()
     skinLayout->addWidget(skinLabelC);
     skinLabel = new QLabel(ui->widget);
     skinLabel->setObjectName(QString::fromUtf8("skinLabel"));
-    skinLabel->setText(tr("skin"));
+    skinLabel->setText(tr("Skin"));
     sizePolicy2.setHeightForWidth(skinLabel->sizePolicy().hasHeightForWidth());
     skinLabel->setSizePolicy(sizePolicy2);
     skinLabel->setMinimumSize(QSize(80, 15));
@@ -912,7 +908,7 @@ void viewWidget::initForm()
     fillLayout->addWidget(fillLabelC);
     fillLabel = new QLabel(ui->widget);
     fillLabel->setObjectName(QString::fromUtf8("fillLabel"));
-    fillLabel->setText(tr("fill"));
+    fillLabel->setText(tr("Fill"));
     sizePolicy2.setHeightForWidth(fillLabel->sizePolicy().hasHeightForWidth());
     fillLabel->setSizePolicy(sizePolicy2);
     fillLabel->setMinimumSize(QSize(80, 15));
@@ -1189,7 +1185,7 @@ void viewWidget::initForm()
      skinLayout_speed->setContentsMargins(16, -1, 16, -1);
      skinLabel_speed = new QLabel(ui->widget);
      skinLabel_speed->setObjectName(QString::fromUtf8("skinLabel_speed"));
-     skinLabel_speed->setText(tr("skin"));
+     skinLabel_speed->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_speed->sizePolicy().hasHeightForWidth());
      skinLabel_speed->setSizePolicy(sizePolicy2);
      skinLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1250,7 +1246,7 @@ void viewWidget::initForm()
      fillLayout_speed->setContentsMargins(16, -1, 16, -1);
      fillLabel_speed = new QLabel(ui->widget);
      fillLabel_speed->setObjectName(QString::fromUtf8("fillLabel_speed"));
-     fillLabel_speed->setText(tr("fill"));
+     fillLabel_speed->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_speed->sizePolicy().hasHeightForWidth());
      fillLabel_speed->setSizePolicy(sizePolicy2);
      fillLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1312,7 +1308,7 @@ void viewWidget::initForm()
      unkonwnLayout_speed->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_speed = new QLabel(ui->widget);
      unkonwnLabel_speed->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_speed->setText(tr("unkonwn"));
+     unkonwnLabel_speed->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_speed->sizePolicy().hasHeightForWidth());
      unkonwnLabel_speed->setSizePolicy(sizePolicy2);
      unkonwnLabel_speed->setMinimumSize(QSize(80, 15));
@@ -1338,7 +1334,6 @@ void viewWidget::initForm()
 
      QVBoxLayout* colorPatch;
      QHBoxLayout* HLayout_colorPatch_label;
-     QLabel* colorPatch_label_unit;
      QHBoxLayout* HLayout_clolorpatch;
      QSpacerItem* horizontalSpacer_cp;
      QSpacerItem* horizontalSpacer_cp_2;
@@ -1492,7 +1487,7 @@ void viewWidget::initForm()
      skinLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      skinLabel_trapezoid = new QLabel(ui->widget);
      skinLabel_trapezoid->setObjectName(QString::fromUtf8("skinLabel_trapezoid"));
-     skinLabel_trapezoid->setText(tr("skin"));
+     skinLabel_trapezoid->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_trapezoid->sizePolicy().hasHeightForWidth());
      skinLabel_trapezoid->setSizePolicy(sizePolicy2);
      skinLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1553,7 +1548,7 @@ void viewWidget::initForm()
      fillLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      fillLabel_trapezoid = new QLabel(ui->widget);
      fillLabel_trapezoid->setObjectName(QString::fromUtf8("fillLabel_trapezoid"));
-     fillLabel_trapezoid->setText(tr("fill"));
+     fillLabel_trapezoid->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_trapezoid->sizePolicy().hasHeightForWidth());
      fillLabel_trapezoid->setSizePolicy(sizePolicy2);
      fillLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1615,7 +1610,7 @@ void viewWidget::initForm()
      unkonwnLayout_trapezoid->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_trapezoid = new QLabel(ui->widget);
      unkonwnLabel_trapezoid->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_trapezoid->setText(tr("unkonwn"));
+     unkonwnLabel_trapezoid->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_trapezoid->sizePolicy().hasHeightForWidth());
      unkonwnLabel_trapezoid->setSizePolicy(sizePolicy2);
      unkonwnLabel_trapezoid->setMinimumSize(QSize(80, 15));
@@ -1796,7 +1791,7 @@ void viewWidget::initForm()
      skinLayout_Flow->setContentsMargins(16, -1, 16, -1);
      skinLabel_Flow = new QLabel(ui->widget);
      skinLabel_Flow->setObjectName(QString::fromUtf8("skinLabel_Flow"));
-     skinLabel_Flow->setText(tr("skin"));
+     skinLabel_Flow->setText(tr("Skin"));
      sizePolicy2.setHeightForWidth(skinLabel_Flow->sizePolicy().hasHeightForWidth());
      skinLabel_Flow->setSizePolicy(sizePolicy2);
      skinLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1857,7 +1852,7 @@ void viewWidget::initForm()
      fillLayout_Flow->setContentsMargins(16, -1, 16, -1);
      fillLabel_Flow = new QLabel(ui->widget);
      fillLabel_Flow->setObjectName(QString::fromUtf8("fillLabel_Flow"));
-     fillLabel_Flow->setText(tr("fill"));
+     fillLabel_Flow->setText(tr("Fill"));
      sizePolicy2.setHeightForWidth(fillLabel_Flow->sizePolicy().hasHeightForWidth());
      fillLabel_Flow->setSizePolicy(sizePolicy2);
      fillLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1919,7 +1914,7 @@ void viewWidget::initForm()
      unkonwnLayout_Flow->setContentsMargins(16, -1, 16, -1);
      unkonwnLabel_Flow = new QLabel(ui->widget);
      unkonwnLabel_Flow->setObjectName(QString::fromUtf8("unknowLabel"));
-     unkonwnLabel_Flow->setText(tr("unkonwn"));
+     unkonwnLabel_Flow->setText(tr("Unknown"));
      sizePolicy2.setHeightForWidth(unkonwnLabel_Flow->sizePolicy().hasHeightForWidth());
      unkonwnLabel_Flow->setSizePolicy(sizePolicy2);
      unkonwnLabel_Flow->setMinimumSize(QSize(80, 15));
@@ -1945,7 +1940,6 @@ void viewWidget::initForm()
 
      QVBoxLayout* colorPatch_Flow;
      QHBoxLayout* HLayout_colorPatch_label_Flow;
-     QLabel* colorPatch_label_unit_Flow;
      QHBoxLayout* HLayout_clolorpatch_Flow;
      QSpacerItem* horizontalSpacer_cp_Flow;
      QSpacerItem* horizontalSpacer_cp_2_Flow;
@@ -2080,7 +2074,7 @@ void viewWidget::initForm()
     timeLayout->addWidget(timePiclabel);
     timelabel = new QLabel(ui->widget);
     timelabel->setObjectName(QString::fromUtf8("timelabel"));
-    timelabel->setText(tr("time"));
+    timelabel->setText(tr("Time"));
     timelabel->setStyleSheet("font: normal bold 16px Microsoft YaHei");
     sizePolicy2.setHeightForWidth(timelabel->sizePolicy().hasHeightForWidth());
     timelabel->setSizePolicy(sizePolicy2);
@@ -2786,20 +2780,23 @@ void viewWidget::linetypeComboxChange(int changeValue)
 
 //
     typeLayout->setCurrentIndex(changeValue);
-    if(changeValue == 1 || changeValue == 2)
-    {
-        colorPatch_label_start->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
-        colorPatch_label_end->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
-        colorPatch_label_start_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
-        colorPatch_label_end_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
-        //colorPatch_label_start->update();
-        //qDebug()<< "freedrate_range :" <<(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0])) ;
-    }
+    if (!this->ui->openGLWidget->gcode_result.freedrate_range.empty()) {
+        if(changeValue == 1 || changeValue == 2)
+        {
+            colorPatch_label_start->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
+            colorPatch_label_end->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
+            colorPatch_label_start_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0]));
+            colorPatch_label_end_trapezoid->setText(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[1]));
+            //colorPatch_label_start->update();
+            //qDebug()<< "freedrate_range :" <<(QString::number(this->ui->openGLWidget->gcode_result.freedrate_range[0])) ;
+        }
 
-    if(changeValue == 3)
-    {
-        colorPatch_label_start_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[0]));
-        colorPatch_label_end_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[1]));
+        if(changeValue == 3)
+        {
+            colorPatch_label_start_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[0]));
+            colorPatch_label_end_Flow->setText(QString::number(this->ui->openGLWidget->gcode_result.flow_range[1]));
+        }
+
     }
 
     this->ui->openGLWidget->setColorType(GcodeViewer::colorType(changeValue));
@@ -2942,7 +2939,7 @@ void viewWidget::setExportPic()
     if(isAiMode){
         mpDlg->setText(tr("Generate AI Image"));
     }else{
-        mpDlg->setText(tr("Export Gcode File"));
+        mpDlg->setText(tr("Export G-Code"));
     }
     mpDlg->setCancelVisible(false);
     connect( ui->openGLWidget,SIGNAL(setValue(int)),mpDlg,SLOT(setValue(int)));
@@ -3012,6 +3009,11 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
         dir.removeRecursively();
     }
     
+    if (this->mPlayTimer != nullptr)
+    {
+    this->mPlayTimer->stop();
+    }
+    
     QFileInfo fi(QString::fromStdString(gcodePath));
     f_size = fi.size() / 1024; 
     if(tp_timer == nullptr)
@@ -3061,7 +3063,41 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
             m_rpc.data()->setProperty("gcodeTotalTime",totleTime);
             QVariant totleFilament = allFilamentValue;
             m_rpc.data()->setProperty("gcodeTotalFilament",totleFilament);
+
+            float extruderTemperature, bedTemperature;
+            getGcodeTargetTemperature(extruderTemperature, bedTemperature);
+            QVariant gcodeExtruderTargetTemperature = extruderTemperature;
+            m_rpc.data()->setProperty("gcodeExtruderTargetTemperature",gcodeExtruderTargetTemperature);
+            QVariant gcodeBedTargetTemperature = bedTemperature;
+            m_rpc.data()->setProperty("gcodeBedTargetTemperature",gcodeBedTargetTemperature);
         }, Qt::QueuedConnection);
+    }
+}
+
+void viewWidget::getGcodeTargetTemperature(float& extruderTemperature, float& bedTemperature)
+{
+    if(ui == nullptr || ui->openGLWidget == nullptr)
+    {
+        return;
+    }
+
+    extruderTemperature = 0.0f;
+    bedTemperature = 0.0f;
+    for(int i=0;i< ui->openGLWidget->gcode_result.moves.size();++i)
+    {
+        if(extruderTemperature<0.01)
+        {
+            extruderTemperature = ui->openGLWidget->gcode_result.moves[i].temperature;
+        }
+        if(bedTemperature<0.01)
+        {
+            bedTemperature = ui->openGLWidget->gcode_result.moves[i].bed_temperature;
+        }
+
+        if(extruderTemperature > 0.01 && bedTemperature > 0.01)
+        {
+            break;
+        }
     }
 }
 
@@ -3140,7 +3176,7 @@ void viewWidget::changeSlider()
         
         if(!printModeInit || !innerModeInit)
         {
-            control::MessageDialog a("warning",tr("Gcode failed to open, please try again"), control::MessageDialog::BUTTONFLAG::OK);
+            control::MessageDialog a("warning",tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
             a.exec();
         }
         if(printModeInit){
@@ -3226,7 +3262,6 @@ void viewWidget::changeEvent(QEvent * event)
 {
   if(this->windowState() == Qt::WindowNoState && !this->printMode && !this->innerMode)
   {
-
     if(QApplication::desktop()->width() < 1920 || QApplication::desktop()->height() - 80 < 1030)
     {
 
@@ -3236,13 +3271,108 @@ void viewWidget::changeEvent(QEvent * event)
         AkUtil::TDebug(dstr);
         //this->setWindowState(Qt::WindowMaximized);
     }
+  } else if (event->type() == QEvent::LanguageChange) {
+    if (ExportButton) {
+        ExportButton->setText(tr("Export"));
+    }
+    if (ExitButton) {
+        ExitButton->setText(tr("Print"));
+    }
+    setWindowTitle(tr("AnkerMake G-Code Preview"));
+#ifdef USE_EXTRA_UI
+    if (linetypeCombox) {
+        int index = linetypeCombox->currentIndex();
+        linetypeCombox->clear();
+        linetypeCombox->addItem(tr("Line Type"));
+        linetypeCombox->addItem(tr("Speed"));
+        linetypeCombox->addItem(tr("Trapezoid"));
+        linetypeCombox->addItem(tr("Flow"));
+        linetypeCombox->setCurrentIndex(index);
+    }
+    if (supportLabel_speed) {
+        supportLabel_speed->setText(tr("Support"));
+    }
+    if (unkonwnLabel_speed) {
+        unkonwnLabel_speed->setText(tr("Unknown"));
+    }
+    if (colorPatch_label_unit) {
+        colorPatch_label_unit->setText(tr("mm/s"));
+    }
+    if (innerWallLabel_trapezoid) {
+        innerWallLabel_trapezoid->setText(tr("Inner Wall"));
+    }
+    if (outerWallLabel_trapezoid) {
+        outerWallLabel_trapezoid->setText(tr("Outer Wall"));
+    }
+    if (skinLabel_trapezoid) {
+        skinLabel_trapezoid->setText(tr("Skin"));
+    }
+    if (skinLabel_trapezoid) {
+        skinLabel_trapezoid->setText(tr("Skin"));
+    }
+    if (helperLabel_Flow) {
+        helperLabel_Flow->setText(tr("Adhesion"));
+    }
+    if (fillLabel_Flow) {
+        fillLabel_Flow->setText(tr("Fill"));
+    }
+    if (supportLabel_Flow) {
+        supportLabel_Flow->setText(tr("Support"));
+    }
+    if (supportLabel_Flow) {
+        supportLabel_Flow->setText(tr("Support"));
+    }
+    if (unkonwnLabel_Flow) {
+        unkonwnLabel_Flow->setText(tr("Unknown"));
+    }
+    if (colorPatch_label_unit_Flow) {
+        colorPatch_label_unit_Flow->setText(tr("mm/s"));
+    }
+#endif
+    if (linetypelabel) {
+        linetypelabel->setText(tr("Line Type"));
+    }
+    if (innerWallLabel) {
+        innerWallLabel->setText(tr("Inner Wall"));
+    }
+    if (outerWallLabel) {
+        outerWallLabel->setText(tr("Outer Wall"));
+    }
+    if (skinLabel) {
+        skinLabel->setText(tr("Skin"));
+    }
+    if (helperLabel) {
+        helperLabel->setText(tr("Adhesion"));
+    }
+    if (fillLabel) {
+        fillLabel->setText(tr("Fill"));
+    }
+    if (ConsumedLabelabel) {
+        ConsumedLabelabel->setText(tr("Consumables"));
+    }
+    if (filamentLabel) {
+        filamentLabel->setText(tr("Filament"));
+    }
+    if (timelabel) {
+        timelabel->setText(tr("Time"));
+    }
+    if (travelLabel) {
+        travelLabel->setText(tr("Travel"));
+    }
+    if (travelLabel) {
+        travelLabel->setText(tr("Travel"));
+    }
+    if (zlapLabel) {
+        zlapLabel->setText(tr("zlap"));
+    }
+    if (supportLabel) {
+        supportLabel->setText(tr("Support"));
+    }
+    if (unkonwnLabel) {
+        unkonwnLabel->setText(tr("Unknown"));
+    }
   }
   return QWidget::changeEvent(event);
-//event->accept();
-//  qDebug() << "change Event";
-//  qDebug() <<QApplication::desktop()->width();
-//  qDebug() <<QApplication::desktop()->height();
-//  qDebug() <<this->windowState();
 }
 
 void viewWidget::resizeEvent(QResizeEvent* event)
@@ -3473,16 +3603,13 @@ void viewWidget::getTimeCount()
     {ExtrusionRole::erCustom,featureType::unknown},
     {ExtrusionRole::erMixed,featureType::unknown}
     };
+    showTimeLabelCount = {};
     for (int i = 0; i < roles.size(); i++)
     {
         auto feature = roleDict.find(roles[i]);
-        showTimeLabelCount[feature->second] = times[i];
+        showTimeLabelCount[feature->second] += times[i];
+
     }
-    //    qDebug() << "showTimeLabelCount[0]"<< showTimeLabelCount[0]<< " ";
-    //    qDebug() << "showTimeLabelCount[1]"<< showTimeLabelCount[1]<< " ";
-    //    qDebug() << "showTimeLabelCount[2]"<< showTimeLabelCount[2]<< " ";
-    //    qDebug() << "showTimeLabelCount[3]"<< showTimeLabelCount[3]<< " ";
-    //    qDebug() << "showTimeLabelCount[4]"<< showTimeLabelCount[4]<< " ";
 
 }
 

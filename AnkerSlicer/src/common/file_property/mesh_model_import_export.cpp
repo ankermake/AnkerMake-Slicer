@@ -6,11 +6,11 @@
 
 bool MeshModelImport_Export::open(const QString& formatName, const QString& fileName, CMeshO& cm, vcg::CallBackPos* cb)
 {
-    QString errorMsgFormat = "Error encountered while loading file:\n\"%1\"\n\nError details: %2";
+    QString errorMsgFormat = tr("Error encountered while loading file") + QString(":\n\"%1\"\n\n") + QString("Error details") + QString(": %2");
 
     if (!QFile::exists(fileName))
     {
-        throw MLException(errorMsgFormat.arg(fileName, "File does not exist"));
+        throw MLException(errorMsgFormat.arg(fileName, tr("File does not exist")));
     }
     // initializing progress bar status
     if (cb != NULL)
@@ -26,7 +26,7 @@ bool MeshModelImport_Export::open(const QString& formatName, const QString& file
         oi.cb = cb;
         if (!vcg::tri::io::ImporterOBJ<CMeshO>::LoadMask(filename.c_str(), oi))
         {
-            throw MLException("Error while loading OBJ mask.");
+            throw MLException(tr("Error while loading OBJ mask."));
         }
 
         if (oi.mask & vcg::tri::io::Mask::IOM_VERTTEXCOORD)

@@ -487,6 +487,23 @@ public:
         }
         return resultSet;
     }
+    
+    QSet<QString> getManuallyValueChangeSet()
+    {
+        QSet<QString> resultSet;
+        for (int i = 0; i < customProfiles.size(); i++)
+        {
+            TProfile& profile = customProfiles[i];
+            
+            if (!(profile.getStatus() & EProfileStatus::NodeValueChangedManually)
+                || profile.getOriginName().isEmpty())
+            {
+                continue;
+            }
+            resultSet.insert(profile.getOriginName());
+        }
+        return resultSet;
+    }
 
     AkOperateValueChangeDetailPtr getValueChangeDetail(QString profieName)
     {

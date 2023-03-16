@@ -735,15 +735,15 @@ QString FdmParameterProfileService::getNozzleSize()
 
 QStringList FdmParameterProfileService::getNozzleSizeList()
 {
-    QStringList resultList;
-    resultList << AkConst::NozzleSizeName::SIZE4;
-    return resultList;
 //    QStringList resultList;
-//    resultList << AkConst::NozzleSizeName::SIZE2;
 //    resultList << AkConst::NozzleSizeName::SIZE4;
-//    resultList << AkConst::NozzleSizeName::SIZE6;
-//    resultList << AkConst::NozzleSizeName::SIZE8;
 //    return resultList;
+    QStringList resultList;
+    resultList << AkConst::NozzleSizeName::SIZE2;
+    resultList << AkConst::NozzleSizeName::SIZE4;
+    resultList << AkConst::NozzleSizeName::SIZE6;
+    resultList << AkConst::NozzleSizeName::SIZE8;
+    return resultList;
 }
 
 

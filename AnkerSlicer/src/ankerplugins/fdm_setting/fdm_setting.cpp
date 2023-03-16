@@ -470,7 +470,7 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getSaveFileName(
 				nullptr,
-                tr("Import ini config file"),
+                tr("Export ini config file"),
 				QString(),
 				QString("Ini File(*.ini)"));
 			return fileName;

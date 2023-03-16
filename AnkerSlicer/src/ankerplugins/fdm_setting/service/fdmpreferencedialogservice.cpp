@@ -225,12 +225,23 @@ void FdmPreferenceDialogService::onSourceTreeApiNodeValueChanged(const QString &
             && (QDateTime::currentDateTime() > lastManuClickTime.addMSecs(500)))
     {
         activeProfile->setModifyTimeNow();
+        activeProfile->addStatus(EProfileStatus::NodeValueChangedManually);
+    }
+
+    
+    auto paramProfile = dynamic_cast<FdmParameterProfile*>(activeProfile);
+    if ((paramProfile != nullptr)
+        && (QDateTime::currentDateTime() > lastManuClickTime.addMSecs(800)))
+    {
+        activeProfile->setModifyTimeNow();
+        activeProfile->addStatus(EProfileStatus::NodeValueChangedManually);
     }
 }
 
 void FdmPreferenceDialogService::onSourceTreeApiNodeValueChangedByUI(const QString& categoryName, const FdmSettingItem& item)
 {
     activeProfile->setModifyTimeNow();
+    activeProfile->addStatus(EProfileStatus::NodeValueChangedManually);
 }
 
 void FdmPreferenceDialogService::syncCurrentParameterFromMangerToTree()

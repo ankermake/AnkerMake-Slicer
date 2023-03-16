@@ -37,6 +37,7 @@
 #include "common/GeoAndShow/support/SupportAssemblyMeshes.h"
 #include "common/utilities/tlogger.h"
 
+
 using namespace vcg;
 
 CHAxisWithArrow::CHAxisWithArrow()
@@ -397,7 +398,7 @@ void EditMeshMoveTransformTool::mouseMoveEvent(QMouseEvent  *event, void *, void
             
             QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
                 (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
-            qDebug() << "move params: " << (*it)->m_params[6] << ", " << (*it)->m_params[7] << ", " << (*it)->m_params[8];
+
             
             (*it)->setTransform(sumtran1);
             (*it)->calRealAABB();
@@ -574,9 +575,9 @@ void EditMeshMoveTransformTool::resetBtnClicked()
         params[1] = m_firstMesh->m_params[7] + m_firstMesh->m_rotCenter[1];
         params[2] = m_firstMesh->m_params[8] + m_firstMesh->m_rotCenter[2] - m_firstMesh->m_baseAABB.getLenZ() / 2;
         qDebug() << "params: " << params[0] << ",  " << params[1] << ",  " << params[2];
-        m_lockToPrintPlatform = true;
+        //m_lockToPrintPlatform = true;
         emit sendParamsToGui(params, MoveChangedType_ResetMove);
-        m_lockToPrintPlatform = lockToPrintPlatform;
+        //m_lockToPrintPlatform = lockToPrintPlatform;
     }
     else if(m_editMeshModels.size() > 1)
     {

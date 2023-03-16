@@ -17,7 +17,7 @@
 #include <QThread>
 #include <QProcess>
 #include <QDir>
-
+#include <QEvent>
 #include "controls/controlmanager.h"
 #include "controls/toolBar.h"
 #include "settingmanager.h"
@@ -89,7 +89,7 @@ private:
     void initFdmWidget();
     void initEditTool(); 
 
-
+    void changeEvent(QEvent *e);
 private:
     QString openFilter(QString projectSuffix, QStringList meshSuffixList, QString gcodeSuffix, QString acodeSuffix);
     bool pathIsValid(QStringList pathList, QStringList suffixList);
@@ -159,6 +159,10 @@ private slots:
     void onButtonRestoreClicked();
     void onButtonMaxClicked();
     void onButtonCloseClicked();
+
+    void unloadPluginsSlot();
+
+
 private:
     bool processIsRun(const QString &exeName);
     bool removeAcodeFile(QString const &path);

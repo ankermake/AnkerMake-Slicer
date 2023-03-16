@@ -951,6 +951,7 @@ void GCodeProcessor::reset()
     m_mm3_per_mm = 0.0f;
     m_fan_speed = 0.0f;
     m_temperature = 0.0f;
+    m_bed_temperature = 0.0f;
 
     m_extrusion_role = Anker::erNone;
     m_extruder_id = 0;
@@ -1213,7 +1214,10 @@ void GCodeProcessor::process_gcode_line(const GCodeReader::GCodeLine& line)
             std::string cmd_up =strTemp.toUpper().toStdString();
             //klipper extendt comands
             if (cmd_up == "TURN_OFF_HEATERS")
+            {
                 m_temperature = 0;
+                m_bed_temperature = 0;
+            }
             else if (cmd_up == "ACTIVATE_EXTRUDER")
                 process_klipper_ACTIVATE_EXTRUDER(line);
         }
@@ -1260,6 +1264,7 @@ void GCodeProcessor::process_gcode_line(const GCodeReader::GCodeLine& line)
             case 109: { process_M104_M109(line); break; } // Set extruder temp
             case 132: { process_M132(line); break; } // Recall stored home offsets
             case 135: { process_M135(line); break; } // Set tool (MakerWare)
+            case 140: { process_M140(line); break; } // Set bed temp
             case 201: { process_M201(line); break; } // Set max printing acceleration
             case 203: { process_M203(line); break; } // Set maximum feedrate
             case 204: { process_M204(line); break; } // Set default acceleration
@@ -2621,6 +2626,15 @@ template<typename T>
             process_T(cmd.substr(pos));
     }
 
+    void GCodeProcessor::process_M140(const GCodeReader::GCodeLine& line)
+    {
+        float new_temp;
+        if (line.has_value('S', new_temp))
+        {
+            m_bed_temperature = new_temp;
+        }
+    }
+
     void GCodeProcessor::process_M201(const GCodeReader::GCodeLine& line)
     {
         // see http://reprap.org/wiki/G-code#M201:_Set_max_printing_acceleration
@@ -2993,6 +3007,7 @@ template<typename T>
             float(m_layer_id), //layer_duration: set later
             m_time_processor.machines[0].time, //time: set later
             m_temperature,
+            m_bed_temperature,
             std::move(temTF),
             g1LineId
         };

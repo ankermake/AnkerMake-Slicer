@@ -1,0 +1,2 @@
+add_definitions(-DBOOST_ALL_NO_LIB)
+__add_boost_target(chrono)

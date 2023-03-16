@@ -167,21 +167,47 @@ void CHMeshShowObj::copy(CHShowObjPtr& obj)
         return;
     }
     out->setObjectName(m_name);
-    out->m_baseAABB = m_baseAABB;
-    out->m_realAABB = m_realAABB;
+    //out->m_baseAABB = m_baseAABB;
+    //out->m_realAABB = m_realAABB;
     out->setColor(m_color);
+    out->setVisuable(m_visuable);
+    out->setDelete(m_delete);
+    out->setDirty(m_dirty);
     out->setLightTest(m_lightTest);
     out->setCalLight(m_calLight);
-    out->setTransform(m_tran);
+    //out->setTransform(m_tran);
+//    out->m_vertices = m_vertices;
+//    out->m_nors = m_nors;
+//    out->m_uvs = m_uvs;
+//    out->m_trians = m_trians;
+    out->setTransform(QMatrix4x4());
+    out->m_vertices.resize(m_vertices.size());
+    out->m_nors.resize(m_nors.size());
+    out->m_uvs.resize(m_uvs.size());
+    out->m_trians.resize(m_trians.size());
 
-    out->m_vertices = m_vertices;
-    out->m_nors = m_nors;
+    QMatrix4x4 tmpMatrix = getTransform();
+    
+    for(int i = 0; i < m_vertices.size(); i++)
+    {
+        out->m_vertices[i] = (tmpMatrix * QVector4D(m_vertices[i], 1)).toVector3D();
+    }
+
+    
+    for(int i = 0; i < m_nors.size(); i++)
+    {
+        out->m_nors[i] = (tmpMatrix.inverted().transposed() * QVector4D(m_nors[i], 1)).toVector3D();
+    }
+
     out->m_uvs = m_uvs;
     out->m_trians = m_trians;
-    out->m_rotCenter[0] = m_rotCenter[0];
-    out->m_rotCenter[1] = m_rotCenter[1];
-    out->m_rotCenter[2] = m_rotCenter[2];
-    out->m_params = m_params;
+//    out->calBaseAABB();
+//    out->calRealAABB();
+
+//    out->m_rotCenter[0] = m_rotCenter[0];
+//    out->m_rotCenter[1] = m_rotCenter[1];
+//    out->m_rotCenter[2] = m_rotCenter[2];
+//    out->m_params = m_params;
 }
 
 void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)

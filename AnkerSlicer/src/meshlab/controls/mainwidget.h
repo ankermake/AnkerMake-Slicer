@@ -66,6 +66,7 @@ signals:
     void fdmSaveProject();
     void fdmSaveAsProject();
     void resizeWidget();
+    void unloadPlugins();
 
 public slots:
       void currentPageChanged(int index);

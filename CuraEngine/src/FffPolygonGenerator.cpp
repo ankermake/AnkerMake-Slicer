@@ -248,6 +248,21 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
         {
             SliceLayer& layer = meshStorage.layers[layer_nr];
 
+//#ifdef _DEBUG
+//            std::stringstream ss;
+//            ss << layer_nr<<"---";
+//            for (auto& part : layer.parts)
+//            {
+//                std::stringstream ss1;
+//                ss1 << &part<<".html";
+//                std::string partname = "d:/work/outpath/"+ss.str()+ss1.str();
+//
+//                SVGHelper::appendPolygons(part.outline,SVG::Color::BLACK,1.0,partname);
+//
+//                
+//            }
+//
+//#endif
             if (use_variable_layer_heights)
             {
                 meshStorage.layers[layer_nr].printZ = adaptive_layer_heights->getLayers()->at(layer_nr).z_position;
@@ -391,6 +406,8 @@ void FffPolygonGenerator::slices2polygons(SliceDataStorage& storage, TimeKeeper&
         Progress::messageProgress(Progress::Stage::INSET_SKIN, mesh_order_idx + 1, storage.meshes.size());
     }
 
+
+
     const Settings& mesh_group_settings = Application::getInstance().current_slice->scene.current_mesh_group->settings;
     if (isEmptyLayer(storage, 0) && !isEmptyLayer(storage, 1))
     {
@@ -494,6 +511,7 @@ void FffPolygonGenerator::processBasicWallsSkinInfill(SliceDataStorage& storage,
     {
         logDebug("Processing insets for layer %i of %i\n", layer_number, mesh_layer_count);
         processInsets(mesh, layer_number);
+
 #ifdef _OPENMP
         if (omp_get_thread_num() == 0)
 #endif
@@ -674,7 +692,7 @@ void FffPolygonGenerator::processPerimeterGaps(SliceDataStorage& storage)
                 }
 
                 if (filter_out_tiny_gaps) {
-                    part.perimeter_gaps.removeSmallAreas(2 * INT2MM(wall_line_width_0) * INT2MM(wall_line_width_0)); // remove small outline gaps to reduce blobs on outside of model
+                    part.perimeter_gaps.removeSmallAreas(4 * INT2MM(wall_line_width_0) * INT2MM(wall_line_width_0)); // remove small outline gaps to reduce blobs on outside of model
                 }
 
                 // gap between inner wall and skin/infill

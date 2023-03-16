@@ -3766,15 +3766,8 @@ QImage GcodeViewer::render_singe_iamge()
     this->set_look_at(std::move(setPosition), std::move(viewCenter), std::move(camLookUp),false);
 
     m_scene3d->resizeWidget(5096, 2867);
-
-    std::vector<float> roi_info = this->get_roi_info(5096,2867);
-//    QString dstr;
-//    QDebug(&dstr)<< roi_info;
-//    AkUtil::TDebug("roi info"+dstr);
-//    int w = (int)roi_info[0];
-//    m_fbo = w > 2867 ?  new QOpenGLFramebufferObject(w, w, format) : new QOpenGLFramebufferObject(2867, 2867, format);
     m_fbo = new QOpenGLFramebufferObject(2867, 2867, format);
-    //m_fbo->setAttachment(QOpenGLFramebufferObject::CombinedDepthStencil);
+
     if (!m_fbo->isValid()) {
         //qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
         AkUtil::TDebug(QString("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!" ));
@@ -3782,18 +3775,9 @@ QImage GcodeViewer::render_singe_iamge()
     // clear framebuffer
     m_fbo->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-//    if(w > 2867){
-//        glViewport((-5096+w)*0.5, 0,5096, 2867);
-//    }
-//    else{
-        glViewport((-5096+2867)*0.5, 0,5096, 2867);
-//    }
-    //boolLock b1(this->m_isNotOffScreen);
-    //m_isNotOffScreen = false;
-    this->paintGL();
-    //m_isNotOffScreen = true;
-    //m_orceShader1 = false;
-    //m_scene3d->setVerticalAngle(30.0);
+    glViewport((-5096+2867)*0.5, 0,5096, 2867);
+
+    this->offRenderSingle();
     return m_fbo->toImage().scaled(256, 256,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 }
 
@@ -3807,7 +3791,6 @@ bool GcodeViewer::postGcodeHead(const QString &line,QString& reLine)
         this->getTimeAndPercent();
         float sum = std::accumulate(times.begin(),times.end(),0.0);
         reLine = reLine.replace(time_match.captured(),QString::number(sum));
-        //AkUtil::TDebug("---replace Time --:"+reLine);
         return true;
     }
     return false;
@@ -3864,8 +3847,8 @@ void GcodeViewer::off_render_single(const QImage& res)
                 //AkUtil::TDebug("---read_file render_singe_iamge scaled--");
 //                QImage scale = res.scaled(256, 256,Qt::KeepAspectRatio,Qt::SmoothTransformation);
 
-                //res.save("testpng.png","PNG");
-                //scale.save("testpngscale.png","PNG");
+//                res.save("testpng.png","PNG");
+//                scale.save("testpngscale.png","PNG");
                 QByteArray arr;
                 QBuffer buffer(&arr);
                 buffer.open(QIODevice::WriteOnly);
@@ -3951,9 +3934,26 @@ void GcodeViewer::offPaint()
     }
 
     QMatrix4x4 pMatrix;
-    m_scene3d->getCurrentProjMat(pMatrix);
+    m_scene3d->getCurrentProjMat_ssp(pMatrix);
     QMatrix4x4 vMatrix;
     m_scene3d->getCurrentViewMat(vMatrix);
+    glsafe(glEnable(GL_DEPTH_TEST));
+    render_toolpaths(vMatrix, pMatrix);
+}
+
+void GcodeViewer::offRenderSingle()
+{
+    if (m_scene3d == NULL)
+        return;
+    glClearColor(31.0 / 255.0, 32.0 / 255.0, 34.0 / 255.0,0.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    QMatrix4x4 pMatrix;
+    m_scene3d->getCurrentProjMat_sp(pMatrix);
+    QMatrix4x4 vMatrix;
+    m_scene3d->getCurrentViewMat(vMatrix);
+    const GLfloat* view_matrix = vMatrix.data();
+    //apply projection
+    GLfloat* projection_matrix = pMatrix.data();
     glsafe(glEnable(GL_DEPTH_TEST));
     render_toolpaths(vMatrix, pMatrix);
 }
@@ -3993,19 +3993,9 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         qDebug() <<"Aimode "<<isAiMode;
         std::vector<int>  loopVec = this->gcode_result.ai_pic_Layer;
         std::string cstring;
-
-
-        //    QString patter;
-        //    if(isAiMode)
-        //    {
-        //        patter = ".+(?=.acode)";
-        //    }else{
-        //        patter = ".+(?=.gcode)";
-        //    }
         QRegularExpression re(".+(?=.gcode)");
         QRegularExpressionMatch match = re.match(_gPath);
 
-        //QString akpicSave;
 #ifdef USE_EXTRA_UI
         QString matchName;
 #endif
@@ -4016,7 +4006,6 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
             matchName = match.captured(0);
 #endif
             akpicSave += ".akpic";
-            //QFile::copy(QString(QString::fromLocal8Bit(this->m_gcode_path.c_str())), akpicSave);
         }
         if(isAiMode)
         {
@@ -4027,7 +4016,6 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
             set_toolpath_move_type_visible(EMoveType::Travel, false);
             this->m_isNotOffScreen = false;
             cstring = std::string((const char*)savePathName.fileName().toLocal8Bit().constData()); //convert UTF8 wide char
-            //qDebug() <<"loopVec.size() "<<loopVec.size();
             assert(cstring.size() < 64);
             processAiPicture picWrite(cstring,std::string((const char*)akpicSave.toLocal8Bit().constData()),this->m_layers.size(), loopVec.size());
             qDebug() << "cstring"<<QString::fromStdString(cstring);
@@ -4076,7 +4064,7 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
                 if (!m_fbo->isValid()) {
                     //qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
                     AkUtil::TDebug(QString("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!" ));
-                    control::MessageDialog a("ERROR",QObject::tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!"), control::MessageDialog::BUTTONFLAG::OK);
+                    control::MessageDialog a("ERROR",QObject::tr("Failed to create background FBO. There may be insufficient memory."), control::MessageDialog::BUTTONFLAG::OK);
                     bool re = a.exec();
                     return ;
                 }
@@ -4230,7 +4218,7 @@ void GcodeViewer::clearGcodeSource()
 
 void GcodeViewer::getTimeAndPercent()
 {
-   if(times.size() >= erCount)
+   if(times.size() >=  m_roles.size())
    {
        return ;
    }
@@ -4246,7 +4234,7 @@ void GcodeViewer::getTimeAndPercent()
             ExtrusionRole role = m_roles[i];
             if (role < erCount) {
                 auto [time, percent] = role_time_and_percent(role);
-                        times.push_back((time > 0.0f) ? time : 0);
+                        times.push_back(time > 0.0f ? time : 0);
                         percents.push_back(percent);
                         max_percent = std::max(max_percent, percent);
             }

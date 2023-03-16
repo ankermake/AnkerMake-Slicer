@@ -29,6 +29,7 @@ public:
     inline void setEnabledHide  (bool enable) {if(actHide  ) actHide  ->setEnabled(enable);}
     inline void setEnabledShow  (bool enable) {if(actShow  ) actShow  ->setEnabled(enable);}
     inline void setEnabledReset (bool enable) {if(actReset ) actReset ->setEnabled(enable);}
+
 protected:
     void changeEvent(QEvent *e);
 protected:

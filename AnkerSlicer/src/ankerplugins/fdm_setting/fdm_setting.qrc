@@ -55,5 +55,6 @@
         <file>../../../distrib/setting/fdm/material/default/PETG.ini</file>
         <file>../../../distrib/setting/fdm/material/default/TPU.ini</file>
         <file>../../../distrib/setting/fdm/material/default/PLA+.ini</file>
+        <file>../../../distrib/setting/fdm/back_logic/FdmJsonObjTree_All_jp.qml</file>
     </qresource>
 </RCC>

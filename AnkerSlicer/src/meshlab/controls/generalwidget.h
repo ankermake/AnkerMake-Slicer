@@ -42,6 +42,7 @@ protected:
     void changeEvent(QEvent *e);
 signals:
    void networkLanguageChangedSignal(qint64);
+   void unloadPluginsSignal();
 public slots:
     void receiveMsgFromNetwork(PluginMessageData metadata);
 

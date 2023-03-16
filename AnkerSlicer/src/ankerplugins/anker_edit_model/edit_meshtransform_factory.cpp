@@ -5,6 +5,7 @@
 #include "edit_meshzoomtransform.h"
 #include "edit_meshmirrortransform.h"
 #include "vcg/space/box3.h"
+//#include "edit_manualtreesupport.h"
 
 
 bool m_lockToPrintPlatform = false;
@@ -124,7 +125,7 @@ QString EditMeshTransformFactory::getEditToolDescription(const QAction* action)
     if (actionEditTool) {
         return actionEditTool->getDescription();
     }
-    return tr("transform mesh model");
+    return tr("Rotate Mesh Model");
 }
 
 
@@ -222,7 +223,7 @@ void EditMeshTransformFactory::__initActionEditTools()
         //m_moveMeshTransform = new ActionEditTool(*pMoveIcon, tr("Move"), this);
         m_moveMeshTransform->setObjectName("Move");
         auto ankerEditTool  = new EditMeshMoveTransformTool();
-        m_moveMeshTransform->setDescription("move mesh model");//QActionEvent
+        m_moveMeshTransform->setDescription("Move Mesh Model");//QActionEvent
 
         ankerEditTool->setParent(m_moveMeshTransform);
         m_moveMeshTransform->ankerEditTool   = ankerEditTool;
@@ -259,7 +260,7 @@ void EditMeshTransformFactory::__initActionEditTools()
         m_scaleMeshTransform->setObjectName("Zoom");
         auto ankerEditTool = new EditMeshZoomTransformTool();
         ankerEditTool->setParent(m_scaleMeshTransform);
-        m_scaleMeshTransform->setDescription(tr("zoom mesh model"));
+        m_scaleMeshTransform->setDescription(tr("Zoom Mesh Model"));
         m_scaleMeshTransform->ankerEditTool   = ankerEditTool;
         m_scaleMeshTransform->ankerEditPlugin = this;
         QObject::connect(m_scaleMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
@@ -275,7 +276,7 @@ void EditMeshTransformFactory::__initActionEditTools()
         m_rotateMeshTransform->setObjectName("Rotate");
         auto ankerEditTool = new EditMeshRotationTransformTool();
         ankerEditTool->setParent(m_rotateMeshTransform);
-        m_rotateMeshTransform->setDescription("rotate mesh model");
+        m_rotateMeshTransform->setDescription("Rotate Mesh Model");
         m_rotateMeshTransform->ankerEditTool   = ankerEditTool;
         m_rotateMeshTransform->ankerEditPlugin = this;
         QObject::connect(m_rotateMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
@@ -291,7 +292,7 @@ void EditMeshTransformFactory::__initActionEditTools()
         m_mirrorMeshTransform->setObjectName("Mirror");
         auto ankerEditTool = new EditMeshMirrorTransformTool();
         ankerEditTool->setParent(m_mirrorMeshTransform);
-        m_mirrorMeshTransform->setDescription("mirror mesh model");
+        m_mirrorMeshTransform->setDescription("Mirror Mesh Model");
         m_mirrorMeshTransform->ankerEditTool   = ankerEditTool;
         m_mirrorMeshTransform->ankerEditPlugin = this;
         QObject::connect(m_mirrorMeshTransform, &QAction::toggled, [this, icon_s, icon_n](bool check){
@@ -383,19 +384,19 @@ void EditMeshTransformFactory::changeEvent(QEvent *e)
     if (e->type() == QEvent::LanguageChange) {
         if (m_moveMeshTransform != nullptr) {
             m_moveMeshTransform->setText(tr("Move"));
-            m_moveMeshTransform->setDescription(tr("move mesh model"));
+            m_moveMeshTransform->setDescription(tr("Move Mesh Model"));
         }
         if (m_scaleMeshTransform != nullptr) {
             m_scaleMeshTransform->setText(tr("Zoom"));
-            m_scaleMeshTransform->setDescription(tr("zoom mesh model"));
+            m_scaleMeshTransform->setDescription(tr("Zoom Mesh Model"));
         }
         if (m_rotateMeshTransform != nullptr) {
             m_rotateMeshTransform->setText(tr("Rotate"));
-            m_rotateMeshTransform->setDescription(tr("rotate mesh model"));
+            m_rotateMeshTransform->setDescription(tr("Rotate Mesh Model"));
         }
         if (m_mirrorMeshTransform != nullptr) {
             m_mirrorMeshTransform->setText(tr("Mirror"));
-            m_mirrorMeshTransform->setDescription(tr("mirror mesh model"));
+            m_mirrorMeshTransform->setDescription(tr("Mirror Mesh Model"));
         }
         if (m_manualTreeSupport != nullptr) {
             m_manualTreeSupport->setText(tr("Support"));

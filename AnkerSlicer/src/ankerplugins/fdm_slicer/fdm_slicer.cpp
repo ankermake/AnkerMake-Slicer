@@ -18,6 +18,7 @@
 #include <QStandardPaths>
 #include <QThreadPool>
 #include <QCoreApplication>
+#include "common/mlapplication.h"
 
 using namespace AkUtil;
 
@@ -128,6 +129,10 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
         paramList << ";" + subList[i];
     }
     paramList << ";paramEnd";
+    paramList << ";AnkerMake version: " + MeshLabApplication::appVer();
+    
+
+    paramList << ";End of Gcode";
     IoApi::append(sliceInfo.gcodeFile, paramList.join("\r\n"));
 
 

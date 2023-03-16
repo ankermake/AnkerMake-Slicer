@@ -6,7 +6,8 @@ Item {
     id: root
     implicitWidth: parent.width
     implicitHeight: 42
-    visible: true
+    visible: model.visible
+    //visible: true
     anchors.leftMargin: 2
     anchors.rightMargin: 15
 

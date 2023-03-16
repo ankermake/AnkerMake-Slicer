@@ -5,7 +5,7 @@ HEADERS += \
 	CHModelMirrorTransformParamsSetUI.h\
 	CHModelMoveTransformParamsSetUI.h\
 	CHModelRotationTransformParamsSetUI.h\
-	CHModelZoomTransformParamsSetUI.h\
+    CHModelZoomTransformParamsSetUI.h\
 	edit_meshmirrortransform.h\
 	edit_meshmovetransform.h\
 	edit_meshrotationtransform.h\
@@ -17,7 +17,7 @@ SOURCES += \
 	CHModelMirrorTransformParamsSetUI.cpp\
 	CHModelMoveTransformParamsSetUI.cpp\
 	CHModelRotationTransformParamsSetUI.cpp\
-	CHModelZoomTransformParamsSetUI.cpp\
+    CHModelZoomTransformParamsSetUI.cpp\
 	edit_meshmirrortransform.cpp\
 	edit_meshmovetransform.cpp\
 	edit_meshrotationtransform.cpp\

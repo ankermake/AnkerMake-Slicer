@@ -76,13 +76,34 @@ QHash<int, QByteArray> ParamListModel::roleNames() const
 
 void ParamListModel::changeData(int row,QVariant text)
 {
+     AkUtil::TFunction("");
     if(row > m_datas.size()) {
         return;
     }
     FdmParamNode *item =  m_datas.at(row);
+    QVariant value =  item->getProperty(roleToString(datatype::value));
+
+    QVariant type = item->getProperty(roleToString(datatype::type));
+    QString typeString = type.toString();
+    if(typeString == "bool") {
+        if(value.toBool() ==  text.toBool() ){
+            return;
+        }
+    }
+    else if(typeString =="enum") {
+        if(value.toString()== text.toString()) {
+            return;
+        }
+
+    }else/* int float*/ {
+        if(value.toFloat() == text.toFloat()) {
+            return;
+        }
+    }
+   //QVariant var =  item->getProperty(roleToString(datatype::type));
     item->nodeValueChange_fromUI(text);
     //qDebug() <<"fdmValueUI =="  << item->getProperty("fdmValueUI");
-         //item->dumpParam();
+    //item->dumpParam();
 }
 
 void ParamListModel::expandIndex(int row)

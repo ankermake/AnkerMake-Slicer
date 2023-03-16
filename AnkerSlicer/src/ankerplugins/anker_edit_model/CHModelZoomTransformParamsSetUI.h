@@ -82,14 +82,14 @@ class ScaleDoubleSpinBox : public QDoubleSpinBox
 {
     Q_OBJECT
 public:
-    ScaleDoubleSpinBox(QWidget *parent = nullptr, ZoomAxisType axisType = ZoomAxisType_Unknown);
+    ScaleDoubleSpinBox(QWidget *parent = nullptr, ZoomAxisType axisType = ZoomAxisType_X);
     void setInitValue(double value);
     ZoomAxisType getAxis() const;
 
 signals:
-    void viewValueChanged(double value, ZoomChangedType type);
+    void viewValueChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);
 
-    void ratioScaleCheck(double value, ZoomChangedType type = ZoomChangedType_Ratio, ZoomAxisType axisType = ZoomAxisType_Unknown); 
+    void ratioScaleCheck(double value, ZoomChangedType type = ZoomChangedType_Ratio, ZoomAxisType axisType = ZoomAxisType_X); 
 
 public slots:
     void scaleValueChanged(double value, ZoomChangedType type = ZoomChangedType_Scale);
@@ -115,18 +115,18 @@ public Q_SLOTS:
     void reset();
     void setLock(bool);
 
-    void viewValueChanged(double value, ZoomChangedType type);
+    void viewValueChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);
     void boxSizeValuesChanged(std::vector<double> values, ZoomChangedType type);
     void scaleValuesChanged(std::vector<double> values, ZoomChangedType type);
-    void scaleRatioChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_Unknown);
-    void sizeRatioChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_Unknown);
+    void scaleRatioChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);
+    void sizeRatioChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);
     void setOnlyScaleValue(double sx, double sy, double sz);
     void setOnlySizeValue(double x, double y, double z);
 
 Q_SIGNALS:
     void stateChanged(bool checked);
 
-    void viewValuesChanged(std::vector<double> values, ZoomChangedType type);
+    void viewValuesChanged(std::vector<double> values, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);
     void resetSignal();
     void scaleToFitSignal();
 protected:
