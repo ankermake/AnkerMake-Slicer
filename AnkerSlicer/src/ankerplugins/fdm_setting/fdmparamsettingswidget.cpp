@@ -12,11 +12,10 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     m_timer(new QTimer(this))
 {
     connect(m_timer,&QTimer::timeout,this,&FdmParamSettingsWidget::showBubbleTip);
-    //QQuickView  *quickView = new QQuickView(FdmQmlEngine::instance(), nullptr);
 
-    m_quickView = new QQuickWidget(FdmQmlEngine::instance(),this);
-   // QWidget *widget = QWidget::createWindowContainer(quickView,this);
-    m_quickView->setResizeMode(QQuickWidget::SizeRootObjectToView);
+    m_quickView = new QQuickView(FdmQmlEngine::instance(),nullptr);
+    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
+
 
     
     //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
@@ -43,7 +42,7 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
 
     connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlResetParameter()),this,SLOT(resertButtonClicked()));
 
-     connect(this,SIGNAL(resertParameter()),parameter,SLOT(onResetBtnClicked()));
+    connect(this,SIGNAL(resertParameter()),parameter,SLOT(onResetBtnClicked()));
 
     connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlAiQualityCurrentIdxChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
     connect((QObject *)(m_quickView->rootObject()),SIGNAL(qmlLayerHeightCurrentIndexChanged(int)),parameter,SLOT(onAiQualityCurrentIdxChanged(int)));
@@ -56,7 +55,8 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     layout->setContentsMargins(0,0,0,0);
     //layout->setc(0);
     this->setLayout(layout);
-    layout->addWidget(m_quickView);
+    QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
+    layout->addWidget(widget);
 }
 
 FdmParamSettingsWidget::~FdmParamSettingsWidget()
@@ -175,10 +175,6 @@ void FdmParamSettingsWidget::resertButtonClicked()
 
 void FdmParamSettingsWidget::showBubbleTip()
 {
-//    if(!m_toolTip || !m_toolTip->isHidden()) {
-//        return;
-//    }
-
     if(!m_toolTip) {
         m_toolTip = new ToolTip();
     }

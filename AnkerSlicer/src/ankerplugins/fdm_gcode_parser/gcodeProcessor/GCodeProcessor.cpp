@@ -962,6 +962,8 @@ void GCodeProcessor::reset()
 
     m_filament_diameters = std::vector<float>(Min_Extruder_Count, 1.75f);
     m_extruded_last_z = 0.0;
+    //add by friva 221205
+    m_extrude_last_layer = 0;
     m_g1_line_id = 0;
     m_layer_id = 0;
     m_cp_color.reset();
@@ -2092,12 +2094,14 @@ template<typename T>
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
 #else
             if ((m_producers_enabled && m_producer != EProducer::PrusaSlicer || m_producer == EProducer::SuperSlicer || m_producer == EProducer::Slic3r) || m_height == 0.0f) {
-                if (m_end_position[Z] > m_extruded_last_z + EPSILON) {
+                //if (m_end_position[Z] > m_extruded_last_z + EPSILON) {
+                if (m_layer_id > m_extrude_last_layer) {
                     m_height = float(m_end_position[Z] - m_extruded_last_z);
 #if ENABLE_GCODE_VIEWER_DATA_CHECKING
                     m_height_compare.update(m_height, m_extrusion_role);
 #endif // ENABLE_GCODE_VIEWER_DATA_CHECKING
                     m_extruded_last_z = m_end_position[Z];
+                    m_extrude_last_layer = m_layer_id;
                 }
             }
 #endif // ENABLE_TOOLPATHS_WIDTH_HEIGHT_FROM_GCODE
@@ -3009,7 +3013,8 @@ template<typename T>
             m_temperature,
             m_bed_temperature,
             std::move(temTF),
-            g1LineId
+            g1LineId,
+            m_layer_id
         };
         m_result.moves.emplace_back(vertex);
     }

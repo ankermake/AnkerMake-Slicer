@@ -28,7 +28,7 @@ public:
      * \param part The part for which to create gcode
      * \param layer_nr The current layer number
      */
-    InsetOrderOptimizer(const FffGcodeWriter& gcode_writer, const SliceDataStorage& storage, LayerPlan& gcode_layer, const SliceMeshStorage& mesh, const int extruder_nr, const PathConfigStorage::MeshPathConfigs& mesh_config, const SliceLayerPart& part, unsigned int layer_nr) :
+    InsetOrderOptimizer(const FffGcodeWriter& gcode_writer, const SliceDataStorage& storage, LayerPlan& gcode_layer, const SliceMeshStorage& mesh, const int extruder_nr, const PathConfigStorage::MeshPathConfigs& mesh_config, const SliceLayerPart& part, unsigned int layer_nr, float z_seam_min_angle_diff, float z_seam_max_angle) :
     gcode_writer(gcode_writer),
     storage(storage),
     gcode_layer(gcode_layer),
@@ -37,7 +37,7 @@ public:
     mesh_config(mesh_config),
     part(part),
     layer_nr(layer_nr),
-    z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner")),
+    z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"), z_seam_min_angle_diff, z_seam_max_angle),
     added_something(false),
     retraction_region_calculated(false),
     wall_overlapper_0(nullptr),

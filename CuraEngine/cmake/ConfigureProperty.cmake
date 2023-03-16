@@ -17,7 +17,6 @@ macro(__append_global_property property value)
 endmacro()
 
 
-
 macro(__set_not_install_import)
 	set_property(GLOBAL PROPERTY GLOBAL_NOT_INSTALL_IMPORT 1) 
 endmacro()

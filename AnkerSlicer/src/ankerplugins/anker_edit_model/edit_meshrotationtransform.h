@@ -112,6 +112,9 @@ private:
     void submitToUI();
     void resetSelectedRotate();
 
+    void checkOnBottom();
+
+
 
 private:
     CHModelRotationTransformParamsSetUI* m_paramUI;
@@ -136,7 +139,8 @@ private:
     std::vector<std::vector<float>> m_values;
     std::vector<std::vector<float>> m_initValues;
 
-    float m_operateMoveZ;//???????????z????
+    float m_operateMoveZ;
+    bool m_lastMultiSelect;
 
     CHLineSegment3DShowObjPtr m_adjustShowCurve;
 

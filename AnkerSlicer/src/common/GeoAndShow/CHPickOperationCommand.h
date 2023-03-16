@@ -100,6 +100,8 @@ Q_SLOTS:
 
 public:
     std::set<CHMeshShowObjPtr> m_selectedObjs;
+    bool rightBtnPressed = false;
+    bool mouseRightMoved = false;
 
 private:
     std::vector<CHMeshShowObjPtr> m_copiedObjs;

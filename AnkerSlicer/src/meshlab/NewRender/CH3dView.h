@@ -111,6 +111,8 @@ private:
 
     QVector3D lastmousept;
     bool m_bMove;
+    bool rightBtnPressed = false;
+    bool mouseRightMoved = false;
 
     QVector3D cameralocation;
     QVector3D lockN;

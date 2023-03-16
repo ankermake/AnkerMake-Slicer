@@ -51,9 +51,14 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
 
     controlManager->setGlareaWidget(this);
     controlManager->setMainWindow(this->parentWidget());
-    GeneralWidget *widget = new GeneralWidget(m_messageProcessing);
-    connect(widget, &GeneralWidget::unloadPluginsSignal, this, &FdmMainWidget::unloadPlugins);
-    controlManager->addPageToPreferences(widget,0);
+    m_widget = new GeneralWidget(m_messageProcessing);
+    connect(m_widget, &GeneralWidget::unloadPluginsSignal, this, &FdmMainWidget::unloadPlugins);
+    //
+    connect(m_widget, &GeneralWidget::closeMainWindow, this, &FdmMainWidget::closeMainWindow);
+    
+    connect(this, &FdmMainWidget::pluginsUnloaded, m_widget, &GeneralWidget::doPluginUnloaded);
+    connect(this, &FdmMainWidget::updateSoftware, m_widget, &GeneralWidget::clickCheckButton);
+    controlManager->addPageToPreferences(m_widget,0);
 
     m_messageProcessing->sendMsg2Preview();
     connect(m_messageProcessing,&MessageProcessing::sendMsg2GetpreviewWid,[=](QObject *object){
@@ -255,23 +260,65 @@ void FdmMainWidget::initTool()
      m_menuHelp = m_titleBar->addMenu(tr("Help"));
      //QMenu* menuHelp= new QMenu(tr("Help"));
      //menuHelp->setIcon(QIcon(":/images/icon/fdm_tool_help_icon_n.png"));
+     QLocale local = QLocale::system();
+     QLocale::Language lang = local.language();
+
      m_tutorial = m_menuHelp->addAction(QIcon(), tr("Tutorial"),[=]{
-         const QUrl regUrl(QLatin1String("https://support.ankermake.com"));
+         QString str;
+         if(lang == QLocale::Japanese) {
+             str = AkConst::WebAddress::tutorialJapanese;
+         }
+         else {
+             str = AkConst::WebAddress::tutorialEnglish;
+         }
+         QUrl regUrl(str);
          QDesktopServices::openUrl(regUrl);
      });
      m_feedback = m_menuHelp->addAction(QIcon(), tr("Feedback"));
 
      //menuHelp->addAction(QIcon(), tr("Software Update"));
-     m_actionUpdate = m_menuHelp->addAction(QIcon(), tr("Software Update"),this,&FdmMainWidget::openPreferencesDialog);
+     m_actionUpdate = m_menuHelp->addAction(QIcon(), tr("Software Update"),this,&FdmMainWidget::OnUpdateSoftware);
      m_actionUpdate->setObjectName("actionUpdate");
      m_controlManager->addMenuToToolBar(m_menuHelp,Qt::AlignRight);
      m_priPolicy = m_menuHelp->addAction(QIcon(), tr("Privacy Policy"),[=]() {
-         const QUrl regUrl(QLatin1String("https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html"));
-         QDesktopServices::openUrl(regUrl);
+//         QString str;
+//         if(lang == QLocale::Japanese) {
+//             str = AkConst::WebAddress::PrivacyPolicyURLJapanese;
+//         }
+//         else {
+//             str = AkConst::WebAddress::PrivacyPolicyURLEnglish;
+//         }
+//         QUrl regUrl(str);
+//         QDesktopServices::openUrl(regUrl);
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::PRIVACY_PROTOCOL;
+         mwData.map.insert("Language", (int)lang);
+         mwData.map.insert("type", "AnkerMake-privacy");
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
      });
      m_termsOfUse = m_menuHelp->addAction(QIcon(), tr("Terms of Use"),[=] {
-         const QUrl regUrl(QLatin1String("https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html"));
-         QDesktopServices::openUrl(regUrl);
+//         QString str;
+//         if(lang ==QLocale::Japanese) {
+//             str = AkConst::WebAddress::TermOfUseURLJapanese;
+//         }
+//         else {
+//             str = AkConst::WebAddress::TermOfUseURLEnglish;
+//         }
+//         QUrl regUrl(str);
+//         QDesktopServices::openUrl(regUrl);
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::PRIVACY_PROTOCOL;
+         mwData.map.insert("Language", (int)lang);
+         mwData.map.insert("type", "AnkerMake-terms-of-service");
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
      });
      m_copyright = m_menuHelp->addAction(QIcon(), tr("Copyright Information"),this, &FdmMainWidget::openCopyrightWidget);
 
@@ -325,6 +372,14 @@ void FdmMainWidget::initScene(QMdiArea* mdiarea)
                      &MessageProcessing::receiveVisibleModelCountChangedFromDoc);
     QObject::connect(docWindow->m_doc.get(), &CHDoc::modelSupportNumberChanged, m_messageProcessing,
                      &MessageProcessing::receiveModelSupportNumberChangedFromDoc);
+
+    
+    QObject::connect(docWindow->m_doc.get(), &CHDoc::ModelSuspendStatusChanged, m_messageProcessing,
+                &MessageProcessing::receiveModelSuspendStatusChangedFromDoc);
+
+
+//    QObject::connect(docWindow->m_doc.get(), &CHDoc::GenerateSupportButtonStatus, m_messageProcessing,
+
 
     
     //  m_meshSuffixList << "obj" << "stl";
@@ -404,33 +459,33 @@ void FdmMainWidget::setActionEnble(bool enble)
 
 void FdmMainWidget::initViewTransformAction()
 {
-    QAction* viewAction = new QAction(QIcon(":/images/icon/fdm_full_icon_n.png"), tr("3D View"));
-    connect(viewAction, &QAction::toggled, this, &FdmMainWidget::viewChanged);
-    m_viewTransform.append(viewAction);
+    m_viewAction = new QAction(QIcon(":/images/icon/fdm_full_icon_n.png"), tr("3D View"));
+    connect(m_viewAction, &QAction::toggled, this, &FdmMainWidget::viewChanged);
+    m_viewTransform.append(m_viewAction);
 
-    QAction* frontAction = new QAction(QIcon(":/images/icon/fdm_front_icon_n.png"), tr("Front View"));
-    connect(frontAction, &QAction::toggled, this, &FdmMainWidget::frontViewChanged);
-    m_viewTransform.append(frontAction);
+    m_frontAction = new QAction(QIcon(":/images/icon/fdm_front_icon_n.png"), tr("Front View"));
+    connect(m_frontAction, &QAction::toggled, this, &FdmMainWidget::frontViewChanged);
+    m_viewTransform.append(m_frontAction);
 
-    QAction* rearAction = new QAction(QIcon(":/images/icon/fdm_rear_icon_n.png"), tr("Rear View"));
-    connect(rearAction, &QAction::toggled, this, &FdmMainWidget::rearViewChanged);
-    m_viewTransform.append(rearAction);
+    m_rearAction = new QAction(QIcon(":/images/icon/fdm_rear_icon_n.png"), tr("Rear View"));
+    connect(m_rearAction, &QAction::toggled, this, &FdmMainWidget::rearViewChanged);
+    m_viewTransform.append(m_rearAction);
 
-    QAction* leftAction = new QAction(QIcon(":/images/icon/fdm_left_icon_n.png"), tr("Left View"));
-    connect(leftAction, &QAction::toggled, this, &FdmMainWidget::leftViewChanged);
-    m_viewTransform.append(leftAction);
+    m_leftAction = new QAction(QIcon(":/images/icon/fdm_left_icon_n.png"), tr("Left View"));
+    connect(m_leftAction, &QAction::toggled, this, &FdmMainWidget::leftViewChanged);
+    m_viewTransform.append(m_leftAction);
 
-    QAction* rightAction = new QAction(QIcon(":/images/icon/fdm_right_icon_n.png"), tr("Right View"));
-    connect(rightAction, &QAction::toggled, this, &FdmMainWidget::rightViewChanged);
-    m_viewTransform.append(rightAction);
+    m_rightAction = new QAction(QIcon(":/images/icon/fdm_right_icon_n.png"), tr("Right View"));
+    connect(m_rightAction, &QAction::toggled, this, &FdmMainWidget::rightViewChanged);
+    m_viewTransform.append(m_rightAction);
 
-    QAction* topAction = new QAction(QIcon(":/images/icon/fdm_on_icon_n.png"), tr("Top View"));
-    connect(topAction, &QAction::toggled, this, &FdmMainWidget::topViewChanged);
-    m_viewTransform.append(topAction);
+    m_topAction = new QAction(QIcon(":/images/icon/fdm_on_icon_n.png"), tr("Top View"));
+    connect(m_topAction, &QAction::toggled, this, &FdmMainWidget::topViewChanged);
+    m_viewTransform.append(m_topAction);
 
-    QAction* bottomAction = new QAction(QIcon(":/images/icon/fdm_bottom_icon_n.png"), tr("Bottom View"));
-    connect(bottomAction, &QAction::toggled, this, &FdmMainWidget::bottomViewChanged);
-    m_viewTransform.append(bottomAction);
+    m_bottomAction = new QAction(QIcon(":/images/icon/fdm_bottom_icon_n.png"), tr("Bottom View"));
+    connect(m_bottomAction, &QAction::toggled, this, &FdmMainWidget::bottomViewChanged);
+    m_viewTransform.append(m_bottomAction);
 
     for (auto action : m_viewTransform) {
         action->setCheckable(true);
@@ -497,6 +552,14 @@ void FdmMainWidget::clearRecentProjectList()
     m_settings.clearRecent();
 }
 
+void FdmMainWidget::OnUpdateSoftware()
+{
+    if (m_widget) {
+        emit updateSoftware();
+    }
+    openPreferencesDialog();
+}
+
 void FdmMainWidget::openPreferencesDialog()
 {
     QAction* action = qobject_cast<QAction*>(sender());
@@ -518,6 +581,18 @@ void FdmMainWidget::openPreferencesDialog()
         currentIndex = AkConst::EWidgetType::General;
     }
     // qDebug() << " index ==" << currentIndex;
+    AkUtil::TDebug("openPreferencesDialog, text:"+text+"  index:"+QString::number(currentIndex));
+    if (text == "actionUpdate")
+    {
+        QWidget* widget = m_controlManager -> getPageWidgetFromPreferences(currentIndex);
+        GeneralWidget* GeneralPageWidget = dynamic_cast<GeneralWidget*>(widget);
+        AkUtil::TDebug(" software Update clicked, GeneralPageWidget:0x"+QString::number((long long)GeneralPageWidget, 16));
+        if (GeneralPageWidget)
+        {
+            GeneralPageWidget -> manualUpdate();
+        }
+    }
+
     m_controlManager->openPreferences(currentIndex);
 }
 
@@ -852,6 +927,27 @@ void FdmMainWidget::changeEvent(QEvent *e)
                                      tr("Device")};
         for (int i = 0; i < m_tabWidget->titleLabels().size(); i++) {
             m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
+        }
+        if (m_viewAction) {
+            m_viewAction->setText(tr("3D View"));
+        }
+        if (m_frontAction) {
+            m_frontAction->setText(tr("Front View"));
+        }
+        if (m_rearAction) {
+            m_rearAction->setText(tr("Rear View"));
+        }
+        if (m_leftAction) {
+            m_leftAction->setText(tr("Left View"));
+        }
+        if (m_rightAction) {
+            m_rightAction->setText(tr("Right View"));
+        }
+        if (m_topAction) {
+            m_topAction->setText(tr("Top View"));
+        }
+        if (m_bottomAction) {
+            m_bottomAction->setText(tr("Bottom View"));
         }
     }
     QWidget::changeEvent(e);

@@ -46,6 +46,7 @@ private slots:
     void openParameterPreference(const QString &name);
     void resertButtonClicked();
     void showBubbleTip();
+
 private:
     ParamListModel *model;
     FdmSettingsTreeModel *treeModel;
@@ -57,7 +58,7 @@ private:
     QString m_affects;
     QString m_affectedBy;
 
-    QQuickWidget *m_quickView = nullptr;
+    QQuickView *m_quickView = nullptr;
 };
 
 

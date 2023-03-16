@@ -76,7 +76,6 @@ void ParametersWidget::renameCustomParameter(const QString &oldName)
     if(!m_messageDialog) {
         m_messageDialog = new MessageDialog(tr("Name These Parameters"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&ParametersWidget::textValid);
-        //QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
         QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
@@ -103,10 +102,11 @@ void ParametersWidget::textValid(int flag)
         m_messageDialog->setWarning(tr("Input a name."));
         return;
     }
-    QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+    QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
     auto pos = rx.indexIn(newname);
     if (pos < 0)
     {
+
         m_messageDialog->setWarning(tr("Name is longer than 128 characters. Create a shorter one."));
         return;
     }

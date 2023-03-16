@@ -31,6 +31,7 @@ CHModelRotationTransformParamsSetUI::CHModelRotationTransformParamsSetUI(QWidget
 
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
     m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
     m_resetButton->setMaximumWidth(20);
@@ -246,6 +247,13 @@ void CHModelRotationTransformParamsSetUI::setOnlyRotateDoubleSpinBox(double x, d
     m_xRotBox->setOnlyValue(x);
     m_yRotBox->setOnlyValue(y);
     m_zRotBox->setOnlyValue(z);
+}
+
+void CHModelRotationTransformParamsSetUI::getBoxEditValue(double &x, double &y, double &z)
+{
+    x = m_xRotBox->value();
+    y = m_yRotBox->value();
+    z = m_zRotBox->value();
 }
 
 

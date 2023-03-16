@@ -30,6 +30,7 @@ SavePanel::SavePanel(QWidget *parent): BubbleWidget(parent),m_messageDialog(null
     saveBtn->setMinimumHeight(40);
     saveBtn->setObjectName(QString::fromUtf8("Save Parameters"));
     saveBtn->setText(tr("Save"));
+    saveBtn->setFocusPolicy(Qt::NoFocus);
     connect(saveBtn, &QPushButton::clicked,this, &SavePanel::save);
 
     saveAsBtn = new QPushButton(this);
@@ -38,7 +39,7 @@ SavePanel::SavePanel(QWidget *parent): BubbleWidget(parent),m_messageDialog(null
     saveAsBtn->setMinimumHeight(40);
     saveAsBtn->setText(tr("Save As"));
     connect(saveAsBtn, &QPushButton::clicked,this, &SavePanel::doSaveAsClick);
-
+    saveAsBtn->setFocusPolicy(Qt::NoFocus);
     hLayout->addWidget(saveBtn);
     hLayout->addWidget(saveAsBtn);
 
@@ -112,7 +113,7 @@ void SavePanel::doSaveAsClick()
         m_messageDialog = new MessageDialog(tr("Save As"),tr("Input a name before you save."),MessageDialog::CANCEL|MessageDialog::SAVE,this);
         qDebug() << "m_messageDialog new suc ";
         connect(m_messageDialog,&MessageDialog::buttonClick,this,&SavePanel::textValid);
-        QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+        QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
         QRegExpValidator *reg = new QRegExpValidator(rx,this);
         m_messageDialog->setValidator(reg);
         m_messageDialog->setAutoClosed(false);
@@ -144,7 +145,7 @@ void SavePanel::textValid(int flag)
         m_messageDialog->setWarning(tr("Input a name."));
         return;
     }
-    QRegExp rx("^[^?v \  * | "" < > : /]{1,128}$");
+    QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
     auto pos = rx.indexIn(newname);
     if (pos < 0)
     {

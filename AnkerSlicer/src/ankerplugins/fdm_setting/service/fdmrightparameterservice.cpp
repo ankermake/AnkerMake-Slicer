@@ -11,6 +11,7 @@
 #include "common/utilities/tlogger.h"
 #include "profilemanage/ifdmprofile.h"
 #include "common/utilities/tlogger.h"
+#include "fdmprofilebackupservice.h"
 
 using namespace AkConst;
 
@@ -73,6 +74,8 @@ void FdmRightParameterService::doMainWindowInitFinished()
     }
     if (m_realTimeProfile->getProfileName() == ProfileName::SIMPLE_MODE)
     {
+        
+        selectProfile(ProfileName::SIMPLE_MODE);
         applySimpleModeData();
     }
 
@@ -184,6 +187,7 @@ void FdmRightParameterService::onMaterialNameChanged(const QString name)
         m_realTimeProfile->setMaterialName(name);
         selectProfile(m_realTimeProfile->getProfileName());
     }
+    emit nozzleSizeListChanged();
     m_updateTime++;
     //
     
@@ -503,6 +507,11 @@ QStringList FdmRightParameterService::getMaterialList()
     QStringList list = FdmMaterialProfileManager::Instance().getAllProfileNameList();
     resultList << list;
     resultList << AkConst::ProfileName::More;
+
+    if (getNozzleSize() == AkConst::NozzleSizeName::SIZE8)
+    {
+        resultList.removeOne(AkConst::MaterialName::TPU);
+    }
     return resultList;
 }
 
@@ -595,6 +604,9 @@ void FdmRightParameterService::onSaveBtnClicked()
     currentProfile->save();
 
     
+    FdmProfileBackupService::instance()->backup(currentProfile->getDataSource());
+
+    
     emit allParameterListChanged();
 }
 
@@ -609,6 +621,9 @@ void FdmRightParameterService::onSaveAsBtnClicked(QString profileName)
     auto newProfile = FdmParameterProfileManager::Instance().createProfile(profileName, categories);
     newProfile->setVisible(true);
     newProfile->save();
+
+    
+    FdmProfileBackupService::instance()->backup(newProfile->getDataSource());
 
     
     emit allParameterListChanged();
@@ -657,6 +672,13 @@ void FdmRightParameterService::onSourceTreeApiNodeValueChanged(const QString &ca
     m_realTimeProfile->setSetting(categoryName,item);
     
     m_updateTime++;
+
+    
+    if (item.name == "support_enable")
+    {
+        bool sptState = item.value.toBool();
+        emit setSupportEnabled(sptState);
+    }
 }
 
 void FdmRightParameterService::onExtruderSwitched(int extruderIdx, FdmQmlTreeApi &treeApi)
@@ -760,6 +782,8 @@ void FdmRightParameterService::onNozzleSizeChanged(const QString name)
     {
         selectProfile(m_realTimeProfile->getProfileName());
     }
+    
+    emit materialListChanged();
     m_updateTime++;
 }
 
@@ -1358,7 +1382,11 @@ void FdmRightParameterService::onCurrentSelectedNameChanged(const QString &param
 //0.05 0.1 0.2 0.4
 int FdmRightParameterService::getAiQualityCurrentIdx() 
 {
-    int defaultValue = 2;
+    int defaultValue = 1;
+    
+    auto list = getAiQualityList();
+    defaultValue = list.size()/2;
+
     auto realtimeProfile = FdmParameterProfileManager::Instance().getRightRealTimeProfile();
     auto qualityIdx = realtimeProfile->getSetting(AkConst::Category::AK_AI, AkConst::SettingKey::AI_QUALITY_INDEX);
     if (qualityIdx.isNull())
@@ -1592,12 +1620,25 @@ QStringList FdmRightParameterService::getNozzleSizeList()
 //    resultList << AkConst::NozzleSizeName::SIZE4;
 //    return resultList;
 
+//    QStringList resultList;
+//    resultList << AkConst::NozzleSizeName::SIZE2;
+//    resultList << AkConst::NozzleSizeName::SIZE4;
+//    resultList << AkConst::NozzleSizeName::SIZE6;
+//    resultList << AkConst::NozzleSizeName::SIZE8;
+//    return resultList;
+
     QStringList resultList;
     resultList << AkConst::NozzleSizeName::SIZE2;
     resultList << AkConst::NozzleSizeName::SIZE4;
     resultList << AkConst::NozzleSizeName::SIZE6;
-    resultList << AkConst::NozzleSizeName::SIZE8;
+    
+    if (getMaterialName() != AkConst::MaterialName::TPU)
+    {
+         resultList << AkConst::NozzleSizeName::SIZE8;
+    }
     return resultList;
+
+
 }
 
 

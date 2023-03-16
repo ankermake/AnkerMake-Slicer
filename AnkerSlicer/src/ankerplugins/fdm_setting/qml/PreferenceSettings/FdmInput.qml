@@ -18,25 +18,30 @@ Rectangle {
     RowLayout {
         anchors.fill: parent
         anchors.margins: 0
-    Label {
-        id:label
-        Layout.fillWidth: true
-        Layout.margins: 0
-        verticalAlignment: Text.AlignVCenter
-        Layout.fillHeight: true
-        anchors.margins: 0
-        color: "#FFFFFF"
-    }
-    BaseControl.BaseTextInput{
-        id: input
-        anchors.right: parent.right
-        anchors.margins: 0
-        Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-        Layout.fillHeight: true
-        inputValidator:RegExpValidator{regExp: /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ }
-        onInputTextEdited: {
-            textEditFinished(textInput)
+        Label {
+            id:label
+            Layout.fillWidth: true
+            Layout.margins: 0
+            verticalAlignment: Text.AlignVCenter
+            Layout.fillHeight: true
+            anchors.margins: 0
+            color: "#FFFFFF"
         }
-    }
+        BaseControl.BaseTextInput{
+            id: input
+            //anchors.right: parent.right
+            anchors.margins: 0
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Layout.fillHeight: true
+            inputValidator:RegExpValidator{regExp: /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ }
+            onInputTextEdited: {
+                //console.log("textInput == ", textInput, "vvvvalue = ", value, "disPlayTextInput =", input.disPlayTextInput)
+                if(textInput.length  <= 0) {
+                    textEditFinished("0")
+                }else {
+                    textEditFinished(textInput)
+                }
+            }
+        }
     }
 }

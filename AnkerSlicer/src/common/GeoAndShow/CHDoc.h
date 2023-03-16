@@ -86,6 +86,12 @@ Q_SIGNALS:
     
     void modelSupportNumberChanged(int sptNum);
 
+    
+    void ModelSuspendStatusChanged(bool susStatus);
+
+    
+    void GenerateSupportButtonStatus();
+
 public Q_SLOTS:
     void modelCheckSceneIn();
 

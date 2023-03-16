@@ -397,6 +397,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "预览ankerMake gcode时展示其用到的参数"
                 fdmDescription: "预览使用ankerMake生成的gcode时，将生成gcode时用到的参数展现在右侧栏参数设置界面."
             }
+            FdmQml_Param{ id:check_param_lost_interval; objectName: "check_param_lost_interval"
+                fdmLabel: "多少秒检查一次参数"
+                fdmDescription: "检查参数状况, 看是否丢失."
+            }
             FdmQml_Param{ id:coasting_enable; objectName: "coasting_enable"
                 fdmLabel: "启用滑行"
                 fdmDescription: "滑行会用一个空驶路径替代挤出路径的最后部分。 渗出材料用于打印挤出路径的最后部分，以便减少串接。"

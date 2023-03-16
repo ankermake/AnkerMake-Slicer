@@ -288,13 +288,11 @@ void AkSlicer::runCmd(QString cmd)
     
     engineLib.runCmd(cmd);
     AkUtil::TWarning("run static lib: ");
-
 #else
     //pInvoker->start("C:/workspace/TortoiseGit/Repository/SliceEngine/CuraEngine slice -v -p -m4 -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2.def.json -j C:/workspace/TortoiseGit/Repository/SliceEngine/config/ultimaker2_extruder_0.def.json -o C:/workspace/TortoiseGit/Repository/SliceEngine/result/cube.gcode -l C:/workspace/TortoiseGit/Repository/SliceEngine/stl/SimpleCube.stl");
     
     pInvoker->start(cmd);
     AkUtil::TWarning("run exe : ");
-
 #endif
     qDebug() << "\t" << cmd;
 }

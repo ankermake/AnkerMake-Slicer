@@ -133,6 +133,14 @@ void viewWidget::paramChange(QVariant p)
 //    QString str;
     //QDebug(&str) << var_test.toFloat();
     //QDebug(&str) << "p.m_backgroundColor "<<p.value<passSceneParam>();
+    qDebug()<< "p canConver passSceneParam"<< p.canConvert<passSceneParam>();
+    if(p.canConvert<passSceneParam>())
+    {
+       m_sceneParam.m_printMachineBox = p.value<passSceneParam>().m_printMachineBox;
+       ui->openGLWidget->setSceneParams(m_sceneParam);
+       return;
+    }
+
     ui->openGLWidget->setSceneParams(m_sceneParam);
     this->changeSlider();
 //    AkUtil::TDebug( str);
@@ -325,10 +333,10 @@ void viewWidget::initForm()
     pButtonGroup->setExclusive(true);
 
     aiButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_ai = new QAction(QIcon(":pic/ui/fdm_ai_icon_n.png"), tr("Camera View"));
-    actiona_ai->setCheckable(true);
-    actiona_ai->setChecked(false);
-    aiButton->setDefaultAction(actiona_ai);
+    m_actiona_ai = new QAction(QIcon(":pic/ui/fdm_ai_icon_n.png"), tr("AI View"));
+    m_actiona_ai->setCheckable(true);
+    m_actiona_ai->setChecked(false);
+    aiButton->setDefaultAction(m_actiona_ai);
     aiButton->setObjectName(QString::fromUtf8("aiButton"));
     sizePolicy2.setHeightForWidth(aiButton->sizePolicy().hasHeightForWidth());
     aiButton->setSizePolicy(sizePolicy2);
@@ -362,10 +370,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(aiButton);
 
     justButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_just = new QAction(QIcon(":pic/ui/fdm_full_icon_n.png"), tr("Camera View"));
-    actiona_just->setCheckable(true);
-    actiona_just->setChecked(false);
-    justButton->setDefaultAction(actiona_just);
+    m_actiona_just = new QAction(QIcon(":pic/ui/fdm_full_icon_n.png"), tr("3D View"));
+    m_actiona_just->setCheckable(true);
+    m_actiona_just->setChecked(false);
+    justButton->setDefaultAction(m_actiona_just);
     justButton->setObjectName(QString::fromUtf8("justButton"));
     sizePolicy2.setHeightForWidth(justButton->sizePolicy().hasHeightForWidth());
     justButton->setSizePolicy(sizePolicy2);
@@ -397,10 +405,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(justButton);
 
     frontButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_front = new QAction(QIcon(":pic/ui/fdm_is_icon_n.png"), tr("Camera View"));
-    actiona_front->setCheckable(true);
-    actiona_front->setChecked(false);
-    frontButton->setDefaultAction(actiona_front);
+    m_actiona_front = new QAction(QIcon(":pic/ui/fdm_is_icon_n.png"), tr("Front View"));
+    m_actiona_front->setCheckable(true);
+    m_actiona_front->setChecked(false);
+    frontButton->setDefaultAction(m_actiona_front);
     frontButton->setObjectName(QString::fromUtf8("frontButton"));
     sizePolicy2.setHeightForWidth(frontButton->sizePolicy().hasHeightForWidth());
     frontButton->setSizePolicy(sizePolicy2);
@@ -431,10 +439,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(frontButton);
 
     backButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_back = new QAction(QIcon(":pic/ui/fdm_back_icon_n.png"), tr("Camera View"));
-    actiona_back->setCheckable(true);
-    actiona_back->setChecked(false);
-    backButton->setDefaultAction(actiona_back);
+    m_actiona_back = new QAction(QIcon(":pic/ui/fdm_back_icon_n.png"), tr("Rear View"));
+    m_actiona_back->setCheckable(true);
+    m_actiona_back->setChecked(false);
+    backButton->setDefaultAction(m_actiona_back);
     backButton->setObjectName(QString::fromUtf8("backButton"));
     sizePolicy2.setHeightForWidth(backButton->sizePolicy().hasHeightForWidth());
     backButton->setSizePolicy(sizePolicy2);
@@ -465,10 +473,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(backButton);
 
     leftButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_left = new QAction(QIcon(":pic/ui/fdm_left_icon_n.png"), tr("Camera View"));
-    actiona_left->setCheckable(true);
-    actiona_left->setChecked(false);
-    leftButton->setDefaultAction(actiona_left);
+    m_actiona_left = new QAction(QIcon(":pic/ui/fdm_left_icon_n.png"), tr("Left View"));
+    m_actiona_left->setCheckable(true);
+    m_actiona_left->setChecked(false);
+    leftButton->setDefaultAction(m_actiona_left);
     leftButton->setObjectName(QString::fromUtf8("leftButton"));
     sizePolicy2.setHeightForWidth(leftButton->sizePolicy().hasHeightForWidth());
     leftButton->setSizePolicy(sizePolicy2);
@@ -499,10 +507,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(leftButton);
 
     rightButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_right = new QAction(QIcon(":pic/ui/fdm_right_icon_n.png"), tr("Camera View"));
-    actiona_right->setCheckable(true);
-    actiona_right->setChecked(false);
-    rightButton->setDefaultAction(actiona_right);
+    m_actiona_right = new QAction(QIcon(":pic/ui/fdm_right_icon_n.png"), tr("Right View"));
+    m_actiona_right->setCheckable(true);
+    m_actiona_right->setChecked(false);
+    rightButton->setDefaultAction(m_actiona_right);
     rightButton->setObjectName(QString::fromUtf8("rightButton"));
     sizePolicy2.setHeightForWidth(rightButton->sizePolicy().hasHeightForWidth());
     rightButton->setSizePolicy(sizePolicy2);
@@ -533,10 +541,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(rightButton);
 
     topButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_top = new QAction(QIcon(":pic/ui/fdm_on_icon_n.png"), tr("Camera View"));
-    actiona_top->setCheckable(true);
-    actiona_top->setChecked(false);
-    topButton->setDefaultAction(actiona_top);
+    m_actiona_top = new QAction(QIcon(":pic/ui/fdm_on_icon_n.png"), tr("Top View"));
+    m_actiona_top->setCheckable(true);
+    m_actiona_top->setChecked(false);
+    topButton->setDefaultAction(m_actiona_top);
     topButton->setObjectName(QString::fromUtf8("topButton"));
     topButton->setMinimumSize(QSize(26, 26));
     topButton->setMaximumSize(QSize(26, 26));
@@ -565,10 +573,10 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(topButton);
 
     bottomButton = new QToolButton(ui->openGLWidget);
-    QAction* actiona_bottom = new QAction(QIcon(":pic/ui/fdm_under_icon_n.png.png"), tr("Camera View"));
-    actiona_bottom->setCheckable(true);
-    actiona_bottom->setChecked(false);
-    bottomButton->setDefaultAction(actiona_bottom);
+    m_actiona_bottom = new QAction(QIcon(":pic/ui/fdm_under_icon_n.png.png"), tr("Bottom View"));
+    m_actiona_bottom->setCheckable(true);
+    m_actiona_bottom->setChecked(false);
+    bottomButton->setDefaultAction(m_actiona_bottom);
     bottomButton->setObjectName(QString::fromUtf8("bottomButton"));
     sizePolicy2.setHeightForWidth(bottomButton->sizePolicy().hasHeightForWidth());
     bottomButton->setSizePolicy(sizePolicy2);
@@ -2899,10 +2907,8 @@ void viewWidget::horizontalSliderValueChanged(int value1, int value2)
 
 void viewWidget::setExportPic()
 {
-    //reSetGcodePath("T:\\_tmp\\1.gcode",false,0);
-    //this->ui->openGLWidget->clearGcodeSource();
-    //return;
-    QString dir = QDir::homePath();
+    oStlName = oStlName.replace(".acode","");
+    QString dir = lastExportPath.isEmpty() ?  QDir::homePath() : lastExportPath;
     QString defaultName = dir + "/" + oStlName;
     QString savePath ;
 
@@ -2916,6 +2922,9 @@ void viewWidget::setExportPic()
     {
         return;
     }
+
+    QFileInfo saveinfo(savePath);
+    lastExportPath = saveinfo.absolutePath();
 #if 0
     {
     AkUtil::TDebug("-------------IgnoreEvent start--------------");
@@ -3249,13 +3258,16 @@ void viewWidget::wheelEvent(QWheelEvent* event)
    {
     QWheelEvent *wevent = new QWheelEvent(event->posF(),event->delta(),Qt::LeftButton,Qt::NoModifier);
     QApplication::postEvent(this->verticalSlider,wevent);
+    event->accept();
    }
    if(this->horizontalSlider->hasFocus())
    {
     QWheelEvent *wevent = new QWheelEvent(event->posF(),event->delta(),Qt::LeftButton,Qt::NoModifier);
     QApplication::postEvent(this->horizontalSlider,wevent);
+    event->accept();
    }
-   event->accept();
+
+   return QWidget::wheelEvent(event);
 }
 
 void viewWidget::changeEvent(QEvent * event)
@@ -3370,6 +3382,30 @@ void viewWidget::changeEvent(QEvent * event)
     }
     if (unkonwnLabel) {
         unkonwnLabel->setText(tr("Unknown"));
+    }
+    if (m_actiona_front) {
+        m_actiona_front->setText(tr("Front View"));
+    }
+    if (m_actiona_ai) {
+        m_actiona_ai->setText(tr("AI View"));
+    }
+    if (m_actiona_just) {
+        m_actiona_just->setText(tr("3D View"));
+    }
+    if (m_actiona_back) {
+        m_actiona_back->setText(tr("Rear View"));
+    }
+    if (m_actiona_left) {
+        m_actiona_left->setText(tr("Left View"));
+    }
+    if (m_actiona_right) {
+        m_actiona_right->setText(tr("Right View"));
+    }
+    if (m_actiona_top) {
+        m_actiona_top->setText(tr("Top View"));
+    }
+    if (m_actiona_bottom) {
+        m_actiona_bottom->setText(tr("Bottom View"));
     }
   }
   return QWidget::changeEvent(event);
@@ -3649,14 +3685,6 @@ void viewWidget::getFilamentCount()
         }
     }
 
-    //  qDebug() << "showLabelCount[0]"<< showLabelCount[0]<< " ";
-    //  qDebug() << "showLabelCount[1]"<< showLabelCount[1]<< " ";
-    //  qDebug() << "showLabelCount[2]"<< showLabelCount[2]<< " ";
-    //  qDebug() << "showLabelCount[3]"<< showLabelCount[3]<< " ";
-    //  qDebug() << "showLabelCount[4]"<< showLabelCount[4]<< " ";
-    //  qDebug() << "showLabelCount[5]"<< showLabelCount[5]<< " ";
-    //  qDebug() << "showLabelCount[6]"<< showLabelCount[6]<< " ";
-    //  qDebug() << "showLabelCount[7]"<< showLabelCount[7]<< " ";
 }
 
 

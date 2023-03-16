@@ -7,6 +7,9 @@
 #include <QHBoxLayout>
 #include <QFrame>
 #include <QEvent>
+#include <QLocale>
+#include <QDebug>
+#include "common/ak_const.h"
 class UserAgreementWidget : public QDialog
 {
     Q_OBJECT
@@ -17,6 +20,7 @@ protected:
 
 private:
     void initUi();
+    bool getCurrentRegion();
 signals:
 
 private slots:
@@ -27,6 +31,7 @@ private:
     QLabel *m_privacyLabel = nullptr;
     QPushButton *m_acceptButton = nullptr;
     QPushButton *m_declineButton = nullptr;
+
 };
 
 #endif // USERAGREEMENTWIDGET_H

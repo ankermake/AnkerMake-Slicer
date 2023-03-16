@@ -173,6 +173,7 @@ private:
     bool isHighPerformance = true;
     bool innerModeInit = true;
     bool printModeInit = true;
+    QString lastExportPath;
     QString saveTempPath ;
     ProgressDialog *mpDlg;
 #ifdef USE_EXTRA_UI
@@ -409,6 +410,14 @@ private:
     int runTimesId;
     const qint64 qs_id = QDateTime::currentSecsSinceEpoch();
     ProgressDialog *m_progessDlg = nullptr;
+    QAction *m_actiona_ai = nullptr;
+    QAction *m_actiona_just = nullptr;
+    QAction *m_actiona_front = nullptr;
+    QAction *m_actiona_back = nullptr;
+    QAction *m_actiona_left = nullptr;
+    QAction *m_actiona_right = nullptr;
+    QAction *m_actiona_top = nullptr;
+    QAction *m_actiona_bottom = nullptr;
 private:
     QColorDialog* colorDlg;
     const std::map<uint8_t, QString> roleDict = {

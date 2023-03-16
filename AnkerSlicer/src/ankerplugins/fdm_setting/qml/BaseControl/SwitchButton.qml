@@ -6,6 +6,7 @@ Rectangle {
     height: 20
     opacity: 1
     radius: 10
+     antialiasing: true;
     color: isChecked ? (root.enabled ? "#61D37D" :"#306C3F") : "#515151"
 
     signal checkedStateChanged(bool state)
@@ -18,6 +19,7 @@ Rectangle {
         radius: 12
         height: root.height
         width: sliderLeft.height
+         antialiasing: true;
         anchors.margins: 2
         color: root.enabled ? "#DBDBDB" : "#747474"
         visible: isChecked ? false :true
@@ -31,6 +33,7 @@ Rectangle {
         radius: 12
         height: root.height
         width: sliderRight.height
+         antialiasing: true;
         anchors.margins: 2
         color: root.enabled ? "#FFFFFF" : "#7CAD88"
         visible:  isChecked ? true :false

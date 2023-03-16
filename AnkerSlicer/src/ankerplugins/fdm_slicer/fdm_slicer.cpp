@@ -19,6 +19,8 @@
 #include <QThreadPool>
 #include <QCoreApplication>
 #include "common/mlapplication.h"
+#include <QRegularExpression>
+#include "../common/controlInterface/messageDialog.h"
 
 using namespace AkUtil;
 
@@ -31,6 +33,7 @@ FdmSlicer::FdmSlicer()
 
 FdmSlicer::~FdmSlicer()
 {
+    TFunction("");
     if (NULL != slicer)
     {
         delete slicer;
@@ -41,7 +44,8 @@ FdmSlicer::~FdmSlicer()
 void FdmSlicer::initialize(ControlInterface *controlmanager, RichParameterList *globalParameterList)
 {
     this->ctrlmanager = controlmanager;
-    AkSlicePanel* panel = new AkSlicePanel();
+    //AkSlicePanel* panel = new AkSlicePanel();
+    panel = new AkSlicePanel();
     
 
     panel->sliceEnable(false);
@@ -110,6 +114,57 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
         gcodeContent = IoApi::readAll(sliceInfo.gcodeFile);
         count--;
     }
+    
+
+    auto getMaxSpeed = [&]()->float{
+        float maxSpeed = -99;
+        
+
+        auto lines = gcodeContent.split("\r",Qt::SkipEmptyParts);
+        for(int i = 0; i< lines.size();i++)
+        {
+            QString line = lines[i];
+            
+
+            if (line.trimmed().startsWith(";")
+                || !line.trimmed().startsWith("G")
+                || line.indexOf("E") < 0
+                || line.indexOf("F") < 0)
+            {
+                 continue;
+            }
+            auto words = line.split(" ",Qt::SkipEmptyParts);
+            for(int j = 0; j< words.size();j++)
+            {
+                if (!words[j].startsWith("F"))
+                {
+                    continue;
+                }
+                try
+                {
+                    float speed = words[j].mid(1).toFloat();
+                    maxSpeed = (maxSpeed < speed) ? speed : maxSpeed;
+                }
+                catch(...){}
+            }
+        }
+        return maxSpeed;
+    };
+    
+
+    if (gcodeContent.indexOf(";MAXSPEED:") > 0)
+    {
+        float maxPrintSpeed = getMaxSpeed();
+        
+
+        if (maxPrintSpeed > 0)
+        {
+            gcodeContent = gcodeContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
+        }
+        
+
+        IoApi::write(sliceInfo.gcodeFile, gcodeContent);
+    }
 
     
 
@@ -124,7 +179,7 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
     //paramList << content.toUtf8().toBase64();
     auto paramContent = content.toUtf8().toBase64();
     auto subList = IoApi::splite(paramContent, 200);
-    for (int i =0;i<subList.size();i++)
+    for (int i = 0; i < subList.size(); i++)
     {
         paramList << ";" + subList[i];
     }
@@ -157,7 +212,7 @@ void FdmSlicer::doSliceFailed(AkSliceInfo sliceInfo)
 {
     this->sliceResult = sliceInfo;
     qDebug() << sliceInfo.sliceCmd;
-    qDebug() << QString("enter doSliceFailed emit sliceFailed %1").arg((long long)(progressBar))  ;
+    qDebug() << QString("enter doSliceFailed emit sliceFailed %1").arg((long long)(progressBar));
     //sliceBtn->setText("slice");
     
 
@@ -242,6 +297,21 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
 
 void FdmSlicer::doSlice()
 {
+    
+
+    
+
+    int buttonState = panel->getButtonState();
+    if ((buttonState & ESliceBtnStat::MODEL_IS_SUSPEND_STATUS)
+       && !(buttonState & ESliceBtnStat::GENERATE_SUPPORT_RESULT_T))
+    {
+        control::MessageDialog messageDialog(tr("Notice"), tr("The model is hovering in the air. Please generate support or switch on [place on bed]."),
+            control::MessageDialog::OK);
+        messageDialog.exec();
+        return;
+    }
+
+
     emit appendSliceBtnStat(ESliceBtnStat::SLICE_BEING);
     //emit sliceSucess();
     //return;
@@ -599,6 +669,47 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
         data.dest = AkConst::Plugin::FDM_SETTING;
         data.msg = AkConst::Msg::SLICE_RESET;
         emit sendMsg2Manager(data);
+    }
+
+    bool generateSuppoteResult = metaData.map.value(AkConst::Param::GENERATE_SUPPORT_RESULT, false).toBool();
+    bool modelSuspendResult = metaData.map.value(AkConst::Param::MODEL_SUSPEND_STATUS_RESULT, false).toBool();
+
+    
+
+    if (metaData.from == AkConst::Plugin::FDM_SETTING
+        && metaData.msg == AkConst::Msg::GET_GENERATE_SUPPORT_STATUS_RESULT)
+    {
+        
+
+        if (generateSuppoteResult)
+        {
+            
+
+            emit appendSliceBtnStat(ESliceBtnStat::GENERATE_SUPPORT_RESULT_T);
+        }
+        else
+        {
+
+            emit appendSliceBtnStat(ESliceBtnStat::GENERATE_SUPPORT_RESULT_N);
+        }
+    }
+
+    
+
+    if (metaData.msg == AkConst::Msg::MODEL_SUSPEND_STATUS)
+    {
+        
+
+        if (modelSuspendResult)
+        {
+            
+
+            emit appendSliceBtnStat(ESliceBtnStat::MODEL_IS_SUSPEND_STATUS);
+        }
+        else
+        {
+            emit appendSliceBtnStat(ESliceBtnStat::MODEL_NOT_SUSPEND_STATUS);
+        }
     }
 
     if (metaData.msg == AkConst::Msg::VISIBLE_MODEL_COUNT_CHANGED){

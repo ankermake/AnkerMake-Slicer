@@ -456,6 +456,7 @@ namespace Anker {
             float bed_temperature{ 0.0f }; //deg
             TrapezoidFeedrateProfile motor_process;
             unsigned int g1_line_id{ 0 };
+            unsigned int layerId{ 0 };
             float volumetric_rate() const { return feedrate * mm3_per_mm; }
         };
 
@@ -616,6 +617,7 @@ namespace Anker {
         ExtruderColors m_extruder_colors;
         std::vector<float> m_filament_diameters;
         double m_extruded_last_z;
+        unsigned int m_extrude_last_layer;
         unsigned int m_g1_line_id;
         unsigned int m_layer_id;
         CpColor m_cp_color;

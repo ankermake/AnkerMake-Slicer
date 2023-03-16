@@ -605,6 +605,29 @@ void EditMeshMoveTransformTool::lockToPrintPlatformStatusChanged()
     AkUtil::TFunction("");
     if (m_lockToPrintPlatform)
     {
+        for(auto it = getDoc()->m_printObjs.begin(); it != getDoc()->m_printObjs.end(); it++)
+        {
+            if((*it)->getStatus() != selected)
+            {
+                CHAABB3D tmpAABB = (*it)->calRealAABB();
+                float tmpZ = -tmpAABB.getLeftDownPoint().z();
+                (*it)->m_params[8] = (*it)->m_params[8] + tmpZ;
+                (*it)->m_realAABB.m_Zmin += tmpZ;
+                (*it)->m_realAABB.m_Zmax += tmpZ;
+                
+                QMatrix4x4 sumtran1 = CHBaseAlg::instance()->calTransformFromParams(QVector3D((*it)->m_rotCenter[0],
+                                                                                    (*it)->m_rotCenter[1], (*it)->m_rotCenter[2]), (*it)->m_params);
+
+                
+                (*it)->setTransform(sumtran1);
+                if (std::dynamic_pointer_cast<SupportMesh>(*it) != nullptr)
+                {
+                    SupportMeshPtr supportMesh = std::dynamic_pointer_cast<SupportMesh>(*it);
+                    supportMesh->setLocalTransform(supportMesh->getParent()->getTransform().inverted() * supportMesh->getTransform());
+                }
+            }
+        }
+
         CHAABB3D aabb;
         for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
         {

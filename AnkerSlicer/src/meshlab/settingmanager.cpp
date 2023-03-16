@@ -59,6 +59,21 @@ void SettingManager::clearRecent()
     m_settings.remove("recentList");
 }
 
+QString SettingManager::readExportRecent()
+{
+    if(m_settings.contains("exportRecent"))
+    {
+        return m_settings.value("exportRecent").toString();
+    }
+    return QString();
+}
+
+void SettingManager::writeExportRecent(const QString &fileName)
+{
+    m_settings.setValue("exportRecent", fileName);
+}
+
+
 void SettingManager::setAiMode(bool flag)
 {
      m_settings.setValue("AiMode",flag);
@@ -134,8 +149,7 @@ void SettingManager::setLanguageList(const QStringList &languageList)
 
 QStringList SettingManager::getLanguageList()
 {
-    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese") << QObject::tr("Janpenese"));
-    //setLanguageList(QStringList() << QString("English")  << QString("中文") << QString("日本語"));
+    setLanguageList(QStringList() << QObject::tr("English")  << QObject::tr("Chinese") << QObject::tr("Japanese"));
     return  m_settings.value("LanguageList").toStringList();
 }
 

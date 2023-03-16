@@ -16,6 +16,7 @@ using namespace AkUtil;
 #include <QSet>
 #include <QMap>
 #include <QStandardPaths>
+#include "common/utilities/tlogger.h"
 
 
 struct profileSortItem
@@ -120,12 +121,21 @@ public:
             TProfile profile(fInfo.absoluteFilePath(), group);
             
             profile.setStatus(EProfileStatus::Normal);
+
             
-            profiles.append(profile);
-            
-            profileNameDict[profile.getName()] = &profiles.last();
-            //profileIdDict[profile.getId()] = &profiles.last();
-            //qDebug() << "loadProfiles profileIdDict[]" << profile.getId() << profile.getName();
+            if (!profileNameDict.contains(profile.getName()))
+            {
+                
+                profiles.append(profile);
+                
+                profileNameDict[profile.getName()] = &profiles.last();
+
+                TDebug("load profiles: " + profile.getName() + " path: " + fInfo.absoluteFilePath());
+            }
+            else
+            {
+                TDebug("skip profiles. filename already exist: " + profile.getName() + " path: " + fInfo.absoluteFilePath());
+            }
         }
     }
 

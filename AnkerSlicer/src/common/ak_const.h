@@ -56,6 +56,7 @@ namespace Param {
     //Update
     const QString ANKERMAKE_VERSION = "AnkerMakeVersion";
     const QString UPDATE_DO = "UpdateDo";
+    const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
     const QString ANKERMAKE_UPDATE_EXE = "AnkerMakeUpdateExe"; 
 
     
@@ -64,6 +65,12 @@ namespace Param {
 
     
     const QString A_KEY_PRINT_FILE_PATH = "AKeyPrintFilePath";
+
+    
+    const QString GENERATE_SUPPORT_RESULT = "GenerateSupportResult";
+    
+    const QString MODEL_SUSPEND_STATUS_RESULT = "ModelSuspendStatusResult";
+
 
 //    //const QString SLICE_PANEL_STATE = "slicePanelState";
 
@@ -118,6 +125,16 @@ namespace Msg {
     
     const QString MODEL_SUPPORT_NUMBER_CHANGED = "ModelSupportNumberChanged";
 
+    
+    const QString MODEL_SUSPEND_STATUS = "ModelSuspendStatus";
+
+    
+    const QString GET_GENERATE_SUPPORT_STATUS = "GetGenerateSupportStatus";
+    
+    const QString GET_GENERATE_SUPPORT_STATUS_RESULT = "GetGenerateSupportStatusResult";
+    
+    const QString GET_GS_STATUS_RESULT = "GetGSStatusResult";
+
     const QString PARAMETER_CHANGED = "ParameterChanged";
     const QString SLICE_START = "SliceStart";
     const QString SLICE_SUCCESS = "SliceSuccess";
@@ -145,6 +162,7 @@ namespace Msg {
     
     const QString MANUAL_UPDATE = "ManualUpdate";
     const QString AUTO_UPDATE = "AutoUpdate";
+    const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
 
     
     const QString A_KEY_PRINT = "AKeyPrint";
@@ -168,6 +186,9 @@ namespace Msg {
     const QString ANKERMAKE_MAINWINDOW_MODAL = "AnkerMakeMainwindowModal";
 
     const QString MAIN_WINDOW_INIT_FINISHED = "MainWindowInitFinished";
+
+    
+    const QString PRIVACY_PROTOCOL = "PrivacyProtocol";
 }
 
 
@@ -240,6 +261,8 @@ namespace SettingKey
     const QString MACHINE_NOZZLE_SIZE = "machine_nozzle_size";
 
     const QString EXTRACT_PARAM_FROM_GCODE = "extract_param_from_gcode";
+
+    const QString CHECK_PARAM_LOST_INTERVAL = "check_param_lost_interval";
 }
 
 namespace GlobalParameterKeys{
@@ -386,6 +409,35 @@ enum NetworkUpdateType
     NetworkUpdateType_AutoUpdate,
 };
 
+namespace WebAddress {
+    const QString TermOfUseURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html";
+    const QString PrivacyPolicyURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html";
+    const QString tutorialEnglish = "https://support.ankermake.com";
+
+    const QString TermOfUseURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.ja.html";
+    const QString PrivacyPolicyURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.ja.html";
+    const QString tutorialJapanese = "https://www.ankerjapan.com/pages/anker-make";
+
+}
+
+
+namespace GlobalStyleSheet {
+const QString ScrollBarVertical = " QScrollBar:vertical {border:0px solid grey;background: #24252B;width: 3px;margin: 0;}"
+    "QScrollBar::handle:vertical { background:#797B80;min-height: 20px;}"
+    "QScrollBar::add-line:vertical {border: 0px solid grey;background: #24252B;height: 0px;subcontrol-position: bottom;subcontrol-origin: margin;}"
+    "QScrollBar::sub-line:vertical {border: 0px solid grey;background: #24252B;height:0px;subcontrol-position: top;subcontrol-origin: margin;}"
+    "QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {border:0px solid grey;width: 0px;height: 0px;background: white;}"
+    "QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {background: none;}";
+
+const QString ScrollBarHorizontal  = "QScrollBar:horizontal {border: 0px solid grey;background: #24252B;height:3px;margin: 0;}"
+     "QScrollBar::handle:horizontal {background: #797B80;min-width: 20px;}"
+     "QScrollBar::add-line:horizontal {background: grey;width: 0px;subcontrol-position: right;subcontrol-origin: margin;border:0px solid black;}"
+     "QScrollBar::sub-line:horizontal {background: grey;width: 0px;subcontrol-position: top right;subcontrol-origin: margin;border:0px solid black;position: absolute;right: 20px;}"
+     "QScrollBar:left-arrow:horizontal, QScrollBar::right-arrow:horizontal {width: 0px;height: 3px;background: grey;}"
+      "QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {background: none;}";
+
+
+}
 //#define More "More..."
 
 }

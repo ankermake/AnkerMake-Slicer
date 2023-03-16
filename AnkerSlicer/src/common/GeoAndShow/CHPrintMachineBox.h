@@ -28,6 +28,7 @@ public:
     virtual void setColor(QColor color);
     void create(QString logoPath, float lenth, float wide, float height);
     void create(const CMeshO& logoMesh, float length, float wide, float height, const QColor& boxColor);
+    void updateMechineSize(float length, float width, float height); 
 
     
     CMeshO getLogoCMeshO() const;

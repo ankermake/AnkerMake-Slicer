@@ -40,8 +40,18 @@ void VSliderRange::mousePressEvent(QMouseEvent* e)
 		isContains = tmpRect.contains(x, y);
 		if (isContains)
 		{
-			belowPressed = true;
+            belowPressed = true;
 		}
+
+        if(upPressed && belowPressed){
+            int upabsV = qAbs(upSliderRect.center().x()-x) + qAbs(upSliderRect.center().y()-y) ;
+            int downabsV = qAbs(belowSliderRect.center().x()-x) + qAbs(belowSliderRect.center().y()-y) ;
+            if(upabsV > downabsV){
+                upPressed = false;
+            }else{
+                belowPressed = false;
+            }
+        }
 
         pressPos = press_center;
         if(upSliderRect.contains(x,y))
@@ -54,7 +64,6 @@ void VSliderRange::mousePressEvent(QMouseEvent* e)
             pressPos = press_down;
         }
 
-        qDebug() << "pressPos" << pressPos;
 	}
     update();
 	e->accept();
@@ -142,7 +151,7 @@ void VSliderRange::mouseMoveEvent(QMouseEvent* e)
             int height = this->height() - 22 - 12;
 			double incrememt = (double)height / (maxValue - minValue);
 
-            int value = maxValue - ( 1.0 / incrememt) * ( e->pos().y() - 8);   //(height - e->pos().y()) / incrememt;//8 + sliderLen / 2
+            int value = maxValue - qRound(( 1.0 / incrememt) * ( e->pos().y() - 8));   //(height - e->pos().y()) / incrememt;//8 + sliderLen / 2
 
             value = value > maxValue ? maxValue : value;
             value = value < minValue ? minValue : value;
@@ -151,12 +160,11 @@ void VSliderRange::mouseMoveEvent(QMouseEvent* e)
             belowValue = belowValue > upValue ? upValue : belowValue;
             emit valueChanged(belowValue, upValue);
             update();
-
 	}
 	else if (belowPressed) {
             int height = this->height() - 22 - 12;
             double increment = (double)(height) / (maxValue - minValue); //24
-            int value = minValue + (this->height() - 14 - e->pos().y()) / increment ;//(height - e->pos().y()) / increment + 10 + 16;
+            int value = minValue +  qRound((this->height() - 14 - e->pos().y()) / increment );//(height - e->pos().y()) / increment + 10 + 16;
             value = value > maxValue ? maxValue : value;
             value = value < minValue ? minValue : value;
              belowValue = value;
@@ -428,7 +436,7 @@ void VSliderRange::setRange(int minValue, int maxValue)
 {
 	AkUtil::TFunction("");
 	
-	if (minValue >= maxValue) {
+    if (minValue >= maxValue && maxValue != 1) {
 		return;
 	}
 	this->minValue = minValue;

@@ -30,6 +30,7 @@ public:
     explicit PreferencesDialog(QWidget *parent = nullptr);
 
     void addWidget(PageWidget *widget, int index = -1);
+    QWidget* getWidget(const int index);
     void openWidget(int index);
     void openWidget(QWidget *widget);
 

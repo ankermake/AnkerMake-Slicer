@@ -68,6 +68,7 @@ HEADERS += \
         qshadowhelper.h \
         settingmanager.h \
         snapshotsetting.h \
+        dbgcrash.h \
 #        ml_render_gui.h \
 #        ml_rendering_actions.h \
 #        ml_default_decorators.h \
@@ -101,6 +102,7 @@ SOURCES += \
         controls/useragreementwidget.cpp \
         controls/viewwidget.cpp \
         main.cpp \
+        dbgcrash.cpp \
 #        mainwindow_Init.cpp \
 #        mainwindow_RunTime.cpp \
 #        glarea.cpp \
@@ -150,6 +152,7 @@ macx:RESOURCES += \
         ankerimages/ankermake.qrc \
         meshlab.qrc \
         translator.qrc
+
 
 win32-msvc2005: RCC_DIR = $(ConfigurationName)
 win32-msvc2008: RCC_DIR = $(ConfigurationName)

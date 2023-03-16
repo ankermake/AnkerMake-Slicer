@@ -46,10 +46,13 @@ void customTitle::initControl()
     m_pTitleContent->setText("AnkerMake");
     m_pTitleContent->setObjectName("m_pTitleContent");
     m_pButtonMin = new QPushButton;
+    m_pButtonMin->setFocusPolicy(Qt::NoFocus);
     m_pButtonMin->setIcon(QIcon(":/images/icon/fdm_nav_min_icon.png"));
     m_pButtonRestoreMax = new QPushButton;
+    m_pButtonRestoreMax->setFocusPolicy(Qt::NoFocus);
     m_pButtonRestoreMax->setIcon(QIcon(":/images/icon/fdm_nav_amp_icon.png"));
     m_pButtonClose = new QPushButton;
+    m_pButtonClose->setFocusPolicy(Qt::NoFocus);
     m_pButtonClose->setIcon(QIcon(":/images/icon/fdm_nav_del_icon.png"));
 
     m_pButtonMin->setFixedSize(QSize(BUTTON_WIDTH, BUTTON_HEIGHT));

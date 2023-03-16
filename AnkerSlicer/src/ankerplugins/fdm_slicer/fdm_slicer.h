@@ -54,13 +54,14 @@ signals:
 private:
     //QPushButton * sliceBtn;
     //AkProgressBar *progressBar;
-    ProgressDialog *progressBar;
-    ControlInterface *ctrlmanager;
-    AkSlicer* slicer;
+    ProgressDialog *progressBar= nullptr;
+    ControlInterface *ctrlmanager= nullptr;
+    AkSlicer* slicer= nullptr;
     AkSliceInfo sliceResult;
-    QTimer *timer;
+    QTimer *timer = nullptr;
     int fileLoadPercent = 0;
     int slicePercent = 0;
+    AkSlicePanel* panel = nullptr;
 
 
 private:

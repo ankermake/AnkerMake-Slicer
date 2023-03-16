@@ -13,7 +13,7 @@ GlareaTopView::GlareaTopView(QWidget*glarea, QObject *parent)
       m_rightWidget(nullptr),
       m_progress(nullptr)
 {
-    m_mainLayout->setContentsMargins(17,20,20,76);
+    m_mainLayout->setContentsMargins(17,20,20,20);
 
     m_mainLayout->addWidget(m_viewSwitch,0,Qt::AlignBottom);
     m_mainLayout->addStretch(2);

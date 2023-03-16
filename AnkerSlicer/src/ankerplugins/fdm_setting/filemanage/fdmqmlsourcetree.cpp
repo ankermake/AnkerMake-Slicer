@@ -314,7 +314,10 @@ void FdmQmlSourceTree::setLanguage(int index)
     }
 
     
-    QObject * qmlRoot = FdmQmlEngine::instance()->loadQmlFile(qmlFile);
+    
+    //QObject * qmlRoot = FdmQmlEngine::instance()->loadQmlFile(qmlFile);
+    FdmQmlEngine engin;
+    QObject* qmlRoot = engin.loadQmlFile(qmlFile);
     FdmParamRoot * trRoot = FdmParamNode::newShadowNode(qmlRoot);
 
     

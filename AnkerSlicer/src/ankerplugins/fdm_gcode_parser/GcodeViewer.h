@@ -163,8 +163,8 @@ private:
     QOpenGLShaderProgram shaderProgram_tr;//t render with a gs
     QOpenGLShaderProgram shaderProgram_point;
     //QOpenGLShaderProgram shaderProgram_old; // old 110 render
-    Scene3D* m_scene3d;
-    RenderDataPtr m_renderData;
+    Scene3D* m_scene3d  = nullptr;
+    RenderDataPtr m_renderData = nullptr;
     SceneParam m_sceneParam;
     QProcess *pCmd;
     QImage offImage;
@@ -868,6 +868,7 @@ public:
     bool innerMode = false;
     void clearGcodeSource();
     void loadGcode();
+    int waitForFileClose(QString filePath,qint64 fileSize);
     QString filterFileName(QString pathName);
     bool postGcodeHead(const QString &line,QString& reLine);
     bool waitForSceneInit();

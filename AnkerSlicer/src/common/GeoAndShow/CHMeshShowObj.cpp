@@ -105,6 +105,8 @@ void CHMeshShowObj::resetTransform()
     {
         m_params[i] = m_initParams[i];
     }
+    m_lastRotParams[0] = m_lastRotParams[1] = m_lastRotParams[2] = {-1}; 
+    m_mirrAxis[0] = m_mirrAxis[1] = m_mirrAxis[2] = 1;
 }
 void CHMeshShowObj::resetMove()
 {

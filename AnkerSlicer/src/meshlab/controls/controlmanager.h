@@ -69,7 +69,8 @@ public:
 
     void addPageToPreferences(PageWidget *widget,int index) {m_preferDialog->addWidget(widget,index);};
     void openPreferences(int index );
-   // void openPreferences(QWidget *widget);
+    QWidget* getPageWidgetFromPreferences(const int index);
+    // void openPreferences(QWidget *widget);
 
 private slots:
     void clickedToSwitchPreferencesPage(int index);

@@ -83,6 +83,8 @@ public:
     
     QVector3D m_rotCenter;
     std::vector<float> m_params;
+    float m_lastRotParams[3] = {-1}; 
+    int m_mirrAxis[3] = {1, 1, 1};
 
     std::vector<float> m_initParams;
     QMatrix4x4 m_initTransform;

@@ -43,6 +43,9 @@ void MessageProcessing::recMsgfromManager(PluginMessageData metadata)
     if(AkConst::Msg::MANUAL_UPDATE == metadata.msg){
         emit sendMsg2Update(metadata);
     }
+    if(AkConst::Msg::CHECK_UPDATE_TEXT == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
     if(AkConst::Msg::A_KEY_PRINT == metadata.msg){
 
     }
@@ -91,6 +94,30 @@ void MessageProcessing::receiveModelSupportNumberChangedFromDoc(int sptCount)
     data2.map.insert(AkConst::Param::SUPPORT_MESH_NUMBER, sptCount);
     emit sendMsg2Manager(data2);
 }
+
+
+void MessageProcessing::receiveModelSuspendStatusChangedFromDoc(bool susStatus)
+{
+
+    PluginMessageData data;
+    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    data.dest = AkConst::Plugin::FDM_SLICER;
+    data.msg = AkConst::Msg::MODEL_SUSPEND_STATUS;
+    data.map.insert(AkConst::Param::MODEL_SUSPEND_STATUS_RESULT, susStatus);
+    emit sendMsg2Manager(data);
+
+
+}
+
+
+//void MessageProcessing::receiveGenerateSupportButtonStatusFromDoc()
+//{
+//    PluginMessageData data;
+//    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+//    data.dest = AkConst::Plugin::FDM_SETTING;
+//    data.msg = AkConst::Msg::GET_GENERATE_SUPPORT_STATUS;
+//    emit sendMsg2Manager(data);
+//}
 
 void MessageProcessing::sendMsg2Preview()
 {

@@ -62,6 +62,7 @@ public:
     ~CHModelRotationTransformParamsSetUI();
     void initValues(double x, double y, double z);
     void setOnlyRotateDoubleSpinBox(double x, double y, double z);
+    void getBoxEditValue(double &x, double &y, double &z);
 
 public Q_SLOTS:
     void rotateValuesChangedSlot(double value, RotateChangedType type = RotateChangedType_BoxRotate);

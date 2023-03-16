@@ -594,14 +594,25 @@ void CHDoc::calcVisibleModelCount()
 void CHDoc::modelCheckSceneIn() 
 {
     
+    calcVisibleModelCount();
+    
     
     bool allInPrintBox = true;
+    
+    bool getSuspendResult = false;
     int visuableCount = 0;
+    
+    //int suspendCount = 0;
     for(int i = 0; i < m_printObjs.size(); i++)
     {
         if(!m_printObjs[i] -> getVisuable()) 
         {
             continue;
+        }
+        
+        if (m_printObjs[i]->calRealAABB().m_Zmin > 1e-3)
+        {
+            getSuspendResult = true;
         }
         visuableCount++;
         
@@ -619,11 +630,14 @@ void CHDoc::modelCheckSceneIn()
         }
         m_printObjs[i]->isSceneIn(printAABB, m_machineBox->m_baseAABB);
         allInPrintBox = allInPrintBox && m_printObjs[i]->getIsSceneIn();
-
     }
     if(visuableCount > 0)
     {
         emit modelOutOfRangeChanged(allInPrintBox);
+        
+        emit ModelSuspendStatusChanged(getSuspendResult);
+
+//        emit GenerateSupportButtonStatus();
     }
 }
 

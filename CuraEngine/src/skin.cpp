@@ -342,7 +342,8 @@ void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerP
 {
     if (mesh.settings.get<bool>("top_surface_one_wall"))
     {
-        SkinPart skin_part_union;
+        //SkinPart skin_part_union;
+        SkinPart skin_polygons_union;
         for (auto it = part->skin_parts.begin(); it != part->skin_parts.end();)
         {   
             //2022/11/07 top_surface Binary: Top skin not need insets,
@@ -359,12 +360,12 @@ void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerP
             if ((poly.size() > 0 || layer_nr == mesh.layers.size() - 1))
             {
                 auto surfacePoly = part->outline.difference(uplaye_part_wall).offset(-mesh.settings.get<coord_t>("wall_line_width_0"));
-                surfacePoly = surfacePoly.offset(-mesh.settings.get<coord_t>("wall_line_width_0") / 4);
+                //surfacePoly = surfacePoly.offset(-mesh.settings.get<coord_t>("wall_line_width_0"));
 
                 surfacePoly.removeSmallAreas(MIN_TOP_SURFACE_SIZE);
 
                 
-                skin_part_union.outline.add(surfacePoly);
+                skin_polygons_union.outline.add(surfacePoly);
                 it = part->skin_parts.erase(it);
 
                 
@@ -378,25 +379,17 @@ void SkinInfillAreaComputation::generateSkinInsetsAndInnerSkinInfill(SliceLayerP
                     part->insets[wall_no].clear();
                     part->insets[wall_no].add(polys);
                 }
-
                 continue;
             }
             ++it;
         }
         //skin_part_union.outline.unionPolygons();
-        if (skin_part_union.outline.size() > 0)
+        if (skin_polygons_union.outline.size() > 0)
         {
-            part->skin_parts.push_back(skin_part_union);
-
-            #ifdef DEBUG
-            if (layer_nr == 49)
-            {
-                SVGHelper::writePolygons(skin_part_union.outline, SVG::Color::BLACK, 1.0, "d:/work/outpath/skin_part_union.html");
-                SVGHelper::writePolygons(part->outline, SVG::Color::BLACK, 1.0, "d:/work/outpath/part_union.html");
-            }
-
-            #endif // DEBUG
-
+            SkinPart pp;
+            
+            pp.outline.add(skin_polygons_union.outline.unionPolygons());
+            part->skin_parts.push_back(pp);
         }
 
     }

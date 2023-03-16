@@ -29,7 +29,7 @@ void ImportModelThread::run()
         if (!ret)
         {
             successful = false;
-            emit  errorEncountered(0, QString::fromLocal8Bit("Other Error"));
+            emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
         }
         QFile::remove(tmpFileName);
     }
@@ -41,7 +41,7 @@ void ImportModelThread::run()
     catch (...) {
         successful = false;
         qDebug() << __FUNCTION__ << __LINE__;
-        emit  errorEncountered(0, QString::fromLocal8Bit("Other Error"));
+        emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
     }
     //MeshModelImport_Export::open(m_formatName, m_fileName, *m_cm, m_cb);
 //    while(1)

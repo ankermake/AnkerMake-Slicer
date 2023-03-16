@@ -21,11 +21,10 @@ void UserAgreementWidget::initUi()
     font.setPixelSize(30);
     m_label->setFont(font);
     m_label->setGeometry(169,62,380,35);
-  //  QLabel *privacyLabel = new QLabel(frame);
-    m_privacyLabel = new QLabel(QString("<body>") + tr("Read the Terms of Use and Privacy Policy.") + QString("<a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>") + tr("Terms of Use") + QString("</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>") + tr("Privacy Policy") +QString("</a> </body>"),frame);
+     m_privacyLabel = new QLabel(frame);
+    //m_privacyLabel = new QLabel(QString("<body>") + tr("Read the Terms of Use and Privacy Policy.") + QString("<a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html\"><font color = #61D37D><text-decoration: none>") + tr("Terms of Use") + QString("</a> and <a href=\"https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html\"><font color = #61D37D><>") + tr("Privacy Policy") +QString("</a> </body>"),frame);
     m_privacyLabel->setOpenExternalLinks(true);
-    //privacyLabel->setText(QString::fromLocal8Bit("Please click to read the <a href= https://ankermake.com/terms-of-use>Terms of Use</a> and <a href=\"https://ankermake.com/privacy-policy\"><font color = #61D37D>Privacy Policy</a>"));
-    //privacyLabel->setText("<body>Please click to read the <a href=\"https://ankermake.com/account/login\"><font color = #61D37D><>Terms of Use</a></body>");
+
     QFont fontPrivacy(this->font());
     fontPrivacy.setPixelSize(16);
     m_privacyLabel->setFont(fontPrivacy);
@@ -46,10 +45,32 @@ void UserAgreementWidget::initUi()
     connect(m_declineButton,&QPushButton::clicked,this,&UserAgreementWidget::declineButtonClick);
     m_declineButton->setGeometry(219,271,219,32);
 
-   //setWindowFlags(Qt::FramelessWindowHint);
-    //this->setAttribute(Qt::WA_TranslucentBackground);
-    //frame->setStyleSheet("background-color:#151619;border-radius:10px;border:none");
-    //this->setStyleSheet("background-color:#151619;border-radius:10px");
+    
+    QString termUrl;
+    QString privacyUrl;
+    if(getCurrentRegion()) {
+        termUrl = AkConst::WebAddress::TermOfUseURLEnglish;
+         privacyUrl = AkConst::WebAddress::PrivacyPolicyURLEnglish;
+    }
+    else {
+        termUrl = AkConst::WebAddress::TermOfUseURLJapanese;
+        privacyUrl = AkConst::WebAddress::PrivacyPolicyURLJapanese;
+    }
+
+    QString url = QString("<body>") + tr("Read the Terms of Use and Privacy Policy.") + QString("<a href=\"%1\"><font color = #61D37D><text-decoration: none>").arg(termUrl) + tr("Terms of Use") + QString("</a> ") + QString(tr("and"))  + QString(" <a href=\"%1\"><font color = #61D37D><>").arg(privacyUrl)+ tr("Privacy Policy") +QString("</a> </body>");
+
+    m_privacyLabel->setText(url);
+}
+
+bool UserAgreementWidget::getCurrentRegion()
+{
+    QLocale local = QLocale::system();
+    QLocale::Language lang = local.language();
+    if(lang == /*QLocale::Chinese*/QLocale::Japanese) {
+        return false;
+    }else {
+        return true;
+    }
 }
 
 void UserAgreementWidget::buttonClick()

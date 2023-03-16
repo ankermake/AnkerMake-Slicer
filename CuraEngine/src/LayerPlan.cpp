@@ -1934,6 +1934,12 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
                 for (unsigned int point_idx = 1; ; point_idx++)
                 {
                     Point p1 = wall[(start_idx + point_idx) % wall.size()];
+
+                    //2022/12/12  Binary for reverse the wipe distance
+                    if (reverse_hole_outer_wall_print_orient)
+                    {
+                        p1 = wall[(wall.size() + start_idx - point_idx) % wall.size()];
+                    }
                     int p0p1_dist = vSize(p1 - p0);
                     if (distance_traversed + p0p1_dist >= wall_0_wipe_dist)
                     {
@@ -1964,11 +1970,15 @@ void LayerPlan::addWalls(const Polygons& walls, const SliceMeshStorage& mesh, co
     //logCL("$CL$ %s %d", __FUNCTION__, __LINE__);
 
     PathOrderOptimizer orderOptimizer(getLastPlannedPositionOrStartingPosition(), z_seam_config);
+
+
+
     for (unsigned int poly_idx = 0; poly_idx < walls.size(); poly_idx++)
     {
         orderOptimizer.addPolygon(walls[poly_idx]);
     }
     orderOptimizer.optimize();
+
     for (unsigned int poly_idx : orderOptimizer.polyOrder)
     {
         addWall(walls[poly_idx], orderOptimizer.polyStart[poly_idx], mesh, non_bridge_config, bridge_config, wall_overlap_computation, wall_0_wipe_dist, flow_ratio, always_retract);

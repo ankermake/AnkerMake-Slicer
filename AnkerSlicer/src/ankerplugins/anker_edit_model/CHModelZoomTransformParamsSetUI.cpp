@@ -34,6 +34,7 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     m_scaleLabel->setText(tr("Scale"));
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
     m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
     m_resetButton->setMaximumWidth(30);

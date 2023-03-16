@@ -116,6 +116,9 @@ void EditMeshMirrorTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
         delete m_paramUI;
         m_paramUI = 0;
     }
+
+    emit getDoc()->modelCheckSceneInChanged();
+    curScene->refresh();
 }
 
 void EditMeshMirrorTransformTool::mousePressEvent(QMouseEvent* event, void*, void*)
@@ -152,6 +155,8 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             tran1.translate(-curCenter);
             QVector3D scaleValue(1, 1, 1);
             scaleValue[index] = -1;
+            (*it)->m_mirrAxis[index] = -(*it)->m_mirrAxis[index];
+
             tran2.scale(scaleValue);
             tran3.translate(curCenter);
             QMatrix4x4 newSumMatrix = tran3 * tran2 * tran1 * (*it)->getTransform();
@@ -179,6 +184,8 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             (*it)->m_params[6] = offset[0];
             (*it)->m_params[7] = offset[1];
             (*it)->m_params[8] = offset[2];
+            p++;
+           // qDebug() << "scale: " << scale;
         }
 
         //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
@@ -306,31 +313,14 @@ void EditMeshMirrorTransformTool::reset()
         {
             continue;
         }
-        if (m_editMeshModels.size() == 1)
+
+        for (int i = 0; i < 3; i++)
         {
-//            qDebug() << "reset m_params: " << (*it)->m_params[0] << ", " << (*it)->m_params[1] << ", " << (*it)->m_params[2];
-            for (int i = 0; i < 3; i++)
+            if((*it)->m_mirrAxis[i] < 0)
             {
-                //(*it)->m_params[i] = fabs((*it)->m_params[i]);
-                if((*it)->m_params[i] < 0)
-                {
-                    receiveButtonClicked(i);
-                }
+                receiveButtonClicked(i);
             }
-            //(*it)->m_params = m_initValues[0];
-
         }
-        else
-        {
-            for(int i = 0; i < 3; i++)
-            {
-                (*it)->m_params[i] = fabs(m_initValues[p][i]);
-            }
-            //(*it)->m_params = m_initValues[p];
-        }
-
-        //(*it)->setTransform(CHBaseAlg::instance()->calTransformFromParams((*it)->m_rotCenter, (*it)->m_params));
-
         if (true/*m_lockToPrintPlatform*/)
         {
             aabb.add((*it)->calRealAABB());

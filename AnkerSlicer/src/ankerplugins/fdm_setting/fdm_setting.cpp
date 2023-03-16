@@ -10,6 +10,7 @@
 #include "profilemanage/fdmparameterprofilemanager.h"
 #include "service/fdmpreferencedialogservice.h"
 #include "service/fdmrightparameterservice.h"
+#include "service/fdmprofilebackupservice.h"
 
 #include <QPushButton>
 #include <QMainWindow>
@@ -20,6 +21,7 @@
 #include "savepanel.h"
 #include "common/utilities/ioapi.h"
 #include "common/utilities/tlogger.h"
+
 using namespace AkUtil;
 
 namespace fdmsettings {
@@ -76,6 +78,9 @@ namespace fdmsettings {
             auto newProfile = FdmMaterialProfileManager::Instance().createProfile(meterialName, categories);
             newProfile->setVisible(true);
             newProfile->save();
+
+            
+            FdmProfileBackupService::instance()->backup(newProfile->getDataSource());
         }
 
         
@@ -89,6 +94,9 @@ namespace fdmsettings {
             auto newProfile = FdmMachineProfileManager::Instance().createProfile(machineName, categories);
             newProfile->setVisible(true);
             newProfile->save();
+
+            
+            FdmProfileBackupService::instance()->backup(newProfile->getDataSource());
         }
 
         
@@ -225,6 +233,11 @@ namespace fdmsettings {
                 FdmRightParameterService::instance()->doMainWindowInitFinished();
             }
         }
+    }
+
+    FdmSettingPlugin::~FdmSettingPlugin()
+    {
+        TFunction("");
     }
 
     
@@ -381,6 +394,9 @@ namespace fdmsettings {
                 AkUtil::IoApi::touch(upgradeFile);
                 AkUtil::TInfo("auto update end, copy setting from " + settingPath +  " -> " + currentCustomSettingPath);
             }
+
+            
+            FdmProfileBackupService::instance()->backupAll();
         }
         else
         {
@@ -388,6 +404,17 @@ namespace fdmsettings {
         }
         
 
+        
+        if (!FdmProfileBackupService::instance()->backupExist())
+        {
+            FdmProfileBackupService::instance()->backupAll();
+        }
+
+        
+        
+         FdmProfileBackupService::instance()->checkAndRestore();
+
+        
 
 		
 		//qDebug()<< "enter initGui" ;
@@ -405,7 +432,26 @@ namespace fdmsettings {
 		//connect(&(FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right()), &FdmQmlTreeApi::anyNodeValueChange, FdmPreferenceDialogService::instance(), &FdmPreferenceDialogService::onSourceTreeApiNodeValueChanged);
 
 		//qDebug()<< "exit initGui" ;
+
+        
+        connect(FdmRightParameterService::instance(), &FdmRightParameterService::setSupportEnabled, this, &FdmSettingPlugin::doSupportEnabled);
+
+        
+        FdmProfileBackupService::instance()->checkFileLost();
+
 	}
+
+    
+    void FdmSettingPlugin::doSupportEnabled(bool enable)
+    {
+        
+        PluginMessageData data;
+        data.from = AkConst::Plugin::FDM_SETTING;
+        data.dest = AkConst::Plugin::FDM_SLICER;
+        data.msg = AkConst::Msg::GET_GENERATE_SUPPORT_STATUS_RESULT;
+        data.map.insert(AkConst::Param::GENERATE_SUPPORT_RESULT, enable);
+        emit sendMsg2Manager(data);
+    }
 
 
 	void FdmSettingPlugin::initGui(ControlInterface* controlmanager, RichParameterList* globalParameterList) {

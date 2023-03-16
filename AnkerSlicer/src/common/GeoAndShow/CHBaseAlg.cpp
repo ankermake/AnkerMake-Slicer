@@ -50,7 +50,6 @@ bool CHBaseAlg::writeMeshesToStlFile(const std::vector<CHMeshShowObjPtr>& meshes
     fp = fopen(filePath.c_str(), "wb"); 
     if (fp == 0)
     {
-
         return false;
     }
 

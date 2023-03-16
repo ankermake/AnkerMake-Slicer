@@ -60,7 +60,12 @@ Edited Comments and GPL license
 
 #include <stdio.h>
 #include <vcg/complex/base.h>
-
+#include <QFile>
+#ifdef MSVC
+#include<io.h>
+#else
+#include <unistd.h>
+#endif
 namespace vcg {
 namespace tri {
 namespace io {
@@ -76,20 +81,24 @@ public:
 typedef typename SaveMeshType::FaceType FaceType;
 typedef unsigned short CallBackSTLFaceAttribute(const SaveMeshType &m, const FaceType &f);
 
-static int Save(const SaveMeshType &m, const char * filename, const int &mask, CallBackPos *)
+static int Save(const SaveMeshType &m, QString filename, const int &mask, CallBackPos *)
 {
  return Save(m,filename,true,mask);
 }
 
-static int Save(const SaveMeshType &m, const char * filename , bool binary =true, int mask=0, const char *objectname=0, bool magicsMode=0)
+static int Save(const SaveMeshType &m, QString filename , bool binary =true, int mask=0, const char * objectname=0, bool magicsMode=0)
 {
   typedef typename SaveMeshType::ConstFaceIterator FaceIterator;
-    FILE *fp;
-
-    fp = fopen(filename,"wb");
-    if(fp==0)
+    QFile qFile(filename);
+    qFile.open(QIODevice::WriteOnly);
+    if (!qFile.isOpen()) {
         return 1;
-
+    }
+    int fd = qFile.handle();
+    FILE *fp = fdopen(dup(fd), "wb");
+    if (fp == nullptr) {
+        return 1;
+    }
     if(binary)
     {
         // Write Header
@@ -154,6 +163,7 @@ static int Save(const SaveMeshType &m, const char * filename , bool binary =true
 	int result = 0;
 	if (ferror(fp)) result = 2;
     fclose(fp);
+    qFile.close();
 	return result;
 }
 static const char *ErrorMsg(int error)

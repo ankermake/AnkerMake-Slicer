@@ -56,7 +56,7 @@ public:
     
     bool checkOpenFile(QString gcodePath);
     void queryLoggingStatus();
-
+    QVariant getSceneParams();
 //    void exportMessageProcessing(PluginMessageData msgBody);  //no need
 
     fdmRpcWrapper *m_rpc = nullptr;
@@ -73,7 +73,7 @@ private:
 //    QList<QProcess *> pInList;
     ProgressDialog* m_pDlg;
     QString CurrentShowFile;
-
+    qint64 CurrentShowFileSize;
     FdmGcodePreviewEntry* preview = nullptr;
     QList<FdmGcodePreviewEntry *> previewNetworkList;
 private slots:

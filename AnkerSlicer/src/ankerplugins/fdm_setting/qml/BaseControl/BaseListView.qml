@@ -24,6 +24,7 @@ Rectangle {
             anchors.right: listview.right
             stepSize: itemHeight
             width: 8
+            height: 100
             active: false
             contentItem: Rectangle {
                 radius: width/2

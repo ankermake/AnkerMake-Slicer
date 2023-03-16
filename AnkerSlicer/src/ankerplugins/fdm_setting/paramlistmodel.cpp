@@ -37,17 +37,6 @@ QVariant ParamListModel::data(const QModelIndex &index, int role) const
     }
     QString  str = roleToString(role);
    //item->dumpParam();
-
-//    if(role == affects) {
-//   qDebug() << "str == " << str << "affects =" <<item->getProperty("@fdmAffects") << "@fdmAffectedBy= " << item->getProperty("@fdmAffectedBy")<< "fdmAffectedById = " << item->getProperty("@fdmAffectedById");
-//}
-  // qDebug() << " item->getProperty("") ==" << item->getProperty("fdmAffectedById").toString();
-//   if(item->getProperty("@fdmAffectedById").isValid()) {
-//    //   item->dumpParam();
-//      // qDebug() << " @fdmAffects =" << item->getProperty("@fdmAffects").toString();
-//       qDebug() << "str == " << str << "affects =" <<item->getQobjProperty("fdmAffects") << "@fdmAffectedBy= " << item->getQobjProperty("fdmAffectedBy")<< "fdmAffectedById = " << item->getProperty("@fdmAffectedById");
-//   }
-   // qDebug() << " item->getProperty(str) ==="  <<item->getProperty(str);
     return  item->getProperty(str);
 }
 
@@ -100,10 +89,7 @@ void ParamListModel::changeData(int row,QVariant text)
             return;
         }
     }
-   //QVariant var =  item->getProperty(roleToString(datatype::type));
     item->nodeValueChange_fromUI(text);
-    //qDebug() <<"fdmValueUI =="  << item->getProperty("fdmValueUI");
-    //item->dumpParam();
 }
 
 void ParamListModel::expandIndex(int row)
@@ -131,13 +117,6 @@ void ParamListModel::updateList()
 
 bool ParamListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-   // qDebug() << " set data  value" << value;
-    //    if(role == type2) {
-    //        BasedItem *item = static_cast<BasedItem *>(index.internalPointer());
-
-    //        emit dataChanged(index,index,QVector<int>() << role);
-    //        return true;
-    //    }
     return false;
 }
 
@@ -153,14 +132,9 @@ void ParamListModel::setListDatas(const QList<FdmParamNode *> &datas)
     m_datas.append(datas);
     for(int row=0; row<datas.size(); ++row){
         datas[row]->insert(fdmNodeRowInModelList, row);
-
-        //if(m_datas.at(row)->getNodeName().compare("acceleration_"))
-        //    qDebug() << "setListDatas"  << m_datas[row]->getNodeName() << m_datas.at(row)->getFdmEnable() << row;
-
         QObject::connect(datas[row], &FdmParamNode::nodeValueChange_toUI,
                          this, &ParamListModel::onNodeValueChange,
                          Qt::DirectConnection);
-                         //Qt::ConnectionType(Qt::QueuedConnection | Qt::UniqueConnection));
     }
 
     endResetModel();
@@ -241,13 +215,10 @@ void ParamListModel::setChildNodeVisibility(int row, bool visbility)
     emit dataChanged(topLeft, bottomRight, QVector<int>()  << datatype::visible);
     return;
 #endif
-   // emit dataChanged(createIndex(row,0),createIndex(row,0),QVector<int>() << datatype::expand);
-
     for(int i = row + 1 ; i < m_datas.size(); i++)
     {
         FdmParamNode *item =  m_datas.at(i);
         if(item->getProperty(fdmPrinterJsonType) == "category") {
-            //emit dataChanged(createIndex(row,0),createIndex(i,0),QVector<int>() << datatype::visible);
             break;
         }
 

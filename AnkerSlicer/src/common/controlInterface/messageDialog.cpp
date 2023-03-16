@@ -98,9 +98,9 @@ void MessageDialog::setButton(int buttons)
     switch (buttons) {
     case(MessageDialog::OK):
         m_leftButton->setVisible(false);
-        m_rightButton->setVisible(false);
-        m_middleButton->setText(tr("OK"));
-        setButtonValue(m_middleButton,MessageDialog::OK);
+        m_middleButton->setVisible(false);
+        m_rightButton->setText(tr("OK"));
+        setButtonValue(m_rightButton,MessageDialog::OK);
         break;
 
 //    case(MessageDialog::YES | MessageDialog::NO):
@@ -133,9 +133,9 @@ void MessageDialog::setButton(int buttons)
     default:
         m_leftButton->setText(tr("No"));
         setButtonValue(m_leftButton,MessageDialog::NO);
-        m_rightButton->setVisible(false);
-        m_middleButton->setText(tr("Yes"));
-        setButtonValue(m_middleButton,MessageDialog::YES);
+        m_middleButton->setVisible(false);
+        m_rightButton->setText(tr("Yes"));
+        setButtonValue(m_rightButton,MessageDialog::YES);
         break;
     }
 
@@ -180,6 +180,18 @@ QString MessageDialog::editText() const
     return m_edit->text();
 }
 
+void MessageDialog::setAutoLevelText(const QString& leftText,  const QString &rightText)
+{
+    m_leftButton->setText(leftText);
+    m_middleButton->setText(rightText);
+}
+
+void MessageDialog::setDescriptionText(const QString &text)
+{
+    m_description->clear();
+    m_description->setText(text);
+}
+
 void MessageDialog::setAutoClosed(bool ok)
 {
      m_isClosed = ok;
@@ -210,6 +222,30 @@ void MessageDialog::buttonClicked()
     else {
         emit buttonClick(flag);
     }
+}
+
+TimerMessageDialog::TimerMessageDialog(const QString &title, const QString &description, int time, int buttons, QWidget *parent) :
+    MessageDialog::MessageDialog(title, description, buttons, parent), m_totalSecs(time), m_description(description)
+{
+    m_timer = new QTimer(this);
+    m_timer->setInterval(1000); 
+    QString tempStr = description + " " + QString::number(m_totalSecs) + "s";
+    qDebug() << "----" << tempStr;
+    setDescriptionText(tempStr);
+    connect(m_timer, &QTimer::timeout, this, [=]() mutable{
+        if(m_totalSecs >= 0)
+        {
+            m_totalSecs--;
+            QString tempStr = description + " " + QString::number(m_totalSecs) + "s";
+            qDebug() << "----" << tempStr;
+            setDescriptionText(tempStr);
+        }
+        else
+        {
+            m_timer->stop();
+        }
+    });
+    m_timer->start();
 }
 
 }

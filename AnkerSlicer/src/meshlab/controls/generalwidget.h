@@ -38,13 +38,18 @@ public:
     QString displayName() const {return m_displayName;};
     virtual void closeWidget();;
     virtual void save();;
+    void forcedUpdateApp();
+    void manualUpdate();
 protected:
     void changeEvent(QEvent *e);
 signals:
    void networkLanguageChangedSignal(qint64);
    void unloadPluginsSignal();
+   void closeMainWindow();
 public slots:
     void receiveMsgFromNetwork(PluginMessageData metadata);
+    void doPluginUnloaded();
+    void clickCheckButton();
 
 private slots:
     void checkButtonClicked();
@@ -55,6 +60,7 @@ private:
 
      void update_app(const QString&);
      QPushButton *m_checkButton;
+     QLabel *m_checkText;
      QString m_filePath;
      QComboBox *m_languageCombox;
      QCheckBox *m_aiCheckBox;

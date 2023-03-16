@@ -59,6 +59,7 @@ void ModelTransformWidget:: addActionToTransform(QAction *action)
     pButton->setAutoRaise(true);
     pButton->setDefaultAction(action);
     pButton->setProperty("index",i);
+    pButton->setToolButtonStyle(Qt::ToolButtonIconOnly);
    // pButton->setStyleSheet("background-color:transparent");
     m_mainLayout->addWidget(pButton);
 }
@@ -89,7 +90,7 @@ void ModelTransformWidget::paintEvent(QPaintEvent *event)
     QPainter painter(this);
     painter.setPen(Qt::NoPen);
     painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.setBrush(QColor(41, 42, 45,180));
+    painter.setBrush(QColor("#292A2D"));
     // qDebug() << " m_background ==" << painter.background();
     painter.drawRoundedRect(0, 0, this->width(), this->height(), 5, 5);
 

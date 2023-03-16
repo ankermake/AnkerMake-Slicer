@@ -50,7 +50,6 @@ Rectangle {
         GlobalSupportUnSelected
     }
 
-
     enum EGenerateAdhesionState
     {
         GenAdhesionSelected = 0,

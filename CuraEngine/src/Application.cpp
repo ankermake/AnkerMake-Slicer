@@ -214,7 +214,7 @@ void Application::run(const size_t argc_, char** argv_)
     testArg.push_back(std::string(argv_[0]));
     testArg.push_back(std::string("extParam"));
     testArg.push_back(std::string("-f"));
-    testArg.push_back(std::string("C:/Users/Administrator/AppData/Local/AnkerMake/AnkerMake_64bit_fp/stl/20221129140736286/sliceCmd.cmd"));
+    testArg.push_back(std::string("C:/Users/Administrator/AppData/Local/AnkerMake/AnkerMake_64bit_fp/stl/20221213143211778/sliceCmd.cmd"));
 
     std::vector<char*> vc;
     for (int i = 0; i < testArg.size(); i++)

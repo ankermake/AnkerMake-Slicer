@@ -241,7 +241,7 @@ namespace io {
 						}
 
 						if (cb !=NULL)
-							(*cb)(100.0 * (float)++nface/(float)m.face.size(), "calc duplex vertex ...");
+							(*cb)(100.0 * (float)++nface/(float)m.face.size(), "Calc duplex vertex ...");
 						else
 							return E_ABORTED;
 					}
@@ -281,7 +281,7 @@ namespace io {
 					mesh->pointL[i] = point;		
 
 					if (cb !=NULL)
-						(*cb)(100.0 * (float)++current/(float)max, "writing vertices ");
+						(*cb)(100.0 * (float)++current/(float)max, "Writing vertices");
 					else
 						return E_ABORTED;
 				}
@@ -301,7 +301,7 @@ namespace io {
 						mesh->pointL[v_index] = point;
 						VertRemap[vi]=v_index;
 						if (cb !=NULL)
-							(*cb)(100.0 * (float)++current/(float)max, "writing vertices ");
+							(*cb)(100.0 * (float)++current/(float)max, "Writing vertices");
 						else
 							return E_ABORTED;
 						v_index++;
@@ -415,7 +415,7 @@ namespace io {
 					mesh->faceL[f_index]=face;
 
 					if (cb !=NULL)
-						(*cb)(100.0 * (float)++current/(float)max, "writing faces ");
+						(*cb)(100.0 * (float)++current/(float)max, "Writing faces");
 					else
 						return E_ABORTED;
 					f_index++;

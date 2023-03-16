@@ -80,6 +80,15 @@ void PreferencesDialog::addWidget(PageWidget *widget, int index)
     m_listmodel->setStringList(m_displayNameList);
 }
 
+QWidget* PreferencesDialog::getWidget(const int index)
+{
+    if (!m_stackLayout)
+    {
+        return nullptr;
+    }
+    return m_stackLayout -> widget(index);
+}
+
 void PreferencesDialog::openWidget(int index)
 {
     if(index > m_stackLayout->count()) {

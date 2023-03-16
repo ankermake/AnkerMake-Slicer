@@ -31,6 +31,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     //m_mirrorLabel->setStyleSheet("QLabel{ \n\tfont: roboto;\n\twidth: 39px; \n\theight: 16px; \n\ttop: 578px; \n\tleft: 109px; \n\tcolor: #333333; \n }");
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     m_resetButton->setObjectName("resetLabel");
     m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
     m_resetButton->setMaximumWidth(20);
@@ -56,6 +57,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     mainblaout->addLayout(hblaout2);
 
     m_xButton = new QToolButton;
+    m_xButton->setObjectName("m_xButton");
     QString xStr = X_STR + tr("Axis");
     m_xStrLabel = new QLabel;
     m_xStrLabel->setObjectName("m_xStrLabel");
@@ -78,12 +80,14 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     m_xButton->setMinimumWidth(120);
     m_xButton->setMinimumHeight(30);
     m_xButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
+
             "   background-color: #3A3B3F;\n"
             "   border-radius:4px;\n"
             "}\n"));
     mainblaout->addWidget(m_xButton);
 
     m_yButton = new QToolButton;
+    m_yButton->setObjectName("m_yButton");
     QString yStr = Y_STR + tr("Axis");
     m_yStrLabel = new QLabel;
     m_yStrLabel->setAlignment(Qt::AlignCenter);
@@ -111,6 +115,7 @@ CHModelMirrorTransformParamsSetUI::CHModelMirrorTransformParamsSetUI(QWidget* pa
     mainblaout->addWidget(m_yButton);
 
     m_zButton = new QToolButton;
+    m_zButton->setObjectName("m_zButton");
     QString zStr = Z_STR + tr("Axis");
     m_zStrLabel = new QLabel;
     m_zStrLabel->setAlignment(Qt::AlignCenter);

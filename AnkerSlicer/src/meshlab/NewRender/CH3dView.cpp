@@ -321,39 +321,23 @@ void CH3dView::paintGL()
 
 void CH3dView::mouseMoveEvent(QMouseEvent* event)
 {
-    //setFocus();
     QPoint qPoint = event->pos();// - lastPos; // mouse move right x+, down y+
-
+    if(getGlobalPick()->rightBtnPressed)
+    {
+        getGlobalPick()->mouseRightMoved = true;
+        m_viewMoving = true;
+    }
     if (m_viewRotating)
     {
-//        if (getGlobalPick()->m_selectedObjs.size() > 0)
-//        {
-//            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-//        }
-//        else
-//        {
-//            //refTranPoint = QVector3D(0, 0, 0);
-//            refTranPoint = m_sceneBox.getCenterPoint();
-//            refTranPoint[2] = 0.0;
-//        }
         refTranPoint = m_sceneBox.getCenterPoint();
-        refTranPoint[2] = 0.0;
+        //refTranPoint[2] = 0.0;
         xyRotate(qPoint.x(), qPoint.y());
         update();
     }
     else if (m_viewMoving)
     {
-//        if (getGlobalPick()->m_selectedObjs.size() > 0)
-//        {
-//            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-//        }
-//        else
-//        {
-//            //refTranPoint = QVector3D(0, 0, 0);
-//            refTranPoint = m_sceneBox.getCenterPoint();
-//        }
         refTranPoint = m_sceneBox.getCenterPoint();
-        refTranPoint[2] = 0.0;
+        //refTranPoint[2] = 0.0;
         xyTranslate(qPoint.x(), qPoint.y());
         update();
     }
@@ -361,34 +345,6 @@ void CH3dView::mouseMoveEvent(QMouseEvent* event)
     {
         getGlobalPick()->mouseMoveEvent(event);
     }
-
-
-    //    if (m_viewTransforming)
-    //    {
-    //        if (getGlobalPick()->m_selectedObjs.size() > 0)
-    //        {
-    //            refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-    //        }
-    //        else
-    //        {
-    //            //refTranPoint = QVector3D(0, 0, 0);
-    //            refTranPoint = m_sceneBox.getCenterPoint();
-    //        }
-
-    //        if (m_controlKeyDown)
-    //        {
-    //            xyTranslate(qPoint.x(), qPoint.y());
-    //        }
-    //        else
-    //        {
-    //            xyRotate(qPoint.x(), qPoint.y());
-    //        }
-    //        paintGL();
-    //    }
-    //    else
-    //    {
-    //        getGlobalPick()->mouseMoveEvent(event);
-    //    }
     return QOpenGLWidget::mouseMoveEvent(event);
 }
 
@@ -397,7 +353,10 @@ void CH3dView::mouseReleaseEvent(QMouseEvent* event)
     m_bMove = true;
 
     QWidget::mouseReleaseEvent(event);
-
+    if(m_viewMoving && event->button() == Qt::RightButton)
+    {
+        m_viewMoving = false;
+    }
     if (m_viewMoving && event->button() == Qt::MiddleButton)
     {
         m_viewMoving = false;
@@ -405,24 +364,14 @@ void CH3dView::mouseReleaseEvent(QMouseEvent* event)
     else if (m_viewRotating && event->button() == Qt::LeftButton)
     {
         m_viewRotating = false;
-
     }
     else
     {
         getGlobalPick()->mouseReleaseEvent(event);
     }
     update();
-
-    //    if (m_viewTransforming && event->button() == Qt::MiddleButton)
-    //    {
-    //        m_viewTransforming = false;
-    //    }
-    //    else
-    //    {
-    //        getGlobalPick()->mouseReleaseEvent(event);
-    //    }
-
-        //paintGL();
+    getGlobalPick()->rightBtnPressed = false; 
+    getGlobalPick()->mouseRightMoved = false; 
     return QOpenGLWidget::mouseReleaseEvent(event);
 }
 
@@ -430,6 +379,10 @@ void CH3dView::mousePressEvent(QMouseEvent* event)
 {
     setFocus();
 
+    if(Qt::RightButton == event->button())
+    {
+        getGlobalPick()->rightBtnPressed = true;
+    }
     if ((getGlobalPick()->haveCanPickedObj() || getGlobalPick()->havePickedObjs()) || (event->button() == Qt::RightButton))
     {
         getGlobalPick()->mousePressEvent(event);
@@ -440,11 +393,6 @@ void CH3dView::mousePressEvent(QMouseEvent* event)
         m_viewRotating = (event->button() == Qt::LeftButton);
         update();
     }
-    //    m_viewTransforming = (event->button() == Qt::MiddleButton);
-    //    if (!m_viewTransforming)
-    //    {
-    //        getGlobalPick()->mousePressEvent(event);
-    //    }
     return QOpenGLWidget::mousePressEvent(event);
 }
 
@@ -458,18 +406,7 @@ void CH3dView::mouseDoubleClickEvent(QMouseEvent* event)
 void CH3dView::wheelEvent(QWheelEvent* event)
 {
     setFocus();
-
-//    if (getGlobalPick()->m_selectedObjs.size() > 0)
-//    {
-//        refTranPoint = getGlobalPick()->getPickedObjsAABB().getCenterPoint();
-//    }
-//    else
-//    {
-//        refTranPoint = m_sceneBox.getCenterPoint();
-//        //refTranPoint = QVector3D(0, 0, 0);
-//    }
     refTranPoint = m_sceneBox.getCenterPoint();
-    refTranPoint[2] = 0.0;
     int qwheel = event->delta();  // positive when wheel up, delta +/- 120 when wheel +/- 1
     double zoomscale = (double)(qwheel) / 2000.0;
     Scale(event->x(), event->y(), zoomscale);
@@ -518,7 +455,7 @@ void CH3dView::calcSceneParamsFromBox(const CHAABB3D& aabb)
     m_up = QVector3D(-0.0115033, 0.57665, 0.81691);
 
     refTranPoint = center;
-    refTranPoint[2] = 0.0;
+    //refTranPoint[2] = 0.0;
     senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
         tan(m_verticalAngle / 360.0 * CH_PI);
     m_bMove = true;

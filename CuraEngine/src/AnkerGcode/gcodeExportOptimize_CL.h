@@ -147,11 +147,18 @@ public:
         {   //  chenge @2022-05-12 by CL
             const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
 
+            auto L_Posion   = m_gcodeExport->getPosition();
             auto Z          = m_gcodeExport->getPositionZ();
+            auto L_E        = m_gcodeExport->clCurrentStatus->getE_block();
             auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index();
             auto L_Nr       = m_gcodeExport->clCurrentStatus->getL_Nr();
             auto L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
             auto new_line   = m_gcodeExport->new_line;
+            auto retract_speed = settingsScene.get<cura::Velocity>("retraction_retract_speed");
+            auto prime_speed = settingsScene.get<cura::Velocity>("retraction_prime_speed");
+            auto travel_speed = settingsScene.get<cura::Velocity>("speed_travel");
+
+            auto relative_extrusion = settingsScene.get<bool>("relative_extrusion");
 
             
             double ms = settingsScene.get<double>("camera_take_picture_time"); // = min *60
@@ -167,13 +174,46 @@ public:
                 cura::coord_t first_photo_z_offset = 50 * 1000;
                 (*(m_gcodeExport->output_stream)) << "; Z_TakePictureStart: " << L_Nr << new_line;
 
-                    
-                    (*(m_gcodeExport->output_stream)) << "G0 F1200 Z" << cura::MMtoStream{Z + first_photo_z_offset + Z_um} << new_line;
+                //2022/12/14  Binary for AI wipe 
+                (*(m_gcodeExport->output_stream)) << "G1 F" << cura::PrecisionedDouble{ 1, retract_speed * 60 } << " E" << cura::PrecisionedDouble{ 5, relative_extrusion?-3:L_E-3} << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I3 J3 P1  F"<< cura::PrecisionedDouble{ 1, travel_speed * 60 }<< new_line;
+                (*(m_gcodeExport->output_stream)) << "G0 X203 Y233 F" << cura::PrecisionedDouble{ 1, travel_speed * 60 } << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0  Z0.0 F600" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2 F600" << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0  Z0.1 F600" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2  F600" << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0  Z0.0 F600" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2  F600" << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0  Z0.1 F600" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2  F600" << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0  Z0.0 F600" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2  F600" << new_line;
+                
+
+                (*(m_gcodeExport->output_stream)) << "G0 F1200 Z"<< cura::MMtoStream{ Z } << new_line;
+
+                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{ 1, travel_speed * 60 } << " X" << cura::MMtoStream{ L_Posion.x } << " Y" << cura::MMtoStream{ L_Posion.y }<< new_line;
+                (*(m_gcodeExport->output_stream)) << "G0 F1200 Z" << cura::MMtoStream{ Z + first_photo_z_offset + Z_um } << new_line;
+ 
                 (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Index << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
                 (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Index << new_line; // writeLayerComment(layer_nr);
+                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{ 1,    F * 60 } << " Z" << cura::MMtoStream{ Z + first_photo_z_offset } << new_line;
+                //G0 X210 Y233 F15000  G0 F1200 Z0.1
+                (*(m_gcodeExport->output_stream)) << "G0 X210 Y233 F" << cura::PrecisionedDouble{ 1, travel_speed * 60 } << new_line;
+                (*(m_gcodeExport->output_stream)) << "G0 F600 Z0.0" << new_line;
+                (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2  F600" << new_line;
 
-                    (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,    F * 60} <<  " Z" << cura::MMtoStream{Z + first_photo_z_offset} << new_line;
-                    (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,   20 * 60} <<  " Z" << cura::MMtoStream{Z} << new_line;
+
+
+                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1,   20 * 60} <<  " Z" << cura::MMtoStream{Z} << new_line;
+                (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{ 1, travel_speed * 60 } << " X" << cura::MMtoStream{ L_Posion.x } << " Y" << cura::MMtoStream{ L_Posion.y } << new_line;
+                (*(m_gcodeExport->output_stream)) << "G1 F" << cura::PrecisionedDouble{ 1, retract_speed * 60 } << " E" << cura::PrecisionedDouble{ 5, relative_extrusion?3:L_E} << new_line;
+
                 (*(m_gcodeExport->output_stream)) << "G0 F" << cura::PrecisionedDouble{1, oldF * 60} << new_line;
             }
             else{

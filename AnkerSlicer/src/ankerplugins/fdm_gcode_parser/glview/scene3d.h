@@ -145,7 +145,7 @@ public:
 private:
     QVector3D m_eye;
     QVector3D m_up;
-    QVector3D m_front;//
+    QVector3D m_front;
     QVector3D m_viewCenter;
     bool isAiView = false;
     double m_verticalAngle;

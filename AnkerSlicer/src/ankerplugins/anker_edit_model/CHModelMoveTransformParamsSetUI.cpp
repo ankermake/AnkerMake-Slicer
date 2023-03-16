@@ -29,6 +29,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_moveLabel->setText(tr("Move"));
 
     m_resetButton = new QToolButton;
+    m_resetButton->setFocusPolicy(Qt::NoFocus);
     //    m_resetButton->setIcon(QIcon(":/images/fdm_remakes_small_icon_n.png"));
     //    m_resetButton->setGeometry(QRect(281.3, 277.04, 13.4, 281.3));
     m_resetButton->setObjectName("resetLabel");

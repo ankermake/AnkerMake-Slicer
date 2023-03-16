@@ -160,7 +160,7 @@ ComboBox {
                 clip: true
                 model: control.popup.visible ? control.delegateModel : null
                 currentIndex: control.highlightedIndex
-                ScrollIndicator.vertical: ScrollIndicator { }
+               // ScrollIndicator.vertical: ScrollIndicator { }
             }
         }
     }

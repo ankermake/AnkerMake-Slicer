@@ -49,7 +49,8 @@ FdmGcodeParser::FdmGcodeParser()
          data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, wid);
          data.object = (QWidget *)wid.toULongLong();
          this->sendMsg2Manager(data);
-         m_rpc_inner->setPassParams(wid);
+         auto pass_params = getSceneParams();
+         m_rpc_inner->setPassParams(pass_params);
     });
     connect(m_rpc_inner,&fdmRpcWrapper::cheeckoutPreview,[=](bool isC){
          qDebug() << "isC : " << isC;
@@ -232,11 +233,15 @@ void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
         return ;
     }else{
         this->CurrentShowFile = file;
+        QFileInfo cFileInfo(file);
+        this->CurrentShowFileSize = cFileInfo.size();
     }
     QString originalStlName = msgBody.map.value(AkConst::Param::ORIGINAL_STL_NAME, QString("")).toString();
     
         m_rpc_inner->pubMsgFromFdmGcodePaser(file);
         m_rpc_inner->setOStlName(originalStlName);
+        auto pass_params = getSceneParams();
+        m_rpc_inner->setPassParams(pass_params);
         
         queryLoggingStatus();
         m_pDlg = new ProgressDialog(nullptr);//(QDialog*)this
@@ -245,7 +250,6 @@ void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
         m_pDlg->setCancelVisible(false);
         connect(preview->ww->getGcodeView(),SIGNAL(setValue(int)),m_pDlg,SLOT(setValue(int)));
         m_pDlg->exec();
-
 }
 
 void FdmGcodeParser::openGcodePreviewWithoutFile()
@@ -285,7 +289,8 @@ void FdmGcodeParser::openGcodePreviewInnetwork(const QString& file,const QString
 
 bool FdmGcodeParser::checkOpenFile(QString gcodePath)
 {
-    if(QString::compare(this->CurrentShowFile,gcodePath) == 0){
+    QFileInfo cFileInfo(gcodePath);
+    if(QString::compare(this->CurrentShowFile,gcodePath) == 0  && CurrentShowFileSize == cFileInfo.size()){
         return true;
     }
     return false;
@@ -298,6 +303,46 @@ void FdmGcodeParser::queryLoggingStatus()
     data.dest = AkConst::Plugin::FDM_NETWORK;
     data.msg = AkConst::Msg::GET_LOGGING_STATUS;
     this->sendMsg2Manager(data);
+}
+
+QVariant FdmGcodeParser::getSceneParams()
+{
+    SceneParam iniSceneParam;
+    if (globalParams != NULL)
+    {
+        if(globalParams->hasParameter(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM))
+        {
+            const RichParameter& param = globalParams->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM);
+            const Value& sceneValue = param.value();
+
+            qDebug() << "m_printMachineBox: (" << sceneValue.getSceneParam().m_printMachineBox.m_length
+                     << ", " << sceneValue.getSceneParam().m_printMachineBox.m_width
+                     << ", " << sceneValue.getSceneParam().m_printMachineBox.m_height << ")";
+            iniSceneParam = sceneValue.getSceneParam();
+        }
+        else
+        {
+            iniSceneParam.m_printMachineBox.m_color = QColor(0.313725 * 255, 0.313725 * 255, 0.313725 * 255,1);
+            iniSceneParam.m_printMachineBox.m_height = 250;
+            iniSceneParam.m_printMachineBox.m_length = 235;
+            iniSceneParam.m_printMachineBox.m_width = 235;
+            iniSceneParam.m_printMachineBox.num = 11513528;
+            iniSceneParam.m_printMachineBox.m_lineWidth = 1;
+            iniSceneParam.m_eye = QVector3D(0, 0, 0);
+            iniSceneParam.m_front = QVector3D(0, 0, 0);
+            iniSceneParam.m_up = QVector3D(0, 0, 0);
+        }
+    }
+    qRegisterMetaTypeStreamOperators<passSceneParam>("passSceneParam");
+    passSceneParam pSP;
+    pSP.m_eye = iniSceneParam.m_eye;
+    pSP.m_front = iniSceneParam.m_front;
+    pSP.m_up = iniSceneParam.m_up;
+    pSP.m_backgroundColor = iniSceneParam.m_backgroundColor;
+    pSP.m_printMachineBox = iniSceneParam.m_printMachineBox;
+    QVariant pspV ;
+    pspV.setValue(pSP);
+    return pspV;
 }
 
 FdmGcodeParser::~FdmGcodeParser()

@@ -1055,6 +1055,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMeshgroup: false
                 fdmAffectedById: ""
             }
+            FdmQml_Param{ id:check_param_lost_interval; objectName: "check_param_lost_interval"
+                fdmLabel: "check param lost interval"
+                fdmDescription: "check whether the parameter lost every interval seconds."
+                fdmType: "int"
+                fdmDefaultValue: 60
+                fdmEnabled: true
+                fdmAffectedById: ""
+            }
             FdmQml_Param{ id:coasting_enable; objectName: "coasting_enable"
                 fdmLabel: "Enable Coasting"
                 fdmDescription: "Coasting replaces the last part of an extrusion path with a travel path. The oozed material is used to print the last piece of the extrusion path in order to reduce stringing."
@@ -4016,7 +4024,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmMaximumValue: speed_print.fdmMaximumValue
                         fdmMaximumValueWarning: speed_print.fdmMaximumValueWarning
                         fdmDefaultValue: 150.0
-                        fdmValue: Math.min(Number(speed_wall.fdmValue) * 2, 250)
+                        fdmValue: Math.min(Number(speed_wall.fdmValue) * 5/3, 250) //Math.min(Number(speed_wall.fdmValue) * 2, 250)
                         fdmLimitToExtruder: Number(wall_x_extruder_nr.fdmValue)
                         fdmSettablePerMesh: true
                         fdmAffectedById: "wall_x_extruder_nr"
@@ -5465,7 +5473,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     "gyroid": "Gyroid"
                 }
                 fdmDefaultValue: "zigzag"
-                fdmEnabled: support_enable.fdmValue || support_meshes_present.fdmValue
+                fdmEnabled: (support_enable.fdmValue || support_meshes_present.fdmValue) && support_structure.fdmValue!=="tree"
                 fdmLimitToExtruder: Number(support_infill_extruder_nr.fdmValue)
                 fdmSettablePerMesh: false
                 fdmSettablePerExtruder: true

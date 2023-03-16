@@ -92,18 +92,14 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
     line7->setLineWide(2);
     line8->setLineWide(2);
 
-    
-    /*m_platform = CHMeshShowObjPtr(new CHMeshShowObj);
-    m_platform->m_vertices.push_back(QVector3D(lenth / 2, wide / 2, 0));
-    m_platform->m_vertices.push_back(QVector3D(-lenth / 2, wide / 2, 0));
-    m_platform->m_vertices.push_back(QVector3D(-lenth / 2, -wide / 2, 0));
-    m_platform->m_vertices.push_back(QVector3D(lenth / 2, -wide / 2, 0));
-    m_platform->m_nors.push_back(QVector3D(0, 0, 1));
-    m_platform->m_nors.push_back(QVector3D(0, 0, 1));
-    m_platform->m_nors.push_back(QVector3D(0, 0, 1));
-    m_platform->m_nors.push_back(QVector3D(0, 0, 1));
-    m_platform->m_trians.push_back(MyTriangle(0, 1, 3));
-    m_platform->m_trians.push_back(MyTriangle(1, 2, 3));*/
+    line1->setObjectName("mechine_line1");
+    line2->setObjectName("mechine_line2");
+    line3->setObjectName("mechine_line3");
+    line4->setObjectName("mechine_line4");
+    line5->setObjectName("mechine_line5");
+    line6->setObjectName("mechine_line6");
+    line7->setObjectName("mechine_line7");
+    line8->setObjectName("mechine_line8");
 
     m_baseShowObjs.push_back(line1);
     m_baseShowObjs.push_back(line2);
@@ -122,6 +118,7 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
         CHLineSegment3DShowObjPtr tline(new CHLineSegment3DShowObj);
         // tline->create(QVector3D(-lenth / 2, wide / num * i - wide / 2, 0), QVector3D(lenth / 2, wide / num * i - wide / 2, 0));
         tline->create(QVector3D(0, wide / num * i, 0), QVector3D(lenth, wide / num * i, 0));
+        tline->setObjectName("mechine_bottom_length:" + QString::number(i));
         tline->setLineWide(1);
         m_baseShowObjs.push_back(tline);
     }
@@ -130,6 +127,7 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
         CHLineSegment3DShowObjPtr tline(new CHLineSegment3DShowObj);
         //tline->create(QVector3D(lenth / num * i - lenth / 2, -wide / 2, 0), QVector3D(lenth / num * i - lenth / 2, wide / 2, 0));
         tline->create(QVector3D(lenth / num * i, 0, 0), QVector3D(lenth / num * i, wide, 0));
+        tline->setObjectName("mechine_bottom_width:" + QString::number(i));
         tline->setLineWide(1);
         m_baseShowObjs.push_back(tline);
     }
@@ -148,6 +146,7 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
     adjustAxisX->setVisuable(true);
     adjustAxisX->setCalLight(false);
     adjustAxisX->setWidth(5.0);
+    adjustAxisX->setObjectName("adjustAxisX");
     //adjustAxisX->setLightTest(false);
     adjustAxisY = CoordinateAxisPtr(new CoordinateAxis);
     adjustAxisY->create(originPoint, QVector3D(0, 1, 0), wide / 5,  wide / 100.0, wide / 20.0);
@@ -155,12 +154,14 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
     adjustAxisY->setVisuable(true);
     adjustAxisY->setCalLight(false);
     adjustAxisY->setWidth(5.0);
+    adjustAxisY->setObjectName("adjustAxisY");
     //adjustAxisY->setLightTest(false);
     adjustAxisZ = CoordinateAxisPtr(new CoordinateAxis);
     adjustAxisZ->create(originPoint, QVector3D(0, 0, 1), height / 5, height / 200.0, height / 20.0);
     adjustAxisZ->setColor(QColor(0, 0, 125));
     adjustAxisZ->setVisuable(true);
     adjustAxisZ->setCalLight(false);
+    adjustAxisZ->setObjectName("adjustAxisZ");
     //adjustAxisZ->setLightTest(false);
     adjustAxisZ->setWidth(5.0);
     adjustOrigin = CHPointShowObjPtr(new CHPointShowObj);
@@ -168,6 +169,7 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
     adjustOrigin->setColor(QColor(125, 0, 125));
     adjustOrigin->setCalLight(false);
     adjustOrigin->setSize(5);
+    adjustOrigin->setObjectName("adjustOrigin");
     m_baseShowObjs.push_back(adjustAxisX);
     m_baseShowObjs.push_back(adjustAxisY);
     m_baseShowObjs.push_back(adjustAxisZ);
@@ -191,6 +193,7 @@ void CHPrintMachineBox::create(QString logoPath, float lenth, float wide, float 
     m_logo->setVisuable(true);
     //m_logo->setLightTest(true);
     m_logo->setCalLight(false);
+    m_logo->setObjectName("logo");
     m_logo->m_showMode = ShowMode::MeshShowFace;
     //qDebug() << "points: " << vcgmesh.vert.size();
 
@@ -294,6 +297,15 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     line7->setLineWide(2);
     line8->setLineWide(2);
 
+    line1->setObjectName("mechine_line1");
+    line2->setObjectName("mechine_line2");
+    line3->setObjectName("mechine_line3");
+    line4->setObjectName("mechine_line4");
+    line5->setObjectName("mechine_line5");
+    line6->setObjectName("mechine_line6");
+    line7->setObjectName("mechine_line7");
+    line8->setObjectName("mechine_line8");
+
     m_baseShowObjs.push_back(line1);
     m_baseShowObjs.push_back(line2);
     m_baseShowObjs.push_back(line3);
@@ -312,6 +324,7 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
         tline->create(QVector3D(0, wide / num * i, 0), QVector3D(lenth, wide / num * i, 0));
         tline->setColor(boxColor);
         tline->setLineWide(1);
+        tline->setObjectName("mechine_bottom_length:" + QString::number(i));
         m_baseShowObjs.push_back(tline);
     }
     for (int i = 0; i < num + 1; i++)
@@ -321,6 +334,7 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
         tline->create(QVector3D(lenth / num * i, 0, 0), QVector3D(lenth / num * i, wide, 0));
         tline->setColor(boxColor);
         tline->setLineWide(1);
+        tline->setObjectName("mechine_bottom_width:" + QString::number(i));
         m_baseShowObjs.push_back(tline);
     }
 
@@ -338,6 +352,7 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     adjustAxisX->setVisuable(true);
     adjustAxisX->setCalLight(false);
     adjustAxisX->setWidth(5.0);
+    adjustAxisX->setObjectName("adjustAxisX");
     //adjustAxisX->setLightTest(false);
     adjustAxisY = CoordinateAxisPtr(new CoordinateAxis);
     adjustAxisY->create(originPoint, QVector3D(0, 1, 0), wide / 5, trad, theight);
@@ -345,6 +360,7 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     adjustAxisY->setVisuable(true);
     adjustAxisY->setCalLight(false);
     adjustAxisY->setWidth(5.0);
+    adjustAxisY->setObjectName("adjustAxisY");
     //adjustAxisY->setLightTest(false);
     adjustAxisZ = CoordinateAxisPtr(new CoordinateAxis);
     adjustAxisZ->create(originPoint, QVector3D(0, 0, 1), height / 5, trad, theight);
@@ -353,11 +369,13 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     adjustAxisZ->setCalLight(false);
     //adjustAxisZ->setLightTest(false);
     adjustAxisZ->setWidth(5.0);
+    adjustAxisZ->setObjectName("adjustAxisZ");
     adjustOrigin = CHPointShowObjPtr(new CHPointShowObj);
     adjustOrigin->create(originPoint);
     adjustOrigin->setColor(QColor(125, 0, 125));
     adjustOrigin->setCalLight(false);
     adjustOrigin->setSize(5);
+    adjustOrigin->setObjectName("adjustOrigin");
     m_baseShowObjs.push_back(adjustAxisX);
     m_baseShowObjs.push_back(adjustAxisY);
     m_baseShowObjs.push_back(adjustAxisZ);
@@ -367,6 +385,7 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     CHMeshShowObjPtr m_logo(new CHMeshShowObj);
     m_logo->setLogo(true);
     m_logo->setCalLight(false);
+    m_logo->setObjectName("logo");
     //m_logo->setLightTest(true);
     m_logo->m_showMode = ShowMode::MeshShowFace;
     std::vector<QVector3D>& points = m_logo->m_vertices;
@@ -427,6 +446,158 @@ void CHPrintMachineBox::create(const CMeshO& logoMesh, float lenth, float wide, 
     m_baseShowObjs.push_back(m_logo);
 
     qDebug() << "Base Show Size: " << m_baseShowObjs.size();
+}
+
+void CHPrintMachineBox::updateMechineSize(float lenth, float wide, float height)
+{
+    if(m_baseShowObjs.empty()) 
+    {
+        return;
+    }
+    
+    m_baseAABB.makeEmpty();
+    m_baseAABB.add(QVector3D(0, 0, 0));
+    m_baseAABB.add(QVector3D(lenth, wide, height));
+    m_realAABB = m_baseAABB;
+
+    
+    QVector3D originPoint = QVector3D(0, 0, 0);
+    float trad = 1.5;
+    float theight = 10;
+    int num = 30;
+
+    for(auto it = m_baseShowObjs.begin(); it != m_baseShowObjs.end(); it++)
+    {
+        if((*it)->getObjectName() == "mechine_line1")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(0, 0, 0), QVector3D(0, 0, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line2")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(lenth, 0, 0), QVector3D(lenth, 0, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line3")
+        {
+            (*it)->setDirty(true); 
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(0, wide, 0), QVector3D(0, wide, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line4")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(lenth, wide, 0), QVector3D(lenth, wide, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line5")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(0, 0, height), QVector3D(0, wide, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line6")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(0, wide, height), QVector3D(lenth, wide, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line7")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(lenth, wide, height), QVector3D(lenth, 0, height));
+            }
+        }
+        else if((*it)->getObjectName() == "mechine_line8")
+        {
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(lenth, 0, height), QVector3D(0, 0, height));
+            }
+        }
+        else if((*it)->getObjectName() == "adjustAxisX")
+        {
+            if(std::dynamic_pointer_cast<CoordinateAxis>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CoordinateAxis>(*it)->updateCoordinateAxis(originPoint, QVector3D(1, 0, 0), lenth / 5, trad, theight);
+            }
+        }
+        else if((*it)->getObjectName() == "adjustAxisY")
+        {
+            if(std::dynamic_pointer_cast<CoordinateAxis>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CoordinateAxis>(*it)->updateCoordinateAxis(originPoint, QVector3D(0, 1, 0), wide / 5, trad, theight);
+            }
+        }
+        else if((*it)->getObjectName() == "adjustAxisZ")
+        {
+            if(std::dynamic_pointer_cast<CoordinateAxis>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CoordinateAxis>(*it)->updateCoordinateAxis(originPoint, QVector3D(0, 0, 1), height / 5, trad, theight);
+            }
+        }
+        else if((*it)->getObjectName() == "logo")
+        {
+            if(std::dynamic_pointer_cast<CHMeshShowObj>(*it) != nullptr)
+            {
+                
+                //QMatrix4x4 tran1;
+                //tran1.rotate(-90, QVector3D(1, 0, 0));
+                //std::dynamic_pointer_cast<CHMeshShowObj>(*it)->setTransform(tran1);
+                CHAABB3D aabb = std::dynamic_pointer_cast<CHMeshShowObj>(*it)->calRealAABB();
+                float scaleValue = lenth / aabb.getLenX() * 0.5;
+                QMatrix4x4 tran2, tran3;
+                tran2 = TransformPack::scale(aabb.getCenterPoint(), scaleValue, scaleValue, scaleValue);
+                tran3.translate(QVector3D(lenth / 2, wide / 4, 0) - aabb.getCenterPoint());
+                std::dynamic_pointer_cast<CHMeshShowObj>(*it)->setTransform(tran3 * tran2 * (*it)->getTransform());
+                (*it)->setDirty(true); 
+            }
+        }
+
+        if((*it)->getObjectName().contains("mechine_bottom_length:"))
+        {
+            QString tmpName = (*it)->getObjectName();
+            int index = tmpName.lastIndexOf(":") + 1;
+            int i = tmpName.mid(index, tmpName.length() - index).toInt();
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(0, wide / num * i, 0), QVector3D(lenth, wide / num * i, 0));
+            }
+        }
+        if((*it)->getObjectName().contains("mechine_bottom_width:"))
+        {
+            QString tmpName = (*it)->getObjectName();
+            int index = tmpName.lastIndexOf(":") + 1;
+            int i = tmpName.mid(index, tmpName.length() - index).toInt();
+            if(std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it) != nullptr)
+            {
+                (*it)->setDirty(true); 
+                std::dynamic_pointer_cast<CHLineSegment3DShowObj>(*it)->create(QVector3D(lenth / num * i, 0, 0), QVector3D(lenth / num * i, wide, 0));
+            }
+        }
+    }
+    this->updateToScene();
 }
 
 CMeshO CHPrintMachineBox::getLogoCMeshO() const

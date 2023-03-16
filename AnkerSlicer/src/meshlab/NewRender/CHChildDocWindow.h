@@ -42,6 +42,7 @@ public:
 	void generateBasePointBuffer();
 
 	void createMachineBox(const QString& logPath, float x, float y, float z, QColor color = QColor(229, 229, 229));
+    void updateMechineBox(float x, float y, float z);
 
 	void setView(const CH3dView::ViewType& _type, const CHAABB3D& aabb);
 

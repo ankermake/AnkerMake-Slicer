@@ -117,30 +117,30 @@ void CHPickOperationCommand::mousePressEvent(QMouseEvent* event)
         }
     };
 
-    
-    auto sceneMenu = [this](){
-        
-        if (m_tmesh && m_tmesh->getStatus() == canPicked)
-        {
-            m_tmesh->setStatus(general);
-            m_tmesh = 0;
-            curScene->refresh();
-        }
 
-        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
-        rightMenu->setEnabledDelete(hasSelected);
-        rightMenu->setEnabledCopy  (hasSelected);
-        rightMenu->setEnabledHide  (hasSelected);
-        rightMenu->setEnabledShow  (hasSelected);
-        rightMenu->setEnabledReset (hasSelected);
-        rightMenu->setEnabled(hasSelected);
+//    auto sceneMenu = [this](){
 
-        if (m_copiedObjs.size() == 0){
-            rightMenu->setEnabledPaste (false);
-        }
-        rightMenu->show();
-        rightMenu->popup(QCursor::pos());
-    };
+//        if (m_tmesh && m_tmesh->getStatus() == canPicked)
+//        {
+//            m_tmesh->setStatus(general);
+//            m_tmesh = 0;
+//            curScene->refresh();
+//        }
+
+//        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
+//        rightMenu->setEnabledDelete(hasSelected);
+//        rightMenu->setEnabledCopy  (hasSelected);
+//        rightMenu->setEnabledHide  (hasSelected);
+//        rightMenu->setEnabledShow  (hasSelected);
+//        rightMenu->setEnabledReset (hasSelected);
+//        rightMenu->setEnabled(hasSelected);
+
+//        if (m_copiedObjs.size() == 0){
+//            rightMenu->setEnabledPaste (false);
+//        }
+//        rightMenu->show();
+//        rightMenu->popup(QCursor::pos());
+//    };
 
     
     
@@ -169,7 +169,7 @@ void CHPickOperationCommand::mousePressEvent(QMouseEvent* event)
     }
     else if (event->button() == Qt::RightButton)
     {
-        sceneMenu(); 
+        
     }
 }
 
@@ -249,6 +249,35 @@ void CHPickOperationCommand::mouseReleaseEvent(QMouseEvent* event)
         if(event->isAccepted()){
             return;
         }
+    }
+
+    
+    auto sceneMenu = [this](){
+        
+        if (m_tmesh && m_tmesh->getStatus() == canPicked)
+        {
+            m_tmesh->setStatus(general);
+            m_tmesh = 0;
+            curScene->refresh();
+        }
+
+        bool hasSelected = (havePickedPrintObjs() || haveCanPickedObj());//(m_selectedObjs.size() > 0);
+        rightMenu->setEnabledDelete(hasSelected);
+        rightMenu->setEnabledCopy  (hasSelected);
+        rightMenu->setEnabledHide  (hasSelected);
+        rightMenu->setEnabledShow  (hasSelected);
+        rightMenu->setEnabledReset (hasSelected);
+        rightMenu->setEnabled(hasSelected);
+
+        if (m_copiedObjs.size() == 0){
+            rightMenu->setEnabledPaste (false);
+        }
+        rightMenu->show();
+        rightMenu->popup(QCursor::pos());
+    };
+    if (event->button() == Qt::RightButton && !mouseRightMoved)
+    {
+        sceneMenu(); 
     }
 }
 
@@ -342,7 +371,8 @@ void CHPickOperationCommand::selectAllobjs()
     for (int i = 0; i < getDoc()->m_printObjs.size(); i++)
     {
         getDoc()->m_printObjs[i]->setStatus(selected);
-        m_selectedObjs.insert(getDoc()->m_printObjs[i]);
+        if(getDoc()->m_printObjs[i]->getVisuable())
+            m_selectedObjs.insert(getDoc()->m_printObjs[i]);
     }
 
     

@@ -44,6 +44,7 @@
 #include "controls/useragreementwidget.h"
 #include "common/utilities/ioapi.h"
 #include "common/Socket/HeartBeatThead.h"
+#include "dbgcrash.h"
 
 #ifdef _WIN32
 #define ANKERMAKE_EXE "AnkerMake.exe"
@@ -79,48 +80,6 @@ int AmdPowerXpressRequestHighPerformance = 1;
 void handleCriticalError(const MLException& exc);
 void wait(unsigned int TimeMS);
 
-
-#if defined(Q_OS_WIN32)
-static LONG WINAPI crashStackCallback(struct _EXCEPTION_POINTERS* exceptionInfo) {
-
-    auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QString savePath = QDir(writableLocation).absoluteFilePath("log");
-    QDir dir(savePath);
-    if(!dir.exists() && !dir.mkpath(savePath)) {
-        return EXCEPTION_EXECUTE_HANDLER;
-    }
-
-    QString dumpFile = "dump_" + QDateTime::currentDateTime().toString("yyyyMMddhhmmsszzz") + ".dmp";
-    auto dumpFullName =  dir.absoluteFilePath(dumpFile);
-    HANDLE dump = CreateFileW(dumpFullName.toStdWString().c_str(), GENERIC_WRITE,
-                              0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-    if(INVALID_HANDLE_VALUE == dump) {
-        return EXCEPTION_EXECUTE_HANDLER;
-    }
-
-    EXCEPTION_RECORD *record = exceptionInfo->ExceptionRecord;
-    QString errCode(QString::number(record->ExceptionCode, 16));
-    QString errAddr(QString::number((qint64)record->ExceptionAddress, 16));
-    QString errFlag(QString::number(record->ExceptionFlags, 16));
-    QString errPara(QString::number(record->NumberParameters, 16));
-    TFatal("Application is crashed. please see dump file "  + dumpFullName  + " errCode:" + errCode + " errAddr:" + errAddr + " errFlag:" + errFlag + " errPara:"+errPara);
-
-
-    MINIDUMP_EXCEPTION_INFORMATION miniDumpExceptionInfo;
-    miniDumpExceptionInfo.ExceptionPointers = exceptionInfo;
-    miniDumpExceptionInfo.ThreadId = GetCurrentThreadId();
-    miniDumpExceptionInfo.ClientPointers = TRUE;
-    DWORD idProcess = GetCurrentProcessId();
-    MiniDumpWriteDump(GetCurrentProcess(), idProcess, dump,
-                      MiniDumpWithFullMemory, &miniDumpExceptionInfo, NULL, NULL);
-
-    
-    CloseHandle(dump);
-
-    return EXCEPTION_EXECUTE_HANDLER;
-}
-#endif
-
 int main(int argc, char *argv[]){
 // QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 //    MeshLabApplication app(argc, argv);
@@ -139,8 +98,10 @@ int main(int argc, char *argv[]){
 //    TDebug("Application exec Start...");
 
 #if defined(Q_OS_WIN32)
-    SetUnhandledExceptionFilter(crashStackCallback);
+    //SetUnhandledExceptionFilter(crashStackCallback);
+    SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ApplicationCrashHandler);
 #endif
+
 
     
     {
@@ -223,7 +184,7 @@ int main(int argc, char *argv[]){
 
     MeshLabApplication app(argc, argv);
     
-    int clearLogCreatedMoreThanXDays = 5;
+    int clearLogCreatedMoreThanXDays = 2;
     QString logPath = TLogger::instance()->getLogPath();
     QStringList filter;
     filter << "*.log";

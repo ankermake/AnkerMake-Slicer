@@ -123,11 +123,10 @@ void AnkerMainWindow::init()
 
 void AnkerMainWindow::initMainWindow() {
     TFunction("");
-    QString title = MeshLabApplication::appVer(true, true);  //  change @2022-06-06 by CL
     QSettings settings;
     setContextMenuPolicy(Qt::NoContextMenu);
     setWindowIcon(QIcon(":/logo_AnkerMake.png")); 
-    setWindowTitle(title);
+    setWindowTitle("AnkerMake");
 
     setMinimumSize(1200, 720);
     m_meshSuffixList << "obj" << "stl";
@@ -242,6 +241,10 @@ void AnkerMainWindow::initFdmWidget()
     FdmMainWidget* mainwidget = new FdmMainWidget(messageProcessing, m_mainTitleBar, m_controlManager, this);
     mainwidget->setMainWindowId(window()->winId());
     connect(mainwidget, &FdmMainWidget::unloadPlugins, this, &AnkerMainWindow::unloadPluginsSlot);
+    connect(mainwidget, &FdmMainWidget::closeMainWindow, this, &AnkerMainWindow::onButtonCloseClicked);
+    
+    connect(this, &AnkerMainWindow::pluginsUnloaded, mainwidget, &FdmMainWidget::pluginsUnloaded);
+
     connect(mainwidget, SIGNAL(fdmOpenFile()), this, SLOT(open()));
     connect(mainwidget, SIGNAL(fdmSaveAllMesh()), this, SLOT(saveAllMesh()));
     connect(mainwidget, SIGNAL(fdmSaveMesh()), this, SLOT(saveMesh()));
@@ -632,9 +635,18 @@ void AnkerMainWindow::mainMachineBoxChanged(const Value &value)
     CHChildDocWindow* docWindow = static_cast<CHChildDocWindow*>(curScene);
     //  docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(229, 229, 229));
     // docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(102, 102, 102));
-    docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(80, 80, 80));
+    if(docWindow->m_doc->m_machineBox == nullptr)
+    {
+        docWindow->createMachineBox(QString("/models/logo.stl"), size.X(), size.Y(), size.Z(), QColor(80, 80, 80));
+    }
+    else
+    {
+        docWindow->updateMechineBox(size.X(), size.Y(), size.Z());
+        qDebug() << "update Mechine: " << size.X() << size.Y() << size.Z();
+    }
+
     emit docWindow->machinePlatformSizeSignal(size.X(), size.Y(), size.Z());
-    qDebug() << "mainMachineBoxChanged: " << size.X() << size.Y() << size.Z() << AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE << "&RichParameterQObject::valueChange";
+    qDebug() << "mainMachineBoxChanged111: " << size.X() << size.Y() << size.Z() << AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE << "&RichParameterQObject::valueChange";
     getDoc()->modelCheckSceneInChanged();
     if(defaultGlobalParams.hasParameter(AkConst::GlobalParameterKeys::ANKER_SCENE_PARAM))
     {
@@ -690,6 +702,9 @@ void AnkerMainWindow::openGcodePreview(const QString& fileName)
     data.dest = AkConst::Plugin::FDM_GCODE_PARSER;
     data.msg = AkConst::Msg::PREVIEW_GCODE;
     data.map.insert(AkConst::Param::GCODE_FILE, fileName);
+    QFileInfo fileInfo(fileName);
+    QString ostNameT = fileInfo.fileName().replace(".gcode","");
+    data.map.insert(AkConst::Param::ORIGINAL_STL_NAME,ostNameT);
 
     
     messageProcessing->sendMsg2Manager(data);
@@ -858,7 +873,7 @@ void AnkerMainWindow::saveMesh()
     }
     CMeshO cm;
     ProjectLoadSave::getInstance().mergeModel(modelPtrList, cm);
-    exportMesh_ak(tr(""), cm);
+    exportMesh_ak((*modelsPtr.begin())->getObjectName(), cm);
     //saveAs_ak();
 }
 
@@ -885,7 +900,7 @@ void AnkerMainWindow::saveAllMesh()
     }
     CMeshO cm;
     ProjectLoadSave::getInstance().mergeModel(modelPtrList, cm);
-    exportMesh_ak(tr(""), cm);
+    exportMesh_ak((*modelsPtr.begin())->getObjectName(), cm);
 }
 
 void AnkerMainWindow::slotSaveAsProject()
@@ -921,6 +936,8 @@ void AnkerMainWindow::slotSaveAsProject()
     else
     {
         //QMessageBox::warning(NULL, tr("Save As"), tr("Save As Failed!"));
+        control::MessageDialog messageBox(tr("Warning"), tr("An unknown error has occurred, please try again"), MessageDialog::OK);
+        messageBox.exec();
     }
 }
 
@@ -1021,7 +1038,7 @@ bool AnkerMainWindow::QCallBack_ak(const int pos, const char* str)
         {
             return true;
         }
-        emit importModelThread->openData(pos, QString(str));
+        emit importModelThread->openData(pos, tr(""));
 
         lastPos = pos;
     }
@@ -1032,7 +1049,7 @@ bool AnkerMainWindow::QCallBack_ak(const int pos, const char* str)
         {
             return true;
         }
-        emit exportModelThread->exportData(pos, QString(str));
+        emit exportModelThread->exportData(pos, QString(""));
         lastPos = pos;
     }
 
@@ -1433,7 +1450,8 @@ void AnkerMainWindow::closeEvent(QCloseEvent* event)
 //        for (auto fp : plugins) {
 //            PM.unloadPlugin(fp);
 //        }
-        unloadPluginsSlot();
+        
+        //unloadPluginsSlot();
         QMainWindow::closeEvent(event);
         return;
 
@@ -1533,14 +1551,20 @@ void AnkerMainWindow::getMask(int& mask, const CMeshO& cm)
 
 bool AnkerMainWindow::exportMesh_ak(const QString& _fileName, CMeshO& cm)
 {
-    QStringList recentList = m_settings->readRecent();
-        QString lastPath = QApplication::applicationDirPath() + "//document";
-        if (!recentList.isEmpty()) {
-            lastPath = recentList.first();
-        }
+    QString lastPath = QApplication::applicationDirPath() + "/document";
+    QString recentExport = m_settings->readExportRecent();
+    if(!recentExport.isEmpty())
+    {
+        lastPath = recentExport;
+    }
+    lastPath += "/" + _fileName + ".stl";
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save Model File"), lastPath, QString("Model Files(*.stl) ;; Model Files(*.obj)"));
     if (fileName.isEmpty())
         return false;
+    int index1 = fileName.lastIndexOf("/");
+    //qDebug() << "write recent export: " << fileName.mid(0, index1);
+    m_settings->writeExportRecent(fileName.mid(0, index1));
+
     QFileInfo fi(fileName);
     QString format = fi.suffix();
 
@@ -1769,6 +1793,8 @@ void AnkerMainWindow::onButtonCloseClicked()
     close();
 }
 
+
+
 void AnkerMainWindow::unloadPluginsSlot()
 {
     QList<MeshLabPlugin*> plugins;
@@ -1780,6 +1806,7 @@ void AnkerMainWindow::unloadPluginsSlot()
     for (auto fp : plugins) {
         PM.unloadPlugin(fp);
     }
+    emit pluginsUnloaded();
 }
 
 bool AnkerMainWindow::eventFilter(QObject *watched, QEvent *event)

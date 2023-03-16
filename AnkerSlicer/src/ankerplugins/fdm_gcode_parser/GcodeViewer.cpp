@@ -1114,11 +1114,17 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
         if (move.type == EMoveType::Extrude) {
             // layers zs
             const double* const last_z = m_layers.empty() ? nullptr : &m_layers.get_zs().back();
+
             double z = static_cast<double>(move.position[2]);
-            if (last_z == nullptr || z < *last_z - EPSILON || *last_z + EPSILON < z)
+            
+            if(move.layerId > m_layers.size())
                 m_layers.append(z, { last_travel_s_id, i }, { 0 });//new layer
             else
                 m_layers.get_endpoints().back().last = i;
+//            if (last_z == nullptr || z < *last_z - EPSILON || *last_z + EPSILON < z)
+//                m_layers.append(z, { last_travel_s_id, i }, { 0 });//new layer
+//            else
+//                m_layers.get_endpoints().back().last = i;
             //cal filament
             m_layers.get_filamentcost().back()[move.extrusion_role] += move.delta_extruder;
             // extruder ids
@@ -1126,7 +1132,6 @@ void GcodeViewer::load_toolpaths(const GCodeProcessor::Result& gcode_result)
             // roles
             if (i > 0)
                 m_roles.emplace_back(move.extrusion_role);
-
 
         }
         else if (move.type == EMoveType::Travel) {
@@ -2712,16 +2717,63 @@ void GcodeViewer::loadGcode()
 
 }
 
+int GcodeViewer::waitForFileClose(QString filePath, qint64 fileSize)
+{
+
+    if(fileSize < 0){
+        AkUtil::TDebug("error : save file's size < 0");
+    }
+    qint64 curSize = QFileInfo(filePath).size();
+    while(curSize < fileSize){
+        QThread::msleep(100);
+        QFileInfo  tfileinfo(filePath);
+        if(!tfileinfo.isFile()){
+            return -1;
+        }
+        curSize = tfileinfo.size();
+    }
+    return 0;
+}
+
 void GcodeViewer::setSceneParams(const SceneParam & param)
 {
     m_sceneParam = param;
     if (m_scene3d)
     {
         m_scene3d->setSceneParams(param);
-        update();
+        qDebug() << "update Mechine size: " << m_sceneParam.m_printMachineBox.m_length << ", "
+                 << m_sceneParam.m_printMachineBox.m_width << ", "
+                 << m_sceneParam.m_printMachineBox.m_height;
+        m_renderData->m_printMachineBoxPtr->updateMechineSize(m_sceneParam.m_printMachineBox.m_length,
+                                                              m_sceneParam.m_printMachineBox.m_width,
+                                                              m_sceneParam.m_printMachineBox.m_height);
+        for (auto meshIt = m_renderData->m_allmeshes.begin(); meshIt != m_renderData->m_allmeshes.end(); meshIt++)
+        {
+            if(meshIt->first->getDirty())
+            {
+                meshIt->first->setDirty(false);
+                
+                meshIt->second->m_vbo.destroy();
+            }
+            writeToGPUBUffer(meshIt->first, meshIt->second);
+        }
+
+        for (auto curveIt = m_renderData->m_allcurves.begin(); curveIt != m_renderData->m_allcurves.end(); curveIt++)
+        {
+            if(curveIt->first->getDirty())
+            {
+                curveIt->first->setDirty(false);
+                
+                curveIt->second->m_vbo.destroy();
+            }
+            writeToGPUBUffer(curveIt->first, curveIt->second);
+        }
+//        update();
     }else
     {
         //scene_part
+
+
         this->makeCurrent();
         
         m_scene3d_init_mutex.lock();
@@ -3345,6 +3397,7 @@ void GcodeViewer::mouseMoveEvent(QMouseEvent * event)
     //    }
     QOpenGLWidget::update();
     event->accept();
+    QWidget::mouseMoveEvent(event);
 }
 
 void GcodeViewer::mouseDoubleClickEvent(QMouseEvent * event)
@@ -3367,6 +3420,7 @@ void GcodeViewer::mousePressEvent(QMouseEvent * event)
 
     QOpenGLWidget::update();
     event->accept();
+    QWidget::mousePressEvent(event);
 }
 
 void GcodeViewer::mouseReleaseEvent(QMouseEvent * event)
@@ -3376,26 +3430,28 @@ void GcodeViewer::mouseReleaseEvent(QMouseEvent * event)
         return;
     m_scene3d->setMousePress(false);
     m_scene3d->setBMove(true);
-    QWidget::mouseReleaseEvent(event);
+
     QOpenGLWidget::update();
+    QWidget::mouseReleaseEvent(event);
     //event->accept();
 }
 
 void GcodeViewer::wheelEvent(QWheelEvent * event)
 {
     AkUtil::TDebug("------------- GcodeViewer::wheelEvent--------------");
-    //setFocus();
-    //qDebug() << "gcodeViewer hasFocus ()" << this->hasFocus();
-    if (m_scene3d == NULL | this->hasFocus() == false)
-    {
-        event->ignore();
-        return;
-    }
+
+    setFocus();
+
+//    if (m_scene3d == NULL | this->hasFocus() == false)
+//    {
+//        event->ignore();
+//        return;
+//    }
     int qwheel = event->delta();
     double zoomScale = (double)(qwheel) / 2000.0;
     m_scene3d->scale(event->x(), event->y(), zoomScale);
-    QOpenGLWidget::update();
-    //event->accept();
+    update();
+    return QOpenGLWidget::wheelEvent(event);
 }
 
 
@@ -3518,6 +3574,8 @@ QString GcodeViewer::sendOriginalStlNamedFile(bool isNeedReplace)
     QString senStr;
     if(this->originalStlName.size() > 0 && matchGcodeName())
     {
+
+        originalStlName = originalStlName.replace(".acode","");
         senStr = QString::fromStdString(this->m_gcode_path).replace(m_gcode_name,originalStlName);
     }else{
         AkUtil::TDebug("originalStlName size < 0 , use default gcode name");
@@ -3693,7 +3751,7 @@ QImage GcodeViewer::render_singe_iamge()
 
     paramsStack pst(this);
     boolLock orc(this->m_orceShader1);
-    //m_scene3d->setVerticalAngle(45.0);
+    m_scene3d->setVerticalAngle(30.0);
 
     QOpenGLFramebufferObjectFormat format;
     format.setSamples(24);
@@ -3727,23 +3785,21 @@ QImage GcodeViewer::render_singe_iamge()
     float length = (m_boundingBox.max - m_boundingBox.min).norm();
 
     
-    float degrees = 15.0f;
+    float degrees = 15.0f; 
+    float e_degrees = qRadiansToDegrees(qAtan(halfDepth/boundbox_height)); 
     float radians = qDegreesToRadians(degrees);
-    //qDebug() <<"(1.0 / qTan(radians))" <<(1.0 / qTan(radians));
-    //float nearWay = (1.0 / qTan(radians)) * 0.5 * boundbox_height;// 1/tan(fov) * h/2
-    //float nearWay_w = boundbox_width / (16.0 / 9.0  * qTan(radians));
-    float nearWay = (1.0 / qTan(radians)) * 0.5 * length;       
-    float nearWay_w = length / (16.0 / 9.0  * qTan(radians));   
-    float nerWay_1 = (1.0 / qTan(radians)) * 0.5 * (boundbox_width * 23.0 / 9.0);      
+    float nearWay = (1.0 / qTan(radians)) * 0.5 * boundbox_height * qCos(qDegreesToRadians(e_degrees)) + halfDepth ;       
+    float nearWay_w = (1.0 / qTan(radians)) * 0.5 * boundbox_width + halfDepth ;    
+    
+    
     nearWay = qMax(nearWay, nearWay_w);
-    nearWay = qMax(nearWay, nerWay_1);
+    //nearWay = qMax(nearWay, nerWay_1);
     
     double dis_near_way = nearWay ;//+ halfDepth;
-    float e_degrees = 15.0f;
     double y_delta = dis_near_way * qCos(qDegreesToRadians(e_degrees));
     double z_delta = dis_near_way * qSin(qDegreesToRadians(e_degrees));
 
-    //qDebug() <<"near way" <<nearWay;
+
     boundcenter[0] = (this->m_boundingBox.max.x() + this->m_boundingBox.min.x()) * 0.5;
     boundcenter[1] = (this->m_boundingBox.max.y() + this->m_boundingBox.min.y()) * 0.5;
     boundcenter[2] = (this->m_boundingBox.max.z() + this->m_boundingBox.min.z()) * 0.5;
@@ -3766,7 +3822,23 @@ QImage GcodeViewer::render_singe_iamge()
     this->set_look_at(std::move(setPosition), std::move(viewCenter), std::move(camLookUp),false);
 
     m_scene3d->resizeWidget(5096, 2867);
-    m_fbo = new QOpenGLFramebufferObject(2867, 2867, format);
+    std::vector<float> roi_info = this->get_roi_info(5096,2867); //OpenGL coord  w  h px py
+    //m_fbo = new QOpenGLFramebufferObject(2867, 2867, format);
+    auto picPending = [](std::vector<float> &roi_info){
+        if(roi_info[0] >= roi_info[1]){
+            //w > h pending h y
+            float pendingVule = roi_info[0] - roi_info[1];
+            roi_info[3] = roi_info[3] - 0.5 * pendingVule;
+            roi_info[1] = roi_info[0];
+        }else{
+            float pendingVule = roi_info[1] - roi_info[0];
+            roi_info[2] = roi_info[2] - 0.5 * pendingVule;
+            roi_info[0] = roi_info[1];
+        }
+        return ;
+    };
+    picPending(roi_info);
+    m_fbo = new QOpenGLFramebufferObject(roi_info[0], roi_info[1], format);
 
     if (!m_fbo->isValid()) {
         //qDebug() << tr("OpenGlOffscreenSurface::recreateFbo() - Failed to create background FBO!");
@@ -3775,7 +3847,8 @@ QImage GcodeViewer::render_singe_iamge()
     // clear framebuffer
     m_fbo->bind();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glViewport((-5096+2867)*0.5, 0,5096, 2867);
+    //glViewport((-5096+2867)*0.5, 0,5096, 2867);
+    glViewport(-roi_info[2], -roi_info[3],5096,2867);
 
     this->offRenderSingle();
     return m_fbo->toImage().scaled(256, 256,Qt::KeepAspectRatio,Qt::SmoothTransformation);
@@ -3842,13 +3915,8 @@ void GcodeViewer::off_render_single(const QImage& res)
             QRegularExpressionMatch match = re.match(line);
             if(match.hasMatch())
             {
-                //AkUtil::TDebug("---read_file render_singe_iamge--");
-//                QImage res = this->render_singe_iamge();
-                //AkUtil::TDebug("---read_file render_singe_iamge scaled--");
-//                QImage scale = res.scaled(256, 256,Qt::KeepAspectRatio,Qt::SmoothTransformation);
-
-//                res.save("testpng.png","PNG");
-//                scale.save("testpngscale.png","PNG");
+                
+                //res.save("testpng.png","PNG");
                 QByteArray arr;
                 QBuffer buffer(&arr);
                 buffer.open(QIODevice::WriteOnly);
@@ -4119,7 +4187,7 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
     {
         QFile::remove(savePath);
     }
-
+    qint64 saveSize = -1;
     //tar .akpic .gcode  TODO:need to add new libtar
     if(isAiMode){
         QFileInfo fileInfo = QFileInfo(_gPath);
@@ -4140,18 +4208,11 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         args.append(fileInfo1.fileName());
         pCmd->start(cmd,args);
         pCmd->waitForStarted();
-        qDebug() << "GcodeView fileName = " << args;
+
         QString debugstr;
         QDebug(&debugstr) <<"tar cmd  program: "<<pCmd->program();
         QDebug(&debugstr) <<"tar cmd  arguments: "<<pCmd->arguments();
-        AkUtil::TDebug(debugstr);
-        connect(pCmd,&QProcess::readyReadStandardError,this,[=]()
-        {
-            
-            QString data=pCmd->readAllStandardError();
-            AkUtil::TDebug("return  cmd : "+data);
-        });
-        pCmd->waitForFinished();
+        saveSize = fileInfo.size() + fileInfo1.size();
     }else{
         
         if(QFile::exists(QString::fromStdString(this->m_gcode_path)))
@@ -4162,8 +4223,21 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         }
         AkUtil::TDebug(QString("this->m_gcode_path " )+QString::fromStdString(this->m_gcode_path.c_str()));
         AkUtil::TDebug(QString("savePath " )+savePath);
+        saveSize = QFileInfo(QString::fromStdString(this->m_gcode_path)).size();
     }
-    emit setValue(100);
+
+    QThreadPool::globalInstance()->start([=](){
+        int re = waitForFileClose(savePath,saveSize);
+        emit setValue(100);
+        if(re != 0)
+        {
+            QMetaObject::invokeMethod(QCoreApplication::instance(), [&] {
+                control::MessageDialog a("ERROR",QObject::tr("An unknown error has occurred, please try again"), control::MessageDialog::BUTTONFLAG::OK);
+                bool re = a.exec();
+            }, Qt::BlockingQueuedConnection);
+        }
+
+    });
     //TODO: change the back
 }
 

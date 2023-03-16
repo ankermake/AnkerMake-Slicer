@@ -1387,7 +1387,8 @@ void FffGcodeWriter::addMeshLayerToGCode_meshSurfaceMode(const SliceDataStorage&
         polygons.add(part.outline);
     }
 
-    ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"));
+    ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"),
+        mesh.settings.get<coord_t>("z_seam_min_angle_diff") / 1000.f, mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f);
     const bool spiralize = Application::getInstance().current_slice->scene.current_mesh_group->settings.get<bool>("magic_spiralize");
     gcode_layer.addPolygonsByOptimizer(polygons, mesh_config.inset0_config, nullptr, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), spiralize);
 
@@ -1438,7 +1439,8 @@ void FffGcodeWriter::addMeshLayerToGCode(const SliceDataStorage& storage, const 
     if (mesh.isPrinted())
     {
         // "normal" meshes with walls, skin, infill, etc. get the traditional part ordering based on the z-seam settings
-        ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"));
+        ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"),
+            mesh.settings.get<coord_t>("z_seam_min_angle_diff") / 1000.f, mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f);
         PathOrderOptimizer part_order_optimizer(gcode_layer.getLastPlannedPositionOrStartingPosition(), z_seam_config);
         for (unsigned int part_idx = 0; part_idx < layer.parts.size(); part_idx++)
         {
@@ -1446,6 +1448,16 @@ void FffGcodeWriter::addMeshLayerToGCode(const SliceDataStorage& storage, const 
             part_order_optimizer.addPolygon((part.insets.size() > 0) ? part.insets[0][0] : part.outline[0]);
         }
         part_order_optimizer.optimize();
+        std::vector<Point3> layer_point;
+        for (int i = 0; i < part_order_optimizer.polygons.size(); i++)
+        {
+            unsigned int point_idx = part_order_optimizer.polyStart[i];
+            ConstPolygonPointer polygon = *part_order_optimizer.polygons[i];
+            ClipperLib::Path path;
+            path.insert(path.begin(), polygon->begin(), polygon->end());
+            layer_point.push_back(Point3(polygon->at(point_idx).X, polygon->at(point_idx).Y, ClipperLib::Orientation(path)));
+        }
+        ZSeamConfig::last_layer_start_point.swap(layer_point);
         for (int part_idx : part_order_optimizer.polyOrder)
         {
             const SliceLayerPart& part = layer.parts[part_idx];
@@ -2302,7 +2314,9 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
         }
         else if (InsetOrderOptimizer::optimizingInsetsIsWorthwhile(mesh, part))
         {
-            InsetOrderOptimizer ioo(*this, storage, gcode_layer, mesh, extruder_nr, mesh_config1, part, gcode_layer.getLayerNr());
+            float z_seam_min_angle_diff = mesh.settings.get<coord_t>("z_seam_min_angle_diff") / 1000.f;
+            float z_seam_max_angle = mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f;
+            InsetOrderOptimizer ioo(*this, storage, gcode_layer, mesh, extruder_nr, mesh_config1, part, gcode_layer.getLayerNr(), z_seam_min_angle_diff, z_seam_max_angle);
             if(0x2 & mesh.settings.get<int>("optimize_single_part_z_seam"))
                 ioo.z_seam_config.isPathOrPolygon = true;   
             return ioo.processInsetsWithOptimizedOrdering();
@@ -2329,7 +2343,8 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                         added_something = true;
                         setExtruder_addPrime(storage, gcode_layer, extruder_nr);
                         gcode_layer.setIsInside(true); // going to print stuff inside print object
-                        ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"));
+                        ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"),
+                            mesh.settings.get<coord_t>("z_seam_min_angle_diff") / 1000.f, mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f);
                         
                         if(0x1 & mesh.settings.get<int>("optimize_single_part_z_seam"))
                             z_seam_config.isPathOrPolygon = true;   
@@ -2353,7 +2368,8 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                     added_something = true;
                     setExtruder_addPrime(storage, gcode_layer, extruder_nr);
                     gcode_layer.setIsInside(true); // going to print stuff inside print object
-                    ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"));
+                    ZSeamConfig z_seam_config(mesh.settings.get<EZSeamType>("z_seam_type"), mesh.getZSeamHint(), mesh.settings.get<EZSeamCornerPrefType>("z_seam_corner"),
+                        mesh.settings.get<coord_t>("z_seam_min_angle_diff") / 1000.f, mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f);
                     Polygons inner_wall = part.insets[processed_inset_number];
                     if (!compensate_overlap_x)
                     {
@@ -2813,6 +2829,15 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
         }
     }
     //Binary 2022/11/16 for top_surface end
+    auto poly = Polygons();
+    if (layer_nr < mesh.layers.size() - 1)
+    {
+        poly = skin_part.outline.difference(mesh.layers[layer_nr + 1].getOutlines());
+    }
+    if ((mesh.settings.get<bool>("top_surface_one_wall") && (poly.size() > 0 || layer_nr == mesh.layers.size() - 1)))
+    {
+        skin_overlap = 0;
+    }
     
     processSkinPrintFeature(storage, gcode_layer, mesh, extruder_nr, skin_part.inner_infill, *skin_config, pattern, skin_angle, skin_overlap, skin_density, monotonic, perimeter_gaps_output, added_something, fan_speed);
 }

@@ -2,8 +2,6 @@
 
 ToolTip::ToolTip(QWidget *parent) : BubbleWidget(parent)
 {
-//    this->setMinimumSize(266,246);
-//    this->setMaximumSize(266,246);
     init();
     this->setFixedWidth(266);
     setAttribute(Qt::WA_ShowWithoutActivating,true);
@@ -27,15 +25,12 @@ void ToolTip::setDescription(const QString &title, const QString &text,  const Q
         }
         affect.append( tr("Affected By") + "<br>"  + QString("<font color = #999999>%1</font>").arg(affectedBy));
     }
-   // qDebug() << " affect ==" << affect;
     if(!affect.isEmpty()) {
         m_affect->setText(affect);
     }
     else {
         m_affect->setVisible(false);
     }
-   // m_despction->adjustSize();
-   // m_affect->adjustSize();
    // qDebug() <<" m_despction size ==" <<m_despction->size() <<" m_affect size =" << m_affect->size();
 }
 
@@ -60,7 +55,6 @@ void ToolTip::init()
     this->setTriangleWidth(20);
     this->setRadius(8);
     QVBoxLayout *mainlayout = new QVBoxLayout(this);
-   // mainlayout->setSpacing(0);
     mainlayout->setContentsMargins(12,12,12,12);
     m_title = new QLabel(this);
     m_title->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Minimum));
@@ -68,9 +62,9 @@ void ToolTip::init()
     Line *line = new Line(this,QString("#565656"),QFrame::HLine);
 
     m_despction = new QLabel(this);
+     m_despction->setSizePolicy(QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding));
     m_despction->setObjectName("m_despction");
-    //m_despction->setStyleSheet("border:1px solid red;");
-    //m_despction->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
+    m_despction->setFixedWidth(235);
     m_despction->adjustSize();
     m_despction->setWordWrap(true);
     mainlayout->addWidget(m_title);
@@ -78,8 +72,6 @@ void ToolTip::init()
     mainlayout->addWidget(m_despction);
 
     m_affect = new QLabel(this);
-    //m_affect->setStyleSheet("border:1px solid red;");
-    //m_affect->setSizePolicy(QSizePolicy(QSizePolicy::Preferred,QSizePolicy::Expanding));
     m_affect->adjustSize();
     m_affect->setWordWrap(true);
 
@@ -96,7 +88,4 @@ void ToolTip::resizeEvent(QResizeEvent *event)
         y = 10;
     }
     this->move(x - 30, y - 1);
-    //this->setMaximumHeight(700);
-   qDebug() << " resizeEvent == " << this->geometry()  << "m_title->height() =  "<< m_title->height() << "m_despction->height() = " << m_despction->height()  << "m_affect->height() =" <<m_affect->height() ;
-
 }

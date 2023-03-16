@@ -7,6 +7,7 @@
 #include <QStandardPaths>
 #include <QProcess>
 #include <QDir>
+#include <QTimer>
 #ifdef __APPLE__
 #include <unistd.h>
 #endif
@@ -85,6 +86,7 @@ void GeneralWidget::init()
     aiLayout->addWidget(m_aiLabel);
 
     m_aiCheckBox = new QCheckBox(tr("Create AI file when slicing."));
+    m_aiCheckBox->setFixedHeight(20);
     m_aiCheckBox->setCheckable(true);
 
     m_aiCheckBox->setChecked(m_settings.getAiMode());
@@ -118,19 +120,31 @@ void GeneralWidget::init()
     fontCheckButton.setPixelSize( 12);
     m_checkButton->setFont(fontCheckButton);
     hlayout->addWidget(m_checkButton);
+
+    m_checkText = new QLabel(this);
+    hlayout->addWidget(m_checkText);
     hlayout->addStretch();
+
     m_updateCheckBox = new QCheckBox(tr("Auto-Check for Updates"));
+    m_updateCheckBox->setFixedHeight(20);
     bool autoUpdateChecked = m_settings.getAutomaticallyUpdate();
     m_updateCheckBox->setChecked(autoUpdateChecked);
     //connect(m_updateCheckBox, &QCheckBox::stateChanged, this, &GeneralWidget::updateCheckBox);
     //m_updateCheckBox->setCheckable(true);
-    PluginMessageData updateData;
-    updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
-    updateData.dest = AkConst::Plugin::FDM_NETWORK;
-    updateData.msg = AkConst::Msg::AUTO_UPDATE;
-    updateData.map.insert(AkConst::Param::UPDATE_DO, autoUpdateChecked);
-    updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
-    emit m_messageProcessing->sendMsg2Manager(updateData);
+    MessageProcessing *tmpMessageProcessing = m_messageProcessing;
+    auto autoUpdateCheck = [autoUpdateChecked, versionStr, tmpMessageProcessing]()
+    {
+        QTimer::singleShot(5000, [autoUpdateChecked, versionStr, tmpMessageProcessing]() {
+            PluginMessageData updateData;
+            updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+            updateData.dest = AkConst::Plugin::FDM_NETWORK;
+            updateData.msg = AkConst::Msg::AUTO_UPDATE;
+            updateData.map.insert(AkConst::Param::UPDATE_DO, autoUpdateChecked);
+            updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+            emit tmpMessageProcessing->sendMsg2Manager(updateData);
+        });
+    };
+
 
     versionLayout->addLayout(hlayout);
     versionLayout->addWidget(m_updateCheckBox);
@@ -147,19 +161,22 @@ void GeneralWidget::init()
     if(!recentVersion.isEmpty() && !recentPath.isEmpty() && recentVersion != versionStr)
     {
         QFileInfo fileInfo(recentPath);
-        if(fileInfo.isFile())
+        if(fileInfo.exists() && fileInfo.isFile() && fileInfo.suffix().toLower() == ".exe")
         {
             m_checkButton->setText(tr("Update"));
             m_checkButton->setProperty("type",Update);
             m_filePath = recentPath;
+            m_updateFlag = true;
+            QTimer::singleShot(3000, [this]() {
+                forcedUpdateApp();
+            });
         }
         else
         {
-            m_settings.setRecentDownloadNetworkPath("");
-            m_settings.setRecentDownloadNetworkVersion("");
+                autoUpdateCheck();
         }
     }
-    else if(!recentPath.isEmpty() && recentPath.contains(versionStr))
+    else if(!recentPath.isEmpty() && recentPath.contains(versionStr, Qt::CaseInsensitive))
     {
         bool result = QFile::remove(recentPath);
         qDebug() << "remove " << recentPath << ", result: " << result;
@@ -167,6 +184,11 @@ void GeneralWidget::init()
         {
             AkUtil::TDebug(recentPath + "is removed.");
         }
+        autoUpdateCheck();
+    }
+    else
+    {
+        autoUpdateCheck();
     }
 }
 
@@ -252,6 +274,31 @@ void GeneralWidget::save()
     emit networkLanguageChangedSignal(m_languageCombox->currentIndex());
 }
 
+void GeneralWidget::manualUpdate()
+{
+    int autoCheck = (m_updateCheckBox->checkState()  == Qt::Checked ? 1 : 0);
+    if (autoCheck)
+    {
+        return;
+    }
+
+    AkUtil::TDebug("start manualUpdate.");
+    qint64 id = QDateTime::currentSecsSinceEpoch();
+    QString versionStr = MeshLabApplication::appVer(false, false);
+    PluginMessageData updateData;
+    updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    updateData.dest = AkConst::Plugin::FDM_NETWORK;
+    updateData.msg = AkConst::Msg::MANUAL_UPDATE;
+    updateData.map.insert(AkConst::Param::UPDATE_DO, 0);
+    updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+    emit m_messageProcessing->sendMsg2Manager(updateData);
+}
+
+void GeneralWidget::clickCheckButton()
+{
+    emit m_checkButton->click();
+}
+
 void GeneralWidget::checkButtonClicked()
 {
     QPushButton *button  = qobject_cast<QPushButton *>(sender());
@@ -262,24 +309,24 @@ void GeneralWidget::checkButtonClicked()
         qint64 id = QDateTime::currentSecsSinceEpoch();
         QString versionStr = MeshLabApplication::appVer(false, false);
 
-        if(m_settings.getAutomaticallyUpdate())
-        {
-            MessageDialog dialog(tr("Notice"), tr("Close Auto-Update"), MessageDialog::BUTTONFLAG::YES);
-            int flag = dialog.exec();
-            if(flag == MessageDialog::BUTTONFLAG::YES)
-            {
-                m_updateCheckBox->setCheckState(Qt::CheckState::Unchecked);
-                m_settings.setAutomaticallyUpdate(m_updateCheckBox->checkState() == Qt::Checked ? true : false );
-                PluginMessageData updateData;
-                updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
-                updateData.dest = AkConst::Plugin::FDM_NETWORK;
-                updateData.msg = AkConst::Msg::AUTO_UPDATE;
-                updateData.map.insert(AkConst::Param::UPDATE_DO, -1);
-                updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
-                emit m_messageProcessing->sendMsg2Manager(updateData);
-            }
-            return;
-        }
+//        if(m_settings.getAutomaticallyUpdate())
+//        {
+//            MessageDialog dialog(tr("Notice"), tr("Close Auto-Update"), MessageDialog::BUTTONFLAG::YES);
+//            int flag = dialog.exec();
+//            if(flag == MessageDialog::BUTTONFLAG::YES)
+//            {
+//                m_updateCheckBox->setCheckState(Qt::CheckState::Unchecked);
+//                m_settings.setAutomaticallyUpdate(m_updateCheckBox->checkState() == Qt::Checked ? true : false );
+//                PluginMessageData updateData;
+//                updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+//                updateData.dest = AkConst::Plugin::FDM_NETWORK;
+//                updateData.msg = AkConst::Msg::AUTO_UPDATE;
+//                updateData.map.insert(AkConst::Param::UPDATE_DO, -1);
+//                updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+//                emit m_messageProcessing->sendMsg2Manager(updateData);
+//            }
+//            return;
+//        }
         PluginMessageData updateData;
         updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
         updateData.dest = AkConst::Plugin::FDM_NETWORK;
@@ -294,18 +341,21 @@ void GeneralWidget::checkButtonClicked()
         if(m_filePath.isNull()) {
             return;
         }
-
         int index0 = m_filePath.lastIndexOf("/") + 1;
         QString fileName = m_filePath.mid(index0, m_filePath.length() - index0);
         int index1 = fileName.indexOf("AnkerMake_") + 10;
         QString tmpFile = fileName.mid(index1, fileName.length() - index1);
-        int index2 = tmpFile.indexOf("_");
+        int index2 = tmpFile.lastIndexOf(".");
         QString version = tmpFile.mid(0, index2);
         m_settings.setRecentDownloadNetworkVersion(version);
-        m_settings.setRecentDownloadNetworkPath(fileName);
+        m_settings.setRecentDownloadNetworkPath(m_filePath);
         qDebug() << "install version: " << version;
-
-        update_app(m_filePath);
+        auto messageDialog = new MessageDialog(tr("Check for Update"), QString(tr("AnkerMake %1 is ready, the changes will effective once you restart the app.")).arg(version),
+                                               MessageDialog::NO|MessageDialog::YES,this);
+        int ret = messageDialog->exec();
+        if (ret == MessageDialog::YES) {
+            update_app(m_filePath);
+        }
     }
 }
 
@@ -315,9 +365,12 @@ void GeneralWidget::update_app(const QString& fileName)
      //TODO:
     QString cmdStr = QString("open \"") + fileName + QString("\"");
     system(cmdStr.toStdString().c_str());
-    emit unloadPluginsSignal();
-    sleep(1);
-    QApplication::exit(0);
+    
+    //emit unloadPluginsSignal();
+    emit closeMainWindow();
+
+//    sleep(1);
+//    QApplication::exit(0);
 #else
 #ifdef Q_OS_WIN
       //auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
@@ -381,6 +434,62 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
         m_filePath = fileName;
         AkUtil::TDebug("Local Version: " + MeshLabApplication::appVer(false, false) + ", Current Version: " + version);
         AkUtil::TDebug("FilePath: " + m_filePath);
+    }
+    else if(metadata.from == AkConst::Plugin::FDM_NETWORK &&
+            metadata.dest == AkConst::Plugin::AK_MAIN_WINDOW &&
+            metadata.msg == AkConst::Msg::CHECK_UPDATE_TEXT)
+    {
+        if(metadata.map.contains(AkConst::Param::CHECK_UPDATE_TEXT))
+        {
+            QString text = metadata.map.find(AkConst::Param::CHECK_UPDATE_TEXT).value().toString();
+            m_checkText->setText(text);
+            qDebug() << "CHECK_UPDATE_TEXT: " << text;
+;        }
+    }
+
+    if (metadata.from == AkConst::Plugin::FDM_NETWORK &&
+       metadata.dest == AkConst::Plugin::AK_MAIN_WINDOW &&
+       (metadata.msg == AkConst::Msg::MANUAL_UPDATE || metadata.msg == AkConst::Msg::AUTO_UPDATE)) {
+        forcedUpdateApp();
+    }
+}
+
+
+void GeneralWidget::doPluginUnloaded()
+{
+#ifdef __APPLE__
+    AkUtil::TDebug("plugin unloaded finished. exit application");
+    QApplication::exit(0);
+#endif
+}
+
+void GeneralWidget::forcedUpdateApp()
+{
+    AkUtil::TDebug("filePath: " + m_filePath);
+    qDebug() << "filePath: " << m_filePath;
+    if(m_filePath.isNull()) {
+        return;
+    }
+
+    int index0 = m_filePath.lastIndexOf("/") + 1;
+    QString fileName = m_filePath.mid(index0, m_filePath.length() - index0);
+    int index1 = fileName.indexOf("AnkerMake_") + 10;
+    QString tmpFile = fileName.mid(index1, fileName.length() - index1);
+    int index2 = tmpFile.lastIndexOf(".");
+    QString version = tmpFile.mid(0, index2);
+    tmpFile.lastIndexOf(".");
+    m_settings.setRecentDownloadNetworkVersion(version);
+    m_settings.setRecentDownloadNetworkPath(m_filePath);
+    qDebug() << "install version: " << version;
+    QSettings settings;
+    qDebug() << "forcedUpdateApp: " << settings.value("is_forced").toBool();
+    if (settings.value("is_forced").toBool()) {
+        MessageDialog *messageDialog = new MessageDialog(tr("Check for Update"), QString(tr("AnkerMake %1 is ready, the changes will effective once you restart the app.")).arg(version),
+                                                         MessageDialog::NO|MessageDialog::YES);
+        int ret = messageDialog->exec();
+        if (ret == MessageDialog::YES) {
+            update_app(m_filePath);
+        }
     }
 }
 

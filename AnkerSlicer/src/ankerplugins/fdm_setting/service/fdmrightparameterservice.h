@@ -163,6 +163,9 @@ signals:
     void generateAdhesionStateChanged();
     void globalSupportTextCodeChanged();
 
+    
+    void setSupportEnabled(bool enable);
+
 private:
     QList<float> getAiQualityList();
     QList<int> getAiInfillDensityList() ;

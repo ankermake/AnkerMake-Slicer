@@ -60,6 +60,7 @@ private:
 
     bool flag = false;
     QLabel *m_title = nullptr;
+    int verticalScrollBarValue = 0;
 };
 
 

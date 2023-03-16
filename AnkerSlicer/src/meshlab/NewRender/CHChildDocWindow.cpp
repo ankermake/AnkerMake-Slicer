@@ -116,6 +116,18 @@ void CHChildDocWindow::createMachineBox(const QString& logPath, float x, float y
     m_doc->m_showPickedAABB->updateToScene();
 }
 
+void CHChildDocWindow::updateMechineBox(float x, float y, float z)
+{
+    if (m_doc->m_machineBox == NULL)
+    {
+        return;
+    }
+    m_doc->m_machineBox->updateMechineSize(x, y, z);
+    m_doc->m_machineBox->updateToScene();
+    m_view->calcSceneParamsFromBox(m_doc->m_machineBox->getBaseAABB());
+    m_doc->m_showPickedAABB->updateToScene();
+}
+
 void CHChildDocWindow::updatePoint(CHPointShowObjPtr pb)
 {
     set<CHPointShowObjPtr>::iterator it = m_renderData->m_allpoints.find(pb);

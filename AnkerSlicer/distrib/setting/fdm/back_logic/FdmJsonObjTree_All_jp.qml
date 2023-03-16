@@ -172,7 +172,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "この長さより短い輪郭の形体は、Small Feature Speedを使用してプリントされます。"
                 }
                 FdmQml_Param{ id:small_feature_speed_factor; objectName: "small_feature_speed_factor"
-                    fdmLabel: "Small Feature Speed"
+                    fdmLabel: "小さな特徴の速度"
                     fdmDescription: "小型形体は通常のプリント速度に対してこの割合でプリントされます。低速でプリントすると、接着と精度が向上します。"
                 }
                 FdmQml_Param{ id:small_feature_speed_factor_0; objectName: "small_feature_speed_factor_0"
@@ -396,6 +396,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:extract_param_from_gcode; objectName: "extract_param_from_gcode"
                 fdmLabel: "Gコードのパラメータープレビュー"
                 fdmDescription: "Gコードファイルのプレビュー中にGコードのパラメーターを表示"
+            }
+            FdmQml_Param{ id:check_param_lost_interval; objectName: "check_param_lost_interval"
+                fdmLabel: "パラメータを確認する秒数"
+                fdmDescription: "パラメータのステータスをチェックして、欠落しているかどうかを確認してください"
             }
             FdmQml_Param{ id:coasting_enable; objectName: "coasting_enable"
                 fdmLabel: "コースティングを有効にする"

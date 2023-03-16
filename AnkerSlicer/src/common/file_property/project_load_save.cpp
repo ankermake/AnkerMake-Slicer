@@ -168,13 +168,14 @@ bool ProjectLoadSave::buildProject(const QString& str, PluginManager& plugins)
     connect(exportProjectWorker, &ExportProjectWorker::errorEncountered, this, &ProjectLoadSave::exportProjectError);
     m_exportProjectThread->start();
 
-    connect(exportProjectWorker, &ExportProjectWorker::compressProject, [this, proPath, proName, fileName, layer, tmpProDir]() {
+    bool result = false;
+    connect(exportProjectWorker, &ExportProjectWorker::compressProject, [this, proPath, proName, fileName, layer, tmpProDir, &result]() {
         QString tmpLayer = layer;
-        saveZip(proPath, proName, fileName, tmpLayer, tmpProDir);
+        result = saveZip(proPath, proName, fileName, tmpLayer, tmpProDir);
     });
 
     m_exportProjectProgress->exec();
-    return true;
+    return result;
 }
 
 void ProjectLoadSave::setMeshDocumentFromDocumentProperty()
@@ -275,8 +276,11 @@ bool ProjectLoadSave::loadZip(QString filePath, const QString& proName, const QS
                 tmpDir.mkpath(tmpfileName.mid(0, tmpIndex1));
             }
             AkUtil::TDebug("Write File Path: " + tmpfileName);
-            file.setFileName(tmpfileName);
+            file.setFileName(tmpOutPath + fileName);
             file.open(QIODevice::WriteOnly);
+            if (!file.isOpen()) {
+                return false;
+            }
             file.write(reader.fileData(QString::fromLocal8Bit(f.filePath.toUtf8())));
             file.flush();
             file.close();
@@ -324,16 +328,20 @@ bool ProjectLoadSave::saveZip(QString filePath, const QString& folderName, QStri
         throw MLException("Error while writing xml.");
     }
     QDir tmpDir(filePath);
+    qDebug() << "filePath: " << filePath << ", outPath: " << outPath + folderName + QString("/");
     if(!tmpDir.exists())
     {
-        control::MessageDialog messageBox(tr("Warning"), tr("Save Path Not Found"), MessageDialog::OK);
-        messageBox.exec();
-        QFileDialog fileDialog;
-        filePath = QFileDialog::getSaveFileName(NULL, tr("Save File"), QApplication::applicationDirPath() + QString("/Document/"), QString("Project File(*.akpro)"));
-        int index1 = filePath.lastIndexOf("/") + 1;
-        int index2 = filePath.lastIndexOf(".");
-        proName = filePath.mid(index1, index2 - index1) + QString(".akpro");
-        filePath = filePath.mid(0, index1);
+//        control::MessageDialog messageBox(tr("Warning"), tr("Save Path Not Found"), MessageDialog::OK);
+//        messageBox.exec();
+//        qDebug() << "file path not found1!";
+//        QFileDialog fileDialog;
+//        filePath = QFileDialog::getSaveFileName(NULL, tr("Save File"), QApplication::applicationDirPath() + QString("/Document/"), QString("Project File(*.akpro)"));
+//        int index1 = filePath.lastIndexOf("/") + 1;
+//        int index2 = filePath.lastIndexOf(".");
+//        proName = filePath.mid(index1, index2 - index1) + QString(".akpro");
+//        filePath = filePath.mid(0, index1);
+//        qDebug() << "file path not found2!";
+        return false;
     }
     QZipWriter* writer = new QZipWriter(filePath + proName);
     result = QZipWriterEx(writer, outPath + folderName + QString("/"), layer);

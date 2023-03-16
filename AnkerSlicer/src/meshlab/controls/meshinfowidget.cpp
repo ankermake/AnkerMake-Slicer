@@ -42,11 +42,8 @@ MeshInfoWidget::MeshInfoWidget(QWidget *parent)
     connect(m_listWidget,&QListWidget::currentRowChanged, this, &MeshInfoWidget::currentRowChanged);
 
     m_listWidget->setFrameShape(QListWidget::NoFrame);
-    QString style = "QScrollBar:vertical { width:4px ; background:#FFFFFF ;margin:0px,0px,3px,0px;padding-top:0px; padding-bottom:0px;}"
-    "QScrollBar::handle:vertical {background-color: #D6D6D6 ; width: 1px; }"
-    "";
-    m_listWidget->verticalScrollBar()->setStyleSheet(style);
-
+    m_listWidget->verticalScrollBar()->setStyleSheet(AkConst::GlobalStyleSheet::ScrollBarVertical);
+    m_listWidget->horizontalScrollBar()->setStyleSheet(AkConst::GlobalStyleSheet::ScrollBarHorizontal);
     m_listWidget->setContentsMargins(0,0,0,0);
     m_listWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
     layout->addWidget(m_listWidget);
@@ -94,7 +91,7 @@ void MeshInfoWidget::addItem(QString name,bool visble,bool selected,int index)
         meshId->setFont(font);
     }
     QFontMetrics metrics(meshId->font());
-    meshId->setText(metrics.elidedText(name,Qt::ElideRight,meshId->width()));
+    meshId->setText(metrics.elidedText(name,Qt::ElideMiddle,meshId->width()));
     hbox->addWidget(meshId);
     QToolButton *showButton = new QToolButton(widget);
     showButton->setProperty("index",index);
@@ -119,6 +116,7 @@ void MeshInfoWidget::addItem(QString name,bool visble,bool selected,int index)
     if(selected) {
         m_listWidget->setCurrentItem(item);
     }
+    m_listWidget->verticalScrollBar()->setValue(verticalScrollBarValue);
 }
 
 void MeshInfoWidget::init()
@@ -231,10 +229,13 @@ void MeshInfoWidget::deleteMesh()
         CHPickOperationCommandPtr pickPtr =  getGlobalPick();
         std::set<CHMeshShowObjPtr> ptr = pickPtr->m_selectedObjs;
         if(ptr.empty()) {
-            return;
+            meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(modelPtr));
         }
-        for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
-            meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*iter));
+        else
+        {
+            for(auto iter = ptr.begin() ; iter != ptr.end() ; ++iter) {
+                meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(*iter));
+            }
         }
     }
    // meshes.push_back(std::dynamic_pointer_cast<CH3DPrintModel>(modelPtr));
@@ -290,6 +291,7 @@ void MeshInfoWidget::updateItem()
     }else {
         flag = false;
     }
+    verticalScrollBarValue = m_listWidget->verticalScrollBar()->value();
     m_listWidget->clear();
 
     init();
@@ -302,6 +304,8 @@ void MeshInfoWidget::currentItemChanged(QListWidgetItem *current, QListWidgetIte
 
 void MeshInfoWidget::currentRowChanged(int currentRow)
 {
+  //  qDebug() << "verticalScrollBar current index ==" << m_listWidget->verticalScrollBar()->value();
+
     if(currentRow < 0)
     {
         return;

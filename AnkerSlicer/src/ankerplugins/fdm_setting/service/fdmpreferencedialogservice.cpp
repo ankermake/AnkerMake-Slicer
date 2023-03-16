@@ -12,6 +12,8 @@
 #include "../profilemanage/operlogcollector.h"
 #include <QDebug>
 #include "common/utilities/tlogger.h"
+#include "service/fdmprofilebackupservice.h"
+
 using namespace AkUtil;
 
 
@@ -141,6 +143,9 @@ void FdmPreferenceDialogService::onSaveBtnClicked()
     openSource = AkConst::EOpenPreferenceSource::Init;
     
     emit operateComplete();
+
+    
+    FdmProfileBackupService::instance()->backupAll();
 
     return;
 

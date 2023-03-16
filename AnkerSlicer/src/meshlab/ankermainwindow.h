@@ -118,6 +118,9 @@ signals:
     void openFileSucessful(QStringList fileList);
     void usbStateChanged(int);
 
+    
+    void pluginsUnloaded();
+
 //signals:
 //    void resizeChildWidget();
 //protected:
