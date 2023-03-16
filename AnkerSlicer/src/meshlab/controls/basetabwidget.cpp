@@ -35,6 +35,7 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
     listItemButton->setFixedSize(QSize(136,40));
     listItemButton->setCheckable(true);
     listItemButton->setAutoExclusive(true);
+    listItemButton->setFocusPolicy(Qt::NoFocus);
     QWidget *Widget = new QWidget(listItemButton);
 
     QHBoxLayout *mainLayout = new QHBoxLayout(Widget);

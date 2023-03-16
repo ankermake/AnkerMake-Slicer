@@ -251,11 +251,12 @@ void FdmQmlSourceTree::setLanguage(int index)
         const QString fdmDescr("fdmDescription");
         const QString fdmOptions("fdmOptions");
 
-        const QList<FdmParamNode *> allChildren = trRoot->allChildrenNode(Qt::FindChildrenRecursively);
-        for(FdmParamNode* trNode : allChildren){
-            const QString nodeName = trNode->getNodeName();
-            FdmParamNode* node = srcRoot->findChildNode(nodeName);
+        const QList<FdmParamNode *> allChildren = srcRoot->allChildrenNode(Qt::FindChildrenRecursively);
+        for(FdmParamNode* node : allChildren){
             if(!node){continue;}
+            const QString nodeName = node->getNodeName();
+            FdmParamNode* trNode = trRoot->findChildNode(nodeName);
+            if(!trNode){continue;}
             bool hasTr = false;
 
             //node->dumpParam();
@@ -350,9 +351,9 @@ void FdmQmlSourceTree::setAiCheck(bool check)
 
 void FdmQmlSourceTree::calcEffects(FdmParamRoot* srcRoot)
 {
-    
-    QHash<QString, QStringList> affectedByIdsMap;
-    QHash<QString, QString> affectedByIdsLableMap;
+
+    QHash<QString, QStringList> affectedByIdsMap;   
+    QHash<QString, QStringList> affectsMapTemp;     
     QList<FdmParamNode*> allChildrenNode = srcRoot->allChildrenNode(Qt::FindChildrenRecursively);
     for (int i = 0; i < allChildrenNode.size(); i++) {
         //allChildrenNode[i]->dumpParam();
@@ -368,39 +369,23 @@ void FdmQmlSourceTree::calcEffects(FdmParamRoot* srcRoot)
         {
             affectedByIdsMap[nodeName] = QStringList();
         }
+
         
         for (int j = 0; j < affectedByIds.size(); j++)
         {
-            auto affectedById = affectedByIds[j];
+            QString affectedById = affectedByIds[j];
             if (!affectedByIdsMap[nodeName].contains(affectedById))
             {
                 affectedByIdsMap[nodeName].append(affectedById);
+
+                
+                if (!affectsMapTemp.contains(affectedById)){ affectsMapTemp[affectedById] = QStringList(); }
+                affectsMapTemp[affectedById].append(nodeName);
             }
         }
     }
 
-    
-    QHash<QString, QStringList> affectsMap;
-    // for each, for_each, foreach
-    foreach(auto id, affectedByIdsMap.keys())
-    {
-        auto affectedByIds = affectedByIdsMap[id];
-        for (int i = 0; i < affectedByIds.size(); i++)
-        {
-            auto affectedById = affectedByIds[i];
-            if (!affectsMap.contains(affectedById))
-            {
-                affectsMap[affectedById] = QStringList();
-            }
-            
-            if (!affectsMap[affectedById].contains(id))
-            {
-                affectsMap[affectedById].append(id);
-            }
-        }
-    }
-
-    srcRoot->setStoreProperty(fdmsettings::fdmPrinterAffects_Map, QVariant::fromValue(affectsMap));
+    srcRoot->setStoreProperty(fdmsettings::fdmPrinterAffects_Map, QVariant::fromValue(affectsMapTemp));
     srcRoot->setStoreProperty(fdmsettings::fdmPrinterAffectedBy_Map, QVariant::fromValue(affectedByIdsMap));
     //srcRoot->dumpParamTree();
 }

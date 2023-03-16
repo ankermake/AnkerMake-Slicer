@@ -147,6 +147,7 @@ public:
     void setGcodeSize();
     void setPerformance(bool);
     void getGcodeTargetTemperature(float&, float&);
+    bool checkLastFileComplete();
 
     std::shared_ptr<Anker::GCodeProcessor> processor;
     GcodeViewer* getGcodeView(){return this->ui->openGLWidget;}
@@ -173,6 +174,8 @@ private:
     bool isHighPerformance = true;
     bool innerModeInit = true;
     bool printModeInit = true;
+    //when layer < 1 . lastShowFileComplete = false
+    bool lastShowFileComplete = true;
     QString lastExportPath;
     QString saveTempPath ;
     ProgressDialog *mpDlg;

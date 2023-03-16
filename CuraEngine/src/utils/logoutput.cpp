@@ -160,8 +160,9 @@ void logAlways(const char* fmt, ...)
 void log(const char* fmt, ...)
 {
     va_list args;
-    if (verbose_level < 1)
-        return;
+
+//    if (verbose_level < 1)
+//        return;
 
     #pragma omp critical
     {

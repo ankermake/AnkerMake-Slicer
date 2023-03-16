@@ -34,10 +34,6 @@ public:
 
 private:
     QWidget *m_widget;
-    QPoint m_mousePos;
-    qint64 m_WinMaxmizeTimeStamp;
-    int m_screenCount;  
-
     
     int m_padding;
     bool m_moveEnable;

@@ -5,11 +5,8 @@
 #include "Qshadowhelper.h"
 #include <QPainter>
 #include <QScreen>
-#include <QDateTime>
-#include <QDesktopWidget>
-#include <QApplication>
-
 #ifdef Q_OS_WIN
+#include <QApplication>
 #include <windows.h>
 #include <dwmapi.h>
 #pragma comment (lib,"user32.lib")
@@ -26,7 +23,7 @@ QFramelessHelper::QFramelessHelper(QWidget* w, bool resizeEnable, bool shadowBor
     , m_winNativeEvent(winNativeEvent)
     , m_borderResizeEnable(resizeEnable)
 {
-    m_padding = 0;
+    m_padding = 8;
     m_moveEnable = true;
 #ifdef Q_OS_WIN
     if (m_winNativeEvent)
@@ -37,10 +34,6 @@ QFramelessHelper::QFramelessHelper(QWidget* w, bool resizeEnable, bool shadowBor
 #else
     m_winNativeEvent = false;
 #endif
-
-    m_WinMaxmizeTimeStamp = 0;
-    m_screenCount = 1;
-
     m_drawShadow = 0;
 
     m_mousePressed = false;
@@ -166,22 +159,6 @@ void QFramelessHelper::doWindowStateChange(QEvent *event)
 
     
     emit maximizedChanged(!m_moveEnable);
-
-    
-#ifdef Q_OS_WIN
-    if(m_widget->windowState()== Qt::WindowMaximized)
-    {
-        QDesktopWidget *desktop = QApplication::desktop();
-        if (desktop)
-        {
-            m_screenCount = desktop->screenCount();
-            if(m_screenCount > 1)
-            {
-                m_WinMaxmizeTimeStamp = QDateTime::currentMSecsSinceEpoch();
-            }
-        }
-    }
-#endif
 
     
 #ifdef Q_OS_MACOS
@@ -487,43 +464,7 @@ bool QFramelessHelper::nativeEvent(const QByteArray &eventType, void *message, l
         //qDebug() << TIMEMS << "nativeEvent" << msg->wParam << msg->message;
 
         
-        if (msg->message == WM_MOVE)
-        {
-            if(m_screenCount>1)
-            {
-                qint64 currTime = QDateTime::currentMSecsSinceEpoch();
-                if (currTime - m_WinMaxmizeTimeStamp < 200 )
-                {
-                    QScreen *screen =QApplication::screenAt(m_mousePos);
-                    if(screen)
-                    {
-                        QRect availableGeometryScreen = screen->availableGeometry();
-                        m_widget->resize(availableGeometryScreen.width(), availableGeometryScreen.height());
-                        m_widget->move(availableGeometryScreen.x(), availableGeometryScreen.y());
-                    }
-                }
-                *result = 0;
-                return true;
-            }
-        }
-        else if (msg->message == WM_SIZE)
-        {
-            if(m_screenCount > 1)
-            {
-                 qint64 currTime = QDateTime::currentMSecsSinceEpoch();
-                 if (currTime - m_WinMaxmizeTimeStamp < 200 )
-                 {
-                     QScreen *screen =QApplication::screenAt(m_mousePos);
-                     if (screen)
-                     {
-                        QRect availableGeometryScreen = screen->availableGeometry();
-                        m_widget->resize(availableGeometryScreen.width(), availableGeometryScreen.height());
-                        m_widget->move(availableGeometryScreen.x(), availableGeometryScreen.y());
-                     }
-                 }
-            }
-        }
-        else if (msg->message == WM_NCCALCSIZE) {
+        if (msg->message == WM_NCCALCSIZE) {
             *result = 0;
             return true;
         } /*else if (msg->message == WM_NCACTIVATE) {
@@ -533,9 +474,7 @@ bool QFramelessHelper::nativeEvent(const QByteArray &eventType, void *message, l
             
             short x = LOWORD(msg->lParam);
             short y = HIWORD(msg->lParam);
-            m_mousePos.setX(x);
-            m_mousePos.setY(y);
-            QPoint pos = m_widget->mapFromGlobal(QPoint(x, y));
+            QPoint pos = m_widget->mapFromGlobal(QPoint(x, y));            
             //qDebug() << "WM_NCHITTEST " << pos;
             
             bool left = pos.x() < m_padding;
@@ -595,10 +534,7 @@ bool QFramelessHelper::nativeEvent(const QByteArray &eventType, void *message, l
                 AdjustWindowRectEx(&frame, WS_OVERLAPPEDWINDOW, FALSE, 0);
                 frame.left = abs(frame.left);
                 frame.top = abs(frame.bottom);
-                if(m_screenCount == 1)
-                {
-                    m_widget->setContentsMargins(frame.left, frame.top, frame.right, frame.bottom);
-                }
+                m_widget->setContentsMargins(frame.left, frame.top, frame.right, frame.bottom);
             }
             else {
                 m_widget->setContentsMargins(0, 0, 0, 0);

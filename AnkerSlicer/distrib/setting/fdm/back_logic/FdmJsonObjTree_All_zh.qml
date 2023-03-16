@@ -947,6 +947,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "Z 缝相对"
                 fdmDescription: "启用时，Z 缝坐标为相对于各个部分中心的值。 禁用时，坐标定义打印平台上的一个绝对位置。"
             }
+            FdmQml_Param{ id:z_seam_min_angle_diff; objectName: "z_seam_min_angle_diff"
+                fdmLabel: "Z缝最大角度差"
+                fdmDescription: "启用时，当最尖角小于此值时，选用最短原则。"
+            }
+            FdmQml_Param{ id:z_seam_max_angle; objectName: "z_seam_max_angle"
+                fdmLabel: "Z缝最大尖角"
+                fdmDescription: "小于此值时才认为是有尖角，大于此值时启用最短原则。"
+            }
         }
         FdmQml_Category{ id:top_bottom; objectName: "top_bottom"
             fdmLabel: "顶 / 底层"
@@ -1719,7 +1727,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "执行最大回抽计数的范围。 该值应与回抽距离大致相同，以便一次回抽通过同一块材料的次数得到有效限制。"
             }
             FdmQml_Param{ id:limit_support_retractions; objectName: "limit_support_retractions"
-                fdmLabel: "支撑限制被撤销"
+                fdmLabel: "支撑不回抽"
                 fdmDescription: "当在各个支撑间直线移动时，省略回抽。启用这个设置可以节省打印时间，但会在支撑结构中产生过多穿线。"
             }
             FdmQml_Param{ id:retraction_combing; objectName: "retraction_combing"
@@ -2510,12 +2518,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:magic_spiralize; objectName: "magic_spiralize"
-                fdmLabel: "螺旋打印外轮廓"
+                fdmLabel: "螺旋打印外轮廓（花瓶）"
                 fdmDescription: "螺旋打印实现外部边缘的平滑 Z 移动。 这会在整个打印上建立一个稳定的 Z 增量。 该功能会将一个实心模型转变为具有实体底部的单壁打印。 只有在当每一层仅包含一个部分时才应启用此功能。"
-            }
-            FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
-                fdmLabel: "平滑螺旋轮廓"
-                fdmDescription: "平滑螺旋轮廓以减少 Z 缝的可见性（Z 缝应在打印品上几乎看不到，但在层视图中仍然可见）。 请注意，平滑操作将倾向于模糊精细的表面细节。"
+                FdmQml_Param{ id:magic_spiralize_print_speed; objectName: "magic_spiralize_print_speed"
+                    fdmLabel: "螺旋打印的速度"
+                    fdmDescription: "螺旋打印的速度"
+                }
+                FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
+                    fdmLabel: "平滑螺旋轮廓"
+                    fdmDescription: "平滑螺旋轮廓以减少 Z 缝的可见性（Z 缝应在打印品上几乎看不到，但在层视图中仍然可见）。 请注意，平滑操作将倾向于模糊精细的表面细节。"
+                }
             }
         }
         FdmQml_Category{ id:experimental; objectName: "experimental"

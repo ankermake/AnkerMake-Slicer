@@ -57,7 +57,10 @@ PathConfigStorage::MeshPathConfigs::MeshPathConfigs(const SliceMeshStorage& mesh
     , mesh.settings.get<coord_t>("wall_line_width_0") * line_width_factor_per_extruder[mesh.settings.get<ExtruderTrain&>("wall_0_extruder_nr").extruder_nr]
     , layer_thickness
     , mesh.settings.get<Ratio>("wall_0_material_flow") * ((layer_nr == 0) ? mesh.settings.get<Ratio>("material_flow_layer_0") : Ratio(1.0))
-    , GCodePathConfig::SpeedDerivatives{mesh.settings.get<Velocity>("speed_wall_0"), mesh.settings.get<Acceleration>("acceleration_wall_0"), mesh.settings.get<Velocity>("jerk_wall_0")}
+    , GCodePathConfig::SpeedDerivatives{
+          mesh.settings.get<bool>("magic_spiralize") ? mesh.settings.get<Velocity>("magic_spiralize_print_speed") : mesh.settings.get<Velocity>("speed_wall_0")
+          , mesh.settings.get<Acceleration>("acceleration_wall_0")
+          , mesh.settings.get<Velocity>("jerk_wall_0")}
 )
 , insetX_config(
     PrintFeatureType::InnerWall

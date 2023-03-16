@@ -28,7 +28,7 @@
 #include <wrap/io_trimesh/io_mask.h>
 #include <QFile>
 #include <QString>
-#ifdef MSVC
+#ifdef _MSC_VER
 #include<io.h>
 #else
 #include <unistd.h>
@@ -327,11 +327,12 @@ static int OpenBinary( OpenMeshType &m, QString filename, int &loadMask, CallBac
         int lineCnt=0;
         int ret;
     /* Read a single facet from an ASCII .STL file */
+    char _facet[32], _normal[32];   
     while(!feof(fp))
     {
       if(cb && (++cnt)%1000)   cb( int(double(ftell(fp))*100.0/fileLen), "STL Mesh Loading");
-        ret=fscanf(fp, "%*s %*s %f %f %f\n", &f.n.X(), &f.n.Y(), &f.n.Z()); // --> "facet normal 0 0 0"
-            if(ret!=3)
+        ret=fscanf(fp, "%s %s %f %f %f\n",_facet, _normal, &f.n.X(), &f.n.Y(), &f.n.Z()); // --> "facet normal 0 0 0"
+            if(ret!=5)
             {
                 // we could be in the case of a multiple solid object, where after a endfaced instead of another facet we have to skip two lines:
                 //     endloop
@@ -340,6 +341,9 @@ static int OpenBinary( OpenMeshType &m, QString filename, int &loadMask, CallBac
                 //solid ascii  <- and this one.
                 //   facet normal 0.000000e+000 7.700727e-001 -6.379562e-001
                 lineCnt++;
+                continue;
+            }
+            if(strncmp(_facet, "facet", 5) ){
                 continue;
             }
       ret=fscanf(fp, "%*s %*s"); // --> "outer loop"

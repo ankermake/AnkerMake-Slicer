@@ -178,6 +178,7 @@ private:
     CHAABB3D m_mainBox;
 
     ViewType m_viewType;
+    QVector2D m_lastMousePts; 
 };
 
 #endif // !GCODE_SCENE3D_H

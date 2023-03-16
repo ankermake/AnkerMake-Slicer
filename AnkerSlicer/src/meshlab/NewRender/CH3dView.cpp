@@ -657,7 +657,7 @@ void CH3dView::xyRotate(int dx, int dy)
         lastmousept.setX(lastmousept.x());
     }
 
-    double H1 = QVector3D::dotProduct(lastmousept - refTranPoint, lockU);
+    double H1 = QVector3D::dotProduct(lastmousept - refTranPoint, lockN);
     double H2 = QVector3D::dotProduct(lastmousept - refTranPoint, lockV);
     double L1 = QVector3D::dotProduct(moveVec, lockU) * 5.0;
     double L2 = QVector3D::dotProduct(moveVec, lockV) * 5.0;
@@ -688,8 +688,24 @@ void CH3dView::xyRotate(int dx, int dy)
     QVector3D curU = QVector3D::crossProduct(curN, curV);
     QVector3D axis1 = curU * sqrt(1 - A1 * A1) + curN * A1;
     QVector3D axis2 = curV * sqrt(1 - A2 * A2) + curN * A2;
-
-    QMatrix4x4 mat = TransformPack::rotMat(refTranPoint, axis1, Angle1) * TransformPack::rotMat(refTranPoint, axis2, -Angle2);
+    QMatrix4x4 mat;
+    if(fabs(m_lastMousePts[0] - dx) > fabs(m_lastMousePts[1] - dy)) 
+    {
+        axis2 = QVector3D(0, 0, 1);
+        mat = TransformPack::rotMat(refTranPoint, axis2, -Angle2);
+    }
+    else if(fabs(m_lastMousePts[0] - dx) < fabs(m_lastMousePts[1] - dy))
+    {
+        axis1 = curU;
+        mat = TransformPack::rotMat(refTranPoint, axis1, Angle1);
+    }
+    else
+    {
+        mat = TransformPack::rotMat(refTranPoint, axis1, Angle1) * TransformPack::rotMat(refTranPoint, axis2, -Angle2);
+    }
+    //qDebug() << "dx: " << dx << ", dy: " << dy << ", lastmousept: " << lastmousept << ", moveVec: " << moveVec;
+    m_lastMousePts[0] = dx;
+    m_lastMousePts[1] = dy;
     m_eye = TransformPack::pRot(mat, m_eye);
     m_front = TransformPack::vRot(mat, m_front);
     m_up = TransformPack::vRot(mat, m_up);
@@ -744,57 +760,36 @@ void CH3dView::setView(const ViewType& _type, const CHAABB3D& aabb)
     switch (_type)
     {
     case ViewType::JUST_VIEW_TYPE:
-//        m_front = QVector3D(0.945542, 0.951188, -0.448531);
-//        m_up = QVector3D(0.228283, 0.220264, 0.948349);
-//        m_eye = QVector3D(-534.188, -537.845, 407.721);
         m_front = m_ViewVec[JUST_VIEW_TYPE].front;
         m_up = m_ViewVec[JUST_VIEW_TYPE].up;
         m_eye = m_ViewVec[JUST_VIEW_TYPE].eye;
         break;
     case ViewType::FRONT_VIEW_TYPE:
-//        m_front = QVector3D(0.0f, 1.0f, 0.0f);
-//        m_up = QVector3D(0.0f, 0.0f, 1.0f);
-//        m_eye = QVector3D(center.x(), -800, 100.0);
         m_front = m_ViewVec[FRONT_VIEW_TYPE].front;
         m_up = m_ViewVec[FRONT_VIEW_TYPE].up;
         m_eye = m_ViewVec[FRONT_VIEW_TYPE].eye;
         break;
     case ViewType::BACK_VIEW_TYPE:
-//        m_front = QVector3D(0, -1.0, 0);
-//        m_up = QVector3D(0, 0, 1.0);
-//        m_eye = QVector3D(center.x(), 800 + aabb.getLenY(), 100.0);
         m_front = m_ViewVec[BACK_VIEW_TYPE].front;
         m_up = m_ViewVec[BACK_VIEW_TYPE].up;
         m_eye = m_ViewVec[BACK_VIEW_TYPE].eye;
         break;
     case ViewType::LEFT_VIEW_TYPE:
-//        m_front = QVector3D(1.0, 0, 0);
-//        m_up = QVector3D(0, 0, 1);
-//        m_eye = QVector3D(-800, center.y(), 100);
         m_front = m_ViewVec[LEFT_VIEW_TYPE].front;
         m_up = m_ViewVec[LEFT_VIEW_TYPE].up;
         m_eye = m_ViewVec[LEFT_VIEW_TYPE].eye;
         break;
     case ViewType::RIGHT_VIEW_TYPE:
-//        m_front = QVector3D(-1.0, 0, 0);
-//        m_up = QVector3D(0, 0, 1);
-//        m_eye = QVector3D(800 + aabb.getLenX(), center.y(), 100.0);
         m_front = m_ViewVec[RIGHT_VIEW_TYPE].front;
         m_up = m_ViewVec[RIGHT_VIEW_TYPE].up;
         m_eye = m_ViewVec[RIGHT_VIEW_TYPE].eye;
         break;
     case ViewType::TOP_VIEW_TYPE:
-//        m_front = QVector3D(0, 0, -1);
-//        m_up = QVector3D(0, 1, 0);
-//        m_eye = QVector3D(center.x(), center.y(), 800 + aabb.getLenZ());
         m_front = m_ViewVec[TOP_VIEW_TYPE].front;
         m_up = m_ViewVec[TOP_VIEW_TYPE].up;
         m_eye = m_ViewVec[TOP_VIEW_TYPE].eye;
         break;
     case ViewType::BOTTOM_VIEW_TYPE:
-//        m_front = QVector3D(0, 0, 1);
-//        m_up = QVector3D(0, -1, 0);
-//        m_eye = QVector3D(center.x(), center.y(), -800);
         m_front = m_ViewVec[BOTTOM_VIEW_TYPE].front;
         m_up = m_ViewVec[BOTTOM_VIEW_TYPE].up;
         m_eye = m_ViewVec[BOTTOM_VIEW_TYPE].eye;
@@ -804,6 +799,8 @@ void CH3dView::setView(const ViewType& _type, const CHAABB3D& aabb)
     }
     update();
     //viewShowWindow(points, m_front, m_up, m_eye, m_up, m_front);
+    senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
+        tan(m_verticalAngle / 360.0 * CH_PI);
 }
 
 void CH3dView::getBoxPoints(const QVector3D& iMin, const QVector3D& iMax, std::vector<QVector3D>& points)
@@ -917,7 +914,7 @@ void CH3dView::getMoveVec(int dx, int dy, QVector3D& move)
     double C = A / QVector3D::dotProduct(fp - cameralocation, lockN);
     fp = cameralocation * (1 - C) + fp * C;
     move = fp - lastmousept;
-    lastmousept = fp;
+    lastmousept = fp;  
 }
 
 void CH3dView::getZoomVec(int dx, int dy, QVector3D& move)

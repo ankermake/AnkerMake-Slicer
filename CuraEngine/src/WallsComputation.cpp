@@ -136,11 +136,14 @@ void WallsComputation::generateInsets(SliceLayerPart* part)
             
             //part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2);
             part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2 - line_width_0/2);
-            part->insets[1] = part->insets[1].offset(line_width_0 / 2);
-
-
-
-
+            if (part->insets[1].size() != 0)
+            {
+                part->insets[1] = part->insets[1].offset(line_width_0 / 2);
+            }
+            else
+            {
+                part->insets[1] = part->insets[0].offset(-line_width_0 / 2 + wall_0_inset - line_width_x / 2);
+            }
             if(wall_ruler_concave_convex_enable)
             {
                 Polygons  outerWall_0;

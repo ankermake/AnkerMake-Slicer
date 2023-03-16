@@ -149,20 +149,7 @@ int PathOrderOptimizer::getClosestPointInPolygon(Point prev_point, int poly_idx)
     // Find most extreme point in one direction*. For the 'actual loop' (see below), start from this point,
     // so it can act as a 'tie breaker' if all differences in dist-score for a polygon fall within epsilon.
     // *) Direction/point should be equal to user-specified point if available, should be an arbitrary point outside of the BP otherwise.
-    int size = config.last_layer_start_point.size();
-
-    std::vector<int> min_dist_idx;
-    std::vector<coord_t> min_dist;
-    std::vector<float> min_dist_corner_angle;  
-    if (size > 0)
-    {
-        min_dist_idx = std::vector<int>(size, -1);
-        min_dist = std::vector<coord_t>(size, LLONG_MAX);
-        min_dist_corner_angle = std::vector<float>(size, std::numeric_limits<float>::infinity());
-    }
-
-
-		
+ 		
     //constexpr coord_t EPSILON = 25; // = 5^2 square micron
     //unsigned int start_from_pos = 0;
     //const Point focus_fixed_point =
@@ -188,37 +175,51 @@ int PathOrderOptimizer::getClosestPointInPolygon(Point prev_point, int poly_idx)
 
     // Loop over the polygon to find the 'best' index given all the parameters.
     int best_point_idx = -1;
-    float best_point_score = std::numeric_limits<float>::infinity();
-    //Point p0 = poly[(start_from_pos - 1 + poly.size()) % poly.size()];
-	Point p0 = poly.back();
-    for (unsigned int point_idx = 0; point_idx < poly.size(); point_idx++)
-    {
-        const Point& p1 = poly[point_idx];
-        const Point& p2 = poly[(point_idx + jump_num) % poly.size()];
-        // when type is SHARPEST_CORNER, actual distance is ignored, we use a fixed distance and decision is based on curvature only
-        float dist_score = (config.type == EZSeamType::SHARPEST_CORNER && config.corner_pref != EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_NONE) ? MM2INT(10) : vSize2(p1 - prev_point);
-        float corner_angle = LinearAlg2D::getAngleLeft(p0, p1, p2) / M_PI; // 0 -> 2
-        float corner_shift;
-        if (config.type == EZSeamType::SHORTEST)
-        {
-            // the more a corner satisfies our criteria, the closer it appears to be
-            // shift 10mm for a very acute corner
-            corner_shift = 10000 * 10000;
-        }
-        else
-        {
-            // the larger the distance from prev_point to p1, the more a corner will "attract" the seam
-            // so the user has some control over where the seam will lie.
 
-            // the divisor here may need adjusting to obtain the best results (TBD)
-            corner_shift = dist_score / 10;
-        }
-        switch (config.corner_pref)
+        int size = config.last_layer_start_point.size();
+
+        std::vector<int> min_dist_idx;
+        std::vector<coord_t> min_dist;
+        std::vector<float> min_dist_corner_angle;
+        if (size > 0)
         {
+            min_dist_idx = std::vector<int>(size, -1);
+            min_dist = std::vector<coord_t>(size, LLONG_MAX);
+            min_dist_corner_angle = std::vector<float>(size, std::numeric_limits<float>::infinity());
+        }
+
+
+        float best_point_score = std::numeric_limits<float>::infinity();
+        //Point p0 = poly[(start_from_pos - 1 + poly.size()) % poly.size()];
+        Point p0 = poly.back();
+        for (unsigned int point_idx = 0; point_idx < poly.size(); point_idx++)
+        {
+            const Point& p1 = poly[point_idx];
+            const Point& p2 = poly[(point_idx + jump_num) % poly.size()];
+            // when type is SHARPEST_CORNER, actual distance is ignored, we use a fixed distance and decision is based on curvature only
+            float dist_score = (config.type == EZSeamType::SHARPEST_CORNER && config.corner_pref != EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_NONE) ? MM2INT(10) : vSize2(p1 - prev_point);
+            float corner_angle = LinearAlg2D::getAngleLeft(p0, p1, p2) / M_PI; // 0 -> 2
+            float corner_shift;
+            if (config.type == EZSeamType::SHORTEST)
+            {
+                // the more a corner satisfies our criteria, the closer it appears to be
+                // shift 10mm for a very acute corner
+                corner_shift = 10000 * 10000;
+            }
+            else
+            {
+                // the larger the distance from prev_point to p1, the more a corner will "attract" the seam
+                // so the user has some control over where the seam will lie.
+
+                // the divisor here may need adjusting to obtain the best results (TBD)
+                corner_shift = dist_score / 10;
+            }
+            switch (config.corner_pref)
+            {
             case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_INNER:
             {
-                if(config.isPathOrPolygon && config.type == EZSeamType::USER_SPECIFIED){    
-				corner_angle = fabs(corner_angle - 1);
+                if (config.isPathOrPolygon && config.type == EZSeamType::USER_SPECIFIED) {    
+                    corner_angle = fabs(corner_angle - 1);
                     float dist_score_corner = corner_angle * corner_shift;
                     if (corner_angle > 1) //Is an inner corner.
                     {
@@ -236,83 +237,83 @@ int PathOrderOptimizer::getClosestPointInPolygon(Point prev_point, int poly_idx)
                 }
             }
             break;
-        case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_OUTER:
-            if (corner_angle < 1)
-            {
-                // p1 lies on a convex curve so reduce the distance to favour it
-                // the more convex the curve, the more we reduce the distance
-                corner_angle = 1 - corner_angle;
+            case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_OUTER:
+                if (corner_angle < 1)
+                {
+                    // p1 lies on a convex curve so reduce the distance to favour it
+                    // the more convex the curve, the more we reduce the distance
+                    corner_angle = 1 - corner_angle;
+                    dist_score -= corner_angle * corner_shift;
+                }
+                break;
+            case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_ANY:
+                // the more curved the region, the more we reduce the distance
+                corner_angle = fabs(corner_angle - 1);
                 dist_score -= corner_angle * corner_shift;
-            }
-            break;
-        case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_ANY:
-            // the more curved the region, the more we reduce the distance
-            corner_angle = fabs(corner_angle - 1);
-            dist_score -= corner_angle * corner_shift;
-            break;
-        case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_WEIGHTED:
-        {
-            //More curve is better score (reduced distance), but slightly in favour of concave curves.
-            float dst_corner_angle = fabs(corner_angle - 1);
-            float dist_score_corner = dst_corner_angle * corner_shift;
-            if (corner_angle < 1)
+                break;
+            case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_WEIGHTED:
             {
-                dist_score_corner *= 2;
+                //More curve is better score (reduced distance), but slightly in favour of concave curves.
+                float dst_corner_angle = fabs(corner_angle - 1);
+                float dist_score_corner = dst_corner_angle * corner_shift;
+                if (corner_angle < 1)
+                {
+                    dist_score_corner *= 2;
+                }
+                dist_score -= dist_score_corner;
+                corner_angle = dst_corner_angle;
+                break;
             }
-            dist_score -= dist_score_corner;
-            corner_angle = dst_corner_angle;
-            break;
-        }
-        case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_NONE:
-        default:
-            // do nothing
-            break;
+            case EZSeamCornerPrefType::Z_SEAM_CORNER_PREF_NONE:
+            default:
+                // do nothing
+                break;
+            }
+
+            for (int i = 0; i < size; i++)
+            {
+                if (config.last_layer_start_point[i].z != poly.orientation()) continue;
+                coord_t dist;
+                dist = vSize2(p1 - config.last_layer_start_point[i]);
+                if (dist < min_dist[i])
+                {
+                    min_dist[i] = dist;
+                    min_dist_idx[i] = point_idx;
+                    min_dist_corner_angle[i] = corner_angle;
+                }
+            }
+            if (dist_score < best_point_score)
+            {
+                best_point_idx = point_idx;
+                best_point_score = dist_score;
+                min_corner_angle = corner_angle;
+            }
+            p0 = p1;
         }
 
-        for (int i = 0; i < size; i++)
+        coord_t dst_min_dist = LLONG_MAX;
+        int dst_min_dist_idx = -1;
+        float dst_min_dist_corner_angle = FLT_MAX;
+        if (size > 0 && size == config.last_layer_start_point.size() && config.type != EZSeamType::USER_SPECIFIED)
         {
-            if (config.last_layer_start_point[i].z != poly.orientation()) continue;
-            coord_t dist;
-            dist = vSize2(p1 - config.last_layer_start_point[i]);
-            if (dist < min_dist[i])
+            for (int i = 0; i < size; i++)
             {
-                min_dist[i] = dist;
-                min_dist_idx[i] = point_idx;
-                min_dist_corner_angle[i] = corner_angle;
+                if (min_dist[i] < dst_min_dist)
+                {
+                    dst_min_dist = min_dist[i];
+                    dst_min_dist_idx = min_dist_idx[i];
+                    dst_min_dist_corner_angle = min_dist_corner_angle[i];
+                }
+            }
+
+            float min_angle_diff = config.z_seam_min_angle_diff / 180.f;
+            float max_angle = (180 - config.z_seam_max_angle) / 180.f;
+            if ((fabs(dst_min_dist_corner_angle - min_corner_angle) < min_angle_diff || min_corner_angle < max_angle)
+                && dst_min_dist_idx != -1 && dst_min_dist_idx < poly.size())
+            {
+                best_point_idx = dst_min_dist_idx;
             }
         }
-        if (dist_score < best_point_score)
-        {
-            best_point_idx = point_idx;
-            best_point_score = dist_score;
-            min_corner_angle = corner_angle;
-        }
-        p0 = p1;
-    }
-
-    coord_t dst_min_dist = LLONG_MAX;
-    int dst_min_dist_idx = -1;
-    float dst_min_dist_corner_angle = FLT_MAX;
-    if (size > 0 && config.type != EZSeamType::USER_SPECIFIED)
-    {
-        for (int i = 0; i < size; i++)
-        {
-            if (min_dist[i] < dst_min_dist)
-            {
-                dst_min_dist = min_dist[i];
-                dst_min_dist_idx = min_dist_idx[i];
-                dst_min_dist_corner_angle = min_dist_corner_angle[i];
-            }
-        }
-
-        float min_angle_diff = config.z_seam_min_angle_diff / 180.f;
-        float max_angle = (180 - config.z_seam_max_angle) / 180.f;
-        if ((fabs(dst_min_dist_corner_angle - min_corner_angle) < min_angle_diff || min_corner_angle < max_angle)
-            && dst_min_dist_idx != -1 && dst_min_dist_idx < poly.size())
-        {
-            best_point_idx = dst_min_dist_idx;
-        }
-    }
     return best_point_idx;
 }
 

@@ -15,70 +15,34 @@ TEMPLATE = subdirs
 message("Anker Make")
 message("DISTRIB_DIRECTORY: "$$MESHLAB_DISTRIB_DIRECTORY)
 
-#the following sub projects are compiled ALSO with Mini
-#SUBDIRS = \ #sub projects names
-#    common \
-#    meshlab \
-#    io_base \        # a few basic file formats (ply, obj, off), without this you cannot open anything
-#    decorate_base \
-#    filter_measure \
-#    filter_meshing
-
-#common.subdir = common
-#meshlab.subdir = meshlab
-#io_base.subdir = meshlabplugins/io_base
-#decorate_base.subdir = meshlabplugins/decorate_base
-#filter_measure.subdir = meshlabplugins/filter_measure
-#filter_meshing.subdir = meshlabplugins/filter_meshing
-
-#meshlab.depends = common
-#io_base.depends = common
-#decorate_base.depends = common
-#filter_measure.depends = common
-#filter_meshing.depends = common
-
 SUBDIRS += common
 common.subdir = common
 
-SUBDIRS += AnkerMake
-AnkerMake.subdir = meshlab
-AnkerMake.depends = common anker_edit_model fdm_gcode_parser fdm_setting fdm_slicer
 
-#SUBDIRS += io_base
-#io_base.subdir = ankerplugins/io_base
-#io_base.depends = common
 
-#SUBDIRS += edit_meshtransform
-#edit_meshtransform.subdir = ankerplugins/edit_meshtransform
-#edit_meshtransform.depends = common
-
+#SUBDIRS += anker_plugin_demo
+#anker_plugin_demo.subdir = ankerplugins/anker_plugin_demo
+#anker_plugin_demo.depends = common
 SUBDIRS += anker_edit_model
 anker_edit_model.subdir = ankerplugins/anker_edit_model
 anker_edit_model.depends = common
 
+SUBDIRS += fdm_setting
+fdm_setting.subdir = ankerplugins/fdm_setting
+fdm_setting.depends = common
 
-## fdm_gcode_preview  --exe
-#SUBDIRS += fdm_gcode_preview
-#fdm_gcode_preview.subdir = ankerplugins/fdm_gcode_preview
-#fdm_gcode_preview.depends = common
-
+SUBDIRS += fdm_slicer
+fdm_slicer.subdir = ankerplugins/fdm_slicer
+fdm_slicer.depends = common
 
 # fdm_gcode_parser plugin
 SUBDIRS += fdm_gcode_parser
 fdm_gcode_parser.subdir = ankerplugins/fdm_gcode_parser
 fdm_gcode_parser.depends = common
 
-#SUBDIRS += anker_plugin_demo
-#anker_plugin_demo.subdir = ankerplugins/anker_plugin_demo
-#anker_plugin_demo.depends = common
-
-SUBDIRS += fdm_slicer
-fdm_slicer.subdir = ankerplugins/fdm_slicer
-fdm_slicer.depends = common
-
-SUBDIRS += fdm_setting
-fdm_setting.subdir = ankerplugins/fdm_setting
-fdm_setting.depends = common
+SUBDIRS += AnkerMake
+AnkerMake.subdir = meshlab
+AnkerMake.depends = common anker_edit_model fdm_gcode_parser fdm_setting fdm_slicer
 
 # if distrib folder is not in $$PWD/../distrib (shadow build case),
 # we need to copy all the files inside $$PWD/../distrib in the actual

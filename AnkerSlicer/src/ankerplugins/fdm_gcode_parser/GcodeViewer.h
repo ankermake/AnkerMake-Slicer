@@ -166,7 +166,6 @@ private:
     Scene3D* m_scene3d  = nullptr;
     RenderDataPtr m_renderData = nullptr;
     SceneParam m_sceneParam;
-    QProcess *pCmd;
     QImage offImage;
 #if ENABLE_SPLITTED_VERTEX_BUFFER
     using IBufferType = unsigned short;

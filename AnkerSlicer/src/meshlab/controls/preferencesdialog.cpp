@@ -9,8 +9,28 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
 {
     this->setMinimumSize(QSize(900,700));
     this->setMaximumSize(QSize(900,700));
-   // this->setWindowFlags(Qt::FramelessWindowHint );
-   // setAttribute(Qt::WA_TranslucentBackground,true);
+//    this->setFixedSize(QSize(800,500));
+   //this->setWindowFlags(Qt::FramelessWindowHint );
+// setAttribute(Qt::WA_TranslucentBackground,true);
+
+//        QVBoxLayout *mainlayout = new QVBoxLayout(this);
+//        mainlayout->setContentsMargins(5,5,5,5);
+
+       // QWidget*widget = new QWidget(dialog);
+        //widget->setObjectName("widgetShadow");
+       
+
+//        QFrame *frame = new QFrame(this);
+//         frame->setWindowFlags(Qt::FramelessWindowHint );
+//        QGraphicsDropShadowEffect *shadow = new QGraphicsDropShadowEffect(frame);
+
+
+//        shadow->setBlurRadius(2);
+//        frame->setAttribute(Qt::WA_TranslucentBackground);
+//        frame->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+//        frame->setGraphicsEffect(shadow);
+
+//        mainlayout->addWidget(frame);
 
     QFont font = this->font();
     font.setPixelSize(font.pixelSize() + 2);
@@ -24,7 +44,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     connect(m_listView,&QListView::clicked,this,&PreferencesDialog::selectCurrentIndex);
     //=================================
     QVBoxLayout *layout = new QVBoxLayout(this);
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(SHADOW_WIDTH,SHADOW_WIDTH,SHADOW_WIDTH,SHADOW_WIDTH);
+    //layout->setContentsMargins(1,0,0,0);
     layout->setSpacing(0);
     this->setLayout(layout);
     m_title = new QLabel(tr("Preferences"));
@@ -51,13 +72,13 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     hlayout->setSpacing(12);
     layout->addLayout(hlayout);
 
-    m_closeButton = new QPushButton(tr("Close"),this);
+    m_closeButton = new QPushButton(tr("Close"));
     m_closeButton->setFont(font);
     m_closeButton->setMinimumSize(100,32);
     connect(m_closeButton,&QPushButton::clicked,this,&PreferencesDialog::closeDialog);
     hlayout->addStretch();
     hlayout->addWidget(m_closeButton);
-    m_saveButton = new  QPushButton(tr("Save"),this);
+    m_saveButton = new  QPushButton(tr("Save"));
     m_saveButton->setObjectName("hightButton");
     m_saveButton->setFont(font);
     m_saveButton->setMinimumSize(100,32);
@@ -166,20 +187,37 @@ void PreferencesDialog::selectCurrentIndex(const QModelIndex &index)
 void PreferencesDialog::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
+//    QPen pen;
+//    pen.setColor(QColor(81,84,95));
+//    pen.setStyle(Qt::CustomDashLine);
+//    painter.setPen(pen);
     painter.setPen(Qt::NoPen);
     // painter.setCompositionMode( QPainter::CompositionMode_Clear );
     painter.setRenderHint(QPainter::Antialiasing, true);
     painter.setBrush(QColor(41,42,45));
-   // QPainterPath path;
-   // QPolygon polygon;
-   // path.addRoundedRect(0,0,this->width() , this->height() ,40,15);
     painter.drawRoundedRect(0,0,this->width() , this->height() ,0,0);
+
+//    QPainter painter(this);
+//    painter.setRenderHint(QPainter::Antialiasing, true);
+//    painter.fillRect(QRect(SHADOW_WIDTH, SHADOW_WIDTH, this->width() - 2 * SHADOW_WIDTH, this->height() - 2 * SHADOW_WIDTH), QBrush(QColor(41,42,45,255)));
+
+//    QColor color(63,63,63,30);
+//    for (int i = 0; i < SHADOW_WIDTH; i++)
+//    {
+//        color.setAlpha(120 - qSqrt(i) * 40);
+//        painter.setPen(color);
+
+//        //painter.drawRect(SHADOW_WIDTH - i, SHADOW_WIDTH - i, this->width() - (SHADOW_WIDTH - i) * 2, this->height() - (SHADOW_WIDTH - i) * 2);
+
+//         painter.drawRoundedRect(SHADOW_WIDTH - i, SHADOW_WIDTH - i, this->width() - (SHADOW_WIDTH - i) * 2, this->height() - (SHADOW_WIDTH - i) * 2, 4, 4);
+//    }
 
   //  QStyleOption opt;
    // opt.init(this);
 //    QPainter painter(this);
    // style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
-    QWidget::paintEvent(event);
+
+   return QWidget::paintEvent(event);
 }
 
 void PreferencesDialog::changeEvent(QEvent * event)

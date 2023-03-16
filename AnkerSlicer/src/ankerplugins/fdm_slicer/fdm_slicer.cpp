@@ -77,6 +77,7 @@ void FdmSlicer::initialize(ControlInterface *controlmanager, RichParameterList *
     connect(this->slicer, &AkSlicer::sliceFailed, this, &FdmSlicer::doSliceFailed);
 }
 
+
 void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
 {
     this->sliceResult = sliceInfo;
@@ -84,118 +85,148 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
     {
         progressBar->setValue(100);
     }
-
-    //sliceBtn->setText("save");
-    
-
-    //if (NULL != progressBar){
-    //    delete progressBar;
-    //    progressBar = NULL;
-    //};
-
-    
-
-    
-
-    QString realtimeProfilePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/parameter/realtime/realtimeprofile.ini");
-    QString content = IoApi::readAll(realtimeProfilePath);
-//    QStringList paramList;
-//    paramList << ";;paramBegin";
-//    paramList << content.toUtf8().toBase64();
-//    paramList << ";;paramEnd";
-// 
-    
-
-    auto gcodeContent = IoApi::readAll(sliceInfo.gcodeFile);
-    int count = 100;
-    while (count > 0 && gcodeContent.indexOf(";End of Gcode") < 0)
-    {
-        QThread::msleep(100);
-        gcodeContent = IoApi::readAll(sliceInfo.gcodeFile);
-        count--;
-    }
-    
-
-    auto getMaxSpeed = [&]()->float{
-        float maxSpeed = -99;
+    bool fileOperEnd = false;
+    QThreadPool::globalInstance()->start([&,this]()->void{
+        //sliceBtn->setText("save");
         
 
-        auto lines = gcodeContent.split("\r",Qt::SkipEmptyParts);
-        for(int i = 0; i< lines.size();i++)
+        //if (NULL != progressBar){
+        //    delete progressBar;
+        //    progressBar = NULL;
+        //};
+
+        
+
+        
+
+        QString realtimeProfilePath = QDir(QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)).absoluteFilePath("setting/fdm/parameter/realtime/realtimeprofile.ini");
+        QString content = IoApi::readAll(realtimeProfilePath);
+    //    QStringList paramList;
+    //    paramList << ";;paramBegin";
+    //    paramList << content.toUtf8().toBase64();
+    //    paramList << ";;paramEnd";
+    //
+        
+
+        auto gcodeContent = IoApi::readAll(sliceResult.gcodeFile);
+        int count = 100;
+        while (count > 0 && gcodeContent.indexOf(";End of Gcode") < 0)
         {
-            QString line = lines[i];
+            QThread::msleep(100);
+            gcodeContent = IoApi::readAll(sliceResult.gcodeFile);
+            count--;
+        }
+        
+
+        auto getMaxSpeed = [&]()->float{
+            float maxSpeed = -99;
             
 
-            if (line.trimmed().startsWith(";")
-                || !line.trimmed().startsWith("G")
-                || line.indexOf("E") < 0
-                || line.indexOf("F") < 0)
+            auto lines = gcodeContent.split("\r",Qt::SkipEmptyParts);
+            for(int i = 0; i< lines.size();i++)
             {
-                 continue;
-            }
-            auto words = line.split(" ",Qt::SkipEmptyParts);
-            for(int j = 0; j< words.size();j++)
-            {
-                if (!words[j].startsWith("F"))
-                {
-                    continue;
-                }
-                try
-                {
-                    float speed = words[j].mid(1).toFloat();
-                    maxSpeed = (maxSpeed < speed) ? speed : maxSpeed;
-                }
-                catch(...){}
-            }
-        }
-        return maxSpeed;
-    };
-    
+                QString line = lines[i];
+                
 
-    if (gcodeContent.indexOf(";MAXSPEED:") > 0)
-    {
-        float maxPrintSpeed = getMaxSpeed();
+                if (line.trimmed().startsWith(";")
+                    || !line.trimmed().startsWith("G")
+                    || line.indexOf("E") < 0
+                    || line.indexOf("F") < 0)
+                {
+                     continue;
+                }
+                auto words = line.split(" ",Qt::SkipEmptyParts);
+                for(int j = 0; j< words.size();j++)
+                {
+                    if (!words[j].startsWith("F"))
+                    {
+                        continue;
+                    }
+                    try
+                    {
+                        float speed = words[j].mid(1).toFloat();
+                        maxSpeed = (maxSpeed < speed) ? speed : maxSpeed;
+                    }
+                    catch(...){}
+                }
+            }
+            return maxSpeed;
+        };
         
 
-        if (maxPrintSpeed > 0)
+        if (gcodeContent.indexOf(";MAXSPEED:") > 0)
         {
-            gcodeContent = gcodeContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
+            float maxPrintSpeed = getMaxSpeed();
+            
+
+            if (maxPrintSpeed > 0)
+            {
+                gcodeContent = gcodeContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
+            }
+            
+
+            IoApi::write(sliceResult.gcodeFile, gcodeContent);
         }
+
         
 
-        IoApi::write(sliceInfo.gcodeFile, gcodeContent);
-    }
+    //    QStringList paramList;
+    //    paramList << ";paramBegin";
+    //    paramList << content.toUtf8().toBase64();
+    //    paramList << ";paramEnd";
+    //    IoApi::append(sliceInfo.gcodeFile, paramList.join(""));
+
+        QStringList paramList;
+        paramList << ";paramBegin";
+        //paramList << content.toUtf8().toBase64();
+        auto paramContent = content.toUtf8().toBase64();
+        auto subList = IoApi::splite(paramContent, 200);
+        for (int i = 0; i < subList.size(); i++)
+        {
+            paramList << ";" + subList[i];
+        }
+        paramList << ";paramEnd";
+        paramList << ";AnkerMake version: " + MeshLabApplication::appVer();
+        
+
+        paramList << ";End of Gcode";
+        IoApi::append(sliceResult.gcodeFile, paramList.join("\r\n"));
+        fileOperEnd = true;
+        //IoApi::append(sliceInfo.gcodeFile, QString(";paramBegin").toLocal8Bit());
+        //auto realtimeBase64 = content.toLocal8Bit().toBase64();
+        //IoApi::append(sliceInfo.gcodeFile, realtimeBase64);
+        //IoApi::append(sliceInfo.gcodeFile, ";paramEnd");
+
+
+
+
+
+//        PluginMessageData data;
+//        data.from = AkConst::Plugin::FDM_SLICER;
+//        data.dest = AkConst::Plugin::FDM_SETTING;
+//        data.msg = AkConst::Msg::SLICE_SUCCESS;
+//        emit sendMsg2Manager(data);
+
+
+//        emit this->sliceSucess();
+
+//        emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
+
+
+
+
+    });
+    //emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
 
     
 
-//    QStringList paramList;
-//    paramList << ";paramBegin";
-//    paramList << content.toUtf8().toBase64();
-//    paramList << ";paramEnd";
-//    IoApi::append(sliceInfo.gcodeFile, paramList.join(""));
-
-    QStringList paramList;
-    paramList << ";paramBegin";
-    //paramList << content.toUtf8().toBase64();
-    auto paramContent = content.toUtf8().toBase64();
-    auto subList = IoApi::splite(paramContent, 200);
-    for (int i = 0; i < subList.size(); i++)
+    int count = 500;
+    while(!fileOperEnd && count>0)
     {
-        paramList << ";" + subList[i];
+        count--;
+        QThread::msleep(20);
+        QCoreApplication::processEvents();
     }
-    paramList << ";paramEnd";
-    paramList << ";AnkerMake version: " + MeshLabApplication::appVer();
-    
-
-    paramList << ";End of Gcode";
-    IoApi::append(sliceInfo.gcodeFile, paramList.join("\r\n"));
-
-
-    //IoApi::append(sliceInfo.gcodeFile, QString(";paramBegin").toLocal8Bit());
-    //auto realtimeBase64 = content.toLocal8Bit().toBase64();
-    //IoApi::append(sliceInfo.gcodeFile, realtimeBase64);
-    //IoApi::append(sliceInfo.gcodeFile, ";paramEnd");
-
     
 
     PluginMessageData data;
@@ -203,9 +234,12 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
     data.dest = AkConst::Plugin::FDM_SETTING;
     data.msg = AkConst::Msg::SLICE_SUCCESS;
     emit sendMsg2Manager(data);
+    
 
-    emit sliceSucess();
-    emit appendSliceBtnStat(ESliceBtnStat::SLICE_END);
+    emit this->sliceSucess();
+    
+
+    emit this->appendSliceBtnStat(ESliceBtnStat::SLICE_END);
 }
 
 void FdmSlicer::doSliceFailed(AkSliceInfo sliceInfo)
@@ -636,7 +670,6 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
         for(int i =0;i<fInfos.size();i++)
         {
             supportMeshes.append(fInfos[i].absoluteFilePath());
-
         }
         slicer->setSupportMeshes(supportMeshes);
         trySlice();

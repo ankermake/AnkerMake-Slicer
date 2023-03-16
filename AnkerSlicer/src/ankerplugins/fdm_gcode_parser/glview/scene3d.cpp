@@ -148,6 +148,8 @@ void Scene3D::setView(const ViewType& _type)
     default:
         break;
     }
+    senseRadius = fabs(QVector3D::dotProduct(m_eye - refTranPoint, m_front)) * (float)(m_w) / (float)(m_h)*
+        tan(m_verticalAngle / 360.0 * CH_PI);
 }
 
 void Scene3D::getBoxPoints(const BoxType& box, std::vector<QVector3D>& points)
@@ -517,9 +519,26 @@ void Scene3D::xyRotate(int dx, int dy)
     QVector3D curV = m_up;
     QVector3D curU = QVector3D::crossProduct(curN, curV);
     QVector3D axis1 = curU * sqrt(1 - A1 * A1) + curN * A1;
-    QVector3D axis2 = curV * sqrt(1 - A2 * A2) + curN * A2;
+    QVector3D axis2 = curV * sqrt(1 - A2 * A2) + curN * A2;//rotMat
 
-    QMatrix4x4 mat = rotMat(refTranPoint, axis1, angle1) * rotMat(refTranPoint, axis2, -angle2);
+    QMatrix4x4 mat;
+    if(fabs(m_lastMousePts[0] - dx) > fabs(m_lastMousePts[1] - dy)) 
+    {
+        axis2 = QVector3D(0, 0, 1);
+        mat = rotMat(refTranPoint, axis2, -angle2);
+    }
+    else if(fabs(m_lastMousePts[0] - dx) < fabs(m_lastMousePts[1] - dy))
+    {
+        axis1 = curU;
+        mat = rotMat(refTranPoint, axis1, angle1);
+    }
+    else
+    {
+        mat = rotMat(refTranPoint, axis1, angle1) * rotMat(refTranPoint, axis2, -angle2);
+    }
+    //qDebug() << "dx: " << dx << ", dy: " << dy << ", lastmousept: " << lastmousept << ", moveVec: " << moveVec;
+    m_lastMousePts[0] = dx;
+    m_lastMousePts[1] = dy;
     m_eye = pRot(mat, m_eye);
     m_front = vRot(mat, m_front);
     m_up = vRot(mat, m_up);
@@ -608,7 +627,7 @@ void Scene3D::getZoomVec(int dx, int dy, QVector3D& move)
 
 void Scene3D::getCurrentProjMat_ssp(QMatrix4x4 &matrix)
 {
-    matrix.perspective(88, (double)m_w / m_h, m_near, m_far);
+    matrix.perspective(m_verticalAngle, (double)m_w / m_h, m_near, m_far);
     return;
 }
 

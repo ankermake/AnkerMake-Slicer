@@ -53,11 +53,10 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     controlManager->setMainWindow(this->parentWidget());
     m_widget = new GeneralWidget(m_messageProcessing);
     connect(m_widget, &GeneralWidget::unloadPluginsSignal, this, &FdmMainWidget::unloadPlugins);
-    //
-    connect(m_widget, &GeneralWidget::closeMainWindow, this, &FdmMainWidget::closeMainWindow);
+    connect(m_widget, &GeneralWidget::otaNeedSaveProjectSignal, this, &FdmMainWidget::otaNeedSaveProjectSignal);
+
     
     connect(this, &FdmMainWidget::pluginsUnloaded, m_widget, &GeneralWidget::doPluginUnloaded);
-    connect(this, &FdmMainWidget::updateSoftware, m_widget, &GeneralWidget::clickCheckButton);
     controlManager->addPageToPreferences(m_widget,0);
 
     m_messageProcessing->sendMsg2Preview();
@@ -266,18 +265,28 @@ void FdmMainWidget::initTool()
      m_tutorial = m_menuHelp->addAction(QIcon(), tr("Tutorial"),[=]{
          QString str;
          if(lang == QLocale::Japanese) {
-             str = AkConst::WebAddress::tutorialJapanese;
+             str = AkConst::WebAddress::TutorialJapanese;
          }
          else {
-             str = AkConst::WebAddress::tutorialEnglish;
+             str = AkConst::WebAddress::TutorialEnglish;
          }
          QUrl regUrl(str);
          QDesktopServices::openUrl(regUrl);
      });
-     m_feedback = m_menuHelp->addAction(QIcon(), tr("Feedback"));
+     m_feedback = m_menuHelp->addAction(QIcon(), tr("Feedback"),[=] {
+         QString str;
+         if(lang == QLocale::Japanese) {
+             str = AkConst::WebAddress::FeedBackJapanese;
+         }
+         else {
+             str = AkConst::WebAddress::FeedBackEnglish;
+         }
+         QUrl regUrl(str);
+         QDesktopServices::openUrl(regUrl);
+     });
 
      //menuHelp->addAction(QIcon(), tr("Software Update"));
-     m_actionUpdate = m_menuHelp->addAction(QIcon(), tr("Software Update"),this,&FdmMainWidget::OnUpdateSoftware);
+     m_actionUpdate = m_menuHelp->addAction(QIcon(), tr("Software Update"),this,&FdmMainWidget::openPreferencesDialog);
      m_actionUpdate->setObjectName("actionUpdate");
      m_controlManager->addMenuToToolBar(m_menuHelp,Qt::AlignRight);
      m_priPolicy = m_menuHelp->addAction(QIcon(), tr("Privacy Policy"),[=]() {
@@ -316,6 +325,16 @@ void FdmMainWidget::initTool()
          mwData.msg = AkConst::Msg::PRIVACY_PROTOCOL;
          mwData.map.insert("Language", (int)lang);
          mwData.map.insert("type", "AnkerMake-terms-of-service");
+         mwData.map.insert("key", "");
+         mwData.map.insert("ext", "");
+         m_messageProcessing->sendMsg2Manager(mwData);
+     });
+     m_logUpload = m_menuHelp->addAction(QIcon(), tr("Log Upload"),[=] {
+
+         PluginMessageData mwData;
+         mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+         mwData.dest = AkConst::Plugin::FDM_NETWORK;
+         mwData.msg = AkConst::Msg::LOG_UPLOAD;
          mwData.map.insert("key", "");
          mwData.map.insert("ext", "");
          m_messageProcessing->sendMsg2Manager(mwData);
@@ -550,14 +569,6 @@ void FdmMainWidget::clearRecentProjectList()
     m_recentMenu->clear();
     m_recentMenu->setEnabled(false);
     m_settings.clearRecent();
-}
-
-void FdmMainWidget::OnUpdateSoftware()
-{
-    if (m_widget) {
-        emit updateSoftware();
-    }
-    openPreferencesDialog();
 }
 
 void FdmMainWidget::openPreferencesDialog()
@@ -927,6 +938,9 @@ void FdmMainWidget::changeEvent(QEvent *e)
                                      tr("Device")};
         for (int i = 0; i < m_tabWidget->titleLabels().size(); i++) {
             m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
+        }
+        if (m_logUpload) {
+            m_logUpload->setText(tr("Log Upload"));
         }
         if (m_viewAction) {
             m_viewAction->setText(tr("3D View"));

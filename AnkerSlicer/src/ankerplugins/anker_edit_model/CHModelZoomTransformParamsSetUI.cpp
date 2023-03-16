@@ -273,9 +273,9 @@ CHModelZoomTransformParamsSetUI::CHModelZoomTransformParamsSetUI(QWidget* parent
     m_scaleToFitButton = new QToolButton;
     m_scaleToFitButton->setObjectName("scaleToFitButton");
     m_scaleToFitButton->setText(tr("Scale To Fit"));
-    m_scaleToFitButton->setMaximumWidth(120);
+    m_scaleToFitButton->setMaximumWidth(200);
     m_scaleToFitButton->setMaximumHeight(32);
-    m_scaleToFitButton->setMinimumWidth(120);
+    m_scaleToFitButton->setMinimumWidth(200);
     m_scaleToFitButton->setMinimumHeight(32);
     m_scaleToFitButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "   background-color: #3A3B3F;\n"
@@ -375,7 +375,6 @@ void CHModelZoomTransformParamsSetUI::setLock(bool checked)
 void CHModelZoomTransformParamsSetUI::viewValueChanged(double value, ZoomChangedType type, ZoomAxisType axisType)
 {
     std::vector<double> params(3);
-
     params[0] = ((fabs(m_xScaleBox->value()) < ZERO ? 0.01 : m_xScaleBox->value()) / 100.0);
     params[1] = ((fabs(m_yScaleBox->value()) < ZERO ? 0.01 : m_yScaleBox->value()) / 100.0);
     params[2] = ((fabs(m_zScaleBox->value()) < ZERO ? 0.01 : m_zScaleBox->value()) / 100.0);

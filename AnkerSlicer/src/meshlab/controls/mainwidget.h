@@ -69,6 +69,7 @@ signals:
     void unloadPlugins();
     void pluginsUnloaded();
     void closeMainWindow();
+    void otaNeedSaveProjectSignal(const QString &filePath);
     void updateSoftware();
 public slots:
       void currentPageChanged(int index);
@@ -120,7 +121,6 @@ private slots:
     void tabCurrentPageChanged(int index);
 
     void visibleModelCountChanged(int count);
-    void OnUpdateSoftware();
 private:
     QMenu* m_recentMenu;
     QMenu* m_exportMenu;
@@ -178,6 +178,7 @@ private:
     QAction *m_topAction = nullptr;
     QAction *m_bottomAction = nullptr;
     GeneralWidget *m_widget = nullptr;
+    QAction *m_logUpload = nullptr;
 };
 }
 #endif // MAINWIDGET_H

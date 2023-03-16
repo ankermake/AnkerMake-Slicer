@@ -129,6 +129,7 @@ signals:
 public slots:
     void openFileFromAppRaram(const QString &fileName);
     void openFileList(QStringList fileNameList);
+    void otaNeedSaveProject(const QString &filePath);
 
 private slots:
     void slotSaveProject();
@@ -170,6 +171,8 @@ private:
     bool processIsRun(const QString &exeName);
     bool removeAcodeFile(QString const &path);
     void initTitleBar();
+    void showNormalWin();
+    void showMaximizedWin();
 private:
     QFramelessHelper *m_framelessHelper = nullptr;
     ControlManager* m_controlManager;
@@ -221,6 +224,7 @@ private:
     bool pressedRightBottom = false;
 
     bool mousePressedStatus = false;
+    bool m_ota = false;
 protected:
     
     void closeEvent(QCloseEvent* event) override;

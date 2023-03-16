@@ -52,10 +52,10 @@ void ProgressDialog::changeEvent(QEvent *e)
 }
 void ProgressDialog::setValue(int value)
 {
-    //qDebug() << "set value ";
+    qDebug() << "set value ";
     m_progressbar->setValue(value);
 //    QCoreApplication::processEvents();
-    this->update();
+    update();
 }
 
 void ProgressDialog::setText(const QString &text)

@@ -161,7 +161,7 @@ void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
     
     if(useTimes > 10)
     {
-        MessageDialog a("warning", "can't open more gcode preview widgt whice numbers must less than 10 ", 0x00400000 );
+        MessageDialog a(tr("Warning"), tr("can't open more gcode preview widgt whice numbers must less than 10."), 0x00400000 );
         a.exec();
         return ;
     }
@@ -235,12 +235,19 @@ void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
         this->CurrentShowFile = file;
         QFileInfo cFileInfo(file);
         this->CurrentShowFileSize = cFileInfo.size();
+
+        PluginMessageData data;
+        data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+        data.dest = AkConst::Plugin::FDM_NETWORK;
+        data.msg = AkConst::Msg::OPEN_NEW_GCODE;
+        this->sendMsg2Manager(data);
     }
     QString originalStlName = msgBody.map.value(AkConst::Param::ORIGINAL_STL_NAME, QString("")).toString();
     
         m_rpc_inner->pubMsgFromFdmGcodePaser(file);
         m_rpc_inner->setOStlName(originalStlName);
         auto pass_params = getSceneParams();
+        qDebug() << "pass_params: " << pass_params;
         m_rpc_inner->setPassParams(pass_params);
         
         queryLoggingStatus();
@@ -290,7 +297,7 @@ void FdmGcodeParser::openGcodePreviewInnetwork(const QString& file,const QString
 bool FdmGcodeParser::checkOpenFile(QString gcodePath)
 {
     QFileInfo cFileInfo(gcodePath);
-    if(QString::compare(this->CurrentShowFile,gcodePath) == 0  && CurrentShowFileSize == cFileInfo.size()){
+    if(QString::compare(this->CurrentShowFile,gcodePath) == 0  && CurrentShowFileSize == cFileInfo.size() && preview->ww->checkLastFileComplete()){
         return true;
     }
     return false;
@@ -326,7 +333,7 @@ QVariant FdmGcodeParser::getSceneParams()
             iniSceneParam.m_printMachineBox.m_height = 250;
             iniSceneParam.m_printMachineBox.m_length = 235;
             iniSceneParam.m_printMachineBox.m_width = 235;
-            iniSceneParam.m_printMachineBox.num = 11513528;
+            iniSceneParam.m_printMachineBox.num = 30;
             iniSceneParam.m_printMachineBox.m_lineWidth = 1;
             iniSceneParam.m_eye = QVector3D(0, 0, 0);
             iniSceneParam.m_front = QVector3D(0, 0, 0);

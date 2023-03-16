@@ -2489,6 +2489,11 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
     communication->sendCurrentPosition(gcode.getPositionXY());
     gcode.setLayerNr(layer_nr);
 
+    /*  FIXME: @2023-02-01 by ChunLian
+
+
+     **/
+
     gcode.writeLayerComment(layer_nr);
 
     // flow-rate compensation
@@ -2772,6 +2777,7 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
                     {
                         communication->sendLineTo(path.config->type, path.points[point_idx], path.getLineWidthForLayerView(), path.config->getLayerThickness(), speed);
                         gcode.writeExtrusion(path.points[point_idx], speed, path.getExtrusionMM3perMM(), path.config->type, update_extrusion_offset);
+                        //  FIXME: @2023-02-01 by ChunLian
                     }
                 }
             }
@@ -2820,6 +2826,9 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
                 }
                 path_idx--; // the last path_idx didnt spiralize, so it's not part of the current spiralize path
             }
+
+            //  FIXME: @2023-02-01 by ChunLian
+
         } // paths for this extruder /\  .
 
         if (extruder.settings.get<bool>("cool_lift_head") && extruder_plan.extraTime > 0.0)

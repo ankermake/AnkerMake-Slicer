@@ -585,10 +585,12 @@ namespace fdmsettings {
 			};
 
             
-            RichParameter& param = globalParameterList->addParam(RichPoint3f(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE, getMachineSize()));
+            //RichParameter& param = globalParameterList->addParam(RichPoint3f(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE, getMachineSize()));
 			QObject::connect(machineSizeX, &FdmParamNode::fdmValueChange, updateMachineSize);
 			QObject::connect(machineSizeY, &FdmParamNode::fdmValueChange, updateMachineSize);
 			QObject::connect(machineSizeZ, &FdmParamNode::fdmValueChange, updateMachineSize);
+
+            updateMachineSize();
 
 			if (0) 
 			{
@@ -616,7 +618,7 @@ namespace fdmsettings {
 		{  
 			FdmParamNode* support_enable = findNode("support_enable");
 			bool enable = support_enable->getFdmValue().toBool();
-			globalParameterList->addParam(RichBool(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE, enable));
+            //globalParameterList->addParam(RichBool(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE, enable));
 			QObject::connect(support_enable, &FdmParamNode::fdmValueChange, [this](QVariant var) {
 				bool enable = var.toBool();
 				BoolValue value(enable);
@@ -627,7 +629,7 @@ namespace fdmsettings {
 
 			FdmParamNode* support_angle = findNode("support_angle");
 			float angle = support_angle->getFdmValue().toFloat();
-			globalParameterList->addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, angle));
+            //globalParameterList->addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, angle));
 			QObject::connect(support_angle, &FdmParamNode::fdmValueChange, [this](QVariant var) {
 				float angle = var.toFloat();
 				FloatValue value(angle);

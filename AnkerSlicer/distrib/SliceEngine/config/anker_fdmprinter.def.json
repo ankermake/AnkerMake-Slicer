@@ -17,7 +17,6 @@
         "preferred_quality_type": "normal",
         "machine_extruder_trains":
         {
-            "0": "anker_fdmextruder"
         },
         "supports_usb_connection": true,
         "supports_network_connection": false
@@ -26,9 +25,9 @@
     {
         "anker_fdm_setting":
         {
-            "label": "AnkerFdmSettings",
+            "label": "Anker Experimental Parameters",
             "type": "category",
-            "description": "Anker specifically opitimize",
+            "description": "Anker experimental tuning parameters",
             "icon": "AnkerFdmSettings",
             "children":
             {
@@ -250,48 +249,45 @@
                     "label": "Dynamic Resolution",
                     "description": "meshfix dynamic resolution.",
                     "default_value": false,
-                    "type": "bool",
-                    "children":
-                    {
-                        "meshfix_maximum_resolution":
-                        {
-                            "label": "Maximum Resolution",
-                            "description": "The minimum size of a line segment after slicing. If you increase this, the mesh will have a lower resolution. This may allow the printer to keep up with the speed it has to process g-code and will increase slice speed by removing details of the mesh that it can't process anyway.",
-                            "type": "float",
-                            "unit": "mm",
-                            "default_value": 0.5,
-                            "minimum_value": "0.001",
-                            "minimum_value_warning": "0.01",
-                            "maximum_value_warning": "3",
-                            "settable_per_mesh": true
-                        },
-                        "meshfix_maximum_travel_resolution":
-                        {
-                            "label": "Maximum Travel Resolution",
-                            "description": "The minimum size of a travel line segment after slicing. If you increase this, the travel moves will have less smooth corners. This may allow the printer to keep up with the speed it has to process g-code, but it may cause model avoidance to become less accurate.",
-                            "type": "float",
-                            "unit": "mm",
-                            "default_value": 1.0,
-                            "value": "min(meshfix_maximum_resolution * speed_travel / speed_print, 2 * line_width)",
-                            "minimum_value": "0.001",
-                            "minimum_value_warning": "0.05",
-                            "maximum_value_warning": "10",
-                            "settable_per_mesh": false,
-                            "settable_per_extruder": true
-                        },
-                        "meshfix_maximum_deviation":
-                        {
-                            "label": "Maximum Deviation",
-                            "description": "The maximum deviation allowed when reducing the resolution for the Maximum Resolution setting. If you increase this, the print will be less accurate, but the g-code will be smaller. Maximum Deviation is a limit for Maximum Resolution, so if the two conflict the Maximum Deviation will always be held true.",
-                            "type": "float",
-                            "unit": "mm",
-                            "default_value": 0.025,
-                            "minimum_value": "0.001",
-                            "minimum_value_warning": "0.01",
-                            "maximum_value_warning": "0.3",
-                            "settable_per_mesh": true
-                        }
-                    }
+                    "type": "bool"
+                },
+                "meshfix_maximum_resolution":
+                {
+                    "label": "Maximum Resolution",
+                    "description": "The minimum size of a line segment after slicing. If you increase this, the mesh will have a lower resolution. This may allow the printer to keep up with the speed it has to process g-code and will increase slice speed by removing details of the mesh that it can't process anyway.",
+                    "type": "float",
+                    "unit": "mm",
+                    "default_value": 0.5,
+                    "minimum_value": "0.001",
+                    "minimum_value_warning": "0.01",
+                    "maximum_value_warning": "3",
+                    "settable_per_mesh": true
+                },
+                "meshfix_maximum_travel_resolution":
+                {
+                    "label": "Maximum Travel Resolution",
+                    "description": "The minimum size of a travel line segment after slicing. If you increase this, the travel moves will have less smooth corners. This may allow the printer to keep up with the speed it has to process g-code, but it may cause model avoidance to become less accurate.",
+                    "type": "float",
+                    "unit": "mm",
+                    "default_value": 1.0,
+                    "value": "min(meshfix_maximum_resolution * speed_travel / speed_print, 2 * line_width)",
+                    "minimum_value": "0.001",
+                    "minimum_value_warning": "0.05",
+                    "maximum_value_warning": "10",
+                    "settable_per_mesh": false,
+                    "settable_per_extruder": true
+                },
+                "meshfix_maximum_deviation":
+                {
+                    "label": "Maximum Deviation",
+                    "description": "The maximum deviation allowed when reducing the resolution for the Maximum Resolution setting. If you increase this, the print will be less accurate, but the g-code will be smaller. Maximum Deviation is a limit for Maximum Resolution, so if the two conflict the Maximum Deviation will always be held true.",
+                    "type": "float",
+                    "unit": "mm",
+                    "default_value": 0.025,
+                    "minimum_value": "0.001",
+                    "minimum_value_warning": "0.01",
+                    "maximum_value_warning": "0.3",
+                    "settable_per_mesh": true
                 },
                 "relative_extrusion":
                 {
@@ -407,7 +403,7 @@
                     "label": "Ruler printing optimization",
                     "description": "﻿Ruler printing optimization.",
                     "type": "bool",
-                    "default_value": true,
+                    "default_value": false,
                     "settable_per_mesh": true,
                     "children":
                     {
@@ -541,11 +537,12 @@
                         },
                         "wall_overhang_extend_type":
                         {
-                            "label": "wall overhang extend type",
-                            "description": "set the range of the overhang effect to make the printing smoothly.",
+                            "label": "wall overhang speed down type",
+                            "description": "set the strategy of slow down when printing overhang to make the a smoothly printing .",
                             "type": "enum",
                             "options":
                             {
+                                "instant": "instant",
                                 "gradually_xy": "gradually_xy",
                                 "circle": "circle"
                             },
@@ -582,8 +579,27 @@
                                     "default_value": 10.0,
                                     "enabled": false,
                                     "settable_per_mesh": true
+                                },
+                                "overhang_inner_wall_shrink_distance":
+                                {
+                                    "label": "Overhang Inner Wall Shrink Distance",
+                                    "description": "inner wall shrink to make a tiny gap between outter wall and inner wall , expect to make the out line more wide ",
+                                    "unit": "mm",
+                                    "type": "float",
+                                    "default_value": "0.0",
+                                    "value": "0.05",
+                                    "enabled": "wall_overhang_extend_type == 'gradually_xy'",
+                                    "settable_per_mesh": true
                                 }
                             }
+                        },
+                        "overhang_related_inner_wall_slow_down":
+                        {
+                            "label": "slow down overhang inner wall",
+                            "description": "Print overhang inner wall with overhang speed.",
+                            "type": "bool",
+                            "default_value": true,
+                            "settable_per_mesh": true
                         },
                         "wall_overhang_speed_factor":
                         {
@@ -593,7 +609,7 @@
                             "type": "float",
                             "default_value": 100,
                             "minimum_value": "0.001",
-                            "minimum_value_warning": "25",
+                            "minimum_value_warning": "5",
                             "settable_per_mesh": true
                         },
                         "wall_overhang_flow_factor":
@@ -766,6 +782,30 @@
                     "settable_per_meshgroup": false,
                     "children":
                     {
+                        "bridge_split_min_length":
+                        {
+                            "label": "Bridge split min length",
+                            "description": "Split a long bridge to 3 part to perform a variable speed printing",
+                            "unit": "mm",
+                            "type": "float",
+                            "minimum_value": "0.0",
+                            "default_value": "20.0",
+                            "enabled": "bridge_settings_enabled",
+                            "settable_per_mesh": true,
+                            "settable_per_extruder": false
+                        },
+                        "bridge_shrink_length":
+                        {
+                            "label": "Bridge shrink length",
+                            "description": "Offset from Bridge start to apply the bridge config ",
+                            "unit": "mm",
+                            "type": "float",
+                            "minimum_value": "0.0",
+                            "default_value": "5.0",
+                            "enabled": "bridge_settings_enabled",
+                            "settable_per_mesh": true,
+                            "settable_per_extruder": false
+                        },
                         "bridge_wall_min_length":
                         {
                             "label": "Minimum Bridge Wall Length",
@@ -1054,6 +1094,67 @@
                     "settable_per_mesh": false,
                     "settable_per_extruder": false,
                     "settable_per_meshgroup": false
+                },
+                "extract_param_from_gcode":
+                {
+                    "label": "show the gcode param when preview ankerMake gcode ",
+                    "description": "show the parameters of the gcode in the setting pannel when preview the gcode which was sliced by ankerMake.",
+                    "default_value": false,
+                    "type": "bool",
+                    "settable_per_mesh": false,
+                    "settable_per_extruder": false,
+                    "settable_per_meshgroup": false
+                },
+                "coasting_enable":
+                {
+                    "label": "Enable Coasting",
+                    "description": "Coasting replaces the last part of an extrusion path with a travel path. The oozed material is used to print the last piece of the extrusion path in order to reduce stringing.",
+                    "type": "bool",
+                    "default_value": false,
+                    "settable_per_mesh": false,
+                    "settable_per_extruder": true,
+                    "children":
+                    {
+                        "coasting_volume":
+                        {
+                            "label": "Coasting Volume",
+                            "description": "The volume otherwise oozed. This value should generally be close to the nozzle diameter cubed.",
+                            "unit": "mm³",
+                            "type": "float",
+                            "default_value": "0.064",
+                            "minimum_value": "0.0",
+                            "maximum_value_warning": "machine_nozzle_size * 5",
+                            "enabled": "coasting_enable",
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": true
+                        },
+                        "coasting_min_volume":
+                        {
+                            "label": "Minimum Volume Before Coasting",
+                            "description": "The smallest volume an extrusion path should have before allowing coasting. For smaller extrusion paths, less pressure has been built up in the bowden tube and so the coasted volume is scaled linearly. This value should always be larger than the Coasting Volume.",
+                            "unit": "mm³",
+                            "type": "float",
+                            "default_value": "0.8",
+                            "minimum_value": "0.0",
+                            "maximum_value_warning": "10.0",
+                            "enabled": "coasting_enable",
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": true
+                        },
+                        "coasting_speed":
+                        {
+                            "label": "Coasting Speed",
+                            "description": "The speed by which to move during coasting, relative to the speed of the extrusion path. A value slightly under 100% is advised, since during the coasting move the pressure in the bowden tube drops.",
+                            "unit": "%",
+                            "type": "float",
+                            "default_value": "90.0",
+                            "minimum_value": "0.0001",
+                            "maximum_value_warning": "100.0",
+                            "enabled": "coasting_enable",
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": true
+                        }
+                    }
                 }
             }
         },
@@ -1087,8 +1188,8 @@
                 },
                 "machine_start_gcode":
                 {
-                    "label": "Start G-code",
-                    "description": "G-code commands to be executed at the very start - separated by \\n.",
+                    "label": "Start G-Code",
+                    "description": "G-Code commands to be executed at the very start - separated by \\n.",
                     "default_value": "G28 ;Home\nG1 Z15.0 F6000 ;Move the platform down 15mm\n;Prime the extruder\nG92 E0\nG1 F200 E3\nG92 E0",
                     "type": "str",
                     "settable_per_mesh": false,
@@ -1187,8 +1288,7 @@
                     "type": "enum",
                     "options":
                     {
-                        "rectangular": "Rectangular",
-                        "elliptic": "Elliptic"
+                        "rectangular": "Rectangular"
                     },
                     "settable_per_mesh": false,
                     "settable_per_extruder": false,
@@ -1227,46 +1327,7 @@
                     "type": "bool",
                     "settable_per_mesh": false,
                     "settable_per_extruder": false,
-                    "settable_per_meshgroup": false,
-                    "children":
-                    {
-                        "material_bed_temperature":
-                        {
-                            "label": "Build Plate Temperature",
-                            "description": "The temperature used for the heated build plate. If this is 0, the build plate is left unheated.",
-                            "unit": "°C",
-                            "type": "float",
-                            "default_value": 60,
-                            "value": "default_material_bed_temperature",
-                            "resolve": "max(extruderValues('material_bed_temperature'))",
-                            "minimum_value": "-273.15",
-                            "minimum_value_warning": "build_volume_temperature",
-                            "maximum_value_warning": "130",
-                            "maximum_value": "200",
-                            "enabled": "machine_heated_bed and machine_gcode_flavor != \"UltiGCode\"",
-                            "settable_per_mesh": false,
-                            "settable_per_extruder": false,
-                            "settable_per_meshgroup": false
-                        },
-                        "material_bed_temperature_layer_0":
-                        {
-                            "label": "Build Plate Temperature Initial Layer",
-                            "description": "The temperature used for the heated build plate at the first layer. If this is 0, the build plate is left unheated during the first layer.",
-                            "unit": "°C",
-                            "type": "float",
-                            "resolve": "max(extruderValues('material_bed_temperature_layer_0'))",
-                            "default_value": 60,
-                            "value": "resolveOrValue('material_bed_temperature')",
-                            "minimum_value": "-273.15",
-                            "minimum_value_warning": "max(build_volume_temperature, max(extruderValues('material_bed_temperature')))",
-                            "maximum_value_warning": "130",
-                            "maximum_value": "200",
-                            "enabled": "machine_heated_bed and machine_gcode_flavor != \"UltiGCode\"",
-                            "settable_per_mesh": false,
-                            "settable_per_extruder": false,
-                            "settable_per_meshgroup": false
-                        }
-                    }
+                    "settable_per_meshgroup": false
                 },
                 "machine_heated_build_volume":
                 {
@@ -1440,14 +1501,9 @@
                     "options":
                     {
                         "RepRap (Marlin/Sprinter)": "Marlin",
-                        "RepRap (Volumetric)": "Marlin (Volumetric)",
                         "RepRap (RepRap)": "RepRap",
-                        "UltiGCode": "Ultimaker 2",
                         "Griffin": "Griffin",
-                        "Makerbot": "Makerbot",
-                        "BFB": "Bits from Bytes",
-                        "MACH3": "Mach3",
-                        "Repetier": "Repetier"
+                        "Makerbot": "Makerbot"
                     },
                     "default_value": "RepRap (Marlin/Sprinter)",
                     "settable_per_mesh": false,
@@ -2023,6 +2079,20 @@
                                     "limit_to_extruder": "wall_0_extruder_nr",
                                     "settable_per_mesh": true
                                 },
+                                "thin_wall_line_width_0":
+                                {
+                                    "label": "Thin Outer Wall Line Width",
+                                    "description": "Thin wall line. Some wall that too thin to generate one wall, can use this param to print a thin wall.",
+                                    "unit": "mm",
+                                    "minimum_value": "0.001",
+                                    "minimum_value_warning": "0.001",
+                                    "maximum_value_warning": "machine_nozzle_size",
+                                    "default_value": "0.2",
+                                    "value": "wall_line_width * 0.5",
+                                    "type": "float",
+                                    "limit_to_extruder": "wall_0_extruder_nr",
+                                    "settable_per_mesh": true
+                                },
                                 "wall_line_width_x":
                                 {
                                     "label": "Inner Wall(s) Line Width",
@@ -2527,6 +2597,32 @@
                     "enabled": "z_seam_type == 'back'",
                     "limit_to_extruder": "wall_0_extruder_nr",
                     "settable_per_mesh": true
+                },
+                "z_seam_min_angle_diff":
+                {
+                    "label": "Z Seam Min Angle Diff",
+                    "description": "When the angle difference between the Sharpest Corner type point and the Shortest type point is less than this value, the Shortest type point is selected.",
+                    "unit": "°",
+                    "type": "float",
+                    "minimum_value_warning": "0",
+                    "maximum_value_warning": "180",
+                    "default_value": "36",
+                    "enabled": "z_seam_type == 'sharpest_corner'",
+                    "limit_to_extruder": "wall_0_extruder_nr",
+                    "settable_per_mesh": true
+                },
+                "z_seam_max_angle":
+                {
+                    "label": "Z Seam Max Angle",
+                    "description": "Only corners smaller than this value are considered sharp corners. If there is no sharp corner point, select the Shortest type point.",
+                    "unit": "°",
+                    "type": "float",
+                    "minimum_value_warning": "0",
+                    "maximum_value_warning": "180",
+                    "default_value": "162",
+                    "enabled": "z_seam_type == 'sharpest_corner'",
+                    "limit_to_extruder": "wall_0_extruder_nr",
+                    "settable_per_mesh": true
                 }
             }
         },
@@ -2746,6 +2842,29 @@
                     "maximum_value_warning": "10",
                     "type": "int",
                     "enabled": "(top_layers > 0 or bottom_layers > 0) and (top_bottom_pattern != 'concentric' or top_bottom_pattern_0 != 'concentric' or (roofing_layer_count > 0 and roofing_pattern != 'concentric'))",
+                    "limit_to_extruder": "top_bottom_extruder_nr",
+                    "settable_per_mesh": true
+                },
+                "top_skin_density":
+                {
+                    "label": "Top Skin Infill Density",
+                    "description": "Adjusts the Top Skin Infill Density.",
+                    "unit": "%",
+                    "type": "float",
+                    "default_value": "110.0",
+                    "minimum_value": "100.0",
+                    "maximum_value_warning": "200.0",
+                    "limit_to_extruder": "infill_extruder_nr",
+                    "settable_per_mesh": true
+                },
+                "top_surface_one_wall":
+                {
+                    "label": "Use One Wall On Top Surface",
+                    "description": "Use only one wall on flat top surface ,to give more space to the top infill pattern",
+                    "value": "(top_bottom_pattern == 'concentric' && top_bottom_pattern_0 == 'concentric' && roofing_layer_count <= 0) ? false : true",
+                    "type": "bool",
+                    "default_value": true,
+                    "enabled": "(top_layers > 0 || bottom_layers > 0) && (top_bottom_pattern != 'concentric' || top_bottom_pattern_0 != 'concentric' || (roofing_layer_count > 0 && roofing_pattern != 'concentric'))",
                     "limit_to_extruder": "top_bottom_extruder_nr",
                     "settable_per_mesh": true
                 },
@@ -3321,7 +3440,7 @@
                 "infill_support_angle":
                 {
                     "label": "Infill Overhang Angle",
-                    "description": "The minimum angle of internal overhangs for which infill is added. At a value of 0° objects are totally filled with infill, 90° will not provide any infill.",
+                    "description": "The minimum angle of internal overhangs for which infill is added. At a value of 0° objects are totally filled with infill, great than 90° will not provide any infill.",
                     "unit": "°",
                     "type": "float",
                     "minimum_value": "0",
@@ -3510,6 +3629,59 @@
                             "enabled": "machine_nozzle_temp_enabled and not machine_extruders_share_heater",
                             "settable_per_mesh": false,
                             "settable_per_extruder": true
+                        },
+                        "default_material_bed_temperature":
+                        {
+                            "label": "Default Build Plate Temperature",
+                            "description": "The default temperature used for the heated build plate. This should be the \"base\" temperature of a build plate. All other print temperatures should use offsets based on this value",
+                            "unit": "°C",
+                            "type": "float",
+                            "resolve": "max(extruderValues('default_material_bed_temperature'))",
+                            "default_value": 60,
+                            "minimum_value": "-273.15",
+                            "minimum_value_warning": "build_volume_temperature",
+                            "maximum_value_warning": "130",
+                            "maximum_value": "200",
+                            "enabled": false,
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": false,
+                            "settable_per_meshgroup": false
+                        },
+                        "material_bed_temperature":
+                        {
+                            "label": "Build Plate Temperature",
+                            "description": "The temperature used for the heated build plate. If this is 0, the build plate is left unheated.",
+                            "unit": "°C",
+                            "type": "float",
+                            "default_value": 60,
+                            "value": "default_material_bed_temperature",
+                            "resolve": "max(extruderValues('material_bed_temperature'))",
+                            "minimum_value": "-273.15",
+                            "minimum_value_warning": "build_volume_temperature",
+                            "maximum_value_warning": "130",
+                            "maximum_value": "200",
+                            "enabled": "machine_heated_bed and machine_gcode_flavor != \"UltiGCode\"",
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": false,
+                            "settable_per_meshgroup": false
+                        },
+                        "material_bed_temperature_layer_0":
+                        {
+                            "label": "Build Plate Temperature Initial Layer",
+                            "description": "The temperature used for the heated build plate at the first layer. If this is 0, the build plate is left unheated during the first layer.",
+                            "unit": "°C",
+                            "type": "float",
+                            "resolve": "max(extruderValues('material_bed_temperature_layer_0'))",
+                            "default_value": 60,
+                            "value": "resolveOrValue('material_bed_temperature')",
+                            "minimum_value": "-273.15",
+                            "minimum_value_warning": "max(build_volume_temperature, max(extruderValues('material_bed_temperature')))",
+                            "maximum_value_warning": "130",
+                            "maximum_value": "200",
+                            "enabled": "machine_heated_bed and machine_gcode_flavor != \"UltiGCode\"",
+                            "settable_per_mesh": false,
+                            "settable_per_extruder": false,
+                            "settable_per_meshgroup": false
                         }
                     }
                 },
@@ -3526,23 +3698,6 @@
                     "enabled": "material_flow_dependent_temperature or (extruders_enabled_count > 1 and material_final_print_temperature != material_print_temperature)",
                     "settable_per_mesh": false,
                     "settable_per_extruder": true
-                },
-                "default_material_bed_temperature":
-                {
-                    "label": "Default Build Plate Temperature",
-                    "description": "The default temperature used for the heated build plate. This should be the \"base\" temperature of a build plate. All other print temperatures should use offsets based on this value",
-                    "unit": "°C",
-                    "type": "float",
-                    "resolve": "max(extruderValues('default_material_bed_temperature'))",
-                    "default_value": 60,
-                    "minimum_value": "-273.15",
-                    "minimum_value_warning": "build_volume_temperature",
-                    "maximum_value_warning": "130",
-                    "maximum_value": "200",
-                    "enabled": false,
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": false,
-                    "settable_per_meshgroup": false
                 },
                 "material_adhesion_tendency":
                 {
@@ -5006,6 +5161,19 @@
                     "settable_per_mesh": false,
                     "settable_per_extruder": true
                 },
+                "retraction_prime_min_travel":
+                {
+                    "label": "Retraction Extra Prime Min Travel Distance",
+                    "description": "Some material can ooze away during a travel move If travel distance less than this min distance, not extra amount.",
+                    "unit": "mm",
+                    "type": "float",
+                    "default_value": "20.0",
+                    "minimum_value_warning": "10",
+                    "maximum_value_warning": "100",
+                    "enabled": "retraction_enable",
+                    "settable_per_mesh": false,
+                    "settable_per_extruder": true
+                },
                 "retraction_min_travel":
                 {
                     "label": "Retraction Minimum Travel",
@@ -5569,7 +5737,7 @@
                 "support_angle":
                 {
                     "label": "Support Overhang Angle",
-                    "description": "The minimum angle of overhangs for which support is added. At a value of 0° all overhangs are supported, 90° will not provide any support.",
+                    "description": "The minimum angle of overhangs for which support is added. At a value of 0° all overhangs are supported, great than 90° will not provide any support.",
                     "unit": "°",
                     "type": "float",
                     "minimum_value": "0",
@@ -7779,54 +7947,6 @@
                     "minimum_value_warning": "0",
                     "default_value": 0,
                     "enabled": "conical_overhang_enabled"
-                },
-                "coasting_enable":
-                {
-                    "label": "Enable Coasting",
-                    "description": "Coasting replaces the last part of an extrusion path with a travel path. The oozed material is used to print the last piece of the extrusion path in order to reduce stringing.",
-                    "type": "bool",
-                    "default_value": false,
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": true
-                },
-                "coasting_volume":
-                {
-                    "label": "Coasting Volume",
-                    "description": "The volume otherwise oozed. This value should generally be close to the nozzle diameter cubed.",
-                    "unit": "mm³",
-                    "type": "float",
-                    "default_value": 0.064,
-                    "minimum_value": "0",
-                    "maximum_value_warning": "machine_nozzle_size * 5",
-                    "enabled": "coasting_enable",
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": true
-                },
-                "coasting_min_volume":
-                {
-                    "label": "Minimum Volume Before Coasting",
-                    "description": "The smallest volume an extrusion path should have before allowing coasting. For smaller extrusion paths, less pressure has been built up in the bowden tube and so the coasted volume is scaled linearly. This value should always be larger than the Coasting Volume.",
-                    "unit": "mm³",
-                    "type": "float",
-                    "default_value": 0.8,
-                    "minimum_value": "0",
-                    "maximum_value_warning": "10.0",
-                    "enabled": "coasting_enable",
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": true
-                },
-                "coasting_speed":
-                {
-                    "label": "Coasting Speed",
-                    "description": "The speed by which to move during coasting, relative to the speed of the extrusion path. A value slightly under 100% is advised, since during the coasting move the pressure in the bowden tube drops.",
-                    "unit": "%",
-                    "type": "float",
-                    "default_value": 90,
-                    "minimum_value": "0.0001",
-                    "maximum_value_warning": "100",
-                    "enabled": "coasting_enable",
-                    "settable_per_mesh": false,
-                    "settable_per_extruder": true
                 },
                 "cross_infill_pocket_size":
                 {

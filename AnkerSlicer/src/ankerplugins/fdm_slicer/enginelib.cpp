@@ -30,7 +30,6 @@ void EngineLibThread::run()
 {
 #ifdef DEBUG_BY_CL
     QStringList strList;
-
     strList = QProcess::splitCommand(m_cmd);
 
     QList<QByteArray> args_list;

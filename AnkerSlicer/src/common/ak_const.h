@@ -58,6 +58,8 @@ namespace Param {
     const QString UPDATE_DO = "UpdateDo";
     const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
     const QString ANKERMAKE_UPDATE_EXE = "AnkerMakeUpdateExe"; 
+    const QString ANKERMAKE_RELEASE_NOTE = "AnkerMakeReleaseNote"; 
+    const QString UPDATE_PHASE = "UpdatePhase";
 
     
     const QString ANKERMAKE_MAINWINDOW_WID = "AnkerMakeMainwindowWid";
@@ -163,9 +165,12 @@ namespace Msg {
     const QString MANUAL_UPDATE = "ManualUpdate";
     const QString AUTO_UPDATE = "AutoUpdate";
     const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
+    const QString HAVE_NEW_VERSION = "HaveNewVersion";
+    const QString CANCEL_AUTO_CHECK_SERVER_VERSION = "CancelAutoCheckServerVersion";
 
     
     const QString A_KEY_PRINT = "AKeyPrint";
+    const QString OPEN_NEW_GCODE = "OpenNewGCode";
 
     
     const QString ANKERMAKE_LOGIN = "AnkerMakeLogin";
@@ -189,6 +194,8 @@ namespace Msg {
 
     
     const QString PRIVACY_PROTOCOL = "PrivacyProtocol";
+    // Log upload
+    const QString LOG_UPLOAD = "LogUpload";
 }
 
 
@@ -412,11 +419,13 @@ enum NetworkUpdateType
 namespace WebAddress {
     const QString TermOfUseURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.en.html";
     const QString PrivacyPolicyURLEnglish = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.en.html";
-    const QString tutorialEnglish = "https://support.ankermake.com";
+    const QString TutorialEnglish = "https://support.ankermake.com";
+    const QString FeedBackEnglish = "https://support.ankermake.com/s/emailcontactus";
 
     const QString TermOfUseURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-terms-of-service.ja.html";
     const QString PrivacyPolicyURLJapanese = "https://public-make-moat-us.s3.us-east-2.amazonaws.com/overall/AnkerMake-privacy.ja.html";
-    const QString tutorialJapanese = "https://www.ankerjapan.com/pages/anker-make";
+    const QString TutorialJapanese = "https://www.ankerjapan.com/pages/anker-make";
+    const QString FeedBackJapanese = "https://www.ankerjapan.com/pages/customer-support";
 
 }
 

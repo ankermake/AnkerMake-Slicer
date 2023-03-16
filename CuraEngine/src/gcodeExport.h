@@ -571,7 +571,7 @@ public:
 
 
 
-
+class LayerPlan_CL;
 class GCodeExport : public GCodeExportBase{
     using BaseType = GCodeExportBase;
 
@@ -579,7 +579,7 @@ class GCodeExport : public GCodeExportBase{
     friend class CL_CurrentStata;
 public:
     class CL_GCodeExportOptinize * clOptinize{nullptr};
-    class CL_CurrentStatus * clCurrentStatus{nullptr};
+    class CL_CurrentStatus * clCurrentStatus {nullptr};
     GCodeExport();
     ~GCodeExport();
 
@@ -587,8 +587,9 @@ public:  //  override GCodeExportBase
     void preSetup(const size_t start_extruder);
     void writeCodeStored(const char *str,int pos, int reserve) override;
 
-    void writeLayerComment(const LayerIndex layer_nr);
     void writeLayerCountComment(const size_t layer_count);
+    void writeLayerComment(const LayerIndex layer_nr);
+    void setCurrentLayerPlan( /*LayerPlan*/ void * layer_plan);   //  @2023-02-01 by ChunLian
 
     void writeTypeComment(const PrintFeatureType& type);
     void writePrintAcceleration(const Acceleration& acceleration);  //TODO
@@ -628,14 +629,17 @@ public:
 
 private:
     friend class GCodeExport;
+    friend class CL_GCodeExportOptinize;
     const GCodeExport &gcode;
     CL_CurrentStatus(const GCodeExport &gcode_):gcode(gcode_){}
     PrintFeatureType akFreatureType{PrintFeatureType::NoneType};
     int              akLayerIndex{0};   // LayerIndex
-    int              akLayerNumber{-1};
+    static int       akLayerNumber;
     int              akLayerCount{0};
     double           akAcceleration{0}; // Acceleration
     double           akK{0.0};
+
+    static int64_t   G1XYE_Count;
 };
 
 

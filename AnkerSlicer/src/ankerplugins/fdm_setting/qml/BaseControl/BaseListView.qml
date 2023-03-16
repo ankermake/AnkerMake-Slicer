@@ -16,6 +16,7 @@ Rectangle {
         anchors.margins: 0
         clip: true
         spacing: 0
+        cacheBuffer: count >200 ? 1000000 :0
         highlight: Rectangle {
             color:  "#404249"
         }

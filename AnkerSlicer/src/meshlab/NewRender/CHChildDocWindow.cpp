@@ -202,7 +202,7 @@ void CHChildDocWindow::updateMesh(CHMeshShowObjPtr mb)
             
             if(it->first != nullptr)
             {
-                qDebug() << "delete: " << it->first->getObjectName();
+                //qDebug() << "delete: " << it->first->getObjectName();
                 it->second->m_vbo.destroy();
                 it->second->m_norbo.destroy();
                 it->second->m_vao.destroy();

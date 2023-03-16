@@ -585,7 +585,8 @@ public:
 
           }  //_END  ___ if you are filling a vcg mesh with TRIANGLES
         }
-        else if ((header.compare("mtllib")==0) && (tokens.size() > 1))	// material library
+        //  delete mtllib usemtlc  @2023-01-06 by ChunLian
+        else if ((header.compare("mtllib")==0) && (tokens.size() > 1) && false)	// material library
         {
           // obtain the name of the file containing materials library
           std::string materialFileName;
@@ -597,7 +598,7 @@ public:
           if (!LoadMaterials( materialFileName.c_str(), materials, m.textures))
             result = E_MATERIAL_FILE_NOT_FOUND;
         }
-        else if ((header.compare("usemtl")==0) && (tokens.size() > 1))	// material usage
+        else if ((header.compare("usemtl")==0) && (tokens.size() > 1) && false)	// material usage
         {
           // emergency check. If there are no materials, the material library failed to load or was not specified
           // but there are tools that save the material library with the same name of the file, but do not add the

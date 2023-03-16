@@ -2724,10 +2724,19 @@ int GcodeViewer::waitForFileClose(QString filePath, qint64 fileSize)
         AkUtil::TDebug("error : save file's size < 0");
     }
     qint64 curSize = QFileInfo(filePath).size();
+    qint64 waitTimeLimit = 5000;
+    qint64 wt = 0;
     while(curSize < fileSize){
         QThread::msleep(100);
         QFileInfo  tfileinfo(filePath);
-        if(!tfileinfo.isFile()){
+        if(!tfileinfo.isFile() ){
+            if(wt < waitTimeLimit)
+            {
+               QThread::msleep(100);
+               wt += 200;
+               continue;
+            }
+            AkUtil::TDebug("error : save file don't exit: "+filePath);
             return -1;
         }
         curSize = tfileinfo.size();
@@ -2740,6 +2749,8 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
     m_sceneParam = param;
     if (m_scene3d)
     {
+       // m_scene3d_init_mutex.lock();
+        makeCurrent();
         m_scene3d->setSceneParams(param);
         qDebug() << "update Mechine size: " << m_sceneParam.m_printMachineBox.m_length << ", "
                  << m_sceneParam.m_printMachineBox.m_width << ", "
@@ -2753,7 +2764,8 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
             {
                 meshIt->first->setDirty(false);
                 
-                meshIt->second->m_vbo.destroy();
+                if(meshIt->second->m_vbo.isCreated())
+                    meshIt->second->m_vbo.destroy();
             }
             writeToGPUBUffer(meshIt->first, meshIt->second);
         }
@@ -2764,10 +2776,12 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
             {
                 curveIt->first->setDirty(false);
                 
-                curveIt->second->m_vbo.destroy();
+                if(curveIt->second->m_vbo.isCreated())
+                    curveIt->second->m_vbo.destroy();
             }
             writeToGPUBUffer(curveIt->first, curveIt->second);
         }
+        //m_scene3d_init_mutex.unlock();
 //        update();
     }else
     {
@@ -2778,6 +2792,7 @@ void GcodeViewer::setSceneParams(const SceneParam & param)
         
         m_scene3d_init_mutex.lock();
         AkUtil::TDebug("m_scene3d_init_mutex.lock() in setSceneParams");
+        qDebug() << "m_scene3d_init_mutex.lock() in setSceneParams";
         m_scene3d = new Scene3D(this, m_sceneParam);
         m_renderData = RenderDataPtr(new RenderData);
         m_renderData->m_printMachineBoxPtr->create(m_sceneParam.logoMesh,
@@ -2830,7 +2845,6 @@ void GcodeViewer::writeToGPUBUffer(CHMeshShowObjPtr mesh, QOpenGLBuffer & outvbo
     float* nors = reinterpret_cast<float*>(mesh->m_nors.data());
     fnum = mesh->m_trians.size();
     int* tri = reinterpret_cast<int*>(mesh->m_trians.data());
-
     QOpenGLVertexArrayObject::Binder vaoBind(&outvao);//RAII
     outvbo.create();
     outvbo.bind();
@@ -2882,6 +2896,8 @@ void GcodeViewer::writeToGPUBUffer(CHCurveShowObjPtr curvebody, RenderCurvePtr r
         vertices[3 * i + 2] = points[i].z();
     }
 
+    if(!rendercurve->m_vao.isCreated())
+        rendercurve->m_vao.create();
     QOpenGLVertexArrayObject::Binder vaoBind(&(rendercurve->m_vao));
     rendercurve->m_vbo.create();
     rendercurve->m_vbo.bind();
@@ -2922,6 +2938,10 @@ void GcodeViewer::paintMeshVbo(QOpenGLShaderProgram & shaderProgram, CHMeshShowO
 void GcodeViewer::paintCurveVbo(QOpenGLShaderProgram & shaderProgram, CHCurveShowObjPtr curve, RenderCurvePtr rc, QMatrix4x4 & pvMatrix)
 {
     if(curve == nullptr || rc == nullptr)
+    {
+        return;
+    }
+    if(!rc->m_vbo.isCreated())
     {
         return;
     }
@@ -4044,6 +4064,10 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
     //AkUtil::TFunction("");
     //IgnoreEvent(this);
     // akpic is exits , don't need to render again
+    if(QFile::exists(savePath))
+    {
+        QFile::remove(savePath);
+    }
     QString _gPath;
     QFileInfo savePathName = QFileInfo(savePath);
 
@@ -4083,9 +4107,9 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
             
             set_toolpath_move_type_visible(EMoveType::Travel, false);
             this->m_isNotOffScreen = false;
-            cstring = std::string((const char*)savePathName.fileName().toLocal8Bit().constData()); //convert UTF8 wide char
+            cstring = std::string((savePathName.fileName().toStdString())); //convert UTF8 wide char
             assert(cstring.size() < 64);
-            processAiPicture picWrite(cstring,std::string((const char*)akpicSave.toLocal8Bit().constData()),this->m_layers.size(), loopVec.size());
+            processAiPicture picWrite(cstring,std::string(akpicSave.toStdString()),this->m_layers.size(), loopVec.size());
             qDebug() << "cstring"<<QString::fromStdString(cstring);
             if (cnt)
             {
@@ -4183,16 +4207,15 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         }
         refresh_render_paths(true, false);
     }
-    if(QFile::exists(savePath))
-    {
-        QFile::remove(savePath);
-    }
+
     qint64 saveSize = -1;
     //tar .akpic .gcode  TODO:need to add new libtar
+    QFileInfo fileInfo = QFileInfo(_gPath);
+    QString temp_path = "temp.acode";
     if(isAiMode){
-        QFileInfo fileInfo = QFileInfo(_gPath);
+
         QFileInfo fileInfo1 = QFileInfo(akpicSave);
-        pCmd = new QProcess();
+        QProcess *pCmd = new QProcess();
         QString cmd;
         pCmd->setWorkingDirectory(fileInfo.absoluteDir().path());
         cmd = "tar";
@@ -4203,21 +4226,30 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
 #endif
         args.append("--format=ustar"); 
         args.append("-cvf");
-        args.append(savePath);
+        args.append(temp_path);
         args.append(fileInfo.fileName());
         args.append(fileInfo1.fileName());
         pCmd->start(cmd,args);
         pCmd->waitForStarted();
-
+        pCmd->waitForFinished();
         QString debugstr;
         QDebug(&debugstr) <<"tar cmd  program: "<<pCmd->program();
         QDebug(&debugstr) <<"tar cmd  arguments: "<<pCmd->arguments();
+        AkUtil::TDebug(debugstr);
         saveSize = fileInfo.size() + fileInfo1.size();
+        QThreadPool::globalInstance()->start([=](){
+        bool re_ = QFile::rename(fileInfo.absoluteDir().path()+"/"+temp_path,savePath);
+        if(!re_){
+            AkUtil::TDebug("rename error");
+        }
+        });
     }else{
         
         if(QFile::exists(QString::fromStdString(this->m_gcode_path)))
         {
-            QFile::copy(QString::fromStdString(this->m_gcode_path), savePath);
+            QThreadPool::globalInstance()->start([=](){
+                QFile::copy(QString::fromStdString(this->m_gcode_path), savePath);
+            });
         }else{
             AkUtil::TDebug("error : file not exit");
         }
@@ -4236,7 +4268,6 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
                 bool re = a.exec();
             }, Qt::BlockingQueuedConnection);
         }
-
     });
     //TODO: change the back
 }

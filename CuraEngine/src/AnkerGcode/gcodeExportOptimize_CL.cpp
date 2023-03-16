@@ -19,147 +19,21 @@
 
 
 namespace CL {
-
-bool PathTurnBackCalculator::_hasTurnBack(Position newPos) {
-    posPrevious = posCurrent; posCurrent = posNew; posNew = newPos;
-
-    if (posPrevious.isZero() || posCurrent.isZero() || posNew.isZero()) { return false; }
-    for (int axis_id = 0; axis_id < 4; ++axis_id) {
-        deltaVec0[axis_id] = posCurrent[axis_id] - posPrevious[axis_id];
-        deltaVec1[axis_id] = posNew[axis_id] - posCurrent[axis_id];
-    }
-    return true;
-}
-bool PathTurnBackCalculator::hasTurnBack_45(Position newPos) {
-    if (!_hasTurnBack(newPos)) { return false; }
-    double A0, B0, A1, B1;
-    A0 = deltaVec0.x + deltaVec0.y; B0 = deltaVec0.x - deltaVec0.y;
-    A1 = deltaVec1.x + deltaVec1.y; B1 = deltaVec1.x - deltaVec1.y;
-
-    if (std::abs(A0) > 0.001 && A0 * A1 < 1.0e-8) { return true; }
-    if (std::abs(B0) > 0.001 && B0 * B1 < 1.0e-8) { return true; }
-    return false;
-    // if return true, insert a line : "G4 P30\n"
-}
-bool PathTurnBackCalculator::hasTurnBack_0_90(Position newPos) {
-    if (!_hasTurnBack(newPos)) { return false; }
-    double xx = deltaVec0.x * deltaVec1.x;
-    double yy = deltaVec0.y * deltaVec1.y;
-    return (xx < 1.0e-8) || (yy < 1.0e-8);  // <= 0
-    // if return true, insert a line : "G4 P30\n"
-}
 
 
-SnapshotLayerCommand::SnapshotLayerCommand(){
-    ss << "[";
+void VAJK_K_Cmd::init(const cura::Settings &settings){
+    ak_VAJK_K_enabled= settings.get<bool>("ak_VAJK_K_enabled");
+    ak_K_print       = settings.get<double>("ak_K_print");
+    ak_K_infill      = settings.get<double>("ak_K_infill");
+    ak_K_wall        = settings.get<double>("ak_K_wall");
+    ak_K_wall_0      = settings.get<double>("ak_K_wall_0");
+    ak_K_wall_x      = settings.get<double>("ak_K_wall_x");
+    ak_K_support     = settings.get<double>("ak_K_support");
+    ak_K_topbottom   = settings.get<double>("ak_K_topbottom");
+    ak_K_skirt_brim  = settings.get<double>("ak_K_skirt_brim");
+    ak_K_layer_0     = settings.get<double>("ak_K_layer_0");
 }
 
-std::string SnapshotLayerCommand::getLayerList() {
-    return ss.str();
-}
-
-void SnapshotLayerCommand::setLayerCount(const int layer_count)
-{
-    m_layer_count = layer_count;
-    m_layer_index = -1;
-    m_snapCount   = 0;
-    step = m_layer_count / (100.0-1.0 * N); 
-}
-
-bool SnapshotLayerCommand::hasSnapshotByLayer(const int layer_nr)
-{
-    //return true; // add @2022-03-15 by CL
-
-    m_layer_index++;
-    m_layer_nr = layer_nr;
-
-    bool res = false;
-    if(true){ 
-        if (m_layer_nr < 0) {
-            m_layer_count++;        
-        }
-        m_snapCount++;
-        res = true;
-    }else 
-        do{
-        if(m_layer_index == 0){
-            res = false;    
-            break;
-        }
-        if (m_layer_nr < 0) {
-            m_layer_count++;        
-            m_snapCount++;            
-            step = m_layer_count / (100.0-1.0 * m_snapCount);     
-            res = true;
-            break;
-        }
-        if(m_snapCount < N && (1 <= m_layer_nr && m_layer_nr <= N)){
-            m_snapCount++;
-            step = m_layer_count / (100.0-1.0 * m_snapCount);
-            res = true;     
-            break;
-        }
-
-        
-        int todoLayer = m_layer_count - step * (100 - (m_snapCount + 1));
-        if(m_layer_index >= todoLayer){
-            m_snapCount++;
-            res = true;
-            break;
-        }
-    }while(false);
-
-    if(res){
-        ss << " (N" << m_layer_nr  << ", I" << m_layer_index <<
-              ", P" << m_snapCount << ", C" << m_layer_count << ")";
-    }
-
-    return res;
-}
-
-std::string SnapshotLayerCommand::getCmdSnapshotByLayer(cura::Point3 xyzPos, const int layer_nr)
-{
-    bool res = hasSnapshotByLayer(layer_nr);
-    std::stringstream m1024ss;
-
-    m1024ss << "M1024 L" << m_layer_index << "/" << m_layer_count << (res ? " 3" : " 1");
-    m1024ss << "\n";
-    m1024ss << ";(N" << m_layer_nr  << ", I" << m_layer_index <<
-               ", P" << m_snapCount << ", C" << m_layer_count << ")";
-
-    return m1024ss.str();
-}
-
-std::string SnapshotLayerCommand::getCmdSnapshotByLayer(cura::Point3 xyzPos)
-{
-    //        bool res = hasSnapshotByLayer(m_layer_nr + 1);
-    //        std::stringstream m1024ss;
-
-    //        m1024ss << "M1024 L" << m_layer_index << "/" << m_layer_count << (res ? " 3" : " 1");
-    //        m1024ss << "\n";
-    //        m1024ss << ";(N" << m_layer_nr  << ", I" << m_layer_index <<
-    //                   ", P" << m_snapCount << ", C" << m_layer_count;
-
-    std::stringstream m1024ss;
-    m_layer_index++;
-    m_layer_nr++;
-    m_snapCount++;
-
-    m1024ss << "M1024 L" << m_layer_index << "/" << m_layer_count << " 3";
-    m1024ss << "\n";
-    m1024ss << ";(N" << m_layer_nr  << ", I" << m_layer_index <<
-               ", P" << m_snapCount << ", C" << m_layer_count;
-
-    return m1024ss.str();
-}
-
-int SnapshotLayerCommand::finalize() {
-    ss << (m_layer_count+1) << "]";
-    std::cout << "\n\n" << ss.str() << "\n\n" << std::endl;
-    return m_layer_count;
-}
-
-
 double VAJK_K_Cmd::getK_byType(const cura::PrintFeatureType &type)
 {
     switch (type)
@@ -189,8 +63,191 @@ double VAJK_K_Cmd::getK_byType(const cura::PrintFeatureType &type)
     }
 }
 
+
+
+void SnapshotLayerCommand::init(cura::GCodeExport *gcodeExport){
+    m_gcodeExport = gcodeExport;
+    const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
+
+    snapshot_layer_M1024_enable = false;
+    snapshot_uplayer_enable     = false;
+
+    do{
+        if(settingsScene.has(key_snapshot_layer_M1024_enable)) ; else {break;}
+
+        snapshot_layer_M1024_enable   = settingsScene.get<bool>(key_snapshot_layer_M1024_enable);
+        if(snapshot_layer_M1024_enable == true); else {break;}
+
+        bool has1 = settingsScene.has(key_snapshot_uplayer_array);
+        bool has2 = settingsScene.has(key_snapshot_height_array );
+        if(has1 && has2){
+            snapshot_uplayer_array = settingsScene.get< std::vector<int>    >(key_snapshot_uplayer_array);
+            snapshot_height_array  = settingsScene.get< std::vector<double> >(key_snapshot_height_array);
+        }
+        else if(has1 || has2){break;}
+        else{   
+            snapshot_uplayer_array = {1, 3, 2, 5, -1, 4};
+            snapshot_height_array  = {70, 90, 0, 100, 110, 120, 80.0};
+        }
+
+        std_sort( snapshot_uplayer_array );
+        for(auto uplayer = snapshot_uplayer_array.begin(); uplayer != snapshot_uplayer_array.end(); ){
+            if(*uplayer < 1)
+                uplayer = snapshot_uplayer_array.erase(uplayer);
+            else
+                ++uplayer;
+
+            cura::logCL("$CL$ snapshot_uplayer_array, %d, %s", *uplayer,  (*uplayer < 1 ) ? "false" : "true" );
+        }
+
+        std_sort( snapshot_height_array );
+        for(auto height = snapshot_height_array.begin(); height != snapshot_height_array.end(); ){
+            if(*height < 0.1)
+                height = snapshot_height_array.erase(height);
+            else
+                ++height;
+
+            cura::logCL("$CL$ snapshot_height_array , %d, %s", *height ,  (*height < 0.1) ? "false" : "true" );
+        }
+
+        if(snapshot_uplayer_array.size() * snapshot_height_array.size() > 0) ; else { break; }
+
+        snapshot_uplayer_enable = true;
+    }while(false);
+}
+
+bool SnapshotLayerCommand::snapshot_writeLayerCountComment(const size_t layer_count) {
+    snapshot_count = layer_count;
+    if(snapshot_layer_M1024_enable && snapshot_uplayer_enable){
+        snapshot_count += snapshot_uplayer_array.size() * snapshot_height_array.size();
+        return true;
+    }
+    return false;
+}
+
+bool SnapshotLayerCommand::snapshot_writeLayerComment(const int layer_nr){
+
+    //  chenge @2022-05-12 by CL
+    const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
+
+    auto L_Posion   = m_gcodeExport->getPosition();
+    auto L_Z        = m_gcodeExport->getPositionZ();
+    auto L_E        = m_gcodeExport->clCurrentStatus->getE_block();
+    auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index();
+    auto&L_Nr       = m_gcodeExport->clCurrentStatus->getL_Nr();
+    auto&L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
+    auto new_line   = m_gcodeExport->new_line;
+    auto retract_speed = settingsScene.get<cura::Velocity>("retraction_retract_speed");
+    auto prime_speed   = settingsScene.get<cura::Velocity>("retraction_prime_speed");
+    auto travel_speed  = settingsScene.get<cura::Velocity>("speed_travel");
+    auto relative      = settingsScene.get<bool>("relative_extrusion");
+    auto machine_height= settingsScene.get<UM>("machine_height");
+
+    
+    double ms     = settingsScene.get<double>("camera_take_picture_time");  if(ms < 1){ms=1;} // = min *60
+    double oldF   = m_gcodeExport->clCurrentStatus->getF_block();
+    double delayF = 1.0;      //  120 mm/min = 2mm/s   um/ms == mm/s
+    double upF    = 20.0;     
+    int    Z_um   = delayF * ms;
+
+
+    
+    auto generalTakePicture1 = [&](){
+        (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Nr << "/" << snapshot_count << " 3" << new_line; // (res ? " 3" : " 1")
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{1,    upF * 60} <<  " Z" << UM2MM{L_Z +Z_um} << new_line;
+        (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Nr << new_line; // writeLayerComment(layer_nr);
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{1, delayF * 60} <<  " Z" << UM2MM{L_Z} << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{1,   oldF * 60} << new_line;
+    };
+
+    /// 2022/12/14  Binary for AI wipe
+    
+    auto wipeExtruderCircle = [&](){
+        (*(m_gcodeExport->output_stream)) << "G1 F"          << double2SS{ 1, retract_speed * 60 } << " E" << double2SS{ 5, relative ? -2 : L_E-2 } << new_line;
+        (*(m_gcodeExport->output_stream)) << "G3 I3 J3 P1  F"<< double2SS{ 1, travel_speed  * 60 }<< new_line;
+        (*(m_gcodeExport->output_stream)) << "G1 F"          << double2SS{ 1, retract_speed * 60 } << " E" << double2SS{ 5, relative ? -1 : L_E-3 } << new_line;
+        (*(m_gcodeExport->output_stream)) << "G2 I3 J3 P1  F"<< double2SS{ 1, travel_speed  * 60 } << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 X"          << UM2MM{ L_Posion.x } << " Y" << UM2MM{ L_Posion.y }<< new_line;
+    };
+
+    
+    auto wipeExtruderLine = [&](){
+        (*(m_gcodeExport->output_stream)) << "G0 X210 Y233 F" << double2SS{ 1, travel_speed * 60 } << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 F600 Z0.0" << new_line;
+        (*(m_gcodeExport->output_stream)) << "G3 I2 J2 P2 " << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 X220 Y233" << new_line;
+        (*(m_gcodeExport->output_stream)) << "G2 I2 J2 P2 " << new_line;
+
+
+    };
+
+    
+    auto recoveryPosition = [&](){
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{ 1,           upF * 60 } << " Z" << UM2MM{L_Z} << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{ 1,  travel_speed * 60 } << " X" << UM2MM{ L_Posion.x } << " Y" << UM2MM{ L_Posion.y } << new_line;
+        (*(m_gcodeExport->output_stream)) << "G1 F" << double2SS{ 1, retract_speed * 60 } << " E" << double2SS{ 5, relative ? 3 : L_E} << new_line;
+        (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{ 1,          oldF * 60 } << new_line;
+    };
+
+
+    
+    (*(m_gcodeExport->output_stream)) << "; Z_TakePictureStart: " << L_Nr << new_line;
+    {
+        generalTakePicture1();
+    }
+
+
+    
+    
+    
+    
+    
+    if( std_contain(snapshot_uplayer_array, layer_nr) )
+    {
+        wipeExtruderCircle(); 
+
+        
+        int coust = 0;
+        for(double height : snapshot_height_array){
+            char L_Nr_str[16]{0};
+            sprintf(L_Nr_str, "%d.%02d", L_Nr, ++coust);      
+            UM pic_z_offset = static_cast<UM>(height * 1000);
+
+            if((L_Z + pic_z_offset + Z_um) >= machine_height)
+                pic_z_offset = machine_height - L_Z - Z_um;
+
+            (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{ 1,    upF * 60 } << " Z" << UM2MM{ L_Z + pic_z_offset } << new_line;
+            (*(m_gcodeExport->output_stream)) << "M1024 L"    << L_Nr_str << "/" << snapshot_count << " 3" << new_line; // (res ? " 3" : " 1")
+            (*(m_gcodeExport->output_stream)) << ";SUBLAYER:" << L_Nr_str << new_line; // writeLayerComment(layer_nr);
+            (*(m_gcodeExport->output_stream)) << "G0 F" << double2SS{ 1, delayF * 60 } << " Z" << UM2MM{ L_Z + pic_z_offset + Z_um } << new_line;
+        }
+
+        wipeExtruderLine(); 
+
+        recoveryPosition(); 
+    }
+    (*(m_gcodeExport->output_stream)) << "; Z_TakePictureEnd: " << L_Nr << new_line;
+
+    return true;
+}
+
+bool SnapshotLayerCommand::snapshot_finalize() {
+    //  chenge @2022-05-12 by CL
+    auto L_Z        = m_gcodeExport->getPositionZ();
+    auto L_Index    = m_gcodeExport->clCurrentStatus->getL_Index() + 1;
+    auto L_Nr       = m_gcodeExport->clCurrentStatus->getL_Nr() + 1;
+    auto L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
+    auto new_line   = m_gcodeExport->new_line;
+
+    (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Nr << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
+    (*(m_gcodeExport->output_stream)) << "G0 Z" << UM2MM{L_Z + 2000} << "; Z_TakePictureStart: " << L_Nr << new_line;
+    (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Nr << new_line; // writeLayerComment(layer_nr);
+    return true;
 }
 
 
-
 
+}//  end of namespace CL
+
+
+

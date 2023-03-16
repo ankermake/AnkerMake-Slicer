@@ -39,6 +39,7 @@ CHModelMoveTransformParamsSetUI::CHModelMoveTransformParamsSetUI(QWidget* parent
     m_resetButton->setMinimumWidth(30);
     m_resetButton->setMinimumHeight(30);
     connect(m_resetButton, &QToolButton::clicked, this, &CHModelMoveTransformParamsSetUI::reset);
+    m_resetButton->hide(); 
     //int left, int top, int width, int height
     QHBoxLayout* hblaout1 = new QHBoxLayout;
     hblaout1->addWidget(m_moveLabel);

@@ -6,8 +6,8 @@ SplitterWidget::SplitterWidget(QWidget *parent, Qt::Orientation orientation) : B
     this->setBackgroundColor(QColor(32, 33, 35));
     this->setRadius(0);
     m_mainLayout = new QVBoxLayout(this);
-    m_mainLayout->setSpacing(24);
-    m_mainLayout->setContentsMargins(0,0,0,24);
+    m_mainLayout->setSpacing(12);
+    m_mainLayout->setContentsMargins(0,0,0,12);
     this->setFixedWidth(500);
     this->setLayout(m_mainLayout);
 }

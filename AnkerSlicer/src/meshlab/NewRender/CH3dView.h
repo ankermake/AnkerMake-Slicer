@@ -141,5 +141,7 @@ private:
     float m_length;
     float m_width;
     float m_height;
+
+    QVector2D m_lastMousePts; 
 };
 #endif

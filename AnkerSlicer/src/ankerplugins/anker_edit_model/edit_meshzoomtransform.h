@@ -66,6 +66,7 @@ Q_SIGNALS:
     void sendBoxSizeParam(std::vector<float > params);
     void boxSizeParamsChanged(std::vector<double> params, ZoomChangedType type);
     void scaleParamsChanged(std::vector<double> params, ZoomChangedType type);
+    void restartEditToolSignal();
 private:
 
     

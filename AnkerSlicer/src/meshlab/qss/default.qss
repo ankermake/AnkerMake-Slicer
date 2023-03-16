@@ -503,15 +503,23 @@ QMenu::item:selected{
 }
 
 QComboBox {
-border:1px solid ;
-border-color:#51545F ;
-border-radius:4px;
-padding:6px 3px 6px 3px  ;
-background: #292A2D;
-color:#FFFFFF
+    border:1px solid ;
+    border-color:#51545F ;
+    border-radius:4px;
+    padding:6px 3px 6px 3px  ;
+    background: #292A2D;
+    color:#FFFFFF
 }
-QComboBox QAbstractItemView{border: 1px solid ; border-color:#292A2D ; border-radius:4px; padding:0px 0px 0px 0px; selection-background-color: #FFFFFF; selection-color:
-#333333; background: #292A2D; color:#FFFFFF}
+QComboBox QAbstractItemView{
+    border: 1px solid ;
+    border-color:#292A2D ;
+    border-radius:4px;
+    padding:0px 0px 0px 0px;
+    selection-background-color: #FFFFFF;
+    selection-color:#333333;
+    background: #292A2D;
+    color:#FFFFFF
+}
 QComboBox::down-arrow{width:15px; padding: 0px 0px 0px 0px; image:url(:/images/icon/fdm_an_icon_n.png);}
 QComboBox::drop-down{border:0px;}
 
@@ -670,7 +678,7 @@ QLabel#labelTip1,#m_labelVersion {
 }
 /*==========================PrintControlPage begin==========================*/
 QLabel#addDeviceTitleLabel,#titleChooseFile {
-     font: normal normal 24px "Microsoft YaHei";
+     font: normal normal 20px "Microsoft YaHei";
 }
 
 QLabel#textLabelLoad,#textLabelAddPrinter,#descriptionChooseFile,#timeLabel {
@@ -755,7 +763,7 @@ QPushButton#m_aboutBtn {
 }
 
 QLabel#m_usrNameLabel {
-      font: normal normal 24px "Microsoft YaHei";
+      font: normal normal 20px "Microsoft YaHei";
 }
 
 
@@ -784,20 +792,24 @@ QPushButton#m_cancelBtn, #m_stopBtn{
     height:40px;
 }
 QPushButton#m_buttonRefresh{
-    font: 16px;
+    font: 14px;
     border: 0;
-    border-radius:9px;
-    background-color:#404040;
+    border-radius:0px;
+    background-color:#292A2D;
     color:#71D78A;
-    height:36px;
+    height:48px;
 }
-QPushButton#m_cancelBtn:hover,#m_stopBtn:hover, #m_buttonRefresh:hover{
+
+QPushButton#m_buttonRefresh:hover {
+    background-color: rgba(255, 255, 255, 6%);
+}
+QPushButton#m_cancelBtn:hover,#m_stopBtn:hover {
     color:#71D78A;
     border:1px solid #71D78A;
     background-color:#3A3B3F;
 }
 
-QPushButton#m_cancelBtn:pressed, #m_stopBtn:pressed, ##m_buttonRefresh:pressed {
+QPushButton#m_cancelBtn:pressed, #m_stopBtn:pressed {
     color:#71D78A;
     border:1px solid #71D78A;
     background-color:#3A3B3F;

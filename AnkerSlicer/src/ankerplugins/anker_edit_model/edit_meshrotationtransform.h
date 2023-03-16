@@ -140,7 +140,6 @@ private:
     std::vector<std::vector<float>> m_initValues;
 
     float m_operateMoveZ;
-    bool m_lastMultiSelect;
 
     CHLineSegment3DShowObjPtr m_adjustShowCurve;
 

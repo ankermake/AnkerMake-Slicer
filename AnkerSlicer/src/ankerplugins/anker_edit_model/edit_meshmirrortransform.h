@@ -54,7 +54,7 @@ public:
 
   public
 Q_SLOTS:
-	void receiveButtonClicked(int index);
+    void receiveButtonClicked(int index);
 	void reset();
 
 private:

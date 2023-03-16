@@ -84,11 +84,19 @@ void ParamListModel::changeData(int row,QVariant text)
             return;
         }
 
-    }else/* int float*/ {
-        if(value.toFloat() == text.toFloat()) {
+    
+    }else if(typeString =="int") {
+        if(value.toInt() == text.toInt()) {
             return;
         }
+    }else if(typeString =="float") {
+        if(qFuzzyCompare( value.toDouble(), text.toDouble() )) {
+            return;
+        }
+    } else {
+        //qDebug() << typeString << value << text;
     }
+
     item->nodeValueChange_fromUI(text);
 }
 

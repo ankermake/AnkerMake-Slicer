@@ -20,6 +20,7 @@ void ImportModelThread::run()
         QFile tmpFile(m_fileName);
         int index = m_fileName.lastIndexOf("/") + 1;
         tmpFileName += m_fileName.mid(index, m_fileName.length() - index);
+        QFile::remove(tmpFileName);  //  add  @2023-01-06 by ChunLian
         bool ret = tmpFile.copy(tmpFileName);
         //qDebug() << "copy " << ret << ", source: " << m_fileName << ", target: " << tmpFileName;
         if(ret)
@@ -31,7 +32,7 @@ void ImportModelThread::run()
             successful = false;
             emit  errorEncountered(0, tr("An unknown error has occurred, please try again"));
         }
-        QFile::remove(tmpFileName);
+        QFile::remove(tmpFileName); 
     }
     catch (std::exception& e) {
         qDebug() << __FUNCTION__ << __LINE__ << e.what();

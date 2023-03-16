@@ -13,10 +13,13 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
 {
     connect(m_timer,&QTimer::timeout,this,&FdmParamSettingsWidget::showBubbleTip);
 
-    m_quickView = new QQuickView(FdmQmlEngine::instance(),nullptr);
-    m_quickView->setResizeMode(QQuickView::SizeRootObjectToView);
-
-
+    m_quickView = new QQuickWidget(FdmQmlEngine::instance(),nullptr);
+    m_quickView->setResizeMode(QQuickWidget::SizeRootObjectToView);
+#ifdef Q_OS_WIN
+    QSurfaceFormat format;
+    format.setSamples(16);
+    m_quickView->setFormat(format);
+#endif
     
     //QString anker_expert = ":/curadef/setting_visibility/anker_expert.cfg";
     QString anker_expert = QDir(QCoreApplication::applicationDirPath()).absoluteFilePath("setting/fdm/back_logic/anker_expert.cfg");
@@ -55,8 +58,8 @@ FdmParamSettingsWidget::FdmParamSettingsWidget(QWidget *parent) :
     layout->setContentsMargins(0,0,0,0);
     //layout->setc(0);
     this->setLayout(layout);
-    QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
-    layout->addWidget(widget);
+    //QWidget *widget = QWidget::createWindowContainer(m_quickView,this);
+    layout->addWidget(m_quickView);
 }
 
 FdmParamSettingsWidget::~FdmParamSettingsWidget()

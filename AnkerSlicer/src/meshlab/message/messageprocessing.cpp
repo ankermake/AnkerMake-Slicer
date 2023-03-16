@@ -43,7 +43,13 @@ void MessageProcessing::recMsgfromManager(PluginMessageData metadata)
     if(AkConst::Msg::MANUAL_UPDATE == metadata.msg){
         emit sendMsg2Update(metadata);
     }
+    if(AkConst::Msg::CANCEL_AUTO_CHECK_SERVER_VERSION == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
     if(AkConst::Msg::CHECK_UPDATE_TEXT == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
+    if(AkConst::Msg::HAVE_NEW_VERSION == metadata.msg){
         emit sendMsg2Update(metadata);
     }
     if(AkConst::Msg::A_KEY_PRINT == metadata.msg){

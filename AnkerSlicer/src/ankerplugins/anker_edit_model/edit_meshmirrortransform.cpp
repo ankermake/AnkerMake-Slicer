@@ -70,7 +70,6 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
 
     //disconnect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), this, SLOT(reset()));
-
     
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
@@ -81,8 +80,10 @@ bool EditMeshMirrorTransformTool::startAnkerEdit(ActionEditTool* action, void* a
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
         m_initValues[p] = (*it)->m_params;
+//        (*it)->m_isRot = false;
         p++;
     }
+
 
     //    if(m_editMeshModels.size() == 1)
     //    {
@@ -113,6 +114,31 @@ void EditMeshMirrorTransformTool::endAnkerEdit(ActionEditTool*, void*, void*)
     //connect(getGlobalPick().get(), SIGNAL(resetSeletedObjsSig()), getGlobalPick().get(), SLOT(resetSelectedObjs()));
     if (m_paramUI)
     {
+        if(m_editMeshModels.size() == 1)
+        {
+
+            (*m_editMeshModels.begin())->m_lastMultiSelect = false;
+            (*m_editMeshModels.begin())->m_isRot = false;
+        }
+        else
+        {
+            int p = 0;
+            for(auto it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
+            {
+                (*it)->m_lastMultiSelect = true;
+                if(m_initValues[p][3] != (*it)->m_params[3] ||
+                   m_initValues[p][4] != (*it)->m_params[4] ||
+                   m_initValues[p][5] != (*it)->m_params[5] )
+                {
+                    (*it)->m_isRot = true;
+                }
+                else
+                {
+                    (*it)->m_isRot = false;
+                }
+            }
+        }
+
         delete m_paramUI;
         m_paramUI = 0;
     }
@@ -144,7 +170,6 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
     int p = 0;
     for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
     {
-        //(*it)->m_params[index] = -(*it)->m_params[index];
         //if (m_editMeshModels.size() > 1)
         {
             //float t1 = (*it)->m_rotCenter[index] + (*it)->m_params[index + 6];
@@ -172,6 +197,7 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             pitch = pitch / CH_PI * 180.0;
             yaw = yaw / CH_PI * 180.0;
             roll = roll / CH_PI * 180.0;
+            //qDebug() << "scale: " << scale[0] << ", " << scale[1] << ", " << scale[2];
             (*it)->m_params[0] = scale[0];
             (*it)->m_params[1] = scale[1];
             (*it)->m_params[2] = scale[2];
@@ -184,6 +210,7 @@ void EditMeshMirrorTransformTool::receiveButtonClicked(int index)
             (*it)->m_params[6] = offset[0];
             (*it)->m_params[7] = offset[1];
             (*it)->m_params[8] = offset[2];
+            //qDebug() << "params rot: " << pitch << ", " << yaw << ", " << roll;
             p++;
            // qDebug() << "scale: " << scale;
         }
@@ -313,14 +340,7 @@ void EditMeshMirrorTransformTool::reset()
         {
             continue;
         }
-
-        for (int i = 0; i < 3; i++)
-        {
-            if((*it)->m_mirrAxis[i] < 0)
-            {
-                receiveButtonClicked(i);
-            }
-        }
+        (*it)->reset3x3Transform();
         if (true/*m_lockToPrintPlatform*/)
         {
             aabb.add((*it)->calRealAABB());
@@ -344,14 +364,7 @@ void EditMeshMirrorTransformTool::reset()
             (*it)->setTransform(sumtran1);
         }
     }
-    //    for (std::set<CHMeshShowObjPtr>::iterator it = m_editMeshModels.begin(); it != m_editMeshModels.end(); it++)
-    //    {
-    //        CH3DPrintModelPtr meshPtr = dynamic_pointer_cast<CH3DPrintModel>(*it);
-    //        if (meshPtr != NULL)
-    //        {
-    //            meshPtr->isSceneIn(meshPtr->calRealAABB(), getDoc()->m_machineBox->getBaseAABB());
-    //        }
-    //    }
+
     emit getDoc()->modelCheckSceneInChanged();
     curScene->refresh();
 }

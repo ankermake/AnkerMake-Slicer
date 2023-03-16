@@ -18,15 +18,15 @@ void SwitchButton::drawBackground(QPainter* painter)
     QRect rect(0, 0, width(), height());
     int side = qMin(width(), height());
 
-    
+
     QPainterPath path1;
     path1.addEllipse(rect.x(), rect.y(), side, side);
 
-    
+
     QPainterPath path2;
     path2.addEllipse(rect.width() - side, rect.y(), side, side);
 
-    
+
     QPainterPath path3;
     path3.addRect(rect.x() + side / 2, rect.y(), rect.width() - side, height());
 

@@ -4,6 +4,7 @@
 #include "../common/utilities/tlogger.h"
 #include "errno.h"
 #include <QTextCodec>
+#include <QDataStream>
 using namespace AkUtil;
 using namespace std;
 
@@ -36,94 +37,236 @@ bool CHBaseAlg::writeMeshesToStlFile(CHMeshShowObjPtr meshPtr, const QString& pa
     return writeMeshesToStlFile(meshes, path, binary);
 }
 
+
 bool CHBaseAlg::writeMeshesToStlFile(const std::vector<CHMeshShowObjPtr>& meshes, const QString& path, bool binary)
 {
+    TFunction("");
     if (meshes.size() == 0)
     {
         return false;
     }
 
-    FILE* fp = 0;
-    //fp = fopen(path.toStdString().c_str(), "wb");
-    string filePath = std::string(path.toLocal8Bit().constData());
-
-    fp = fopen(filePath.c_str(), "wb"); 
-    if (fp == 0)
-    {
-        return false;
-    }
-
-    if (binary)
-    {
-        // Write Header
-        char header[128] = "VCG                                                                                                  ";
-
-        fwrite(header, 80, 1, fp);
-        // write number of facets
-        int faceSum = 0;
-        for (int i = 0; i < meshes.size(); i++)
+    QFile modelfile;
+    modelfile.setFileName(path);
+    bool result =true;
+    try {
+        if (binary)
         {
-            faceSum += meshes[i]->m_trians.size();
-        }
-        fwrite(&faceSum, 1, sizeof(int), fp);
-
-        for (int i = 0; i < meshes.size(); i++)
-        {
-            for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+            bool isopen = modelfile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+            if (!isopen)
             {
-                QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
-                QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
-                QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
-
-                
-                QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
-                fwrite(&tnor, 3, sizeof(float), fp);
-
-                fwrite(&pt1, 3, sizeof(float), fp);
-                fwrite(&pt2, 3, sizeof(float), fp);
-                fwrite(&pt3, 3, sizeof(float), fp);
-
-                unsigned short attributes = 0;
-                fwrite(&attributes, 1, sizeof(short), fp);
+                TError(QString("open file %1 failed, errno=%2, reason is %3").arg(path).arg(errno).arg(strerror(errno)));
+                return false;
             }
-        }
-    }
-    else
-    {
-        fprintf(fp, "solid vcg\n");
-        for (int i = 0; i < meshes.size(); i++)
-        {
-            for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+            char header[128] = "STL                                                                                              ";
+            
+            //dataStream.writeBytes(header, 80);
+            modelfile.write(header, 80);
+            // write number of facets
+            int faceSum = 0;
+            for (int i = 0; i < meshes.size(); i++)
             {
-                QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
-                QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
-                QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
-
-                
-                QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
-
-                fprintf(fp, "  facet normal %13e %13e %13e\n", tnor[0], tnor[1], tnor[2]);
-                fprintf(fp, "    outer loop\n");
-
-                fprintf(fp, "      vertex  %13e %13e %13e\n", pt1[0], pt1[1], pt1[2]);
-                fprintf(fp, "      vertex  %13e %13e %13e\n", pt2[0], pt2[1], pt2[2]);
-                fprintf(fp, "      vertex  %13e %13e %13e\n", pt3[0], pt3[1], pt3[2]);
-
-                fprintf(fp, "    endloop\n");
-                fprintf(fp, "  endfacet\n");
+                faceSum += meshes[i]->m_trians.size();
             }
-        }
-        fprintf(fp, "endsolid vcg\n");
-    }
+            //dataStream.writeBytes((char*)&faceSum, sizeof(int));
+            modelfile.write((char*)&faceSum,sizeof(int));
 
-    bool result = true;
-    if (ferror(fp))
-    {
+            for (int i = 0; i < meshes.size(); i++)
+            {
+                for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+                {
+                    QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
+                    QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
+                    QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
+
+                    
+                    QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
+                    modelfile.write((char*)&tnor, 3*sizeof(float));
+                    modelfile.write((char*)&pt1, 3*sizeof(float));
+                    modelfile.write((char*)&pt2, 3*sizeof(float));
+                    modelfile.write((char*)&pt3, 3*sizeof(float));
+                    unsigned short attributes = 0;
+                    modelfile.write((char*)&attributes, sizeof(short));
+                }
+            }
+
+            //QDataStream dataStream;
+            //bool isopen = modelfile.open(QIODevice::WriteOnly | QIODevice::Truncate);
+            //if (!isopen)
+            //{
+            //    TError(QString("open file %1 failed, errno=%2, reason is %3").arg(path).arg(errno).arg(strerror(errno)));
+            //    return false;
+            //}
+            //dataStream.setDevice(&modelfile);
+            //// Write Header
+            //char header[128] = "                                                                                                  ";
+            
+            ////dataStream.writeBytes(header, 80);
+            //dataStream.writeRawData(header, 80);
+            //// write number of facets
+            //int faceSum = 0;
+            //for (int i = 0; i < meshes.size(); i++)
+            //{
+            //    faceSum += meshes[i]->m_trians.size();
+            //}
+            ////dataStream.writeBytes((char*)&faceSum, sizeof(int));
+            //dataStream << faceSum;
+
+            //for (int i = 0; i < meshes.size(); i++)
+            //{
+            //    for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+            //    {
+            //        QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
+            //        QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
+            //        QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
+
+            
+            //        QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
+
+            //        dataStream << tnor.x() << tnor.y() << tnor.z();
+            //        dataStream << pt1.x() << pt1.y() << pt1.z();
+            //        dataStream << pt2.x() << pt2.y() << pt2.z();
+            //        dataStream << pt3.x() << pt3.y() << pt3.z();
+
+            //        //dataStream.writeBytes((char*)&tnor, 3*sizeof(float));
+            //        //dataStream.writeBytes((char*)&pt1, 3*sizeof(float));
+            //        //dataStream.writeBytes((char*)&pt2, 3*sizeof(float));
+            //        //dataStream.writeBytes((char*)&pt3, 3*sizeof(float));
+
+            //        unsigned short attributes = 0;
+            //        //dataStream.writeBytes((char*)&attributes, sizeof(short));
+            //        dataStream << attributes;
+            //    }
+            //}
+        }
+        else
+        {
+            QTextStream ascii_text;
+            modelfile.open(QIODevice::WriteOnly|QIODevice::Text);
+            ascii_text.setDevice(&modelfile);
+            ascii_text << "solid vcg\n";
+
+            for (int i = 0; i < meshes.size(); i++)
+            {
+                for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+                {
+                    QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
+                    QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
+                    QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
+
+                    
+                    QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
+
+                    ascii_text << "  facet normal " << tnor[0] << " " << tnor[1] << " " << tnor[2] << "\n";
+                    ascii_text << "    outer loop\n";
+                    ascii_text << "       vertex " << pt1[0] << " " << pt1[1] << " " << pt1[2] << "\n";
+                    ascii_text << "       vertex " << pt2[0] << " " << pt2[1] << " " << pt2[2] << "\n";
+                    ascii_text << "       vertex " << pt3[0] << " " << pt3[1] << " " << pt3[2] << "\n";
+                    ascii_text << ("    endloop\n");
+                    ascii_text << ("  endfacet\n");
+                }
+            }
+            ascii_text << ( "endsolid vcg\n");
+        }
+    }  catch (...) {
+        TDebug("");
         result = false;
     }
-    fclose(fp);
+    modelfile.flush();
+    modelfile.close();
     return result;
 }
+
+//bool CHBaseAlg::writeMeshesToStlFile(const std::vector<CHMeshShowObjPtr>& meshes, const QString& path, bool binary)
+//{
+//    if (meshes.size() == 0)
+//    {
+//        return false;
+//    }
+
+//    FILE* fp = 0;
+//    //fp = fopen(path.toStdString().c_str(), "wb");
+//    //string filePath = std::string(path.toLocal8Bit().constData());
+//    string filePath = path.toStdString();
+
+
+//    if (fp == 0)
+//    {
+//        TError(QString("open file %1 failed, errno=%2, reason is %3").arg(path).arg(errno).arg(strerror(errno)));
+//        return false;
+//    }
+
+//    if (binary)
+//    {
+//        // Write Header
+//        char header[128] = "VCG                                                                                                  ";
+
+//        fwrite(header, 80, 1, fp);
+//        // write number of facets
+//        int faceSum = 0;
+//        for (int i = 0; i < meshes.size(); i++)
+//        {
+//            faceSum += meshes[i]->m_trians.size();
+//        }
+//        fwrite(&faceSum, 1, sizeof(int), fp);
+
+//        for (int i = 0; i < meshes.size(); i++)
+//        {
+//            for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+//            {
+//                QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
+//                QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
+//                QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
+
+
+//                QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
+//                fwrite(&tnor, 3, sizeof(float), fp);
+
+//                fwrite(&pt1, 3, sizeof(float), fp);
+//                fwrite(&pt2, 3, sizeof(float), fp);
+//                fwrite(&pt3, 3, sizeof(float), fp);
+
+//                unsigned short attributes = 0;
+//                fwrite(&attributes, 1, sizeof(short), fp);
+//            }
+//        }
+//    }
+//    else
+//    {
+//        fprintf(fp, "solid vcg\n");
+//        for (int i = 0; i < meshes.size(); i++)
+//        {
+//            for (int p = 0; p < meshes[i]->m_trians.size(); p++)
+//            {
+//                QVector3D pt1 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index1]);
+//                QVector3D pt2 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index2]);
+//                QVector3D pt3 = TransformPack::pRot(meshes[i]->getTransform(), meshes[i]->m_vertices[meshes[i]->m_trians[p].m_index3]);
+
+
+//                QVector3D tnor = QVector3D::crossProduct(pt2 - pt1, pt3 - pt1).normalized();
+
+//                fprintf(fp, "  facet normal %13e %13e %13e\n", tnor[0], tnor[1], tnor[2]);
+//                fprintf(fp, "    outer loop\n");
+
+//                fprintf(fp, "      vertex  %13e %13e %13e\n", pt1[0], pt1[1], pt1[2]);
+//                fprintf(fp, "      vertex  %13e %13e %13e\n", pt2[0], pt2[1], pt2[2]);
+//                fprintf(fp, "      vertex  %13e %13e %13e\n", pt3[0], pt3[1], pt3[2]);
+
+//                fprintf(fp, "    endloop\n");
+//                fprintf(fp, "  endfacet\n");
+//            }
+//        }
+//        fprintf(fp, "endsolid vcg\n");
+//    }
+
+//    bool result = true;
+//    if (ferror(fp))
+//    {
+//        result = false;
+//    }
+//    fclose(fp);
+//    return result;
+//}
 
 void CHBaseAlg::extremeBetweenLineAndLine(const CHLine3DPtr& line1, const CHLine3DPtr& line2,
     LineLineExtremeResult& res)
@@ -329,7 +472,9 @@ bool CHBaseAlg::LineMeshIntersect(const CHMeshShowObjPtr& mesh, const CHLine3DPt
         if (!isPickAabb) { return isPickAabb; }
     }
 
-    for (int i = 0; i < mesh->m_trians.size(); i++)
+    int mesh_m_trians_size = mesh->m_trians.size();
+#pragma omp parallel for num_threads(4) shared(intersections)
+    for (int i = 0; i < mesh_m_trians_size; i++)
     {
         const QVector3D& pt1 = mesh->m_vertices[mesh->m_trians[i].m_index1];
         const QVector3D& pt2 = mesh->m_vertices[mesh->m_trians[i].m_index2];
@@ -364,6 +509,7 @@ bool CHBaseAlg::LineMeshIntersect(const CHMeshShowObjPtr& mesh, const CHLine3DPt
             
             outpt.m_nor = QVector3D(invertMat.transposed() * QVector4D(outpt.m_nor, 1)).normalized();
 
+#pragma omp critical
             intersections.push_back(outpt);
         }
     }
@@ -396,19 +542,19 @@ bool CHBaseAlg::LineSegmentMeshIntersect(const CHMeshShowObjPtr& mesh, const CHL
 bool CHBaseAlg::existIntersectionBetweenLineAndTriangle(const CHLine3DPtr& line, const QVector3D& pt1,
     const QVector3D& pt2, const QVector3D& pt3, CHPointOnMesh& outpt)
 {
-    QVector3D v0 = pt3 - pt1;
-    QVector3D v1 = pt2 - pt1;
-    QVector3D nor = QVector3D::crossProduct(v1, v0);
+    const QVector3D v13 = pt3 - pt1;
+    const QVector3D v12 = pt2 - pt1;
+    QVector3D nor = QVector3D::crossProduct(v12, v13);
     const float tol = 0.0000001;
     if (fabs(nor.x()) < tol && fabs(nor.y()) < tol && fabs(nor.z()) < tol)
     {
-        QVector3D vv0 = pt2 - pt3;
-        nor = QVector3D::crossProduct(vv0, v0) + QVector3D::crossProduct(vv0, v1);
+        const QVector3D v23 = pt2 - pt3;
+        nor = QVector3D::crossProduct(v23, v13) + QVector3D::crossProduct(v23, v12);
     }
 
-    QVector3D st = line->m_st;
-    QVector3D et = line->m_et;
-    QVector3D dir = et - st;
+    const QVector3D& st = line->m_st;
+    const QVector3D& et = line->m_et;
+    const QVector3D dir = et - st;
     float t = 0;
     float m = QVector3D::dotProduct(dir, nor);
     if (fabs(m) < tol)
@@ -423,18 +569,20 @@ bool CHBaseAlg::existIntersectionBetweenLineAndTriangle(const CHLine3DPtr& line,
 
     
     QVector3D v2 = intersection - pt1;
-    float a = QVector3D::dotProduct(v0, v1);
-    float b = QVector3D::dotProduct(v0, v0);
-    float e = QVector3D::dotProduct(v1, v1);
+    float a = QVector3D::dotProduct(v13, v12);
+    float b = QVector3D::dotProduct(v13, v13);
+    float e = QVector3D::dotProduct(v12, v12);
     float beLine = b * e - a * a;
 
     if (abs(beLine) < tol)
     {
-        return false;
+        
+        if(beLine == 0.0f)  //  add @2023-01-04 by ChunLian;
+            return false;
     }
 
-    float c = QVector3D::dotProduct(v2, v0);
-    float d = QVector3D::dotProduct(v2, v1);
+    float c = QVector3D::dotProduct(v2, v13);
+    float d = QVector3D::dotProduct(v2, v12);
     float u = (e * c - a * d) / beLine;
     float v = (b * d - a * c) / beLine;
     if (u >= 0 && v >= 0 && u + v <= 1)

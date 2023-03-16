@@ -14,8 +14,15 @@ if(APPLE)
     endif()
 endif()
 
-#__enable_vld()
-__enable_openmp()
+option (ENABLE_VLD    "Enable VLD to check memory" OFF)
+option (ENABLE_OPENMP "Enable OPENMP multithreading acceleration" ON)
+
+if(ENABLE_VLD)
+    __enable_vld()
+endif ()
+if(ENABLE_OPENMP)
+    __enable_openmp()
+endif ()
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -28,8 +35,6 @@ set(BOOST_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost)
 
 add_subdirectory(src)
 
-
-set(RAPIDJSON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/rapidjson)
 
 #add_definitions(-DBOOST_ALL_NO_LIB)
 #add_definitions(-DBOOST_FILESYSTEM_SOURCE)
@@ -52,6 +57,15 @@ set(RAPIDJSON_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/libs/rapidjson)
 set(LIBS _CuraEngine)
 set(INCS ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
+if (WIN32)
+    set(LIBS _CuraEngine DbgHelp.lib)
+endif()
+__add_real_target(CuraEngine exe SOURCE main.cpp dbgcrash.cpp LIB ${LIBS} INC ${INCS} OPENMP)
 
-__add_real_target(CuraEngine exe SOURCE main.cpp LIB ${LIBS} INC ${INCS} OPENMP)
+
+option (TEST_CL "Static library test engine" OFF)
+if(TEST_CL AND WIN32)
+    include(TestLibCL)
+    __test_lib_cl()
+endif()
 

@@ -20,6 +20,8 @@ public:
     EditMeshTransformFactory();
     ~EditMeshTransformFactory() override;
 
+    void restartCurrentAction();
+
 
     void recMsgfromManager(PluginMessageData metaData) override;
 signals:
@@ -66,6 +68,8 @@ private:
     ActionEditTool* m_manualTreeSupport{ nullptr };
 
     ActionEditTool* m_currAction {nullptr};
+    void *m_arg1 {nullptr};
+    void *m_arg2 {nullptr};
 
 public:
     static void initMeshModelEulerParams(CHMeshShowObjPtr tmm);

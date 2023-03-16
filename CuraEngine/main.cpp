@@ -18,6 +18,11 @@
 
 #include "utils/DecodeUtils.hpp"
 
+#include "dbgcrash.h"
+#if defined(_WIN32)
+#include <windows.h>
+#include <Dbghelp.h>
+#endif
 namespace cura
 {
 
@@ -35,6 +40,12 @@ void signal_FPE(int n)
 
 int main(int argc, char **argv)
 {
+#if defined(_WIN32)
+    //SetUnhandledExceptionFilter(crashStackCallback);
+    SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)ApplicationCrashHandler);
+#endif
+
+
 #if defined(__linux__) || (defined(__APPLE__) && defined(__MACH__))
     //Lower the process priority on linux and mac. On windows this is done on process creation from the GUI.
     setpriority(PRIO_PROCESS, 0, 10);

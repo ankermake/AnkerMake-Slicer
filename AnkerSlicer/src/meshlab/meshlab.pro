@@ -48,6 +48,7 @@ HEADERS += \
         controls/toolBar.h \
         controls/useragreementwidget.h \
         controls/viewwidget.h \
+        controls/updateMessageDialog.h \
 #        mainwindow.h \
 #        glarea.h \
 #        dialogs/about_dialog.h \
@@ -101,6 +102,7 @@ SOURCES += \
         controls/toolBar.cpp \
         controls/useragreementwidget.cpp \
         controls/viewwidget.cpp \
+        controls/updateMessageDialog.cpp \
         main.cpp \
         dbgcrash.cpp \
 #        mainwindow_Init.cpp \

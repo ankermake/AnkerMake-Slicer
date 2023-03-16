@@ -12,9 +12,9 @@ ModelTransformWidget::ModelTransformWidget(QWidget *parent)
     // setAttribute(Qt::WA_NoSystemBackground);
     //setStyleSheet("background-color:transparent");
     m_mainLayout->setAlignment(Qt::AlignTop);
-    m_mainLayout->setContentsMargins(12,12,12,12);
+    m_mainLayout->setContentsMargins(4,12,4,12);
     m_mainLayout->setSpacing(0);
-    this->setFixedSize(QSize(84,349));//409
+    this->setFixedSize(QSize(68,349));//409
 }
 
 void ModelTransformWidget::addWidgetToTransForm(QWidget *widget, int actionIndex)

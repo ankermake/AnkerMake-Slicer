@@ -7,7 +7,7 @@
 AkSlicePanel::AkSlicePanel(QWidget *parent) : BubbleWidget(parent)
 {
     this->setBackgroundColor(QColor(32, 33, 35));
-    this->setFixedHeight(40);//64
+    this->setFixedHeight(30);//64
     this->setRadius(0);
     auto vlayout = new QVBoxLayout(this);
     vlayout->setContentsMargins(24,0,24,0);
@@ -24,7 +24,7 @@ AkSlicePanel::AkSlicePanel(QWidget *parent) : BubbleWidget(parent)
     sliceBtn = new QPushButton(this);
     sliceBtn->setFont(font);
     sliceBtn->setObjectName("hightButton");
-    sliceBtn->setMinimumHeight(40);
+    sliceBtn->setMinimumHeight(30);
     sliceBtn->setText(tr("Slice"));
     sliceBtn->setFocusPolicy(Qt::NoFocus);
     connect(sliceBtn, &QPushButton::clicked,this, &AkSlicePanel::slice);
@@ -32,7 +32,7 @@ AkSlicePanel::AkSlicePanel(QWidget *parent) : BubbleWidget(parent)
     previewBtn = new QPushButton(this);
     previewBtn->setFont(font);
     previewBtn->setFocusPolicy(Qt::NoFocus);
-    previewBtn->setMinimumHeight(40);
+    previewBtn->setMinimumHeight(30);
     previewBtn->setObjectName(QString::fromUtf8("Preview"));
     previewBtn->setText(tr("Preview"));
     connect(previewBtn, &QPushButton::clicked,this, &AkSlicePanel::previewBtnClicked);
@@ -44,7 +44,7 @@ AkSlicePanel::AkSlicePanel(QWidget *parent) : BubbleWidget(parent)
 
     exportBtn = new QPushButton(this);
     exportBtn->setFont(font);
-    exportBtn->setMinimumHeight(40);
+    exportBtn->setMinimumHeight(30);
     exportBtn->setFocusPolicy(Qt::NoFocus);
     exportBtn->setObjectName(QString::fromUtf8("Export"));
     exportBtn->setText(tr("Export"));

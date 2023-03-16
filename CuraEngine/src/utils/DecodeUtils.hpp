@@ -16,6 +16,7 @@ static std::string readFileIntoString(const char* filename)
     std::ifstream ifile(filename);
     if (!ifile.is_open())
     {
+        cura::logError("open file :%s failed\n", filename);
         return "";
     }
     

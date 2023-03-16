@@ -47,9 +47,9 @@
 #include "dbgcrash.h"
 
 #ifdef _WIN32
-#define ANKERMAKE_EXE "AnkerMake.exe"
+#define ANKERMAKE "AnkerMake"
 #elif __APPLE__
-#define ANKERMAKE_EXE "AnkerMake.app"
+#define ANKERMAKE "AnkerMake"
 #endif
 
 #if defined(Q_OS_WIN32)   // Q_OS_WIN32
@@ -108,15 +108,16 @@ int main(int argc, char *argv[]){
         bool ret = false;
 #ifdef _WIN32
         QProcess process;
-        process.start("tasklist", QStringList() << "/FI" << "imagename eq " + QString(ANKERMAKE_EXE));
+        process.start("tasklist", QStringList() << "/FI" << "imagename eq " + QString(ANKERMAKE)+ "*");
         process.waitForFinished();
 
         QString outputStr = QString::fromLocal8Bit(process.readAllStandardOutput());
         ret = outputStr.contains("PID");
-        ret &= outputStr.count(ANKERMAKE_EXE) > 1; 
-        qDebug() << "outputStr: " << outputStr;
+        ret &= outputStr.count(ANKERMAKE) > 1; 
+        qDebug() << "outputStr: " << outputStr << ", ret: " << ret;
+        //TDebug("outputStr: " + outputStr);
 #elif __APPLE__
-        std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE_EXE).toStdString() + " |grep -v grep |awk '{print $2}'";
+        std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE).toStdString() + "* |grep -v grep |awk '{print $8}'";
         const char* strFindName = strCmd.c_str();
         FILE *pPipe = popen(strFindName, "r");
         int count = 0;
@@ -126,9 +127,10 @@ int main(int argc, char *argv[]){
             while(fgets(name, sizeof(name), pPipe) != NULL)
             {
                 int nLen = strlen(name);
-                if(nLen > 0 && name[nLen - 1] == '\n')
+                //TDebug("nLen: " + nLen + ", name: " + QString::fromUtf8(name));
+                qDebug() << "nLen: " << nLen << ", name: " << QString::fromUtf8(name);
+                if(QString::fromUtf8(name).contains(ANKERMAKE))
                 {
-                    name[nLen - 1] = '\0';
                     count++;
                 }
             }
@@ -213,18 +215,6 @@ int main(int argc, char *argv[]){
     font.setPixelSize(14);
     app.setFont(font);
 
-
-    auto m_translator =  Translator::instance();
-    SettingManager setting;
-    int index =  setting.getCurrentLanguage();
-    if(index == 1) {
-        m_translator->loadLanguage(Language::CH);
-    }
-    else if (index == 0) {
-        m_translator->loadLanguage(Language::EN);
-    } else if (index == 2) {
-        m_translator->loadLanguage(Language::JA);
-    }
     //add qss
     QFile file(":/qss/default.qss");
     file.open(QFile::ReadOnly);
@@ -251,6 +241,7 @@ int main(int argc, char *argv[]){
         return 0;
     }
 #endif
+    SettingManager setting;
     bool flag = setting.getAcceptUserAgreement();
     if(!flag) {
         UserAgreementWidget userAgreementWidget;
@@ -262,6 +253,17 @@ int main(int argc, char *argv[]){
             return 0;
         }
         setting.setAcceptUserAgreement(true);
+    }
+    auto m_translator =  Translator::instance();
+
+    int index =  setting.getCurrentLanguage();
+    if(index == 1) {
+        m_translator->loadLanguage(Language::CH);
+    }
+    else if (index == 0) {
+        m_translator->loadLanguage(Language::EN);
+    } else if (index == 2) {
+        m_translator->loadLanguage(Language::JA);
     }
 #ifdef __APPLE__
     QSurfaceFormat glFormat;

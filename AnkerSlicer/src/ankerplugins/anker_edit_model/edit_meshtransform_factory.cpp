@@ -5,7 +5,6 @@
 #include "edit_meshzoomtransform.h"
 #include "edit_meshmirrortransform.h"
 #include "vcg/space/box3.h"
-//#include "edit_manualtreesupport.h"
 #include <common/utilities/tlogger.h>
 
 
@@ -21,7 +20,7 @@ EditMeshTransformFactory::EditMeshTransformFactory() {
     __initActionEditTools();
 }
 EditMeshTransformFactory::~EditMeshTransformFactory() {
-     AkUtil::TFunction("");
+    AkUtil::TFunction("");
 }
 
 
@@ -152,12 +151,19 @@ void EditMeshTransformFactory::setEditToolsEnable(QVariant var)
         }
     }
 }
-
+#include "edit_meshzoomtransform.h"
 bool EditMeshTransformFactory::startAnkerEdit(ActionEditTool *action, void *arg1, void *arg2)
 {
     bool res = action->ankerEditTool->startAnkerEdit(action, arg1, arg2);
     if(res){
         m_currAction  = action;
+        qDebug() << "start Edit: " << action->getDescription() << ", " << dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool);
+        if(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool) != nullptr)
+        {
+            connect(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool), &EditMeshZoomTransformTool::restartEditToolSignal, this, &EditMeshTransformFactory::restartCurrentAction);
+        }
+        m_arg1 = arg1;
+        m_arg2 = arg2;
         m_isActivated = true  ;
     }
     return res;
@@ -168,6 +174,18 @@ void EditMeshTransformFactory::endAnkerEdit(ActionEditTool *action, void *arg1, 
     if(action->ankerEditTool->isActivated()){
         action->ankerEditTool->endAnkerEdit(action, arg1, arg2);
         m_isActivated = false ;
+        if(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool) != nullptr)
+        {
+            disconnect(dynamic_cast<EditMeshZoomTransformTool*>(action->ankerEditTool), &EditMeshZoomTransformTool::restartEditToolSignal, this, &EditMeshTransformFactory::restartCurrentAction);
+        }
+    }
+}
+
+void EditMeshTransformFactory::restartCurrentAction()
+{
+    if(m_currAction != nullptr){
+       endAnkerEdit(m_currAction, m_arg1, m_arg2);
+       startAnkerEdit(m_currAction, m_arg1, m_arg2);
     }
 }
 

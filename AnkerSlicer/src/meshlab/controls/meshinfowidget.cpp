@@ -36,7 +36,6 @@ MeshInfoWidget::MeshInfoWidget(QWidget *parent)
     m_listWidget->installEventFilter(this);
     m_listWidget->setFocusPolicy(Qt::NoFocus);
  //   connect(m_listWidget,&QListWidget::clicked,this,&MeshInfoWidget::clickCurrentIndex);
-    //connect(m_listWidget,&QListWidget::itemSelectionChanged,this,&MeshInfoWidget::selectedChanged);
     connect(m_listWidget,&QListWidget::itemSelectionChanged, this, &MeshInfoWidget::selectedChanged);
     //connect(m_listWidget,&QListWidget::currentItemChanged, this, &MeshInfoWidget::currentItemChanged);
     connect(m_listWidget,&QListWidget::currentRowChanged, this, &MeshInfoWidget::currentRowChanged);
@@ -162,23 +161,16 @@ bool MeshInfoWidget::eventFilter(QObject *watched, QEvent *event)
 
 void MeshInfoWidget::showMesh()
 {
-//    QList<QListWidgetItem *> list = m_listWidget->selectedItems();
-//    if(list.size() == 1) {
-//        QListWidgetItem *item = list.at(0);
-//        item->setSelected(false);
-//    }
-
     QToolButton *button = qobject_cast<QToolButton *>(sender());
     QListWidgetItem *item = m_listWidget->itemAt(button->parentWidget()->pos());
    // item->setSelected(true);
     QVariant var = button->property("index");
     CHDocPtr docPtr = getDoc();
     std::vector<CH3DPrintModelPtr> ptrList;
-    CH3DPrintModelPtr  modelPtr = findCurrentModel(docPtr,var.toInt());
+    CH3DPrintModelPtr  modelPtr = findCurrentModel(docPtr,var.toInt());    
     if(modelPtr == 0) {
         return;
     }
-
     bool visuable = modelPtr->getVisuable();
     ObjStatus status = modelPtr->getStatus();
     std::vector<CHMeshShowObjPtr>  meshes;
@@ -193,8 +185,15 @@ void MeshInfoWidget::showMesh()
         CHPickOperationCommandPtr pickPtr =  getGlobalPick();
         std::set<CHMeshShowObjPtr> ptr = pickPtr->m_selectedObjs;
         if(ptr.empty()) {
-            meshes.push_back(std::dynamic_pointer_cast<CHMeshShowObj>(modelPtr));
-            modelPtr->setStatus(general);
+
+            for(int i = 0; i < m_listWidget->count(); i++)
+            {
+                if(docPtr->m_printObjs[i] != nullptr && m_listWidget->item(i)->isSelected())
+                {
+                    meshes.push_back(docPtr->m_printObjs[i]);
+                    docPtr->m_printObjs[i]->setStatus(general);
+                }
+            }
             getDoc()->setObjsVisuable(meshes, !visuable);
             return;
         }
@@ -310,10 +309,12 @@ void MeshInfoWidget::currentRowChanged(int currentRow)
     {
         return;
     }
+
     if(flag) {
         flag = false;
         return;
     }
+
     
     if(docPtrStatusChanged(getDoc())) {
         emit  currentChanged();

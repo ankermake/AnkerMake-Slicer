@@ -38,6 +38,7 @@ struct OpenGLInfo{
 };
 
 bool isHighPerformance(const OpenGLInfo& _info_opengl_t){
+    AkUtil::TDebug("m_opengl_info.Vendorr " + _info_opengl_t.Vendor);
 #ifdef _WIN32
     
     if(_info_opengl_t.Vendor.contains("Intel",Qt::CaseSensitivity::CaseInsensitive)){
@@ -59,7 +60,7 @@ bool isHighPerformance(const OpenGLInfo& _info_opengl_t){
     
     return true;
 #endif
-
+    return false;
 }
 
 FdmGcodePreviewEntry::FdmGcodePreviewEntry()

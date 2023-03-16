@@ -63,7 +63,6 @@ Rectangle {
         anchors.margins: 16
         anchors.topMargin: 13
         spacing: 16
-        objectName: "layut"
 
         FdmSetting.ComboxItem {
             id:printer
@@ -309,9 +308,13 @@ Rectangle {
             delegate: Loader
             {
                 id:viewDelegate
-                width: listView.width
-                height: model.visible ? 42 : 0
+                anchors { left: parent.left; right: parent.right }
+               // height: model.visible ? column.implicitHeight + 4 : 0
+//                width: listView.width
+               height: model.visible ? 42 : 0
+                Behavior on height { NumberAnimation { duration: 100 } }
                 opacity: model.visible ? 1 : 0
+                Behavior on opacity { NumberAnimation { duration: 100 } }
                 active: model.type !== undefined
 
                 source:

@@ -140,6 +140,7 @@ void PluginManager::loadPlugins()
 {
 	// without adding the correct library path in the mac the loading of jpg (done via qt plugins) fails
 	// ToDo: get rid of any qApp here
+    if(meshlab::defaultPluginPath().isEmpty()){ return; }
 	qApp->addLibraryPath(meshlab::defaultPluginPath());
 	loadPlugins(QDir(meshlab::defaultPluginPath()));
 }

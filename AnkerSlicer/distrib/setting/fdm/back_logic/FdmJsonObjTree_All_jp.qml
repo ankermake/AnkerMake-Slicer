@@ -946,6 +946,14 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "相対Zシーム"
                 fdmDescription: "有効時は、Zシームは各パーツの真ん中に設定されます。無効時はプラットフォームのサイズによって設定されます。"
             }
+            FdmQml_Param{ id:z_seam_min_angle_diff; objectName: "z_seam_min_angle_diff"
+                fdmLabel: "Zジョイントの最大角度差"
+                fdmDescription: "有効になった場合、最も先の尖った角度がこの値よりも小さい場合、最短の原則を選択します。"
+            }
+            FdmQml_Param{ id:z_seam_max_angle; objectName: "z_seam_max_angle"
+                fdmLabel: "Zジョイントの最大の鋭いコーナー"
+                fdmDescription: "この値よりも小さい場合、鋭いコーナーがあると見なされ、この値よりも大きい場合、最短の原則が有効になります。"
+            }
         }
         FdmQml_Category{ id:top_bottom; objectName: "top_bottom"
             fdmLabel: "トップ/ボトム"
@@ -2507,12 +2515,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 }
             }
             FdmQml_Param{ id:magic_spiralize; objectName: "magic_spiralize"
-                fdmLabel: "滑らかな外側輪郭"
+                fdmLabel: "滑らかな外側輪郭（花瓶）"
                 fdmDescription: "Z軸の外側のエッジの動きを滑らかにします。全体のプリントに安定したZの動きを促し、この機能によりソリッドのモデルを固定した底辺と単一のウォールのプリントにします。この機能は各レイヤーが単一の部品を含んでいる場合のみに有効です。"
-            }
-            FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
-                fdmLabel: "滑らかな輪郭"
-                fdmDescription: "らせん状の輪郭を滑らかにしてZシームの視認性を低下させます (Zシームはプリント物上でほとんどみえませんが、層ビューでは確認できます)。スムージングは、細かい表面の詳細をぼかす傾向があることに注意してください。"
+                FdmQml_Param{ id:magic_spiralize_print_speed; objectName: "magic_spiralize_print_speed"
+                    fdmLabel: "滑らかな外側輪郭速度"
+                    fdmDescription: "滑らかな外側輪郭速度"
+                }
+                FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
+                    fdmLabel: "滑らかな輪郭"
+                    fdmDescription: "らせん状の輪郭を滑らかにしてZシームの視認性を低下させます (Zシームはプリント物上でほとんどみえませんが、層ビューでは確認できます)。スムージングは、細かい表面の詳細をぼかす傾向があることに注意してください。"
+                }
             }
         }
         FdmQml_Category{ id:experimental; objectName: "experimental"

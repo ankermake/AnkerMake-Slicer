@@ -31,20 +31,13 @@ public:
 public:
     inline QString toString(){
         QStringList resultList ;
-        resultList << "stl原生名称:" << originalStlName << "\r\n";
-
-        resultList << "stl路径:" << stlFile << "\r\n";
-
-        resultList << "结果路径:" << gcodeFile << "\r\n";
-
-        resultList << "切片参数:" << sliceCmd << "\r\n";
-
-        resultList << "切片时长(s):" << QString("%1").arg(sliceTime) << "\r\n";
-
-        resultList << "打印时长(s):" << QString("%1").arg(printTime) << "\r\n";
-
-        resultList << "耗材体积(mm^3):" << QString("%1").arg(filamentCost) << "\r\n";
-
+        resultList << "stl_origin_name:" << originalStlName << "\r\n";
+        resultList << "stl_path:" << stlFile << "\r\n";
+        resultList << "result_path:" << gcodeFile << "\r\n";
+        resultList << "SliceParam:" << sliceCmd << "\r\n";
+        resultList << "TimeCost(s):" << QString("%1").arg(sliceTime) << "\r\n";
+        resultList << "PrintTime(s):" << QString("%1").arg(printTime) << "\r\n";
+        resultList << "FilamentCost(mm^3):" << QString("%1").arg(filamentCost) << "\r\n";
         return resultList.join("");
     }
 };

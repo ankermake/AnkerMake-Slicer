@@ -25,7 +25,7 @@ Rectangle {
         id: label
         anchors.left: parent.left
         anchors.top: parent.top
-        font.pixelSize: 16
+        font.pixelSize: 14
         color: "#FFFFFF"
     }
     RowLayout{

@@ -33,10 +33,11 @@
 #include "edit_meshtransform_factory.h"
 
 #include "QOpenGLFramebufferObject"
+#include "common/support/supportdata.h"
+#include "common/support/supportmeshfactory.h"
 #include "common/GeoAndShow/AkTransformMath.h"
 #include "common/GeoAndShow/support/SupportAssemblyMeshes.h"
 #include "common/utilities/tlogger.h"
-
 
 using namespace vcg;
 

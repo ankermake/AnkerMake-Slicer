@@ -82,15 +82,16 @@ void InsetOrderOptimizer::processHoleInsets()
     const unsigned int num_insets = part.insets.size();
     constexpr float flow = 1.0;
 
-    do{ 
-        if(!outer_inset_first)  ; else{break;}
-        bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
-        const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
-        //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
-        //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
-        if(optimize_wall_hole && overhang_hole_mask.empty())  
-            outer_inset_first = true;
-    }while(false);
+    //delete by Binary for inset order bug
+    
+    //    if(!outer_inset_first)  ; else{break;}
+    //    bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
+    //    const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
+    //    //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
+    //    //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
+    
+    //        outer_inset_first = true;
+    //}while(false);
 
     if (!outer_inset_first && mesh.settings.get<bool>("infill_before_walls"))
     {

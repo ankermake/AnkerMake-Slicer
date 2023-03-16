@@ -18,9 +18,11 @@
 #include <QPainterPath>
 #include <QStringListModel>
 #include <QAbstractItemView>
+#include <QGraphicsDropShadowEffect>
 #include "common/controlInterface/pagewidget.h"
 #include "common/controlInterface/bubbleWidget.h"
 #include "common/controlInterface/line.h"
+#include <QtMath>
 #include <QDebug>
 namespace  control{
 class PreferencesDialog : public QDialog
@@ -58,6 +60,8 @@ private:
     QLabel *m_title = nullptr;
     QPushButton *m_closeButton = nullptr;
     QPushButton *m_saveButton = nullptr;
+
+    int SHADOW_WIDTH = 0;
 };
 }
 #endif // PREFERENCESDIALOG_H

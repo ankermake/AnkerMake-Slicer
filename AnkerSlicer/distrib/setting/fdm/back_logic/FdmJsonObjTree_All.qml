@@ -2212,8 +2212,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "Wall Thickness"
                 fdmDescription: "The thickness of the walls in the horizontal direction. This value divided by the wall line width defines the number of walls."
                 fdmUnit: "mm"
-                fdmDefaultValue: 0.8
-                fdmValue: magic_spiralize.fdmValue ? wall_line_width_0.fdmValue : 0.8  // (wall_line_width_0.fdmValuewall_line_width_0.fdmValue + wall_line_width_x.fdmValue * Math.max(0, wall_line_count.fdmValue-1))
+                fdmDefaultValue: 1.24
+                fdmValue: magic_spiralize.fdmValue ? wall_line_width_0.fdmValue : 1.24  // (wall_line_width_0.fdmValuewall_line_width_0.fdmValue + wall_line_width_x.fdmValue * Math.max(0, wall_line_count.fdmValue-1))
                 fdmMinimumValue: 0.0
                 fdmMinimumValueWarning: Number(line_width.fdmValue)
                 fdmMaximumValueWarning: 10 * Number(line_width.fdmValue)
@@ -2488,6 +2488,34 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmType: "bool"
                 fdmDefaultValue: false
                 fdmEnabled: z_seam_type.fdmValue === "back"
+                fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "wall_0_extruder_nr"
+            }
+
+            FdmQml_Param{ id:z_seam_min_angle_diff; objectName: "z_seam_min_angle_diff"
+                fdmLabel: "Z Seam Min Angle Diff"
+                fdmDescription: "When the angle difference between the Sharpest Corner type point and the Shortest type point is less than this value, the Shortest type point is selected."
+                fdmUnit: "°"
+                fdmType: "float"
+                fdmMinimumValueWarning: 0
+                fdmMaximumValueWarning: 180
+                fdmDefaultValue: 36
+                fdmEnabled: z_seam_type.fdmValue === "sharpest_corner"
+                fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
+                fdmSettablePerMesh: true
+                fdmAffectedById: "wall_0_extruder_nr"
+            }
+
+            FdmQml_Param{ id:z_seam_max_angle; objectName: "z_seam_max_angle"
+                fdmLabel: "Z Seam Max Angle"
+                fdmDescription: "Only corners smaller than this value are considered sharp corners. If there is no sharp corner point, select the Shortest type point."
+                fdmUnit: "°"
+                fdmType: "float"
+                fdmMinimumValueWarning: 0
+                fdmMaximumValueWarning: 180
+                fdmDefaultValue: 162
+                fdmEnabled: z_seam_type.fdmValue === "sharpest_corner"
                 fdmLimitToExtruder: Number(wall_0_extruder_nr.fdmValue)
                 fdmSettablePerMesh: true
                 fdmAffectedById: "wall_0_extruder_nr"
@@ -2853,7 +2881,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmDescription: "Adjust the amount of overlap between the walls and the skin-centerline endpoints. This is a percentage of the skin lines and inntermost wall line widths.A slight overlap allows walls to connect firmly to the skin. Note that with equal skin and wall line width, percentages over 50% may cause the skin to go past the wall."
                 fdmUnit: "%"
                 fdmType: "float"
-                fdmDefaultValue: 5.0
+                fdmDefaultValue: 0
                 fdmMinimumValueWarning: -50.0
                 fdmMaximumValueWarning: 100.0
                 fdmValue: top_bottom_pattern.fdmValue !== "concentric" ? 5 : 0
@@ -2866,7 +2894,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmDescription: "Adjust the overlap between the walls and the skin-centerline endpoints. A slight overlap allows walls to connect firmly to the skin.Note that with equal skin and wall line width, values over half the wall witdh may cause the skin to go past the wall."
                     fdmUnit: "mm"
                     fdmType: "float"
-                    fdmDefaultValue: 0.02
+                    fdmDefaultValue: 0.00
                     fdmMinimumValueWarning: -0.5 * Number(machine_nozzle_size.fdmValue)
                     fdmMaximumValueWarning: Number(machine_nozzle_size.fdmValue)
                     fdmValue: top_bottom_pattern.fdmValue !== "concentric" ? (0.5 * (Number(skin_line_width.fdmValue) + (Number(wall_line_count.fdmValue) > 1 ? Number(wall_line_width_x.fdmValue) : Number(wall_line_width_0.fdmValue))) * Number(skin_overlap.fdmValue) / 100 ) : 0
@@ -5525,7 +5553,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmMinimumValue: 0.0
                 fdmMaximumValueWarning: 100.0
                 fdmDefaultValue: 15.0
-                fdmValue: (support_enable.fdmValue && support_structure.fdmValue === "normal") ? 15 : ((support_enable.fdmValue && support_structure.fdmValue === "tree") ? 0 : 15)
+                fdmValue: 15.0 // (support_enable.fdmValue && support_structure.fdmValue === "normal") ? 15 : ((support_enable.fdmValue && support_structure.fdmValue === "tree") ? 0 : 15)
                 fdmEnabled: support_enable.fdmValue || support_meshes_present.fdmValue
                 fdmLimitToExtruder: Number(support_infill_extruder_nr.fdmValue)
                 fdmSettablePerMesh: false
@@ -7324,16 +7352,26 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmSettablePerMesh: false
                 fdmSettablePerExtruder: false
                 fdmAffectedById: ""
-            }
-            FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
-                fdmLabel: "Smooth Spiralized Contours"
-                fdmDescription: "Smooth the spiralized contours to reduce the visibility of the Z seam (the Z seam should be barely visible on the print but will still be visible in the layer view). Note that smoothing will tend to blur fine surface details."
-                fdmType: "bool"
-                fdmDefaultValue: true
-                fdmEnabled: magic_spiralize.fdmValue
-                fdmSettablePerMesh: false
-                fdmSettablePerExtruder: false
-                fdmAffectedById: ""
+                FdmQml_Param{ id:magic_spiralize_print_speed; objectName: "magic_spiralize_print_speed"
+                    fdmLabel: "Printing Speed of Spiralize Outer Contour"
+                    fdmDescription: "Printing Speed of Spiralize Outer Contour"
+                    fdmType: "float"
+                    fdmDefaultValue: 30.0
+                    fdmEnabled: magic_spiralize.fdmValue
+                    fdmSettablePerMesh: false
+                    fdmSettablePerExtruder: false
+                    fdmAffectedById: ""
+                }
+                FdmQml_Param{ id:smooth_spiralized_contours; objectName: "smooth_spiralized_contours"
+                    fdmLabel: "Smooth Spiralized Contours"
+                    fdmDescription: "Smooth the spiralized contours to reduce the visibility of the Z seam (the Z seam should be barely visible on the print but will still be visible in the layer view). Note that smoothing will tend to blur fine surface details."
+                    fdmType: "bool"
+                    fdmDefaultValue: true
+                    fdmEnabled: magic_spiralize.fdmValue
+                    fdmSettablePerMesh: false
+                    fdmSettablePerExtruder: false
+                    fdmAffectedById: ""
+                }
             }
         }
         FdmQml_Category{ id:experimental; objectName: "experimental"

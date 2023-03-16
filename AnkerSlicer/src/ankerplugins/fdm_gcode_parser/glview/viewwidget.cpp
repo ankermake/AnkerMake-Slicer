@@ -129,15 +129,13 @@ void viewWidget::connectedRPC()
 void viewWidget::paramChange(QVariant p)
 {
     AkUtil::TDebug("in param change ");
-    //emit setValue(42);
-//    QString str;
-    //QDebug(&str) << var_test.toFloat();
-    //QDebug(&str) << "p.m_backgroundColor "<<p.value<passSceneParam>();
-    qDebug()<< "p canConver passSceneParam"<< p.canConvert<passSceneParam>();
     if(p.canConvert<passSceneParam>())
     {
        m_sceneParam.m_printMachineBox = p.value<passSceneParam>().m_printMachineBox;
        ui->openGLWidget->setSceneParams(m_sceneParam);
+       if(printModeInit){
+          this->changeSlider();
+       }
        return;
     }
 
@@ -169,7 +167,7 @@ void viewWidget::initForm()
 
     ui->widget->setStyleSheet(QString("background-color:#292A2D;"));
     setWindowTitle(tr("AnkerMake G-Code Preview"));
-    setWindowIcon(QIcon(":/pic/ui/logo_AnkerMake.ico"));
+  //  setWindowIcon(QIcon(":/pic/ui/logo_AnkerMake.ico"));
 
     //ui opengl widgt layout
     QVBoxLayout* verticalLayout_in;
@@ -273,6 +271,7 @@ void viewWidget::initForm()
 
     //play button
     pushButton_9 = new QPushButton(ui->openGLWidget);
+    pushButton_9->setFocusPolicy(Qt::NoFocus);
     pushButton_9->setObjectName(QString::fromUtf8("pushButton_9"));
     QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Fixed);
     sizePolicy2.setHorizontalStretch(0);
@@ -333,36 +332,28 @@ void viewWidget::initForm()
     pButtonGroup->setExclusive(true);
 
     aiButton = new QToolButton(ui->openGLWidget);
-    m_actiona_ai = new QAction(QIcon(":pic/ui/fdm_ai_icon_n.png"), tr("AI View"));
+    QIcon iconAi;
+    iconAi.addPixmap(QPixmap(":pic/ui/fdm_ai_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconAi.addPixmap(QPixmap(":/pic/ui/fdm_ai_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_ai = new QAction(iconAi, tr("AI View"));
     m_actiona_ai->setCheckable(true);
     m_actiona_ai->setChecked(false);
+
     aiButton->setDefaultAction(m_actiona_ai);
     aiButton->setObjectName(QString::fromUtf8("aiButton"));
     sizePolicy2.setHeightForWidth(aiButton->sizePolicy().hasHeightForWidth());
     aiButton->setSizePolicy(sizePolicy2);
-    aiButton->setMinimumSize(QSize(26, 26));
-    aiButton->setMaximumSize(QSize(26, 26));
+//    aiButton->setMinimumSize(QSize(26, 26));
+//    aiButton->setMaximumSize(QSize(26, 26));
+    aiButton->setFixedSize(32,32);
     //aiButton->setFlat(true);
-    aiButton->setIconSize(QSize(26, 26));
+    aiButton->setIconSize(QSize(32, 32));
     aiButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_ai_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
         "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_ai_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+));
     //aiButton->setIcon(QPixmap("://pic//ui/fdm_ai_icon_n.png"));
     //aiButton->setCheckable(true);
     pButtonGroup->addButton(aiButton);
@@ -370,239 +361,162 @@ void viewWidget::initForm()
     horizontalLayout_in_4->addWidget(aiButton);
 
     justButton = new QToolButton(ui->openGLWidget);
-    m_actiona_just = new QAction(QIcon(":pic/ui/fdm_full_icon_n.png"), tr("3D View"));
+    QIcon iconJust;
+    iconJust.addPixmap(QPixmap(":pic/ui/fdm_full_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconJust.addPixmap(QPixmap(":pic/ui/fdm_full_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_just = new QAction(iconJust, tr("3D View"));
     m_actiona_just->setCheckable(true);
     m_actiona_just->setChecked(false);
     justButton->setDefaultAction(m_actiona_just);
     justButton->setObjectName(QString::fromUtf8("justButton"));
     sizePolicy2.setHeightForWidth(justButton->sizePolicy().hasHeightForWidth());
     justButton->setSizePolicy(sizePolicy2);
-    justButton->setMinimumSize(QSize(26, 26));
-    justButton->setMaximumSize(QSize(26, 26));
+//    justButton->setMinimumSize(QSize(26, 26));
+//    justButton->setMaximumSize(QSize(26, 26));
     //justButton->setCheckable(true);
-    justButton->setIconSize(QSize(26, 26));
+    justButton->setIconSize(QSize(32, 32));
     justButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_full_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_full_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(justButton);
 
     horizontalLayout_in_4->addWidget(justButton);
 
     frontButton = new QToolButton(ui->openGLWidget);
-    m_actiona_front = new QAction(QIcon(":pic/ui/fdm_is_icon_n.png"), tr("Front View"));
+    QIcon iconFront;
+    iconFront.addPixmap(QPixmap(":pic/ui/fdm_is_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconFront.addPixmap(QPixmap(":pic/ui/fdm_is_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_front = new QAction(iconFront, tr("Front View"));
     m_actiona_front->setCheckable(true);
     m_actiona_front->setChecked(false);
     frontButton->setDefaultAction(m_actiona_front);
     frontButton->setObjectName(QString::fromUtf8("frontButton"));
     sizePolicy2.setHeightForWidth(frontButton->sizePolicy().hasHeightForWidth());
     frontButton->setSizePolicy(sizePolicy2);
-    frontButton->setMinimumSize(QSize(26, 26));
-    frontButton->setMaximumSize(QSize(26, 26));
+//    frontButton->setMinimumSize(QSize(26, 26));
+//    frontButton->setMaximumSize(QSize(26, 26));
     //frontButton->setCheckable(true);
-    frontButton->setIconSize(QSize(26, 26));
+    frontButton->setIconSize(QSize(32, 32));
     frontButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_is_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_is_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(frontButton);
     horizontalLayout_in_4->addWidget(frontButton);
 
     backButton = new QToolButton(ui->openGLWidget);
-    m_actiona_back = new QAction(QIcon(":pic/ui/fdm_back_icon_n.png"), tr("Rear View"));
+    QIcon iconBack;
+    iconBack.addPixmap(QPixmap(":pic/ui/fdm_back_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconBack.addPixmap(QPixmap(":pic/ui/fdm_back_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_back = new QAction(iconBack, tr("Rear View"));
     m_actiona_back->setCheckable(true);
     m_actiona_back->setChecked(false);
     backButton->setDefaultAction(m_actiona_back);
     backButton->setObjectName(QString::fromUtf8("backButton"));
     sizePolicy2.setHeightForWidth(backButton->sizePolicy().hasHeightForWidth());
     backButton->setSizePolicy(sizePolicy2);
-    backButton->setMinimumSize(QSize(26, 26));
-    backButton->setMaximumSize(QSize(26, 26));
+//    backButton->setMinimumSize(QSize(26, 26));
+//    backButton->setMaximumSize(QSize(26, 26));
     //backButton->setCheckable(true);
-    backButton->setIconSize(QSize(26, 26));
+    backButton->setIconSize(QSize(32, 32));
     backButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_back_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_back_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(backButton);
     horizontalLayout_in_4->addWidget(backButton);
 
     leftButton = new QToolButton(ui->openGLWidget);
-    m_actiona_left = new QAction(QIcon(":pic/ui/fdm_left_icon_n.png"), tr("Left View"));
+    QIcon iconLeft;
+    iconLeft.addPixmap(QPixmap(":pic/ui/fdm_left_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconLeft.addPixmap(QPixmap(":pic/ui/fdm_left_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_left = new QAction(iconLeft, tr("Left View"));
     m_actiona_left->setCheckable(true);
     m_actiona_left->setChecked(false);
     leftButton->setDefaultAction(m_actiona_left);
     leftButton->setObjectName(QString::fromUtf8("leftButton"));
     sizePolicy2.setHeightForWidth(leftButton->sizePolicy().hasHeightForWidth());
     leftButton->setSizePolicy(sizePolicy2);
-    leftButton->setMinimumSize(QSize(26, 26));
-    leftButton->setMaximumSize(QSize(26, 26));
+//    leftButton->setMinimumSize(QSize(26, 26));
+//    leftButton->setMaximumSize(QSize(26, 26));
     //leftButton->setCheckable(true);
-    leftButton->setIconSize(QSize(26, 26));
+    leftButton->setIconSize(QSize(32, 32));
     leftButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_left_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_left_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(leftButton);
     horizontalLayout_in_4->addWidget(leftButton);
 
     rightButton = new QToolButton(ui->openGLWidget);
-    m_actiona_right = new QAction(QIcon(":pic/ui/fdm_right_icon_n.png"), tr("Right View"));
+    QIcon iconRight;
+    iconRight.addPixmap(QPixmap(":pic/ui/fdm_right_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconRight.addPixmap(QPixmap(":pic/ui/fdm_right_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_right = new QAction(iconRight, tr("Right View"));
     m_actiona_right->setCheckable(true);
     m_actiona_right->setChecked(false);
     rightButton->setDefaultAction(m_actiona_right);
     rightButton->setObjectName(QString::fromUtf8("rightButton"));
     sizePolicy2.setHeightForWidth(rightButton->sizePolicy().hasHeightForWidth());
     rightButton->setSizePolicy(sizePolicy2);
-    rightButton->setMinimumSize(QSize(26, 26));
-    rightButton->setMaximumSize(QSize(26, 26));
+//    rightButton->setMinimumSize(QSize(26, 26));
+//    rightButton->setMaximumSize(QSize(26, 26));
     //rightButton->setCheckable(true);
-    rightButton->setIconSize(QSize(26, 26));
+    rightButton->setIconSize(QSize(32, 32));
     rightButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_right_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_right_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(rightButton);
     horizontalLayout_in_4->addWidget(rightButton);
 
     topButton = new QToolButton(ui->openGLWidget);
-    m_actiona_top = new QAction(QIcon(":pic/ui/fdm_on_icon_n.png"), tr("Top View"));
+    QIcon iconTop;
+    iconTop.addPixmap(QPixmap(":pic/ui/fdm_on_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconTop.addPixmap(QPixmap(":pic/ui/fdm_on_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_top = new QAction(iconTop, tr("Top View"));
     m_actiona_top->setCheckable(true);
     m_actiona_top->setChecked(false);
     topButton->setDefaultAction(m_actiona_top);
     topButton->setObjectName(QString::fromUtf8("topButton"));
-    topButton->setMinimumSize(QSize(26, 26));
-    topButton->setMaximumSize(QSize(26, 26));
+//    topButton->setMinimumSize(QSize(26, 26));
+//    topButton->setMaximumSize(QSize(26, 26));
     //topButton->setCheckable(true);
-    topButton->setIconSize(QSize(26, 26));
+    topButton->setIconSize(QSize(32, 32));
     topButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_on_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_on_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(topButton);
     horizontalLayout_in_4->addWidget(topButton);
 
     bottomButton = new QToolButton(ui->openGLWidget);
-    m_actiona_bottom = new QAction(QIcon(":pic/ui/fdm_under_icon_n.png.png"), tr("Bottom View"));
+    QIcon iconBottom;
+    iconBottom.addPixmap(QPixmap(":pic/ui/fdm_under_icon_n.png"),QIcon::Normal, QIcon::Off);
+    iconBottom.addPixmap(QPixmap(":pic/ui/fdm_under_icon_s.png"),QIcon::Normal, QIcon::On);
+    m_actiona_bottom = new QAction(iconBottom, tr("Bottom View"));
     m_actiona_bottom->setCheckable(true);
     m_actiona_bottom->setChecked(false);
     bottomButton->setDefaultAction(m_actiona_bottom);
     bottomButton->setObjectName(QString::fromUtf8("bottomButton"));
     sizePolicy2.setHeightForWidth(bottomButton->sizePolicy().hasHeightForWidth());
     bottomButton->setSizePolicy(sizePolicy2);
-    bottomButton->setMinimumSize(QSize(26, 26));
-    bottomButton->setMaximumSize(QSize(26, 26));
+//    bottomButton->setMinimumSize(QSize(26, 26));
+//    bottomButton->setMaximumSize(QSize(26, 26));
     //bottomButton->setCheckable(true);
-    bottomButton->setIconSize(QSize(26, 26));
+    bottomButton->setIconSize(QSize(32, 32));
     bottomButton->setStyleSheet(QString::fromUtf8("QToolButton{\n"
         "    border: none;\n"
         "    border-radius:5;\n"
-        "    image: url(:pic/ui/fdm_under_icon_n.png);\n"
         "    background-color:transparent;\n"
-        "\n"
-        "}\n"
-        "QToolButton:hover {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "}\n"
-        "\n"
-        "QToolButton:checked {\n"
-        "    background-color:rgb(208, 242, 216);\n"
-        "    image: url(:pic/ui/fdm_under_icon_s.png);\n"
-        "}\n"
-        "\n"
-        "QToolButton:pressed {\n"
-        "    background-color:rgb(97, 211, 125);\n"
-        "}"));
+        "}\n"));
     pButtonGroup->addButton(bottomButton);
     horizontalLayout_in_4->addWidget(bottomButton);
     horizontalSpacer_in_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
@@ -732,6 +646,7 @@ void viewWidget::initForm()
     innerWallLayout->setObjectName(QString::fromUtf8("innerWallLayout"));
     innerWallLayout->setContentsMargins(0, 0, 0, 0);
     innerWallLabelC = new QPushButton(ui->widget);
+    innerWallLabelC->setFocusPolicy(Qt::NoFocus);
     innerWallLabelC->setObjectName(QString::fromUtf8("innerWallLabelC"));
     innerWallLabelC->setStyleSheet(QString::fromUtf8("background-color: rgb(80,99,92);\n"
         "border-radius:5"));//QString::fromUtf8("background-color:rgb(51, 51, 51)\n""border-radius:5"));
@@ -782,6 +697,7 @@ void viewWidget::initForm()
     outerWallLayout->setObjectName(QString::fromUtf8("outerWallLayout"));
     outerWallLayout->setContentsMargins(0, 0, 0, 0);
     outerWallLabelC = new QPushButton(ui->widget);
+    outerWallLabelC->setFocusPolicy(Qt::NoFocus);
     outerWallLabelC->setObjectName(QString::fromUtf8("outerWallLabelC"));
     outerWallLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 144, 82, 1);\n"
         "border-radius:5"));
@@ -823,6 +739,7 @@ void viewWidget::initForm()
     skinLayout->setObjectName(QString::fromUtf8("skinLayout"));
     skinLayout->setContentsMargins(0, 0, 0, 0);
     skinLabelC = new QPushButton(ui->widget);
+    skinLabelC->setFocusPolicy(Qt::NoFocus);
     skinLabelC->setObjectName(QString::fromUtf8("skinLabelC"));
     skinLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(97, 211, 125, 1);\n"
         "border-radius:5"));
@@ -864,6 +781,7 @@ void viewWidget::initForm()
     helperLayout->setObjectName(QString::fromUtf8("helperLayout"));
     helperLayout->setContentsMargins(0, 0, 0, 0);
     helperLabelC = new QPushButton(ui->widget);
+    helperLabelC->setFocusPolicy(Qt::NoFocus);
     helperLabelC->setObjectName(QString::fromUtf8("helperLabelC"));
     helperLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(71, 143, 255, 1);\n"
         "border-radius:5"));
@@ -905,6 +823,7 @@ void viewWidget::initForm()
     fillLayout->setObjectName(QString::fromUtf8("fillLayout"));
     fillLayout->setContentsMargins(0, 0, 0, 0);
     fillLabelC = new QPushButton(ui->widget);
+    fillLabelC->setFocusPolicy(Qt::NoFocus);
     fillLabelC->setObjectName(QString::fromUtf8("fillLabelC"));
     fillLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(138, 76, 216, 1);\n"
         "border-radius:5"));
@@ -945,6 +864,7 @@ void viewWidget::initForm()
     travelLayout->setObjectName(QString::fromUtf8("travelLayout"));
     travelLayout->setContentsMargins(0, 0, 0, 0);
     travelLabelC = new QPushButton(ui->widget);
+    travelLabelC->setFocusPolicy(Qt::NoFocus);
     travelLabelC->setObjectName(QString::fromUtf8("travelLabelC"));
     travelLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(91, 207, 207, 1);\n"
         "border-radius:5"));
@@ -987,6 +907,7 @@ void viewWidget::initForm()
     zlapLayout->setObjectName(QString::fromUtf8("zlapLayout"));
     zlapLayout->setContentsMargins(0, 0, 0, 0);
     zlapLabelC = new QPushButton(ui->widget);
+    zlapLabelC->setFocusPolicy(Qt::NoFocus);
     zlapLabelC->setObjectName(QString::fromUtf8("zlapLabelC"));
     zlapLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 255, 255, 1);\n"
         "border-radius:5"));
@@ -1027,6 +948,7 @@ void viewWidget::initForm()
     supportLayout->setObjectName(QString::fromUtf8("supportLayout"));
     supportLayout->setContentsMargins(0, 0, 0, 0);
     supportLabelC = new QPushButton(ui->widget);
+    supportLabelC->setFocusPolicy(Qt::NoFocus);
     supportLabelC->setObjectName(QString::fromUtf8("supportLabelC"));
     supportLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(249, 211, 86, 1);\n"
         "border-radius:5"));
@@ -1068,6 +990,7 @@ void viewWidget::initForm()
     unkonwnLayout->setObjectName(QString::fromUtf8("unkonwnLayout"));
     unkonwnLayout->setContentsMargins(0, 0, 0, 0);
     unkonwnLabelC = new QPushButton(ui->widget);
+    unkonwnLabelC->setFocusPolicy(Qt::NoFocus);
     unkonwnLabelC->setObjectName(QString::fromUtf8("unkonwnLabelC"));
     unkonwnLabelC->setStyleSheet(QString::fromUtf8("background-color: rgba(255, 105, 105, 1);\n"
         "border-radius:5"));
@@ -2117,11 +2040,12 @@ void viewWidget::initForm()
 //    horizontalSpacer_ExportLayout12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExportLayout->addItem(horizontalSpacer_ExportLayout12);
     ExportButton = new QPushButton(ui->widget);
+    ExportButton->setFocusPolicy(Qt::NoFocus);
     ExportButton->setObjectName(QString::fromUtf8("ExportButton"));
     ExportButton->setText(tr("Export"));
     QSizePolicy bottomsizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
     ExportButton->setSizePolicy(bottomsizePolicy);
-    ExportButton->setFixedHeight(40);
+    ExportButton->setFixedHeight(30);
 //    ExportButton->setMinimumSize(252,40);
 //    ExportButton->setMaximumSize(252,40);
     ExportButton->setStyleSheet(QString::fromUtf8("QPushButton{\n"
@@ -2163,9 +2087,10 @@ void viewWidget::initForm()
 //    horizontalSpacer_Exit14 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 //    ExitLayout->addItem(horizontalSpacer_Exit14);
     ExitButton = new QPushButton(ui->widget);
+    ExitButton->setFocusPolicy(Qt::NoFocus);
     ExitButton->setObjectName(QString::fromUtf8("ExitButton"));
     ExitButton->setText(tr("Print"));
-    ExitButton->setFixedHeight(40);
+    ExitButton->setFixedHeight(30);
     ExitButton->setSizePolicy(bottomsizePolicy);
 //    ExitButton->setMinimumSize(252,40);
 //    ExitButton->setMaximumSize(252,40);
@@ -3040,8 +2965,14 @@ void viewWidget::reSetGcodePath( std::string gcodePath,bool isAiMode, int gcode_
         auto poolThread = QThread::currentThread();
         
         QMetaObject::invokeMethod(QCoreApplication::instance(), [&] {
-            this->ui->openGLWidget->cnt = new QOpenGLContext();
-            this->ui->openGLWidget->m_offscreenSurface = new QOffscreenSurface();
+            if(this->ui->openGLWidget->cnt == nullptr)
+            {
+                this->ui->openGLWidget->cnt = new QOpenGLContext();
+            }
+            if(this->ui->openGLWidget->m_offscreenSurface == nullptr)
+            {
+                this->ui->openGLWidget->m_offscreenSurface = new QOffscreenSurface();
+            }
             this->ui->openGLWidget->m_offscreenSurface->setFormat(this->ui->openGLWidget->context()->format());
             this->ui->openGLWidget->m_offscreenSurface->create();
             this->ui->openGLWidget->doneCurrent();
@@ -3108,6 +3039,11 @@ void viewWidget::getGcodeTargetTemperature(float& extruderTemperature, float& be
             break;
         }
     }
+}
+
+bool viewWidget::checkLastFileComplete()
+{
+  return this->lastShowFileComplete;
 }
 
 void viewWidget::setDefaultScene()
@@ -3185,7 +3121,7 @@ void viewWidget::changeSlider()
         
         if(!printModeInit || !innerModeInit)
         {
-            control::MessageDialog a("warning",tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
+            control::MessageDialog a(tr("Warning"), tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
             a.exec();
         }
         if(printModeInit){
@@ -3195,7 +3131,7 @@ void viewWidget::changeSlider()
         }
         this->ExitButton->setEnabled(false);
         this->ExportButton->setEnabled(false);
-
+        this->lastShowFileComplete = false;
         return;
     }else{
         this->verticalSlider->show();
@@ -3205,6 +3141,7 @@ void viewWidget::changeSlider()
         this->pushButton_9->show();//play button
         this->ExitButton->setEnabled(true);
         this->ExportButton->setEnabled(true);
+        this->lastShowFileComplete = true;
     }
 
     this->verticalSlider->setRange(1, layersize);
@@ -3433,7 +3370,7 @@ void viewWidget::on_pushButton_quit_clicked()
         sendStr = this->ui->openGLWidget->sendAcodeToPrintCtr();
         if(sendStr.size() <= 1)
         {
-            control::MessageDialog a("warning","NO GCODE HERE!", 0x00400000);
+            control::MessageDialog a(tr("Warning"),tr("No GCODE here!"), 0x00400000);
             a.exec();
             return ;
         }

@@ -58,7 +58,7 @@ private:
     QString m_affects;
     QString m_affectedBy;
 
-    QQuickView *m_quickView = nullptr;
+    QQuickWidget *m_quickView = nullptr;
 };
 
 

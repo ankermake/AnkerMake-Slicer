@@ -14,7 +14,7 @@ Item {
     signal showAllChildern(string category)
     signal showTooltip(string description, point p)
     signal hideTooltip()
-
+    //当item为子节点时， 缩进 占位
     Item {
         id: itemSpace
         anchors.left: parent.left

@@ -12,7 +12,7 @@ using namespace control;
 SavePanel::SavePanel(QWidget *parent): BubbleWidget(parent),m_messageDialog(nullptr)
 {
     //auto vlayout = new QVBoxLayout(this);
-    this->setFixedHeight(40);
+    this->setFixedHeight(30);
     this->setBackgroundColor(QColor(32, 33, 35));
     auto hLayout = new QHBoxLayout(this);
     hLayout->setSpacing(12);
@@ -27,7 +27,7 @@ SavePanel::SavePanel(QWidget *parent): BubbleWidget(parent),m_messageDialog(null
 
     saveBtn = new QPushButton(this);
     saveBtn->setFont(font);
-    saveBtn->setMinimumHeight(40);
+    saveBtn->setMinimumHeight(30);
     saveBtn->setObjectName(QString::fromUtf8("Save Parameters"));
     saveBtn->setText(tr("Save"));
     saveBtn->setFocusPolicy(Qt::NoFocus);
@@ -36,7 +36,7 @@ SavePanel::SavePanel(QWidget *parent): BubbleWidget(parent),m_messageDialog(null
     saveAsBtn = new QPushButton(this);
     saveAsBtn->setFont(font);
     saveAsBtn->setObjectName(QString::fromUtf8("Save As Parameters"));
-    saveAsBtn->setMinimumHeight(40);
+    saveAsBtn->setMinimumHeight(30);
     saveAsBtn->setText(tr("Save As"));
     connect(saveAsBtn, &QPushButton::clicked,this, &SavePanel::doSaveAsClick);
     saveAsBtn->setFocusPolicy(Qt::NoFocus);

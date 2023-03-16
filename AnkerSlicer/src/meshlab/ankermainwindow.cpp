@@ -22,6 +22,7 @@
 #include "common/file_property/export_model_thread.h"
 #include "common/file_property/read_mesh.h"
 #include "qframelesshelper.h"
+#include  <QScreen>
 #ifdef _WIN32
 #include <windows.h>
 #include <Dbt.h>
@@ -125,7 +126,7 @@ void AnkerMainWindow::initMainWindow() {
     TFunction("");
     QSettings settings;
     setContextMenuPolicy(Qt::NoContextMenu);
-    setWindowIcon(QIcon(":/logo_AnkerMake.png")); 
+   
     setWindowTitle("AnkerMake");
 
     setMinimumSize(1200, 720);
@@ -139,17 +140,14 @@ void AnkerMainWindow::initRichParameterList()
 
 
     //    QSettings settings;
-    
-    
-    //       **/
-    //        QString paramName = AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE;
-    //        Point3m paramDefval = Point3m(225, 225, 250);
-    //        RichPoint3f param = RichPoint3f(paramName, paramDefval);
-    //        defaultGlobalParams.addParam(param);
-    //    }
+    {  
+        defaultGlobalParams.addParam(RichPoint3f(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE, Point3m(235.0f, 235.0f, 250.0f)));
+        defaultGlobalParams.addParam(RichBool(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE, false));
+        defaultGlobalParams.addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, 90.0f));
+    }
 
     static auto createMachineSize = [this]() {
-        {
+        {  
             const RichPoint3f& param = static_cast<const RichPoint3f&>(defaultGlobalParams.getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE));
             mainMachineBoxChanged(param.value());
             QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, this, &AnkerMainWindow::mainMachineBoxChanged);
@@ -195,7 +193,7 @@ void AnkerMainWindow::initRichParameterList()
 
     static std::function<void(void)> delay_createMachineSize;
     delay_createMachineSize = [&](){
-        if(defaultGlobalParams.hasParameter(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE)){
+        if(curScene){
             createMachineSize();
             qDebug() << "createMachineSize";
         }
@@ -241,7 +239,7 @@ void AnkerMainWindow::initFdmWidget()
     FdmMainWidget* mainwidget = new FdmMainWidget(messageProcessing, m_mainTitleBar, m_controlManager, this);
     mainwidget->setMainWindowId(window()->winId());
     connect(mainwidget, &FdmMainWidget::unloadPlugins, this, &AnkerMainWindow::unloadPluginsSlot);
-    connect(mainwidget, &FdmMainWidget::closeMainWindow, this, &AnkerMainWindow::onButtonCloseClicked);
+    connect(mainwidget, &FdmMainWidget::otaNeedSaveProjectSignal, this, &AnkerMainWindow::otaNeedSaveProject);
     
     connect(this, &AnkerMainWindow::pluginsUnloaded, mainwidget, &FdmMainWidget::pluginsUnloaded);
 
@@ -547,6 +545,52 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
     emit openFileSucessful(openSuccessFileList);
 
     // insertRecent(openSuccessFileList);
+}
+
+void AnkerMainWindow::otaNeedSaveProject(const QString &filePath)
+{
+    AkUtil::TFunction("");
+    
+    MessageDialog messageDialog(tr("Notice"), tr("Your changes will be lost without saving. Do you want to save now?"),
+                                MessageDialog::SAVE | MessageDialog::DoNotSave);
+    int button = messageDialog.exec();
+    if(button == MessageDialog::SAVE | button == MessageDialog::DoNotSave)
+    {
+        if(button == MessageDialog::SAVE) {
+            qDebug() << " button ==" << button << "save  ==" << MessageDialog::SAVE  << " not save ==" <<  MessageDialog::DoNotSave;
+             slotSaveProject();
+        }
+    }
+    m_ota = true;
+
+#ifdef __APPLE__
+     //TODO:
+    QString cmdStr = QString("open \"") + filePath + QString("\"");
+    system(cmdStr.toStdString().c_str());
+    close();
+    
+    //emit unloadPluginsSignal();
+
+
+//    sleep(1);
+//    QApplication::exit(0);
+#else
+#ifdef Q_OS_WIN
+      QString update_dir = QDir::toNativeSeparators(filePath);
+      qDebug()  << "update_dir: " << update_dir;
+      //std::unique_ptr<QProcess> cmd(new QProcess);
+      QProcess *cmd = new QProcess();
+      QStringList args;
+      args = QStringList({"-Command", QString("Start-Process %1 /S -Verb runAs").arg(update_dir)});
+      AkUtil::TDebug(update_dir);
+      cmd->start("powershell", args);
+      //qDebug()<<update_app_dir<<args;
+#else
+    //TODO :linux
+#endif
+
+#endif
+
 }
 
 void AnkerMainWindow::importModelProgress(int pos, const QString& str)
@@ -873,7 +917,7 @@ void AnkerMainWindow::saveMesh()
     }
     CMeshO cm;
     ProjectLoadSave::getInstance().mergeModel(modelPtrList, cm);
-    exportMesh_ak((*modelsPtr.begin())->getObjectName(), cm);
+    exportMesh_ak(modelPtrList[0]->getObjectName(), cm);
     //saveAs_ak();
 }
 
@@ -949,6 +993,7 @@ void AnkerMainWindow::slotQuit()
 
 void AnkerMainWindow::open()
 {
+    TFunction("");
     QString  filter = openFilter(m_projectSuffix, m_meshSuffixList, m_gcodeSuffix, m_acodeSuffix);
     // qDebug() << " str == " << filter;
     QStringList recentList = m_settings->readRecent();
@@ -958,10 +1003,7 @@ void AnkerMainWindow::open()
     }
     QDir dir(lastPath);
     dir.cdUp();
-    //QFileInfo info(lastPath);
-   // info.absoluteFilePath();
-    QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), /*info.absolutePath()*/dir.path(), filter/*tr("files (*akpro; *obj; *stl)")*/);
-    //qDebug() << "open fileNameList: " << fileNameList;
+    QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), dir.path(), filter);
     if (!fileNameList.isEmpty()) {
         openFileList(fileNameList);
     }
@@ -1032,6 +1074,7 @@ bool AnkerMainWindow::importMeshWithLayerManagement_ak(QString fileName)
 
 bool AnkerMainWindow::QCallBack_ak(const int pos, const char* str)
 {
+    //qDebug() << "pos: " << pos << ", str: " << str;
     if (importModelThread != nullptr && modelImporting)
     {
         if (lastPos == pos) 
@@ -1431,6 +1474,10 @@ void AnkerMainWindow::importMesh(QString fileName)
 
 void AnkerMainWindow::closeEvent(QCloseEvent* event)
 {
+    if(m_ota)
+    {
+        return QMainWindow::closeEvent(event);
+    }
     
     MessageDialog messageDialog(tr("Notice"), tr("Your changes will be lost without saving. Do you want to save now?"),
                                 MessageDialog::CANCEL | MessageDialog::SAVE | MessageDialog::DoNotSave);
@@ -1453,6 +1500,7 @@ void AnkerMainWindow::closeEvent(QCloseEvent* event)
         
         //unloadPluginsSlot();
         QMainWindow::closeEvent(event);
+
         return;
 
     }
@@ -1778,14 +1826,20 @@ void AnkerMainWindow::onButtonMinClicked()
 
 void AnkerMainWindow::onButtonRestoreClicked()
 {
-    showNormal();
+    TFunction("");
+    //showNormal();
+
+    showNormalWin();
 }
 
 void AnkerMainWindow::onButtonMaxClicked()
 {
-    showMaximized();
-    QDesktopWidget *desk = QApplication::desktop();
-    setGeometry(desk->availableGeometry());
+    TFunction("");
+    //showMaximized();
+    // QDesktopWidget *desk = QApplication::desktop();
+    // setGeometry(desk->availableGeometry());
+
+    showMaximizedWin();
 }
 
 void AnkerMainWindow::onButtonCloseClicked()
@@ -1807,6 +1861,33 @@ void AnkerMainWindow::unloadPluginsSlot()
         PM.unloadPlugin(fp);
     }
     emit pluginsUnloaded();
+}
+
+void AnkerMainWindow::showNormalWin()
+{
+    QScreen* screen =  this->screen();
+    if(screen)
+    {
+        QSize minSZ= this->minimumSize();
+        QRect availableGeometry = screen->availableGeometry();
+        // set win size to 70% of screen size
+        int w = availableGeometry.width()*0.7 > minSZ.width() ? availableGeometry.width()*0.7 : minSZ.width();
+        int h = availableGeometry.height()*0.7 > minSZ.height() ? availableGeometry.height()*0.7 : minSZ.height();
+        int x = availableGeometry.x() + (availableGeometry.width() - w)*0.5;
+        int y = availableGeometry.y() + (availableGeometry.height() -h)*0.5;
+        showNormal();
+        this->setGeometry(x,y,w,h);
+    }
+}
+
+void AnkerMainWindow::showMaximizedWin()
+{
+    QScreen* screen = this->screen();
+    if(screen)
+    {
+        QRect availableGeometry = screen->availableGeometry();
+        this->setGeometry(availableGeometry.x(),availableGeometry.y(),availableGeometry.width(), availableGeometry.height());
+    }
 }
 
 bool AnkerMainWindow::eventFilter(QObject *watched, QEvent *event)

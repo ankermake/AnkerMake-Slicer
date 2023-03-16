@@ -34,6 +34,13 @@ public:
                         int buttons, QWidget *parent = nullptr);
 
     
+    void setBottonText(BUTTONFLAG botton, const QString &string);
+    
+    void setDetailText(const QString &text);
+    
+    void setDetailVisible(bool show);
+    
+
     void setEditMode(bool edit);
     
     void setValidator(const QValidator *validator);
@@ -67,6 +74,7 @@ private slots:
 private:
    QLabel *m_title;
    QLabel *m_description;
+   QLabel *m_detail;
    QLineEdit *m_edit;
    QLabel *m_warning;
    QPushButton *m_leftButton;

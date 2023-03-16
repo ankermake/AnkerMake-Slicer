@@ -629,7 +629,8 @@ void FffGcodeWriter::processStartingCode(const SliceDataStorage& storage, const 
         gcode.writeCodeStored(prefix.c_str(), 0, 400);
     }
 
-    gcode.writeComment("Generated with AnkerSlicer " VERSION);
+    //  delete VERSION @2022-10-19 by CL
+    gcode.writeComment("Generated with AnkerSlicer ");
 
     if (gcode.getFlavor() == EGCodeFlavor::GRIFFIN)
     {
@@ -1445,7 +1446,16 @@ void FffGcodeWriter::addMeshLayerToGCode(const SliceDataStorage& storage, const 
         for (unsigned int part_idx = 0; part_idx < layer.parts.size(); part_idx++)
         {
             const SliceLayerPart& part = layer.parts[part_idx];
-            part_order_optimizer.addPolygon((part.insets.size() > 0) ? part.insets[0][0] : part.outline[0]);
+            
+            //part_order_optimizer.addPolygon((part.insets.size() > 0) ? part.insets[0][0] : part.outline[0]);
+            if (part.insets.size() > 0)
+            {
+                if (part.insets[0].size() > 0) { part_order_optimizer.addPolygon(part.insets[0][0]);}
+            }
+            else
+            {
+                if (part.outline.size() > 0) { part_order_optimizer.addPolygon(part.outline[0]);}
+            }
         }
         part_order_optimizer.optimize();
         std::vector<Point3> layer_point;
@@ -2333,6 +2343,7 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 {
                     processed_inset_number = part.insets.size() - 1 - inset_number;
                 }
+
 
                 // Outer wall is processed
                 if (processed_inset_number == 0)
