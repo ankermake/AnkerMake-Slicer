@@ -119,6 +119,10 @@ bool EditMeshMoveTransformTool::startAnkerEdit(ActionEditTool * action, void * a
 #endif
 
     curScene = static_cast<CHScene*>(arg1);
+    if (nullptr == curScene)
+    {
+        return false;
+    }
     if (curScene->m_pickCommand->m_selectedObjs.size() == 0)
     {
         return false;

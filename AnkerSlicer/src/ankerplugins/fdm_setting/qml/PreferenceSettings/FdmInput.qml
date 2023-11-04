@@ -35,7 +35,7 @@ Rectangle {
             Layout.fillHeight: true
             inputValidator:RegExpValidator{regExp: /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ }
             onInputTextEdited: {
-                //console.log("textInput == ", textInput, "vvvvalue = ", value, "disPlayTextInput =", input.disPlayTextInput)
+                //console.log("textInput === ", textInput, "vvvvalue = ", value, "disPlayTextInput =", input.disPlayTextInput)
                 if(textInput.length  <= 0) {
                     textEditFinished("0")
                 }else {

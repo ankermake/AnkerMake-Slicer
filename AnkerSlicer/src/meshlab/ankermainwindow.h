@@ -78,7 +78,7 @@ class AnkerMainWindow : public AkMainWindowPre
 public:
     explicit AnkerMainWindow();
     ~AnkerMainWindow();
-
+    FdmMainWidget* mainwidget = nullptr;
 private:
     void init();  
 
@@ -132,6 +132,9 @@ public slots:
     void otaNeedSaveProject(const QString &filePath);
 
 private slots:
+    void sendCloseVideoStreamMSG();
+    void videoStatusChangeSlot(bool isPlaying);
+
     void slotSaveProject();
 
     void slotSaveAsProject();
@@ -142,6 +145,7 @@ private slots:
     void saveAllMesh();
 
     void open();
+    void OPenOnPreview();
 
 //    void importMesh_ak(QString fileName = QString());
     void importMesh(QString fileName = QString());
@@ -226,6 +230,8 @@ private:
 
     bool mousePressedStatus = false;
     bool m_ota = false;
+    bool m_QuitAppAfterVideoClose = false;
+    bool m_videoPlaying = false;
 protected:
     
     void closeEvent(QCloseEvent* event) override;

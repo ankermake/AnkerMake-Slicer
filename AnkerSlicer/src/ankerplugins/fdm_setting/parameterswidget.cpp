@@ -131,8 +131,10 @@ void ParametersWidget::importButtonClicked()
     QString lastPath = QApplication::applicationDirPath();
     QString filePath= QFileDialog::getOpenFileName(this, tr("Import"), lastPath, "files (*.ini) ;; files(*)");
     qDebug() << " importButtonClicked  filepath = " << filePath;
-    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Material);
-    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Parameter);
+//    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Material);
+//    this->m_controlmanager->openPreferences( AkConst::EWidgetType::Parameter);
+    this->m_controlmanager->selectIndex(AkConst::EWidgetType::Material);
+    this->m_controlmanager->selectIndex(AkConst::EWidgetType::Parameter);
     if(filePath.isEmpty()) {
         return;
     }
@@ -146,8 +148,10 @@ void ParametersWidget::exportButtonClicked(QString name)
 {
     QString lastPath = QApplication::applicationDirPath() + "/" + name + ".ini";
     QString fileName = QFileDialog::getSaveFileName(this, tr("Export"), lastPath, "files (*.ini) ;; files(*)");
-    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Material);
-    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Parameter);
+//    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Material);
+//    this->m_controlmanager->openPreferences(AkConst::EWidgetType::Parameter);
+    this->m_controlmanager->selectIndex(AkConst::EWidgetType::Material);
+    this->m_controlmanager->selectIndex(AkConst::EWidgetType::Parameter);
     if(fileName.isEmpty()) {
         return;
     }

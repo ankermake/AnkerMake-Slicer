@@ -48,7 +48,7 @@ public:
     void setRootNode(FdmParamNode *root);
 
 private:
-    QString roleToString(int role) const;
+    QByteArray roleToString(int role) const;
     FdmParamNode *indexToNode(const QModelIndex &index) const;
     QModelIndex nodeToIndex(FdmParamNode *node)const;
 

@@ -69,7 +69,7 @@ void CopyRightWidget::initUi()
     layout->addWidget(m_tableWidget,0,0);
 
    // mainLayout->addWidget(m_tableWidget,1,0);
-    QLabel *labelCopyrightDescription = new QLabel(tr("Copyright@2021 Anker Innovations Limited"),this);
+    QLabel *labelCopyrightDescription = new QLabel(tr("Copyright?2021 Anker Innovations Limited"),this);
     labelCopyrightDescription->setAlignment(Qt::AlignHCenter);
     layout->addWidget(labelCopyrightDescription,1,0,Qt::AlignHCenter|Qt::AlignBottom);
 

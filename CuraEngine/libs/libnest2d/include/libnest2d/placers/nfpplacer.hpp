@@ -896,14 +896,14 @@ private:
 
                             switch (type)
                             {
-                            case 3:score = pl::distance(ibb.center(),                           
+                            case 3:score = pl::distance(ibb.center(),                           //到中心距离最小化,从中心往外排样，starting_point = CENTER，alignment = DONT_ALIGN或alignment = CENTER
                                 binbb.center()) / norm; break;
-                            case 4:score = fabs(ibb.center().Y - binH / 2)/ binH; break;        
-                            case 5:score = fabs(ibb.center().X - binW / 2)/ binW; break;        
-                            case 6:score = ibb.center().X / binW; break;                        
-                            case 7:score = (binW - ibb.center().X) / binW; break;               
-                            case 8:score = ibb.center().Y / binH; break;                        
-                            case 9:score = (binH - ibb.center().Y) / binH; break;               
+                            case 4:score = fabs(ibb.center().Y - binH / 2)/ binH; break;        //从Y中轴线向上下两方向排样，starting_point = CENTER，alignment = DONT_ALIGN或alignment = CENTER
+                            case 5:score = fabs(ibb.center().X - binW / 2)/ binW; break;        //从X中轴线向左右两方向排样，starting_point = CENTER，alignment = DONT_ALIGN或alignment = CENTER
+                            case 6:score = ibb.center().X / binW; break;                        //从X轴0向右方向排样，starting_point = BOTTOM_LEFT或starting_point = TOP_LEFT，alignment = DONT_ALIGN
+                            case 7:score = (binW - ibb.center().X) / binW; break;               //从X轴max向左方向排样，starting_point = BOTTOM_RIGHT或starting_point = TOP_RIGHT，alignment = DONT_ALIGN
+                            case 8:score = ibb.center().Y / binH; break;                        //从Y轴0向下方向排样，starting_point = BOTTOM_LEFT或starting_point = BOTTOM_RIGHT，alignment = DONT_ALIGN
+                            case 9:score = (binH - ibb.center().Y) / binH; break;               //从Y轴max向上方向排样，starting_point = TOP_LEFT或starting_point = TOP_RIGHT，alignment = DONT_ALIGN
                             }
 
                             double fullbbH = fullbb.height();                       
@@ -914,7 +914,7 @@ private:
                             fullbbW = fullbbW > fullbbW_cal ? fullbbW : fullbbW_cal;
                             double totalArea = fullbbH * fullbbW;
 
-                            double area_score = 1 - pile_area / totalArea;
+                            double area_score = 1 - pile_area / totalArea;//最小面积加权
 
                             score = score * 0.5 + area_score * 0.5;
 
@@ -965,7 +965,7 @@ private:
                             fullbbH = fullbbH > fullbbH_cal ? fullbbH : fullbbH_cal;
                             fullbbW = fullbbW > fullbbW_cal ? fullbbW : fullbbW_cal;
                             double totalArea = fullbbH * fullbbW;
-                            double area_score = 1 - pile_area / totalArea;
+                            double area_score = 1 - pile_area / totalArea;//最小面积加权
                             score = score * 0.5 + area_score * 0.5;
                         }
 
@@ -1151,7 +1151,7 @@ private:
 
         if (bNest2d && can_pack)
         {
-            
+            //判断当前模型排进去后是否会出界，若出界，将其转至原点位置
             Vertex origin_tr = { 0, 0 };
             auto trans_item = item.transformedShape_s();
             Clipper3r::Clipper a;
@@ -1172,7 +1172,7 @@ private:
             {
                 pack_out = true;
                 item.translation(origin_tr);
-                item.rotation(-0.5*Pi);
+                item.rotation(-0.5*Pi);//超界标志
             }
         }
 
@@ -1183,7 +1183,7 @@ private:
                 ret = PackResult(item);
         } else {
             item.translation({});
-            item.rotation(-0.5 * Pi);
+            item.rotation(-0.5 * Pi);//超界标志
             ret = PackResult(item, best_overfit);
         }
 

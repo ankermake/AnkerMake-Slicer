@@ -56,7 +56,7 @@ public:
     void setListDatas(const QList<FdmParamNode *> &datas);
 
 private:
-    QString roleToString(int role) const;
+    QByteArray roleToString(int role) const;
     void setChildNodeVisibility(int row, bool visbility);
 
 signals:

@@ -111,6 +111,20 @@
         <file>images/icon/fdmSlicerTab.png</file>
         <file>images/icon/logo_icon.png</file>
         <file>images/icon/fdm_title_close_icon.png</file>
+        <file>images/icon/Device-n.png</file>
+        <file>images/icon/Device-s.png</file>
+        <file>images/icon/Preview-n.png</file>
+        <file>images/icon/Preview-s.png</file>
+        <file>images/icon/slice-n.png</file>
+        <file>images/icon/slice-s.png</file>
+        <file>images/icon/guidePageBackground.png</file>
         <file>qss/NotoSansJP-Regular.ttf</file>
+        <file>images/survey_info_icon.png</file>
+        <file>images/icon/fdm-slice-tab-s.png</file>
+        <file>images/icon/fdm-slice-tab-n.png</file>
+        <file>images/icon/fdm-preview-tab-s.png</file>
+        <file>images/icon/fdm-device-tab-n.png</file>
+        <file>images/icon/fdm-preview-tab-n.png</file>
+        <file>images/icon/fdm-device-tab-s.png</file>
     </qresource>
 </RCC>

@@ -43,7 +43,7 @@ macx:QMAKE_POST_LINK = " \ #every plugin needs to point to meshlab-common placed
 
 win32-msvc:DEFINES += GLEW_STATIC _USE_MATH_DEFINES
 
-INCLUDEPATH *= ../.. $$VCGDIR $$EIGENDIR ../../..
+INCLUDEPATH *= ../.. $$VCGDIR $$EIGENDIR $$CLIPPERDIR ../../..
 !CONFIG(system_glew): INCLUDEPATH *=  $$GLEWDIR/include
 DEPENDPATH += ../.. $$VCGDIR
 

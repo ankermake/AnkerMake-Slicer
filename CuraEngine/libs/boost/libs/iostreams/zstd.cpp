@@ -1,4 +1,4 @@
-
+// (C) Copyright Reimar Döffinger 2018.
 // Based on zstd.cpp by:
 // (C) Copyright Milan Svoboda 2008.
 // (C) Copyright Jonathan Turkanis 2003.

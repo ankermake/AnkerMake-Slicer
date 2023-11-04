@@ -41,11 +41,14 @@ public :
 signals:
     void cancel();
     void progressClosed();
+    void closeSignal(bool);
 
 public slots:
     void cancelButtonClick();
     
     void setValue(int value);
+
+    void autoCloseDialog();
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -59,6 +62,9 @@ private:
     bool m_autoClosed;
     bool m_alreadyClosed;
 
+    int m_lastValue = 0;
+    int m_currentValue = 0;
+    QTimer* m_timer;
 };
 
 #endif // PROGRESSDIALOG_H

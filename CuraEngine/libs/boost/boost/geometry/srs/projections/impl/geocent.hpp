@@ -362,7 +362,7 @@ inline void pj_Convert_Geocentric_To_Geodetic (GeocentricInfo<T> const& gi,
 /*
 * Reference...
 * ============
-
+* Wenzel, H.-G.(1985): Hochauflösende Kugelfunktionsmodelle für
 * das Gravitationspotential der Erde. Wiss. Arb. Univ. Hannover
 * Nr. 137, p. 130-131.
 
@@ -436,7 +436,7 @@ static const int maxiter = 30;
 
 /* --------------------------------------------------------------
  * Following iterative algorithm was developed by
-
+ * "Institut für Erdmessung", University of Hannover, July 1988.
  * Internet: www.ife.uni-hannover.de
  * Iterative computation of CPHI,SPHI and Height.
  * Iteration of CPHI and SPHI to 10**-12 radian resp.

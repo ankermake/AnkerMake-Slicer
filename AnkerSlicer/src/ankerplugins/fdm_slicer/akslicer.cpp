@@ -116,6 +116,7 @@ void AkSlicer::slice(QString stlFile,QString destFile, QString userSetting)
     
     this->sliceInfo->stlFile = stlFile;
     this->sliceInfo->gcodeFile = destFile;
+    this->sliceInfo->meshCount = visibleMeshCount;
     this->sliceInfo->originalStlName = this->originalStlName;
     
     auto getSptMeshCmd = [](QString meshFile)->QString {
@@ -354,6 +355,10 @@ void AkSlicer::setSupportMeshes(const QStringList &newSupportMeshes)
     supportMeshes = newSupportMeshes;
 }
 
+void AkSlicer::setVisibleMeshCount(int meshCount)
+{
+    visibleMeshCount = meshCount;
+}
 
 const QString AkSlicer::getStlPath() const
 {
@@ -506,20 +511,9 @@ void AkSlicer::newStdErrGeneratedChars(QByteArray res)
     QStringList lines = msg.split('\r',Qt::SkipEmptyParts);
     foreach(QString line, lines)
     {
-#if defined(DEBUG_BY_CL) // add  @2022-05-15 by CL
-        if(true || line.startsWith("$CL$"))  
-        {
-            
-            QString logPath = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
-            QString logFile = QDir(logPath).absoluteFilePath("engine.log");
-
-            AkUtil::IoApi::touch(logFile);
-            AkUtil::IoApi::append(logFile, line);
-            qDebug() << line;
-        }
-#endif
-
-        
+        if( (line = line.trimmed()).isEmpty()){continue;}
+        TInfo(line);  
+      
         if (line.indexOf("[ERROR]") >= 0)
         {
             emit progress(SliceStep::Slice, SliceStatus::Error,0, line);

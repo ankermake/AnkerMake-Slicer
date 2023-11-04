@@ -632,6 +632,13 @@ void FffGcodeWriter::processStartingCode(const SliceDataStorage& storage, const 
     //  delete VERSION @2022-10-19 by CL
     gcode.writeComment("Generated with AnkerSlicer ");
 
+    //Binary for fast mode
+    const Settings& mesh_group_settings = Application::getInstance().current_slice->scene.current_mesh_group->settings;
+    if (mesh_group_settings.get<std::string>("param_print_mode") != "normal")
+    {
+        gcode.writeLine("M4899 T3");
+    }
+
     if (gcode.getFlavor() == EGCodeFlavor::GRIFFIN)
     {
         std::ostringstream tmp;
@@ -643,8 +650,6 @@ void FffGcodeWriter::processStartingCode(const SliceDataStorage& storage, const 
         
         processInitialLayerTemperature(storage, start_extruder_nr, true);
     }
-
-    const Settings& mesh_group_settings = Application::getInstance().current_slice->scene.current_mesh_group->settings;
 
     gcode.writeExtrusionMode(false); // ensure absolute extrusion mode is set before the start gcode
     //gcode.writeCode(mesh_group_settings.get<std::string>("machine_start_gcode").c_str());
@@ -1471,7 +1476,7 @@ void FffGcodeWriter::addMeshLayerToGCode(const SliceDataStorage& storage, const 
         for (int part_idx : part_order_optimizer.polyOrder)
         {
             const SliceLayerPart& part = layer.parts[part_idx];
-            addMeshPartToGCode(storage, mesh, extruder_nr, mesh_config, part, gcode_layer);
+            addMeshPartToGCodeCL(storage, mesh, extruder_nr, mesh_config, part, gcode_layer);
         }
     }
     else
@@ -1494,7 +1499,7 @@ void FffGcodeWriter::addMeshLayerToGCode(const SliceDataStorage& storage, const 
             }
             part_order_optimizer.optimize();
             const int nearest_part_index = part_order_optimizer.polyOrder[0];
-            addMeshPartToGCode(storage, mesh, extruder_nr, mesh_config, *parts[nearest_part_index], gcode_layer);
+            addMeshPartToGCodeCL(storage, mesh, extruder_nr, mesh_config, *parts[nearest_part_index], gcode_layer);
             parts.erase(parts.begin() + nearest_part_index);
         }
     }
@@ -1541,6 +1546,87 @@ void FffGcodeWriter::addMeshPartToGCode(const SliceDataStorage& storage, const S
     }
 
     gcode_layer.setIsInside(false);
+}
+
+//  add Parts  @2023-05-11 by ChunLian
+void FffGcodeWriter::addMeshPartToGCodeCL(const SliceDataStorage &storage, const SliceMeshStorage &mesh, const size_t extruder_nr, const PathConfigStorage::MeshPathConfigs &mesh_config, const SliceLayerPart &part, LayerPlan &gcode_layer) const
+{
+    //  local variable
+    struct ControlRoleOrderInPart orderInPart(mesh.settings);
+    bool bKeepTheOldLogic = orderInPart.roles.size() <= 0;
+    bool added_something = false;
+
+    //  logCL("====%s==== ControlRoleOrderInPart: ",__FUNCTION__);
+    //  logCL("\t  bKeepTheOldLogic            = %X", bKeepTheOldLogic);
+    //  logCL("\t  index_of_role_order_in_part = %X", orderInPart.index_of_role_order_in_part);
+    //  logCL("\t  optimize_wall_0_order       = %X", orderInPart.optimize_wall_0_order      );
+    //  logCL("\t  infill_before_walls         = %X", orderInPart.infill_before_walls        );
+    //  logCL("\t  outer_inset_first           = %X", orderInPart.outer_inset_first          );
+
+    ///  define lambda function
+#if 1
+    auto funcKeepTheOldLogic= [&]() -> bool {
+        this->addMeshPartToGCode  (storage, mesh, extruder_nr, mesh_config, part, gcode_layer);
+        return true;
+    };
+
+    auto funcpPocessInfill  = [&]() -> bool {
+        return this->processInfill(storage, gcode_layer, mesh, extruder_nr, mesh_config, part);
+    };
+
+    auto funcpPocessOuter   = [&]() -> bool {
+        return this->processInsets(storage, gcode_layer, mesh, extruder_nr, mesh_config, part, (int)ControlRoleOrderInPart::E_Role_OuterWall);
+    };
+
+    auto funcpPocessInner   = [&]() -> bool {
+        return this->processInsets(storage, gcode_layer, mesh, extruder_nr, mesh_config, part, (int)ControlRoleOrderInPart::E_Role_InnerWall);
+    };
+
+    auto funcAfterWalls     = [&]() -> bool {
+        this->processOutlineGaps  (storage, gcode_layer, mesh, extruder_nr, mesh_config, part, added_something);   //after Outer
+        return this->processSkinAndPerimeterGaps(storage, gcode_layer, mesh, extruder_nr, mesh_config, part);    // after Infill Outer Inner
+    };
+
+    auto funcFinishPart     = [&]() -> bool {
+        const Settings& mesh_group_settings = Application::getInstance().current_slice->scene.current_mesh_group->settings;
+        //After a layer part, make sure the nozzle is inside the comb boundary, so we do not retract on the perimeter.
+        if (added_something && (!mesh_group_settings.get<bool>("magic_spiralize") || gcode_layer.getLayerNr() < static_cast<LayerIndex>(mesh.settings.get<size_t>("initial_bottom_layers"))))
+        {
+            coord_t innermost_wall_line_width = mesh.settings.get<coord_t>((mesh.settings.get<size_t>("wall_line_count") > 1) ? "wall_line_width_x" : "wall_line_width_0");
+            if (gcode_layer.getLayerNr() == 0)
+            {
+                innermost_wall_line_width *= mesh.settings.get<Ratio>("initial_layer_line_width_factor");
+            }
+            gcode_layer.moveInsideCombBoundary(innermost_wall_line_width);
+        }
+
+        gcode_layer.setIsInside(false);
+        return false;
+    };
+#endif   ///  end of define lambda function
+
+
+    if(bKeepTheOldLogic){
+        funcKeepTheOldLogic();
+        return;
+    }
+    //  else new logic
+    {
+        for(const ControlRoleOrderInPart::ERole role : orderInPart.roles){
+            if(role == ControlRoleOrderInPart::E_Role_Infill){
+                added_something = added_something | funcpPocessInfill();
+            }
+            if(role == ControlRoleOrderInPart::E_Role_OuterWall){
+                added_something = added_something | funcpPocessOuter();
+            }
+            if(role == ControlRoleOrderInPart::E_Role_InnerWall){
+                added_something = added_something | funcpPocessInner();
+            }
+        }
+
+        added_something = added_something | funcAfterWalls();
+        added_something = added_something | funcFinishPart();
+    }
 }
 
 bool FffGcodeWriter::processInfill(const SliceDataStorage& storage, LayerPlan& gcode_layer, const SliceMeshStorage& mesh, const size_t extruder_nr, const PathConfigStorage::MeshPathConfigs& mesh_config, const SliceLayerPart& part) const
@@ -1992,7 +2078,7 @@ void FffGcodeWriter::processSpiralizedWall(const SliceDataStorage& storage, Laye
     gcode_layer.spiralizeWallSlice(mesh_config.inset0_config, wall_outline, ConstPolygonRef(*last_wall_outline), seam_vertex_idx, last_seam_vertex_idx, is_top_layer, is_bottom_layer);
 }
 
-bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& gcode_layer, const SliceMeshStorage& mesh, const size_t extruder_nr, const PathConfigStorage::MeshPathConfigs& mesh_config, const SliceLayerPart& part) const
+bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& gcode_layer, const SliceMeshStorage& mesh, const size_t extruder_nr, const PathConfigStorage::MeshPathConfigs& mesh_config, const SliceLayerPart& part, int role_flag) const
 {
     if (extruder_nr != mesh.settings.get<ExtruderTrain&>("wall_0_extruder_nr").extruder_nr && extruder_nr != mesh.settings.get<ExtruderTrain&>("wall_x_extruder_nr").extruder_nr)
     {
@@ -2309,11 +2395,20 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
             gcode_layer.setOverhangMask(Polygons());
         }
 
+        const ControlRoleOrderInPart::BWallFlag bWallFlag(role_flag);
+        //  logCL("====%s==== BWallFlag: ",__FUNCTION__);
+        //  logCL("\t  role_flag = %X", role_flag );
+        //  logCL("\t  bAll      = %X", bWallFlag.bProcessed_AllWalls );
+        //  logCL("\t  bOne      = %X", bWallFlag.bProcessed_OneWalls );
+        //  logCL("\t  bOuter    = %X", bWallFlag.bProcessedOuterWall );
+        //  logCL("\t  bInner    = %X", bWallFlag.bProcessedInnerWall );
+
         // Only spiralize the first part in the mesh, any other parts will be printed using the normal, non-spiralize codepath.
         // This sounds weird but actually does the right thing when you have a model that has multiple parts at the bottom that merge into
         // one part higher up. Once all the parts have merged, layers above that level will be spiralized
         if (spiralize && &mesh.layers[gcode_layer.getLayerNr()].parts[0] == &part)
         {
+            if(bWallFlag.bProcessedOuterWall) //  When bProcessedOuterWall or Default. add @2023-05-11 by ChunLian
             if (part.insets.size() > 0 && extruder_nr == mesh.settings.get<ExtruderTrain&>("wall_0_extruder_nr").extruder_nr)
             {
                 added_something = true;
@@ -2328,8 +2423,8 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
             float z_seam_max_angle = mesh.settings.get<coord_t>("z_seam_max_angle") / 1000.f;
             InsetOrderOptimizer ioo(*this, storage, gcode_layer, mesh, extruder_nr, mesh_config1, part, gcode_layer.getLayerNr(), z_seam_min_angle_diff, z_seam_max_angle);
             if(0x2 & mesh.settings.get<int>("optimize_single_part_z_seam"))
-                ioo.z_seam_config.isPathOrPolygon = true;   
-            return ioo.processInsetsWithOptimizedOrdering();
+                ioo.z_seam_config.isPathOrPolygon = true;   // @2022-06-16 by CL  Z·ì
+            return ioo.processInsetsWithOptimizedOrdering(role_flag);
         }
         else
         {
@@ -2348,6 +2443,8 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                 // Outer wall is processed
                 if (processed_inset_number == 0)
                 {
+                    if(bWallFlag.bProcessedOuterWall) //  When bProcessedOuterWall or Default. add @2023-05-11 by ChunLian
+                    {
                     constexpr float flow = 1.0;
                     if (part.insets[0].size() > 0 && extruder_nr == mesh.settings.get<ExtruderTrain&>("wall_0_extruder_nr").extruder_nr)
                     {
@@ -2372,10 +2469,13 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                             gcode_layer.addWalls(outer_wall, mesh, mesh_config1.inset0_config, mesh_config1.bridge_inset0_config, &wall_overlap_computation, z_seam_config, mesh.settings.get<coord_t>("wall_0_wipe_dist"), flow, retract_before_outer_wall);
                         }
                     }
+                    }
                 }
                 // Inner walls are processed
                 else if (!part.insets[processed_inset_number].empty() && extruder_nr == mesh.settings.get<ExtruderTrain&>("wall_x_extruder_nr").extruder_nr)
                 {
+                    if(bWallFlag.bProcessedInnerWall) //  When bProcessedOuterWall or Default. add @2023-05-11 by ChunLian
+                    {
                     added_something = true;
                     setExtruder_addPrime(storage, gcode_layer, extruder_nr);
                     gcode_layer.setIsInside(true); // going to print stuff inside print object
@@ -2391,6 +2491,7 @@ bool FffGcodeWriter::processInsets(const SliceDataStorage& storage, LayerPlan& g
                     {
                         WallOverlapComputation wall_overlap_computation(inner_wall, mesh_config1.insetX_config.getLineWidth());
                         gcode_layer.addWalls(inner_wall, mesh, mesh_config1.insetX_config, mesh_config1.bridge_insetX_config, &wall_overlap_computation, z_seam_config);
+                    }
                     }
                 }
             }
@@ -2834,7 +2935,8 @@ void FffGcodeWriter::processTopBottom(const SliceDataStorage& storage, LayerPlan
                 down_skin_area.add(skinpart.outline);
             }
         }
-        if (skin_part.inner_infill.intersection(down_skin_area).size()==0)
+        //Binary 2023/03/24  speedy mode ,keep fast
+        if (mesh_group_settings.get<std::string>("param_print_mode") != "fast" && skin_part.inner_infill.intersection(down_skin_area).size()==0 && mesh.settings.get<bool>("top_surface_one_wall"))
         {
             skin_config = &mesh_config.bridge_skin_config;
         }
@@ -2943,14 +3045,14 @@ void FffGcodeWriter::processPerimeterGaps(const SliceDataStorage& storage, Layer
 
     assert(mesh.roofing_angles.size() > 0);
     const bool zig_zaggify_infill = false;
-    const bool connect_polygons = false; // not applicable
+    const bool connect_polygons = true; // not applicable
     int perimeter_gaps_angle = mesh.roofing_angles[gcode_layer.getLayerNr() % mesh.roofing_angles.size()]; // use roofing angles for perimeter gaps
     Polygons gap_polygons; // will remain empty
     Polygons gap_lines;
     constexpr int offset = 0;
     constexpr int infill_multiplier = 1;
     constexpr int extra_infill_shift = 0;
-    const coord_t skin_overlap = mesh.settings.get<coord_t>("skin_overlap_mm");
+    const coord_t skin_overlap = 0;// mesh.settings.get<coord_t>("skin_overlap_mm");
     constexpr int wall_line_count = 0;
     const Point& infill_origin = Point();
     constexpr Polygons* perimeter_gaps_polyons = nullptr;
@@ -2959,8 +3061,8 @@ void FffGcodeWriter::processPerimeterGaps(const SliceDataStorage& storage, Layer
     constexpr bool skip_some_zags = false;
     constexpr int zag_skip_count = 0;
     constexpr coord_t pocket_size = 0;
-    coord_t max_resolution = 10; // we don't need to simplify line based infill
-    coord_t max_deviation = 5;
+    coord_t max_resolution = 5; // we don't need to simplify line based infill
+    coord_t max_deviation = 2;
 
     Infill infill_comp(
         EFillMethod::LINES, zig_zaggify_infill, connect_polygons, perimeter_gaps, offset, perimeter_gaps_line_width, perimeter_gaps_line_width, skin_overlap, infill_multiplier, perimeter_gaps_angle, gcode_layer.z, extra_infill_shift

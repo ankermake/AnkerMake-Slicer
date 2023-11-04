@@ -4,6 +4,9 @@
 #include "common/ak_const.h"
 #include "service/fdmparameterprofileservice.h"
 #include "profilemanage/fdmparameterprofilemanager.h"
+#ifdef TOOL_SAVE_AS_PARAM_INI
+#include "service/fdmrightparameterservice.h"
+#endif
 
 #include <QDebug>
 
@@ -120,6 +123,11 @@ void SavePanel::doSaveAsClick()
         
         auto currentName = FdmParameterProfileManager::Instance().getRightRealTimeProfile()->getProfileName();
         QString recommandName = FdmParameterProfileManager::Instance().getValidName(currentName);
+
+#ifdef TOOL_SAVE_AS_PARAM_INI
+        recommandName = FdmRightParameterService::instance()->__ToolSaveAs_1();
+#endif
+
         qDebug() << "recommandName is " << recommandName;
         m_messageDialog->setEditText(recommandName);
     }
@@ -145,6 +153,7 @@ void SavePanel::textValid(int flag)
         m_messageDialog->setWarning(tr("Input a name."));
         return;
     }
+#ifndef TOOL_SAVE_AS_PARAM_INI
     QRegExp rx("[^\\\\/:*?\"<>|\\s]{1,128}$");
     auto pos = rx.indexIn(newname);
     if (pos < 0)
@@ -160,6 +169,7 @@ void SavePanel::textValid(int flag)
         m_messageDialog->setWarning(tr("This name already exists. Try another name."));
         return;
     }
+#endif
     //emit materialRename(m_oldName,newname);
     qDebug() << " emit save as"  << newname;
     emit saveAs(newname);

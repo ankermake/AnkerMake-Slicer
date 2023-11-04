@@ -299,7 +299,7 @@ public:
     }
     /*   section 5.3.1 &10 of the C++ standard
     The operand of ~ shall have integral or unscoped enumeration type; 
-
+    the result is the ones’ complement of its operand. Integral promotions 
     are performed. The type of the result is the type of the promoted operand.
     */
     constexpr auto operator~() const { // complement

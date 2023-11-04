@@ -86,6 +86,11 @@ QWidget* ControlManager::getPageWidgetFromPreferences(const int index)
     return m_preferDialog -> getWidget(index);
 }
 
+void ControlManager::selectIndex(const int index)
+{
+    m_preferDialog ->selectIndex(index);
+}
+
 void ControlManager::clickedToSwitchPreferencesPage(int index)
 {
     emit switchPreferencesPage(index);

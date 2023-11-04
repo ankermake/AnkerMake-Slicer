@@ -1,7 +1,7 @@
 // This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 //
-
+// Copyright (C) 2012 Désiré Nuentsa-Wakam <desire.nuentsa_wakam@inria.fr>
 //
 // This Source Code Form is subject to the terms of the Mozilla
 // Public License v. 2.0. If a copy of the MPL was not distributed
@@ -124,7 +124,7 @@ int coletree(const MatrixType& mat, IndexVector& parent, IndexVector& firstRowEl
 
 /** 
   * Depth-first search from vertex n.  No recursion.
-
+  * This routine was contributed by Cédric Doucet, CEDRAT Group, Meylan, France.
 */
 template <typename IndexVector>
 void nr_etdfs (typename IndexVector::Scalar n, IndexVector& parent, IndexVector& first_kid, IndexVector& next_kid, IndexVector& post, typename IndexVector::Scalar postnum)

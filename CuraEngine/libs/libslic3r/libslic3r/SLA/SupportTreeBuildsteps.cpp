@@ -1005,7 +1005,7 @@ bool SupportTreeBuildsteps::create_ground_pillar(const Vec3d &hjp,
 
         // Could not find a path to avoid the pad gap
         if (dlast < gap_dist) return false;
-        if (is_approx((endp - nexp).normalized().norm(), 1.))
+        if (is_approx((endp - nexp).normalized().norm(), 1.))//防止相等异常
             if (bridge_mesh_distance(endp, (endp - nexp).normalized(), radius)< distance(endp - nexp)) return false;
         if (t > 0.) { // Need to make additional bridge
             Junction jun;
@@ -1353,7 +1353,7 @@ void SupportTreeBuildsteps::filter()
         }
         else {
             //auto hittest = bridge_mesh_intersect(hp, n, back_r);
-            
+            //if (hittest.distance() > EPSILON)//将该类型的点直接流到下一流程，最终可能会生成小支撑
             {
                 h.id = fidx;
                 h.dir = nn;
@@ -1513,7 +1513,7 @@ void SupportTreeBuildsteps::filterDown()
         }
         else {
             //auto hittest = bridge_mesh_intersect(hp, n, back_r);
-            
+            //if (hittest.distance() > EPSILON)//将该类型的点直接流到下一流程，最终可能会生成小支撑
             {
                 h.id = fidx;
                 h.dir = n;
@@ -1999,7 +1999,7 @@ void SupportTreeBuildsteps::interconnect_pillars()
                 Vec3d gndsp{s(X), s(Y), gnd};
 
                 // If the path is clear, check for pillar base collisions
-#if 0           
+#if 0           //对支撑在模型上的主支撑也添加周边护柱
                 canplace[n] = std::isinf(hr.distance()) &&
                               std::sqrt(m_mesh.squared_distance(gndsp)) >
                                   min_dist;
@@ -2155,9 +2155,9 @@ void SupportTreeBuildsteps::dealOneHeadPre(std::vector<Head> &heads)
         // Then we just create a quaternion from the two normals
         // (Quaternion::FromTwoVectors) and apply the rotation to the
         // arrow head.
-        
-        
-        
+        //对于所有法线，我们生成球坐标并将极坐标从底部饱和到45度，
+        //然后转换回标准坐标以获得新的法线。
+        //然后我们从两个法线创建一个四元数 (Quaternion:: fromtwoovectors)和应用旋转到箭头。
         auto [polar, azimuth] = dir_to_spheric(n);
 
         // skip if the tilt is not sane
@@ -2251,22 +2251,22 @@ void SupportTreeBuildsteps::dealOneHeadPre(std::vector<Head> &heads)
                 h.r_pin_mm = pin_r;
                 h.r_back_mm = back_r;
         }
-        else if (h.width_mm > m_cfg.head_width_min_mm)
+        else if (h.width_mm > m_cfg.head_width_min_mm)//优先减少长度
         {
             h.width_mm -= m_cfg.head_width_min_mm;
             filterfn(fidx, i);
         }
-        else if (h.r_pin_mm > m_cfg.head_fallback_radius_mm)
+        else if (h.r_pin_mm > m_cfg.head_fallback_radius_mm)//优先减少长度
         {
             h.r_pin_mm = m_cfg.head_fallback_radius_mm;
             filterfn(fidx, i);
         }
-        else if (h.r_back_mm >  m_cfg.head_fallback_radius_mm)
+        else if (h.r_back_mm >  m_cfg.head_fallback_radius_mm)//长度为零时，减少支撑半径之类
         {
             h.r_back_mm = m_cfg.head_fallback_radius_mm;
             filterfn(fidx, i);
         }
-        else if (h.penetration_mm >  m_cfg.head_width_min_mm)
+        else if (h.penetration_mm >  m_cfg.head_width_min_mm)//减少支撑嵌入深度
         {
             h.penetration_mm  -= m_cfg.head_width_min_mm;
             filterfn(fidx, i);
@@ -2859,7 +2859,7 @@ bool SupportTreeBuildsteps::bridge_to_nearpillar(const Vec3d& pt,double radius, 
     double slope = std::atan2(hdiff, d2d);
 
     //bridgestart(Z) -= bridgePillarLen;
-    double Zdown = headjp(Z)+ d2d * std::tan(-max_slope);
+    double Zdown = headjp(Z)+ d2d * std::tan(-max_slope);//斜着角度的垂直高度
     Vec3d touchjp = bridgeend;
     touchjp(Z) = Zdown;
 
@@ -3461,11 +3461,11 @@ void SupportTreeBuildsteps::CX_classify()
     }
     //std::cout << "pillarRadiusTotal size==" << pillarRadiusTotal.size() << std::endl;
     //std::cout << "m_ihead size==" << m_iheads.size();
-    m_pillarPoints = std::make_pair(pillarPoints, pillarMeshlinkTotal);
+    m_pillarPoints = std::make_pair(pillarPoints, pillarMeshlinkTotal);//保存起当前数据，供下阶段使用
 
     PointIndex pointIndex=pillarPointindex.guarded_clone();
     std::vector<bool> clusterflg(pillarPoints.rows(), false);
-    
+    //提取m_pillar_clusters数据
     for (int i = 0; i < pillarPoints.rows(); i++)
     {
         PtIndices ptindex;
@@ -3475,16 +3475,16 @@ void SupportTreeBuildsteps::CX_classify()
         clusterflg[i] = true;
         ptindex.emplace_back(i);
         PointIndexEl e1 = std::make_pair(pillarPoints.row(i),i);
-        pointIndex.remove(e1);
+        pointIndex.remove(e1);//移除，防止搜索自已
         PointIndex pointIndexFirst = pointIndex;
         PointIndexEl idfirstE1;
         long id_first= searchSidePillarPoint(pointIndexFirst, pt, idfirstE1);
 
-        while (id_first > SupportTreeNode::ID_UNSET)
+        while (id_first > SupportTreeNode::ID_UNSET)//搜索到第一个
         {
 
             long id_second  = SupportTreeNode::ID_UNSET;
-            pointIndexFirst.remove(pillarPoints.row(id_first), id_first);
+            pointIndexFirst.remove(pillarPoints.row(id_first), id_first);//移除搜索到的第一个对象，继续搜索第二个
             PointIndex pointIndexSecond = pointIndexFirst;
             PointIndexEl idsecondE2;
             id_second = searchSidePillarPoint(pointIndexSecond, pt,idsecondE2);
@@ -3508,7 +3508,7 @@ void SupportTreeBuildsteps::CX_classify()
                     clusterflg[id_first] = true;
                     goto SEARCH_END;
                 }
-                else 
+                else //角度不满足需求，续续搜索
                 {
                     id_second = searchSidePillarPoint(pointIndexSecond, pt, idsecondE2);
                 }
@@ -3644,11 +3644,11 @@ void SupportTreeBuildsteps::CX_classify_simple()
     }
     //std::cout << "pillarRadiusTotal size==" << pillarRadiusTotal.size() << std::endl;
     //std::cout << "m_ihead size==" << m_iheads.size();
-    m_pillarPoints = std::make_pair(pillarPoints, pillarMeshlinkTotal);
+    m_pillarPoints = std::make_pair(pillarPoints, pillarMeshlinkTotal);//保存起当前数据，供下阶段使用
 
     PointIndex pointIndex = pillarPointindex.guarded_clone();
     std::vector<bool> clusterflg(pillarPoints.rows(), false);
-    
+    //提取m_pillar_clusters数据
     for (int i = 0; i < pillarPoints.rows(); i++)
     {
         PtIndices ptindex;
@@ -3675,7 +3675,7 @@ void SupportTreeBuildsteps::CX_routing_to_ground()
 
     const PointSet &points= m_pillarPoints.first;
     const std::vector<SupportTreeNode2MeshLink>& ptStartMeshlinks = m_pillarPoints.second;
-    std::vector<SupportTreeNode2MeshLink> treeNodeLinksNext;
+    std::vector<SupportTreeNode2MeshLink> treeNodeLinksNext;//存储流入到下阶段的信息
     for (auto& cl : m_pillar_clusters) {
         m_thr();
         PtIndices sidePillid;
@@ -3690,11 +3690,11 @@ void SupportTreeBuildsteps::CX_routing_to_ground()
 
         // get the current cluster centroid
         auto& thr = m_thr;
-        long lcid = 0;
+        long lcid = 0;//上一流程中，默认数组第一项为中心点
         unsigned hid = cl[size_t(lcid)]; // Head ID
 
         cl_centroids.emplace_back(hid);
-        
+        //先创建两边对象
         for (auto& c : cl)
         {
             Vec3d  pstart(points.row(c));
@@ -3703,7 +3703,7 @@ void SupportTreeBuildsteps::CX_routing_to_ground()
             std::vector<SupportTreeNode2MeshLink> meshlinksL;
             if (c == hid)
                 continue;
-            
+            //可能已有对象创建完成了，搜索主支撑
             switch (startMeshlink.type)
             {
             case MeshTypeElement::Head:
@@ -3905,7 +3905,7 @@ void SupportTreeBuildsteps::CX_routing_to_ground()
         auto centerhit = bridge_mesh_intersect(pstart, DOWN, radius);
         std::vector<SupportTreeNode2MeshLink> outTreeNodelink;
 
-        if (centerhit.distance()<= deltZ)
+        if (centerhit.distance()<= deltZ)//中心点向下空间不够
         {
             treeNodeLinksNext.emplace_back(startMeshlink);
         }

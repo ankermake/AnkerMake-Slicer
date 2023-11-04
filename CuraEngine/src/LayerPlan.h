@@ -328,6 +328,85 @@ public:
         return false;
     }
 };
+
+//  add struct ControlPrintingOrderInParts @2023-05-10 by ChunLian
+struct ControlRoleOrderInPart{
+    using ThisType = ControlRoleOrderInPart;
+    enum ERole : int{
+        E_Role_Order_None = 0x0000
+        ,E_Role_OuterWall = 0x01 << 0
+        ,E_Role_InnerWall = 0x01 << 1
+        ,E_Role_ThinGaps  = 0x01 << 2
+        ,E_Role_Infill    = 0x01 << 3
+        ,E_Role_Hole      = 0x01 << 4
+        ,E_Role_SkinGaps  = 0x01 << 5
+
+        ,E_Role_Count     = 5
+    };
+
+    enum EOrder : int{
+        E_Order_Nothing = 0x0000        //  infill_before_walls   outer_inset_first
+        ,E_Order_Infill_Outer_Inner     //         true                 true
+        ,E_Order_Infill_Inner_Outer     //         true                 false
+        ,E_Order_Outer_Inner_Infill     //         false                true
+        ,E_Order_Inner_Outer_Infill     //         false                false
+        ,E_Order_Inner_Infill_Outer     //         ----                 ----
+        ,E_Order_Outer_Infill_Inner     //         ----                 ----
+    };
+
+    struct BWallFlag{
+        bool bProcessed_AllWalls {0};
+        bool bProcessed_OneWalls {0};
+        bool bProcessedOuterWall {0};
+        bool bProcessedInnerWall {0};
+        BWallFlag (int role_flag){
+            this->bProcessedOuterWall = ThisType::bProcessedOuterWall( role_flag);
+            this->bProcessedInnerWall = ThisType::bProcessedInnerWall( role_flag);
+            this->bProcessed_AllWalls = ThisType::bProcessed_AllWalls( role_flag);
+            this->bProcessed_OneWalls = ThisType::bProcessed_OneWalls( role_flag);
+        }
+    };
+
+    Settings& mesh_settings;
+
+    int index_of_role_order_in_part {E_Order_Nothing};
+    std::vector<ERole> roles   { };
+
+    int optimize_wall_0_order {0};     //  mesh.settings.get<bool>("optimize_wall_0_printing_order")
+    int infill_before_walls   {0};     //  mesh.settings.get<bool>("infill_before_walls")
+    int outer_inset_first     {0};     //  mesh.settings.get<bool>("outer_inset_first")
+
+    ControlRoleOrderInPart(Settings& mesh_settings_) : mesh_settings(mesh_settings_)
+    {
+        if(mesh_settings.get<std::string>("index_of_role_order_in_part").size() > 0){
+            index_of_role_order_in_part =  mesh_settings.get<int>("index_of_role_order_in_part");
+
+            if(1){  //  should bind at the ui param.   add  @2023-05-11 by ChunLian
+                switch (index_of_role_order_in_part) {
+                    case E_Order_Infill_Outer_Inner: { mesh_settings.add("infill_before_walls", "true" ); mesh_settings.add("outer_inset_first", "true" ); break;}
+                    case E_Order_Infill_Inner_Outer: { mesh_settings.add("infill_before_walls", "true" ); mesh_settings.add("outer_inset_first", "false"); break;}
+                    case E_Order_Outer_Inner_Infill: { mesh_settings.add("infill_before_walls", "false"); mesh_settings.add("outer_inset_first", "true" ); break;}
+                    case E_Order_Inner_Outer_Infill: { mesh_settings.add("infill_before_walls", "false"); mesh_settings.add("outer_inset_first", "false"); break;}
+                    case E_Order_Inner_Infill_Outer: { roles = {E_Role_InnerWall, E_Role_Infill, E_Role_OuterWall}; break;}
+                    case E_Order_Outer_Infill_Inner: { roles = {E_Role_OuterWall, E_Role_Infill, E_Role_InnerWall}; break;}
+                    case E_Order_Nothing:
+                    default:
+                        break;
+                }
+            }
+        }
+
+        optimize_wall_0_order = mesh_settings.get<bool>("optimize_wall_0_printing_order");
+        infill_before_walls   = mesh_settings.get<bool>("infill_before_walls");
+        outer_inset_first     = mesh_settings.get<bool>("outer_inset_first");
+    }
+
+    inline static bool bProcessedOuterWall(int role_flag){return (role_flag <= 0 || (ControlRoleOrderInPart::E_Role_OuterWall & role_flag)); }
+    inline static bool bProcessedInnerWall(int role_flag){return (role_flag <= 0 || (ControlRoleOrderInPart::E_Role_InnerWall & role_flag)); }
+    inline static bool bProcessed_AllWalls(int role_flag){return (bProcessedOuterWall(role_flag) && bProcessedInnerWall(role_flag)); }
+    inline static bool bProcessed_OneWalls(int role_flag){return (bProcessedOuterWall(role_flag) ^  bProcessedInnerWall(role_flag)); }
+};
+
 /*! 
  * The LayerPlan class stores multiple moves that are planned.
  * 

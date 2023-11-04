@@ -33,10 +33,13 @@ signals:
     void checkoutPreview(bool isC);
 
     void networkSendWid2AnkerMake(QObject *object);
+    void networkSendLoginWidgetPtr(QObject *object);
     void swtichNetworkWidgetSignal();
     void networkDeadSig();
+    void videoStatusChangeSig(bool isPlaying);
     void mainwindowModalSig(int wid);
-
+    void fdmOpenPreviewFile();
+    void aiModeChanged(bool status);
     //void sendMainwindowPtr2Network(QMainWindow *);
 
     //update

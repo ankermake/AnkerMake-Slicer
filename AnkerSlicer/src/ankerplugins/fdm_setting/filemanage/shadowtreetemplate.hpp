@@ -39,12 +39,12 @@ public:
     ClStoreData(QObject * master);      
     using QObject::installEventFilter;  
 
-    bool     has(const QString & key)const;
-    QVariant get(const QString & key)const;
-    void     set(const QString & key, QVariant value);
+    bool     has(const QByteArray & key)const;
+    QVariant get(const QByteArray & key)const;
+    void     set(const QByteArray & key, QVariant value);
 
     int      size() const;
-    void     remove(const QString &key);
+    void     remove(const QByteArray &key);
     QList<QByteArray> keys();
 
 //signals:
@@ -92,15 +92,15 @@ public:
 
     //  setFdmProperty
     inline ClStoreData & storeData(){return *inj.m_storeData;}
-    inline bool     hasStoreProperty(const QString & cppKey)                    { return storeData().has(cppKey);}
-    inline QVariant getStoreProperty(const QString & cppKey)                    { return storeData().get(cppKey); }
-    inline void     setStoreProperty(const QString & cppKey, QVariant fdmValue) { storeData().set(cppKey, fdmValue); }
+    inline bool     hasStoreProperty(const QByteArray & cppKey)                    { return storeData().has(cppKey);}
+    inline QVariant getStoreProperty(const QByteArray & cppKey)                    { return storeData().get(cppKey); }
+    inline void     setStoreProperty(const QByteArray & cppKey, QVariant fdmValue) { storeData().set(cppKey, fdmValue); }
 
     //  setQmlProperty
     inline QObject *qobjReal(){return inj.m_qobjReal;}
-    inline bool     hasQobjProperty(const QString & qmlKey)                     { return getQobjProperty(qmlKey).type() != QVariant::Invalid;}
-    inline QVariant getQobjProperty(const QString & qmlKey)                     { return qobjReal()->property(qmlKey.toLocal8Bit()); }
-    inline void     setQobjProperty(const QString & qmlKey, QVariant qtValue)   { qobjReal()->setProperty(qmlKey.toLocal8Bit(), qtValue); }
+    inline bool     hasQobjProperty(const QByteArray & qmlKey)                     { return getQobjProperty(qmlKey).type() != QVariant::Invalid;}
+    inline QVariant getQobjProperty(const QByteArray & qmlKey)                     { return qobjReal()->property(qmlKey.constData()); }
+    inline void     setQobjProperty(const QByteArray & qmlKey, QVariant qtValue)   { qobjReal()->setProperty(qmlKey.constData(), qtValue); }
 
     void dumpMetaShadow(int t=0, QString * log=nullptr);
 
@@ -127,10 +127,10 @@ public:
     inline void     setNodeName(const QString & nodeName){qobjReal()->setObjectName(nodeName);}
 
     //  property :   m_data.m_hashData;
-    inline bool     hasProperty(const QString & propertyName) { return hasStoreProperty(propertyName); }
-    inline QVariant getProperty(const QString & propertyName) { return getStoreProperty(propertyName); }
-    inline void     setProperty(const QString & propertyName, QVariant propertyValue) { setStoreProperty(propertyName, propertyValue); }
-    inline void     insert     (const QString & propertyName, QVariant propertyValue) { setStoreProperty(propertyName, propertyValue); }
+    inline bool     hasProperty(const QByteArray & propertyName) { return hasStoreProperty(propertyName); }
+    inline QVariant getProperty(const QByteArray & propertyName) { return getStoreProperty(propertyName); }
+    inline void     setProperty(const QByteArray & propertyName, QVariant propertyValue) { setStoreProperty(propertyName, propertyValue); }
+    inline void     insert     (const QByteArray & propertyName, QVariant propertyValue) { setStoreProperty(propertyName, propertyValue); }
 
     static bool       checkNodeQobj(NodeType * nodePtr){return (nodePtr && nodePtr->qobjReal());}
     static NodeType * newShadowNode(QObject *qobjReal){

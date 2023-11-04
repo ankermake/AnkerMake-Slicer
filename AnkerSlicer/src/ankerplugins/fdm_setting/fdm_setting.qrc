@@ -27,29 +27,112 @@
         <file>images/fdm_radio_icon_n.png</file>
         <file>images/fdm_radio_icon_s.png</file>
         <file>images/fdm_delete_icon.png</file>
+        <file>images/fmd_gray_light.png</file>
+        <file>images/fmd_green_light.png</file>
+        <file>images/fdm_question_icon.png</file>
     </qresource>
     <qresource prefix="/">
         <file>fdm/parameter/support/treeSupport.ini</file>
         <file>fdm/machine/default/AnkerMakeM5.ini</file>
         <file>fdm/material/default/ABS.ini</file>
         <file>fdm/material/default/PETG.ini</file>
-        <file>fdm/material/default/PLA+.ini</file>
         <file>fdm/material/default/TPU.ini</file>
         <file>fdm/parameter/default/M5_2_ABS.ini</file>
         <file>fdm/parameter/default/M5_2_PETG.ini</file>
-        <file>fdm/parameter/default/M5_2_PLA+.ini</file>
         <file>fdm/parameter/default/M5_2_TPU.ini</file>
         <file>fdm/parameter/default/M5_4_ABS.ini</file>
         <file>fdm/parameter/default/M5_4_PETG.ini</file>
-        <file>fdm/parameter/default/M5_4_PLA+.ini</file>
         <file>fdm/parameter/default/M5_4_TPU.ini</file>
         <file>fdm/parameter/default/M5_6_ABS.ini</file>
         <file>fdm/parameter/default/M5_6_PETG.ini</file>
-        <file>fdm/parameter/default/M5_6_PLA+.ini</file>
         <file>fdm/parameter/default/M5_6_TPU.ini</file>
         <file>fdm/parameter/default/M5_8_ABS.ini</file>
         <file>fdm/parameter/default/M5_8_PETG.ini</file>
-        <file>fdm/parameter/default/M5_8_PLA+.ini</file>
         <file>fdm/parameter/default/M5_8_TPU.ini</file>
+        <file>fdm/machine/default/AnkerMakeM5C.ini</file>
+        <file>fdm/parameter/default/M5C_4_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_4_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_4_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_6_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_6_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_6_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_8_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_8_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_8_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+BASIC_FAST.ini</file>
+        <file>fdm/material/default/PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+GLITTER_FAST.ini</file>
+        <file>fdm/material/default/PLA+GLITTER.ini</file>
+        <file>fdm/machine/default/AnkerMakeM5C_B.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_B_6_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_B_6_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_B_6_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_B_8_ABS.ini</file>
+        <file>fdm/parameter/default/M5C_B_8_PETG.ini</file>
+        <file>fdm/parameter/default/M5C_B_8_TPU.ini</file>
+        <file>fdm/parameter/default/M5C_2_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5C_B_2_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5_2_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5_2_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5_6_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5_6_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5_8_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5_8_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_2_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_2_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+BASIC_FAST.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+GLITER_FAST.ini</file>
+        <file>fdm/parameter/default/M5C_B_2_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_B_2_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_B_6_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_B_6_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_B_8_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_B_8_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_6_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_6_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_8_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_8_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+BASIC.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+BASIC_FAST.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+GLITTER.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+GLITTER_FAST.ini</file>
+        <file>fdm/parameter/default/M5C_B_PA-CF.ini</file>
+        <file>fdm/parameter/default/M5C_PA-CF.ini</file>
+        <file>fdm/material/default/PA-CF.ini</file>
+        <file>fdm/parameter/default/M5C_B_PA-CF_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_PA-CF_Fast.ini</file>
+        <file>fdm/material/default/PLA+Metalic.ini</file>
+        <file>fdm/material/default/PLA+Silk.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+Metalic_Fast.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+Silk_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+Metalic_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+Metalic_Fast.ini</file>
+        <file>fdm/parameter/default/M5_2_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+BASIC_SMOOTH.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+Metalic.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+Silk.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+Metalic.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+Metalic.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+Silk_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+Silk_Fast.ini</file>
+        <file>fdm/material/default/PET-CF.ini</file>
+        <file>fdm/material/default/PLA+Matte.ini</file>
+        <file>fdm/material/default/PLA-CF.ini</file>
+        <file>fdm/parameter/default/M5_4_PLA+Matte_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_4_PET-CF.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA+Matte_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_4_PLA-CF_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PET-CF.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA+Matte_Fast.ini</file>
+        <file>fdm/parameter/default/M5C_B_4_PLA-CF_Fast.ini</file>
     </qresource>
 </RCC>

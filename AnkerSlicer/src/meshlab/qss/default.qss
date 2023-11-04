@@ -47,11 +47,11 @@ QPushButton:disabled{
     background-color:#3A3B3F;
     color: #696969;
 }
-QPushButton#hightButton,#m_signIn,#m_printBtn, #PrintButton, #m_rightButton{
+QPushButton#hightButton,#m_signIn,#m_printBtn, #PrintButton, #m_rightButton, #m_okBtn{
     background-color:#61D37D;
     color:#FFFFFF;
 }
-QPushButton#hightButton:hover, #m_signIn:hover, #m_printBtn:hover, #PrintButton:hover,#m_rightButton::hover{
+QPushButton#hightButton:hover, #m_signIn:hover, #m_printBtn:hover, #PrintButton:hover,#m_rightButton::hover, #m_okBtn{
     background-color:#71D78A;
      color:#FFFFFF;
 }
@@ -124,8 +124,8 @@ QHeaderView::section
 }
 
 QTableWidget {
-    color: #FFFFFF;                                       /*表格内文字颜色*/
-    background-color: rgba(0, 0, 0, 12%);               /*表格内背景色*/
+    color: #FFFFFF;                                       
+    background-color: rgba(0, 0, 0, 12%);               
     border:none;
 }
 /****************************************MessageDialog end******************************************************************/
@@ -137,7 +137,7 @@ QLineEdit#m_edit {
     color:#FFFFFF;
 }
 
-QPushButton#m_leftButton,#m_middleButton,#m_rightButton,#m_cancelButton{
+QPushButton#m_leftButton,#m_middleButton,#m_rightButton,#m_cancelButton, #m_noBtn{
     background-color:rgba(255, 255, 255, 20%);
 }
 
@@ -678,7 +678,7 @@ QLabel#labelTip1,#m_labelVersion {
 }
 /*==========================PrintControlPage begin==========================*/
 QLabel#addDeviceTitleLabel,#titleChooseFile {
-     font: normal normal 20px "Microsoft YaHei";
+     font: normal normal 14px "Microsoft YaHei";
 }
 
 QLabel#textLabelLoad,#textLabelAddPrinter,#descriptionChooseFile,#timeLabel {

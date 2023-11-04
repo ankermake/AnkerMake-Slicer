@@ -19,7 +19,7 @@
 //    void openModelSignal(int);
 
 //private:
-
+//    int m_num; 
 //};
 class ImportProjectWorker : public QObject
 {

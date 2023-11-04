@@ -106,7 +106,7 @@ namespace detail {
   broadcast_impl(const communicator& comm, T* values, int n, int root, 
                  mpl::false_ non_mpi_datatype)
   {
-    
+    // Implementation proposed by Lorenz Hübschle-Schneider
     if (comm.rank() == root) {
       packed_oarchive oa(comm);
       for (int i = 0; i < n; ++i) {

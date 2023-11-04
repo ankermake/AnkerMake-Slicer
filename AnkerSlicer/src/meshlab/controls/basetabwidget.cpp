@@ -1,5 +1,7 @@
 #include "basetabwidget.h"
 #include <QHBoxLayout>
+#include <QDebug>
+#include "common/utilities/tlogger.h"
 BaseTabWidget::BaseTabWidget(QWidget *parent)
     : QWidget(parent),
       m_mainLayout(new QGridLayout(this)),
@@ -28,11 +30,19 @@ BaseTabWidget::BaseTabWidget(QWidget *parent)
 //    return addIndex;
 //}
 
-int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label, int index)
+int BaseTabWidget::addTab(QWidget *page, const QIcon &iconSelect, const QIcon &iconNotSelect,const QString &label, int index)
 {
     QPushButton *listItemButton = new QPushButton(this);
+    //QGridLayout *listItemButtonLayout = new QGridLayout(listItemButton);
     listItemButton->setObjectName("listItemButton");
-    listItemButton->setFixedSize(QSize(136,40));
+    if(index == 5)
+    {
+        listItemButton->setFixedSize(QSize(280,40));
+    }
+    else
+    {
+        listItemButton->setFixedSize(QSize(200,40));//200,40
+    }
     listItemButton->setCheckable(true);
     listItemButton->setAutoExclusive(true);
     listItemButton->setFocusPolicy(Qt::NoFocus);
@@ -43,20 +53,40 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
    // mainLayout->setContentsMargins(0,0,0,0);
     QLabel *iconLabel = new QLabel(Widget);
     iconLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
-    QPixmap pix = icon.pixmap(iconLabel->size());
-    iconLabel->setScaledContents(true);
+    QPixmap pix;
+    if(m_buttonGroup->buttons().size() == 0)
+    {
+        pix = iconSelect.pixmap(iconLabel->size());
+    }
+    else
+    {
+        pix = iconNotSelect.pixmap(iconLabel->size());
+    }
+    iconLabel->setScaledContents(true);//true
     iconLabel->setPixmap(pix);
     mainLayout->addWidget(iconLabel);
+
     QLabel *itemTextLabel = new QLabel();
     itemTextLabel->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    itemTextLabel->setFixedWidth(80);
+    if(index == 5)
+    {
+        itemTextLabel->setFixedWidth(280);
+        itemTextLabel->setOpenExternalLinks(true);
+    }
+    else
+    {
+        itemTextLabel->setFixedWidth(140);
+    }
+    int insertIdx = 0;
     if (index == -1) {
        if (m_topHboxLayout->isEmpty()) {
            m_titleLabels.insert(0, itemTextLabel);
        } else {
            m_titleLabels.insert(m_topHboxLayout->count() - 1, itemTextLabel);
+           insertIdx = m_topHboxLayout->count() - 1;
        }
     } else {
+       insertIdx = index;
        if (!m_titleLabels.contains(index)) {
            m_titleLabels.insert(index, itemTextLabel);
        } else {
@@ -66,9 +96,28 @@ int BaseTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &label
            m_titleLabels.insert(index, itemTextLabel);
        }
     }
+    //add icon
+    m_iconMaps[insertIdx]=QVector<QIcon>();
+    m_iconMaps[insertIdx].push_back(iconSelect);
+    m_iconMaps[insertIdx].push_back(iconNotSelect);
+    itemTextLabel->setStyleSheet("font-size:14px");
     itemTextLabel->setText(label);
-    itemTextLabel->setObjectName("itemTextLabel");
-    mainLayout->addWidget(itemTextLabel);
+    if(index == 5)
+    {
+        mainLayout->addWidget(itemTextLabel, 1);
+    }
+    else
+    {
+        itemTextLabel->setObjectName("itemTextLabel");
+        mainLayout->addWidget(itemTextLabel);
+    }
+
+    QFontMetrics fm(font());
+    int strLength =  fm.horizontalAdvance(label);
+    int merginLeft = (listItemButton->size().width() - 69 - strLength)/2;
+    //mainLayout->setContentsMargins(merginLeft,10,merginLeft,0);
+    //iconLabel->setStyleSheet(QString("padding-left:%1px").arg(merginLeft));
+
     Widget->setLayout(mainLayout);
     int addIndex = -1;
     if(index != -1) {
@@ -150,6 +199,27 @@ QWidget *BaseTabWidget::currentWidget() const
     return m_stackLayout->widget(m_currentIndex);
 }
 
+void BaseTabWidget::updateTabMergein()
+{
+    return;
+    QList<QAbstractButton*> list = m_buttonGroup->buttons();
+    for(auto button : list) {
+        QWidget *widget = button->findChild<QWidget *>();
+        QHBoxLayout *mainLayout = widget->findChild<QHBoxLayout *>();
+        QLabel *theLabel = dynamic_cast<QLabel*>(mainLayout->itemAt(1)->widget());
+        int strLength = 6;
+        if (nullptr != theLabel)
+        {
+            QFontMetrics fm(font());
+            strLength =  fm.horizontalAdvance( theLabel->text());
+        }
+
+        int merginLeft = (button->size().width() - 69 - strLength)/2;
+        //mainLayout->setContentsMargins(merginLeft,10,merginLeft,0);
+        //theLabel->setStyleSheet(QString("padding-left:%1px").arg(merginLeft));
+    }
+
+}
 void BaseTabWidget::setCurrentIndex(int newCurrentIndex)
 {
     if (m_currentIndex == newCurrentIndex) {
@@ -161,8 +231,59 @@ void BaseTabWidget::setCurrentIndex(int newCurrentIndex)
     //list.at(m_currentIndex)->setChecked(true);
     for(auto button : list) {
         int id = m_buttonGroup->id(button);
+        //get subobject
+        QWidget *widget = button->findChild<QWidget *>();
+        QHBoxLayout *mainLayout = widget->findChild<QHBoxLayout *>();
         if(id == m_currentIndex) {
             button->setChecked(true);
+            button->setStyleSheet(QString::fromUtf8("background-color: #354138"));
+            //iconLabel.change icon
+            //mainLayout->itemAt(0)->widget()->setStyleSheet(QString::fromUtf8("color: #61D37D"));
+            //QLabel *iconLabel = new QLabel(Widget);
+            if (!m_iconMaps.contains(id))
+            {
+                continue;
+            }
+
+            QLabel *iconLabel = dynamic_cast<QLabel*>(mainLayout->itemAt(0)->widget());
+            if (nullptr == iconLabel)
+            {
+                AkUtil::TDebug("dynamic_cast<QLabel*>(mainLayout->itemAt(0)->widget()) failed. please check.");
+                continue;
+            }
+            //QIcon icon(":/images/icon/fdm-slice-tab-s.png");
+
+            iconLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
+            //iconLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+            QPixmap pix = m_iconMaps[id][0].pixmap(iconLabel->size());
+            iconLabel->setScaledContents(false);
+            iconLabel->setPixmap(pix);
+
+            //textLable
+            mainLayout->itemAt(1)->widget()->setStyleSheet(QString::fromUtf8("color: #61D37D"));
+        }
+        else
+        {
+            button->setStyleSheet(QString::fromUtf8("background-color: #343539"));
+            //iconLabel
+            //mainLayout->itemAt(0)->widget()->setStyleSheet(QString::fromUtf8("color: #FFFFFF"));
+            QLabel *iconLabel = dynamic_cast<QLabel*>(mainLayout->itemAt(0)->widget());
+            if (nullptr == iconLabel)
+            {
+                AkUtil::TDebug("dynamic_cast<QLabel*>(mainLayout->itemAt(0)->widget()) failed. please check.");
+                continue;
+            }
+            //diffrent
+            //QIcon icon(":/images/icon/fdm-slice-tab-n.png");
+            iconLabel->setSizePolicy(QSizePolicy::Preferred,QSizePolicy::Fixed);
+            //iconLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+            QPixmap pix =  m_iconMaps[id][1].pixmap(iconLabel->size());
+            iconLabel->setScaledContents(false);
+            iconLabel->setPixmap(pix);
+
+            //textLable
+            mainLayout->itemAt(1)->widget()->setStyleSheet(QString::fromUtf8("color: #FFFFFF"));
         }
     }
     m_stackLayout->setCurrentIndex(m_currentIndex);

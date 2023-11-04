@@ -383,7 +383,8 @@ std::optional<std::pair<Point, bool>> LayerPlan::getFirstTravelDestinationState(
 
 GCodePath& LayerPlan::addTravel(const Point p, const bool force_retract)
 {
-    const GCodePathConfig& travel_config = configs_storage.travel_config_per_extruder[getExtruder()];
+    this->ptr_path_configs.emplace_back(new GCodePathConfig( configs_storage.travel_config_per_extruder[getExtruder()] ));
+    GCodePathConfig &travel_config = *this->ptr_path_configs.back();
     const RetractionConfig& retraction_config = storage.retraction_config_per_extruder[getExtruder()];
 
     GCodePath* path = getLatestPathWithConfig(travel_config, SpaceFillType::None);
@@ -517,6 +518,8 @@ GCodePath& LayerPlan::addTravel(const Point p, const bool force_retract)
         path->perform_z_hop = retraction_enable && extruder->settings.get<bool>("retraction_hop_enabled");
     }
 
+    travel_config.akPathFeature.isCombing = (path && path->points.size() > 0);  //  add @2023-05-16 by ChunLian
+
     // must start new travel path as retraction can be enabled or not depending on path length, etc.
     forceNewPathStart();
 
@@ -596,7 +599,9 @@ void LayerPlan::addPolygon(ConstPolygonRef polygon, int start_idx, const GCodePa
                 if (distance_traversed + p0p1_dist >= wall_0_wipe_dist)
                 {
                     Point vector = p1 - p0;
-                    Point half_way = p0 + normal(vector, wall_0_wipe_dist - distance_traversed);
+                    Point p2 = normal(vector, wall_0_wipe_dist - distance_traversed);
+                    constexpr double rotate_angle = 30.0 / 180.0 * M_PI;
+                    Point half_way = p0 + rotate(p2, rotate_angle);
                     addTravel_simple(half_way);
                     break;
                 }
@@ -1270,8 +1275,16 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
             
             if (PolygonUtils::polygonCollidesWithLineSegment(targetMask, p0, p1))
             {
-                
-                DistanceCacheMap[point_idx] = vSize(p1 - p0);
+                //if p0 on the polygon , distance should be 0
+                if (targetMask.inside(p0, true) && targetMask.inside(p1, true))
+                {
+                    DistanceCacheMap[point_idx] = 0;
+                    zeroIdx.push_back(point_idx);
+                }
+                else
+                {
+                    DistanceCacheMap[point_idx] = vSize(p1 - p0);
+                }
             }
             
             else if (!targetMask.inside(p0, true))
@@ -1601,9 +1614,12 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
     }
     else
     {
-        
+
+        speedDownMask = speedDownMask.offset(non_bridge_config.getLineWidth() );
+
         spliteWall(bridgeSplitMinLength, bridgeShrinkLength, speedDownMask,wall);
-        
+        spliteWall(bridgeSplitMinLength, bridgeShrinkLength, bridge_wall_mask, wall);
+
         calcDistanceToMaskMap(min_bridge_line_len, bridge_wall_mask, wall, distanceToBridgeMap);
     }
 
@@ -1882,8 +1898,8 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
     };
 
     const bool reverse_hole_outer_wall_print_orient = mesh.settings.get<bool>("reverse_hole_outer_wall_print_orient");
-    
-    for (unsigned int point_idx = 1; point_idx <= wall.size(); point_idx++)
+
+    for (unsigned int point_idx = 1; point_idx < wall.size(); point_idx++)
     {
         if (non_bridge_config.type == PrintFeatureType::OuterWall
                 && non_bridge_config.akPathFeature.isHoleWall
@@ -1936,7 +1952,7 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
                     Point p1 = wall[(start_idx + point_idx) % wall.size()];
 
                     //2022/12/12  Binary for reverse the wipe distance
-                    if (reverse_hole_outer_wall_print_orient)
+                    if (reverse_hole_outer_wall_print_orient&& non_bridge_config.akPathFeature.isHoleWall)
                     {
                         p1 = wall[(wall.size() + start_idx - point_idx) % wall.size()];
                     }
@@ -1944,7 +1960,9 @@ void LayerPlan::addWall(ConstPolygonRef constWall, int start_idx, const SliceMes
                     if (distance_traversed + p0p1_dist >= wall_0_wipe_dist)
                     {
                         Point vector = p1 - p0;
-                        Point half_way = p0 + normal(vector, wall_0_wipe_dist - distance_traversed);
+                        Point p2 = normal(vector, wall_0_wipe_dist - distance_traversed);
+                        constexpr double rotate_angle = 30.0 / 180.0 * M_PI; 
+                        Point half_way = p0 + rotate(p2, rotate_angle);
                         addTravel_simple(half_way);
                         break;
                     }
@@ -2598,6 +2616,10 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
 
         for(unsigned int path_idx = 0; path_idx < paths.size(); path_idx++)
         {
+            int    local_PreSetJerkXY_n = 0;
+            double local_NextJerkXY     = 0;
+            double local_NextSpeedXY    = 0;
+
             extruder_plan.handleInserts(path_idx, gcode);
 
             GCodePath& path = paths[path_idx];
@@ -2622,6 +2644,7 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
                 gcode.clCurrentStatus->getA_block();
                 if (path.config->isTravelPath())
                 {
+                    if(path.points.size() > 2)
                     gcode.writeTravelAcceleration(path.config->getAcceleration());
                 }
                 else
@@ -2631,27 +2654,72 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
             }
             if (jerk_enabled)
             {
-                
-                if(jerk_travel_auto_enabled && path.config->isTravelPath())
-                {
-                }else
-                //gcode.writeJerk(path.config->getJerk());
-                do{ 
-                    double j_old = gcode.clCurrentStatus->getJ_block();
-                    double j_new = path.config->getJerk();
+                Velocity j_old  = gcode.clCurrentStatus->getJ_XY_block();
+                Velocity j_new  = path.config->getJerkXY();
+                Velocity j_next = path_next ? path_next->config->getJerkXY() : Velocity(0);
 
-                    if((j_new - j_old) > 3){
+                if(jerk_travel_auto_enabled && path.config->isTravelPath()){
+
+                    //  jerk of travel automatically follows historical values. add @2023-04-28 by ChunLian
+                    do{ //  add @2022-06-07 by CL
+                        /// isSmall
                         bool isSmall_prev = (path_prev && path_prev->config->akPathFeature.isSmall);
                         bool isSmall_next = (path_next && path_next->config->akPathFeature.isSmall);
                         if(isSmall_prev && isSmall_next){
                             j_new = j_old;
+                            break;  //  do not change   
                         }
-                        else if(isSmall_prev || isSmall_next){
-                            j_new = j_old;// + 3;
+
+                        /// move to ont line
+                        bool isOut_Next = ( path_next && path_next->config->type == PrintFeatureType::OuterWall );
+                        if(isOut_Next){
+                            j_new = j_next;
+                            break;  //  do not change
                         }
-                    }
-                    gcode.writeJerk(j_new);
-                }while(false);
+
+                        /// is between
+                        int  seg_count  = path.points.size() - 1;
+                        //ClipperLib::cInt d2 = 0;if(segCount < 2){for(int i = 0; i < segCount; ++i){Point diff = path.points[i+1] - path.points[i];d2 += (diff.X * diff.X + diff.Y * diff.Y);}}
+
+                        bool hasE_prev  = ( path_prev && !path_prev->config->isTravelPath() );
+                        bool hasE_next  = ( path_next && !path_next->config->isTravelPath() );
+                        bool bBetween   = ( hasE_prev && hasE_next ) ;
+
+                        /// pre set jerk
+                        if(hasE_next && j_next > 0 && j_next != j_new){   // change
+                            if(seg_count  >= 10){
+                                local_PreSetJerkXY_n = 5;
+                                local_NextJerkXY     = j_next;
+                                local_NextSpeedXY    = path_next->config->getSpeed() * path_next->speed_factor;
+                            }
+                            else // if(5 <= seg_count && seg_count < 10)
+                            {
+                                j_new = j_next;
+                            }
+                            break;  //  do not change
+                        }
+                        else if(bBetween  && seg_count < 5){
+                            j_new = j_old;
+                            break;  //  do not change
+                        }
+                        else if(seg_count < 2){
+                            j_new = j_old;
+                            break;  //  do not change
+                        }
+
+                    }while(false);
+
+                    //gcode.writeComment(std::string("IN jerk of travel ") + std::to_string(path.points.size()) + (path_prev ? PrintFeatureTypeMap()[path_prev->config->type] : " ==> nullptr") + PrintFeatureTypeMap()[path.config->type] + (path_next ? PrintFeatureTypeMap()[path_next->config->type] : " ==> nullptr") );
+                    gcode.writeJerkXYZE('X', j_new);
+                }else{
+                    bool isOut_Next = ( path_next && path_next->config->type == PrintFeatureType::OuterWall );
+                    double jerkXY_new = path.config->getJerkXY();
+                    gcode.writeJerkXYZE('X', jerkXY_new);
+                }
+
+                double jerkEE_new = path.config->getJerkEE();
+                if(jerkEE_new > 0)
+                    gcode.writeJerkXYZE('E', jerkEE_new);
             }
 
             if (path.retract)
@@ -2746,16 +2814,28 @@ void LayerPlan::writeGCode(GCodeExport& gcode)
                     // Prevent the final travel(s) from resetting to the 'previous' layer height.
                     gcode.setZ(final_travel_z);
                 }
-                for(unsigned int point_idx = 0; point_idx < path.points.size() - 1; point_idx++)
+
+                for(unsigned int point_idx = 0; point_idx < path.points.size() - local_PreSetJerkXY_n; point_idx++)
                 {
                     gcode.writeTravel(path.points[point_idx], speed);
                 }
+
+                if(local_PreSetJerkXY_n > 0){
+                    gcode.writeComment("IN local_PreSetXY_1");
+                    gcode.writeJerkXYZE('X', local_NextJerkXY);
+                    for(unsigned int point_idx = path.points.size() - 1 - local_PreSetJerkXY_n; point_idx < path.points.size(); point_idx++)
+                    {
+                        gcode.writeTravel(path.points[point_idx], (point_idx < path.points.size() - 1) ? speed : local_NextSpeedXY);
+                    }
+                    gcode.writeComment("IN local_PreSetXY_end");
+                }
+
                 if (path.unretract_before_last_travel_move)
                 {
                     // We need to unretract before the last travel move of the path if the next path is an outer wall.
                     gcode.writeUnretractionAndPrime();
                 }
-                gcode.writeTravel(path.points.back(), speed);
+                //gcode.writeTravel(path.points.back(), speed);
                 continue;
             }
 
@@ -2999,11 +3079,22 @@ bool LayerPlan::writePathWithCoasting(GCodeExport& gcode, const size_t extruder_
     }
 
     // write coasting path
+    auto cost_dist = 0.0;
     for (size_t point_idx = point_idx_before_start + 1; point_idx < path.points.size(); point_idx++)
     {
         const Ratio coasting_speed_modifier = extruder.settings.get<Ratio>("coasting_speed");
         const Velocity speed = Velocity(coasting_speed_modifier * path.config->getSpeed() * extruder_plan.getExtrudeSpeedFactor());
-        gcode.writeTravel(path.points[point_idx], speed);
+        
+        Point way = path.points[point_idx];
+        if (point_idx == path.points.size() - 1) ///the last cost point 
+        {
+            constexpr double rotate_angle = 30.0 / 180.0 * M_PI;
+            Point vector = path.points[point_idx] - gcode.getPositionXY();;
+
+            Point p2 = normal(vector, 200);
+            way = gcode.getPositionXY()+ rotate(p2, rotate_angle);
+        }
+       gcode.writeTravel(way, speed);
     }
     return true;
 }

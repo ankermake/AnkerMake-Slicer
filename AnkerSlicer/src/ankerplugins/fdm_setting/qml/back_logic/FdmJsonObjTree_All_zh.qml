@@ -12,6 +12,15 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "国际语言"
                 fdmDescription: "FDM国际语言开关"
             }
+            FdmQml_Param{ id:param_print_mode; objectName: "param_print_mode"
+                fdmLabel: "打印模式"
+                fdmDescription: "三种打印模式，正常模式，高速模式，精细模式"
+                fdmOptions:{
+                    "normal": "正常模式",
+                    "fast": "高速模式",
+                    "fine": "精细模式"
+                }
+            }
             FdmQml_Param{ id:anker_param_ai_camera; objectName: "anker_param_ai_camera"
                 fdmLabel: "AI摄像头"
                 fdmDescription: "﻿AI摄像头"
@@ -261,6 +270,19 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     }
                 }
             }
+            FdmQml_Param{ id:index_of_role_order_in_part; objectName: "index_of_role_order_in_part"
+                fdmLabel: "打印顺序(单连通区域)"
+                fdmDescription: "单连通区域的[内壁、外壁、填充]打印顺序"
+                fdmOptions:{
+                    "0" : "Order_Nothing"           ,
+                    "1" : "填->外->内",
+                    "2" : "填->内->外",
+                    "3" : "外->内->填",
+                    "4" : "内->外->填",
+                    "5" : "内->填->外",
+                    "6" : "外->填->内",
+                }
+            }
             FdmQml_Param{ id:optimize_wall_0_printing_order; objectName: "optimize_wall_0_printing_order"
                 fdmLabel: "优化外墙打印顺序"
                 fdmDescription: "﻿优化外壁打印顺序，使得外壁不是最先也不是最后打印。"
@@ -285,16 +307,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "Jerk最大值设置"
                 fdmDescription: "﻿Jerk最大值设置"
                 FdmQml_Param{ id:machine_max_jerk_xy; objectName: "machine_max_jerk_xy"
-                    fdmLabel: "默认 X-Y 平面抖动速度（Jerk）"
-                    fdmDescription: "水平面移动的默认抖动速度。"
+                    fdmLabel: "机器 X-Y 轴的最大Jerk值"
+                    fdmDescription: "机器 X-Y 轴的最大Jerk值。"
                 }
                 FdmQml_Param{ id:machine_max_jerk_z; objectName: "machine_max_jerk_z"
-                    fdmLabel: "默认 Z 轴抖动速度（Jerk）"
-                    fdmDescription: "Z 轴方向电机的默认抖动速度。"
+                    fdmLabel: "机器 Z 轴的最大Jerk值"
+                    fdmDescription: "机器 Z 轴的最大Jerk值。"
                 }
                 FdmQml_Param{ id:machine_max_jerk_e; objectName: "machine_max_jerk_e"
-                    fdmLabel: "默认挤出电机 Jerk"
-                    fdmDescription: "耗材电机的默认抖动速度。"
+                    fdmLabel: "机器 E 轴的最大Jerk值"
+                    fdmDescription: "机器 E 轴的最大Jerk值。"
                 }
             }
             FdmQml_Param{ id:bridge_settings_enabled; objectName: "bridge_settings_enabled"
@@ -515,15 +537,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:machine_extruder_count; objectName: "machine_extruder_count"
                 fdmLabel: "挤出机数目"
                 fdmDescription: "挤出机组数目。 挤出机组是指进料装置、鲍登管和喷嘴的组合。"
-                fdmDefaultValue: 1
-                fdmMinimumValue: 1
-                fdmMaximumValue: 1
-                fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
-                fdmSettablePerMesh: false
-                fdmSettablePerExtruder: false
-                fdmSettablePerMeshgroup: false
-                fdmAffectedById: ""
             }
             FdmQml_Param{ id:extruders_enabled_count; objectName: "extruders_enabled_count"
                 fdmLabel: "已启用的挤出机数目"
@@ -1683,6 +1697,47 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDescription: "打印 skirt 和 brim 时的最大瞬时速度变化。"
                     }
                 }
+                FdmQml_Param{ id:ak_VAJK_J_E_enabled; objectName: "ak_VAJK_J_E_enabled"
+                    fdmLabel: "Jerk值控制"
+                    fdmDescription: "﻿Jerk 是可以瞬间发生的最大速度变化（以毫米/秒为单位）。它也可以被认为是速度的最小变化，将作为加速（非瞬时）移动来完成。"
+                    FdmQml_Param{ id:ak_J_E_print; objectName: "ak_J_E_print"
+                        fdmLabel: "打印Jerk值"
+                        fdmDescription: "﻿打印Jerk值"
+                        FdmQml_Param{ id:ak_J_E_infill; objectName: "ak_J_E_infill"
+                            fdmLabel: "填充Jerk值"
+                            fdmDescription: "﻿填充Jerk值"
+                        }
+                        FdmQml_Param{ id:ak_J_E_wall; objectName: "ak_J_E_wall"
+                            fdmLabel: "墙Jerk值"
+                            fdmDescription: "﻿墙Jerk值"
+                            FdmQml_Param{ id:ak_J_E_wall_0; objectName: "ak_J_E_wall_0"
+                                fdmLabel: "外墙Jerk值"
+                                fdmDescription: "﻿外墙Jerk值"
+                            }
+                            FdmQml_Param{ id:ak_J_E_wall_x; objectName: "ak_J_E_wall_x"
+                                fdmLabel: "内墙Jerk值"
+                                fdmDescription: "﻿内墙Jerk值"
+                            }
+                        }
+                        FdmQml_Param{ id:ak_J_E_topbottom; objectName: "ak_J_E_topbottom"
+                            fdmLabel: "顶底Jerk值"
+                            fdmDescription: "﻿顶底Jerk值"
+                        }
+                        FdmQml_Param{ id:ak_J_E_support; objectName: "ak_J_E_support"
+                            fdmLabel: "支撑Jerk值"
+                            fdmDescription: "﻿支撑Jerk值"
+                        }
+                        FdmQml_Param{ id:ak_J_E_skirt_brim; objectName: "ak_J_E_skirt_brim"
+                            fdmLabel: "裙边Jerk值"
+                            fdmDescription: "﻿裙边Jerk值"
+                        }
+                        FdmQml_Param{ id:ak_J_E_layer_0; objectName: "ak_J_E_layer_0"
+                            fdmLabel: "首层Jerk值"
+                            fdmDescription: "﻿首层Jerk值"
+                        }
+                    }
+                }
+
             }
         }
         FdmQml_Category{ id:travel; objectName: "travel"
@@ -1720,8 +1775,8 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "回抽额外装填量最小空走距离"
                 fdmDescription: "有些材料可能会在空驶一定距离时，才会过程中渗出，这个是设置最空驶距离。"
             }
-						
-			
+
+
             FdmQml_Param{ id:retraction_min_travel; objectName: "retraction_min_travel"
                 fdmLabel: "回抽最小空驶"
                 fdmDescription: "回抽发生所需的最小空驶距离。 这有助于在较小区域内实现更少的回抽。"
@@ -2209,6 +2264,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     "skirt": "Skirt",
                     "brim": "Brim",
                     "raft": "Raft",
+                    "autobrim": "Auto Brim",
                     "none": "无"
                 }
             }
@@ -2235,6 +2291,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmLabel: "Brim 走线计数"
                     fdmDescription: "brim 所用走线数量。 更多 brim 走线可增强与打印平台的附着，但也会减少有效打印区域。"
                 }
+            }
+            FdmQml_Param{ id:min_contact_area; objectName: "min_contact_area"
+                fdmLabel: "最小接触面积"
+                fdmDescription: "当打印区域和构建平台接触面积小于这个最小面积时，将会触发在打印区域周围加brim，使得打印件和构建平台的接触面变大，提高打印成功率。"
             }
             FdmQml_Param{ id:brim_gap; objectName: "brim_gap"
                 fdmLabel: "边沿距离"

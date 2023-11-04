@@ -108,10 +108,15 @@ public:
     void setMetaData(const QString &key, const QVariant &value);
     QVariant getMetaData(const QString &key) const;
 
-
+    void setBaseParamData(const QString &key, const QVariant &value);
 
     
     //virtual void commit();
+
+    QString getDefaultNozzleSizeName();
+    QString getDefaultMaterialName();
+    QString getDefaultPrintMode();
+    QString getDefaultParameterMode();
 
 protected:
     void setMetaDataIfNotExist(const QString &key, const QVariant &value);

@@ -48,7 +48,7 @@ public:
 
     postProcessGcode();
     typedef std::function<void(postProcessGcode&, const GCodeLine&)> callback_t;
-    typedef std::function<void(postProcessGcode&, const QString&)> callback_q;
+    typedef std::function<void(postProcessGcode&, const std::string_view&)> callback_q;
     template<typename Callback>
     const char* parse_line(const char *ptr, GCodeLine &gline, Callback &callback)
     {

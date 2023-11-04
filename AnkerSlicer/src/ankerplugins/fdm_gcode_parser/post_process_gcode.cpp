@@ -1,6 +1,7 @@
 #include "post_process_gcode.h"
 #include <QFile>
 #include <QTextStream>
+#include <QTextCodec>
 postProcessGcode::postProcessGcode()
 {
 
@@ -9,20 +10,22 @@ postProcessGcode::postProcessGcode()
 void postProcessGcode::read_file(const std::string &file,callback_q callback)
 {
     QString fileName = QString::fromStdString(file.c_str());
-    QFile f(fileName);
-    if (!f.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile in(fileName);
+    if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
        return ;
 
-    QTextStream in(&f);
+    //in.setCodec(QTextCodec::codecForName("UTF-8"));
     m_parsing_file = true;
+    char    lineBuf[4*1024]; //  Faster optimization add @2023-05-09 by ChunLian
+    int64_t lineLen = 0;
     while (m_parsing_file && !in.atEnd())
     {
-       QString line = in.readLine(); //read one line at a time
-       //this->parse_line(line.toStdString(), callback);
+        //  QFile::readLine -> lineBuf include NewLine
+        lineLen = in.readLine(lineBuf, sizeof(lineBuf)); //read one line at a time
+        std::string_view line(lineBuf, static_cast<size_t>(lineLen) );
         callback(*this,line);
     }
-    f.close();
-
+    in.close();
 }
 
 

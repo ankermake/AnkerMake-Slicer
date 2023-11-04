@@ -23,42 +23,7 @@ macro(__enable_openmp)
 			
 				set(openmp_INCLUDE_DIRS ${OPENMP_ROOT}/include/)
 	elseif(CC_BC_LINUX)
-		if(NOT OPENMP_ROOT)
-			set(OPENMP_ROOT /usr/lib/llvm-10) 
-		endif()
-	
-		if(NOT EXISTS ${OPENMP_ROOT}/include/openmp/omp.h)
-			message(FATAL_ERROR "OPENMP_ROOT [${OPENMP_ROOT}] error.")
-		endif()
-		set(openmp_INCLUDE_DIRS ${OPENMP_ROOT}/include/openmp)
-	
-		#find_library(openmp_LIBRARIES_DEBUG
-		#			NAMES omp
-		#			PATHS "${OPENMP_ROOT}/lib/")
-					
-		#find_library(openmp_LIBRARIES_RELEASE
-		#		NAMES omp
-		#		PATHS "${OPENMP_ROOT}/lib/")
-		set(openmp_LIBRARIES_DEBUG ${OPENMP_ROOT}/lib/libomp.so.5)
-		set(openmp_LIBRARIES_RELEASE ${OPENMP_ROOT}/lib/libomp.so.5)
-		
-		set(openmp_LOC_DEBUG ${openmp_LIBRARIES_DEBUG})
-		set(openmp_LOC_RELEASE ${openmp_LIBRARIES_RELEASE})
-	
-		set(openmp_INCLUDE_DIRS ${OPENMP_ROOT}/include/openmp)
-		message("OpenMP::OpenMP_CXX_INCLUDE_DIRS  ${openmp_INCLUDE_DIRS}")
-	
-		message("OpenMP::OpenMP_CXX_LIBRARIES_DEBUG  ${openmp_LIBRARIES_DEBUG}")
-		message("OpenMP::OpenMP_CXX_LIBRARIES_RELEASE  ${openmp_LIBRARIES_RELEASE}")
-	
-		if(openmp_INCLUDE_DIRS AND openmp_LIBRARIES_DEBUG AND openmp_LIBRARIES_RELEASE)
-
-			set(OpenMP::OpenMP_CXX_FOUND "True")
-			__import_target(openmp lib)
-			add_library(OpenMP::OpenMP_CXX ALIAS openmp)
-			message("import target OpenMP::OpenMP_CXX +++++")
-		endif()
-		
+		set(CMAKE_CXX_FLAGS -fopenmp)	
 	endif()
 endmacro()
 

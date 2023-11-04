@@ -83,15 +83,19 @@ void InsetOrderOptimizer::processHoleInsets()
     constexpr float flow = 1.0;
 
     //delete by Binary for inset order bug
-    
-    //    if(!outer_inset_first)  ; else{break;}
-    //    bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
-    //    const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
-    //    //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
-    //    //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
-    
-    //        outer_inset_first = true;
-    //}while(false);
+    do{ //  @2022-06-08 by CL 
+        //if(outer_inset_first)  ; else{break;}
+        bool optimize_wall_hole = mesh.settings.get<bool>("optimize_wall_hole_printing");
+        const Polygons& overhang_hole_mask = gcode_layer.getHoleOverhangMask();
+        //logCL("$CL$ outer_inset_first = %d, optimize_wall_hole = %d, overhang_hole_mask = %d, %f\n",
+        //      outer_inset_first, optimize_wall_hole, overhang_hole_mask.size(), overhang_hole_mask.area());
+        if(!overhang_hole_mask.empty()){
+            outer_inset_first = false;  
+        }
+        else if(optimize_wall_hole){
+            outer_inset_first = true;   
+        }
+    }while(false);
 
     if (!outer_inset_first && mesh.settings.get<bool>("infill_before_walls"))
     {
@@ -461,8 +465,7 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
                 orderOptimizer.addPolygons(part_inner_walls);
                 orderOptimizer.optimize();
 
-                
-                //constexpr coord_t wall_0_wipe_dist = 0;
+                constexpr coord_t wall_0_wipe_dist = 0;
                 constexpr float flow_ratio = 1.0;
                 constexpr bool always_retract = false;
 
@@ -583,7 +586,7 @@ void InsetOrderOptimizer::processOuterWallInsets(const bool include_outer, const
     }
 }
 
-bool InsetOrderOptimizer::processInsetsWithOptimizedOrdering()
+bool InsetOrderOptimizer::processInsetsWithOptimizedOrdering(int role_flag)
 {
     added_something = false;
     const unsigned int num_insets = part.insets.size();
@@ -649,6 +652,23 @@ bool InsetOrderOptimizer::processInsetsWithOptimizedOrdering()
     // the outer wall if it is printed before the holes because the outer wall does not get flow reduced but the hole walls will get flow reduced where
     // they are close to the outer wall. However, we only want to do this if the level 0 insets are being printed before the higher level insets.
 
+    //   add @2023-05-12 by ChunLian
+    const ControlRoleOrderInPart::BWallFlag bWallFlag(role_flag);
+
+    if(bWallFlag.bProcessed_OneWalls){
+        if(bWallFlag.bProcessedOuterWall){
+            processHoleInsets();
+            processOuterWallInsets(true, false);
+        }
+        else if(bWallFlag.bProcessedInnerWall){
+            processOuterWallInsets(false, true);
+        }
+        else{
+            throw "ERROR: bool InsetOrderOptimizer::processInsetsWithOptimizedOrdering(int role_flag)";
+        }
+    }
+    else{  
+
     //  add @2022-05-29 by CL
     const bool optimize_wall_0_order = mesh.settings.get<bool>("optimize_wall_0_printing_order")
             || (layer_nr == 0 && mesh.settings.get<EPlatformAdhesion>("adhesion_type") == EPlatformAdhesion::BRIM);
@@ -678,8 +698,10 @@ bool InsetOrderOptimizer::processInsetsWithOptimizedOrdering()
         // then process the part's outer wall and its enclosed insets
         processOuterWallInsets(true, true);
     }
+    }  
 
     // finally, mop up all the remaining insets that can occur in the gaps between holes
+    if(bWallFlag.bProcessed_AllWalls || bWallFlag.bProcessedInnerWall) //  add @2023-05-12 by ChunLian
     if (extruder_nr == mesh.settings.get<ExtruderTrain&>("wall_x_extruder_nr").extruder_nr)
     {
         Polygons remaining;

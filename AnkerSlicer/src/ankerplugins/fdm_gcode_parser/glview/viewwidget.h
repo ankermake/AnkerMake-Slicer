@@ -86,13 +86,16 @@ private:
     SliderLastValue m_sliderLastValue;
 public slots:
     void setOriginalStlName(const QString& oStlName);
+    void setOriginalGCodePath(const QString& oStlGcodePath);
     void setAimode(bool _isAimode);
+    void setCurAnkerMachine(int akMachine);
     void setLoggingStatus(bool);
     void pauseGcodePlay(int);
 private slots:
     void initForm();
     void setSavePicTrue();
     void setExportPic();
+    void openFlie();
     void verticalSliderValueChanged(int, int);
     void horizontalSliderValueChanged(int, int);
     void onFrontView();
@@ -118,6 +121,7 @@ private slots:
     void spinBoxUpValueChanged(int);
     
     void setLoadingProgress();
+    void ShowFileCompleteChanged(bool);
 #ifdef USE_EXTRA_UI
     void linetypeComboxChange(int);
 #endif
@@ -135,6 +139,8 @@ signals:
     void checkoutPreviewEvent(bool);
     void printGcode(const QString&);
     void processFile(const QString&,bool); 
+    void ShowFileComplete(bool);
+    void previewOpenFileEvent();
     //void setValue(int);
     //void startOffRender(const QString& savePath,bool isAiMode,bool cancel);
 public:
@@ -157,10 +163,12 @@ public:
     HSliderRang* horizontalSlider;
     QPushButton* ExitButton;
     QPushButton* ExportButton;
+    QPushButton* openFileButton;
     QSharedPointer<QRemoteObjectDynamicReplica> m_rpc;
     QRemoteObjectNode *m_node = nullptr;
     QString oStlName;
-    
+    QString oStlGCodePath;
+
     bool printMode = false;
     //inner mode
     bool innerMode = false;
@@ -197,7 +205,9 @@ private:
     QLabel* ConsumedLabelabel = nullptr;
     QLabel* filamentLabel = nullptr;
     QLabel* timelabel = nullptr;
-    
+    QLabel* isAiCreatlabel = nullptr;
+    QLabel* isAicreatPiclabel = nullptr;
+    //  outer wall Õ‚«Ω/Õ‚±⁄
     QHBoxLayout  *outerWallLayout = nullptr;
     QPushButton  *outerWallLabelC = nullptr;
     QLabel       *outerWallLabel = nullptr;
@@ -398,6 +408,9 @@ private:
     float allTimeValue;
     double allFilamentValue;
 
+    QToolButton* aiButton;
+
+    SwitchButton* isAicreatcheckBox = nullptr;
     gcodeLabelEdit* spinBox_2 = nullptr;//up
     gcodeLabelEdit* spinBox = nullptr;//down
 
@@ -410,6 +423,7 @@ private:
     SceneParam m_sceneParam;
     bool isAiMode = false;
     bool loggingStatus = false;
+    int curAnkerMachine = 0;
     int runTimesId;
     const qint64 qs_id = QDateTime::currentSecsSinceEpoch();
     ProgressDialog *m_progessDlg = nullptr;

@@ -102,7 +102,7 @@ namespace projections
                 *
                 * Inverse functions added by Drazen Tutic and Lovro Gradiser based on paper:
                 *
-
+                * I.Özbug Biklirici and Cengizhan Ipbüker. A General Algorithm for the Inverse
                 * Transformation of Map Projections Using Jacobian Matrices. In Proceedings of the
                 * Third International Symposium Mathematical & Computational Applications,
                 * pages 175{182, Turkey, September 2002.

@@ -35,10 +35,9 @@ Rectangle {
             selectByMouse: true
             readOnly: false
             activeFocusOnPress :true
-            color: root.enabled == true ? "#FFFFFF" : "#666666"
-          //  validator: RegExpValidator{ regExp: (unitLabel.text == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (unitLabel.text == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
-            //限制用户的输入
-            // validator: RegExpValidator{ regExp: (model.type == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (model.type == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
+            color: root.enabled === true ? "#FFFFFF" : "#666666"
+          //  validator: RegExpValidator{ regExp: (unitLabel.text === "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (unitLabel.text === "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type === "int") ? /^-?[0-9]{0,10}$/ : (model.type === "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
+            // validator: RegExpValidator{ regExp: (model.type === "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (model.type === "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type === "int") ? /^-?[0-9]{0,10}$/ : (model.type === "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
             /*RegExpValidator{ regExp: /[+-]?\d+(\.\d*)?|[+-]?\.\d+/ }*/
             onTextEdited: {
                 inputTextEdited()
@@ -73,14 +72,14 @@ Rectangle {
         cursorShape: Qt.IBeamCursor
         onEntered: {
             borderColor = "#61D37D"
-//           console.log("MouseArea  enter=============== model.label == ",model.label);
+//           console.log("MouseArea  enter=============== model.label === ",model.label);
         }
         onClicked: {
             mouse.accepted = true;
             inputFocus = true;
             input.forceActiveFocus();
             input.update();
-           // console.log("click...................", model.label ,"foucus == ", input.focus, "activeFocusOnPress =" , input.activeFocusOnPress  ,"length ==" , input.length )
+           // console.log("click...................", model.label ,"foucus === ", input.focus, "activeFocusOnPress =" , input.activeFocusOnPress  ,"length ==" , input.length )
         }
         onExited: {
             borderColor = "#4F5259"

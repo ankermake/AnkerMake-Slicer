@@ -321,6 +321,7 @@ void CHModelRotationTransformParamsSetUI::adjustSingleAngle(float& angle)
 
 RotateDoubleSpinBox::RotateDoubleSpinBox(QWidget *parent) : QDoubleSpinBox{parent}
 {
+    installEventFilter(this);
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(rotateValueChangedSlot(double)));
 }
 
@@ -334,6 +335,15 @@ void RotateDoubleSpinBox::setOnlyValue(double value)
     disconnect(this, SIGNAL(valueChanged(double)), this, SLOT(rotateValueChangedSlot(double)));
     setValue(value);
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(rotateValueChangedSlot(double)));
+}
+
+bool RotateDoubleSpinBox::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::ContextMenu) {
+        // Ignore right key event.
+        return true;
+    }
+    return QDoubleSpinBox::eventFilter(obj, event);
 }
 
 void RotateDoubleSpinBox::keyPressEvent(QKeyEvent *event)

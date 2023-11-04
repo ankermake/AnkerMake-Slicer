@@ -233,7 +233,7 @@ int line_circle_intersection(
 	return n;
 }
 
-
+// Sutherland–Hodgman clipping of a rectangle against an AABB.
 // Expects the first 4 points of rect to be filled at the beginning.
 // The clipping may produce up to 8 points.
 // Returns the number of resulting points.

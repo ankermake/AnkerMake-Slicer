@@ -232,32 +232,24 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
         mesh.bbox.max.X(), mesh.bbox.max.Y(), mesh.bbox.max.Z());
     m_realAABB = m_baseAABB;
 
-    if (true)
+
+    vcg::tri::UpdateNormal<CMeshO>::PerFace(mesh); //计算三角面片的法向量
+    float maxZ = -9999;
+    float maxX = -9999;
+    float minZ = 9999;
+    float minX = 9999;
+    int reverse = 1; // 用来判断法向量是否需要取反
+    std::vector<CFaceO>::iterator findUpFaceIt = mesh.face.end();// 拿到最上方的面片
+    std::vector<CFaceO>::iterator findBottomFaceIt = mesh.face.end();// 拿到最下方的面片
+    std::vector<CFaceO>::iterator findRightFaceIt = mesh.face.end(); // 拿到最右边的面片
+    std::vector<CFaceO>::iterator findLeftFaceIt = mesh.face.end(); // 拿到最左边的面片
+    for(auto it = mesh.face.begin(); it != mesh.face.end(); it++)
     {
-        std::vector<QVector3D>& points = m_vertices;
-        std::vector<QVector3D>& nors = m_nors;
-        std::vector<MyTriangle>& faces = m_trians;
-        points.resize(mesh.face.size() * 3);
-        nors.resize(mesh.face.size() * 3);
-        faces.resize(mesh.face.size());
-        int p = 0;
-        vcg::tri::UpdateNormal<CMeshO>::PerFace(mesh); 
-        float maxZ = -9999;
-        float maxX = -9999;
-        float minZ = 9999;
-        float minX = 9999;
-        int reverse = 1; 
-        std::vector<CFaceO>::iterator findUpFaceIt = mesh.face.end();
-        std::vector<CFaceO>::iterator findBottomFaceIt = mesh.face.end();
-        std::vector<CFaceO>::iterator findRightFaceIt = mesh.face.end(); 
-        std::vector<CFaceO>::iterator findLeftFaceIt = mesh.face.end(); 
-        for(auto it = mesh.face.begin(); it != mesh.face.end(); it++)
+        if(it->V(0)->P().Z() > maxZ)
         {
-            if(it->V(0)->P().Z() > maxZ)
-            {
-               maxZ = it->V(0)->P().Z();
-               findUpFaceIt  = it;
-            }
+           maxZ = it->V(0)->P().Z();
+           findUpFaceIt  = it;
+        }
 
             if(it->V(0)->P().Z() < minZ)
             {
@@ -357,7 +349,16 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
             }
         }
         qDebug() << "reverse: " << reverse;
-        
+
+    if (mesh.face.size() < mesh.vert.size())
+    {
+        std::vector<QVector3D>& points = m_vertices;
+        std::vector<QVector3D>& nors = m_nors;
+        std::vector<MyTriangle>& faces = m_trians;
+        points.resize(mesh.face.size() * 3);
+        nors.resize(mesh.face.size() * 3);
+        faces.resize(mesh.face.size());
+        int p = 0;
 
         for (auto it = mesh.face.begin(); it != mesh.face.end(); it++)
         {
@@ -402,9 +403,11 @@ void CHMeshShowObj::cmeshoToMeshShowObj(CMeshO& mesh)
             points[i][1] = it->P().Y();
             points[i][2] = it->P().Z();
 
-            nors[i][0] = it->N().X();
-            nors[i][1] = it->N().Y();
-            nors[i][2] = it->N().Z();
+            QVector3D vn(it->N().X(), it->N().Y(), it->N().Z());
+            vn *= reverse;
+            nors[i][0] = vn.x();
+            nors[i][1] = vn.y();
+            nors[i][2] = vn.z();
 
             i++;
         }

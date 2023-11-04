@@ -13,8 +13,8 @@ Item {
     }
     function setOpacities() {
         for(var i = 0 ; i <stack.children.length; ++i) {
-            stack.children[i].opacity = (i == current ? 1 :0)
-            stack.children[i].visible = (i == current ? true : false)
+            stack.children[i].opacity = (i === current ? 1 :0)
+            stack.children[i].visible = (i === current ? true : false)
         }
     }
     Row {
@@ -39,8 +39,8 @@ Item {
                     verticalAlignment: Qt.AlignVCenter
                     text: stack.children[index].title
                     elide: Text.ElideRight
-                    font.weight: current == index ? Font.Bold :  Font.Normal
-                    color: current == index ? "#FFFFFF" : "#999999"
+                    font.weight: current === index ? Font.Bold :  Font.Normal
+                    color: current === index ? "#FFFFFF" : "#999999"
                 }
                 Rectangle {
                     id:lines
@@ -52,7 +52,7 @@ Item {
                     anchors.right: parent.right
                     border.color: "#18b930"
                     border.width: 3
-                    visible:  current == index
+                    visible:  current === index
                 }
 
                 MouseArea {

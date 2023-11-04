@@ -46,7 +46,7 @@ std::string SpiralVase::process_layer(const std::string &gcode)
         });
     }
     
-    
+    // Remove layer height from initial Z.
     z -= layer_height;
     
     std::string new_gcode;

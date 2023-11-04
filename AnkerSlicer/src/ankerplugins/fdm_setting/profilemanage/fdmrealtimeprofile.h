@@ -11,7 +11,7 @@ public:
 	void reload(FdmRealTimeProfile* rtProfile);
 	
 	QString getProfileName();
-	void setProfileName(QString name);
+    void setProfileName(QString name) override;
 
 	void setRealTimeMetaDate(const QString& key, const QVariant& value);
 	QVariant getRealTimeMetaDate(const QString& key);

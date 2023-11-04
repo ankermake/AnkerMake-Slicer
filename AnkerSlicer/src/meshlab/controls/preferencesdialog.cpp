@@ -144,6 +144,12 @@ void PreferencesDialog::openWidget(QWidget *widget)
     }
 }
 
+void PreferencesDialog::selectIndex(const int index)
+{
+    m_stackLayout->setCurrentIndex(index);
+    emit swicthPage(index);
+}
+
 void PreferencesDialog::save()
 {
     int cout =  m_stackLayout->count();

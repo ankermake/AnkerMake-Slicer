@@ -33,6 +33,7 @@ namespace Plugin{
     const QString FDM_SLICER        = "FdmSlicer";
     const QString FDM_SETTING       = "FdmSetting";
     const QString FDM_GCODE_PARSER  = "FdmGcodeParser";
+    const QString FDM_GCODE_FILTER  = "FdmGcodeFilter";
     const QString FDM_AI_CAMERA     = "FdmAiCamera";
     const QString FDM_NETWORK       = "FdmNetwork";
     const QString FDM_SEND2ALL      = "fdmSend2All";    
@@ -43,7 +44,9 @@ namespace Param {
     //InitGui
     const QString STL_FILE = "stlFile";
     const QString CUSTOM_SETTING = "customSetting";
+    const QString SOURCE_GCODE_FILE = "SourceGcodeFile"; //for filter
     const QString GCODE_FILE = "gcodeFile";
+    const QString GCODE_INFO = "GCodeInfo"; // GCodeInfo GCodeConstant.hpp::GCodeConstant::GCodeInfo
     const QString AKPIC_FILE = "akpicFile";
     const QString GL_CONTEXT = "glContext";
     const QString GL_FORMAT = "glFormat";
@@ -58,6 +61,7 @@ namespace Param {
     //gcode preview Gcode wid
     const QString GCODE_PREVIEW_WID = "gcodePreviewWid";
     const QString LOGGING_STATUS = "loggingStatus";
+    const QString LOGGING_WIDGET_PTR = "loggingWidgetPtr";
 
     const QString AIMODE_STATE = "AiModeState";
     const QString LANGUAGE_STATE = "languageState";
@@ -71,8 +75,11 @@ namespace Param {
     const QString UPDATE_PHASE = "UpdatePhase";
     const QString APP_STARTUP = "AppStartUp";
     const QString PREFERENCE_SHOW = "PreferenceShow";
+    const QString LANGUAGE_CHANGE = "LanguageChange";
+    // video
+    const QString VIDEO_IS_PLAYING = "VideoIsPlaying";
 
-    
+    //登录用到主窗口Wid
     const QString ANKERMAKE_MAINWINDOW_WID = "AnkerMakeMainwindowWid";
     const QString NETWORK_MAINWINDOW_WID = "NetworkMainwindowWid";
 
@@ -85,7 +92,14 @@ namespace Param {
     
     const QString MODEL_SUSPEND_STATUS_RESULT = "ModelSuspendStatusResult";
 
+    const QString TAB_STITCH_TO_NETWORK = "TabSwitchToNetwork";
 
+    //mesh count
+    const QString VISIBLE_MESH_COUNT = "VisibleMeshCount";
+
+    const QString CURRENT_PAGE_INDEX = "CURRENT_PAGE_INDEX";
+
+//    //按钮状态
 //    //const QString SLICE_PANEL_STATE = "slicePanelState";
 
 //    const QString MODEL_OUT_OF_RANGE = "ModelOutofRange";
@@ -166,6 +180,8 @@ namespace Msg {
     const QString OPEN_PREVIEW_IN_NETWORK = "OpenPreviewInNetwork";
     const QString CHECKOUT_PREVIEW = "CheckoutPreview";
     const QString GET_LOGGING_STATUS = "getLoggingStatus";
+    //
+    const QString GET_GCODE_WITH_AI = "getGCodeWithAI";
 
     //AI mode
     const QString AIMODE_CHANGED = "AiMode";
@@ -178,9 +194,11 @@ namespace Msg {
     const QString AUTO_UPDATE = "AutoUpdate";
     const QString CHECK_UPDATE_TEXT = "CheckUpdateText";
     const QString HAVE_NEW_VERSION = "HaveNewVersion";
+    const QString START_AUTO_CHECK_SERVER_VERSION = "StartAutoCheckServerVersion";
     const QString CANCEL_AUTO_CHECK_SERVER_VERSION = "CancelAutoCheckServerVersion";
+    const QString VIDEO_STATUS = "VideoStatus";
 
-    
+    //Network打印控制相关
     const QString A_KEY_PRINT = "AKeyPrint";
     const QString OPEN_NEW_GCODE = "OpenNewGCode";
 
@@ -193,10 +211,17 @@ namespace Msg {
     
     const QString ANKERMAKE_MAINWINDOW_PTR = "AnkerMakeMainwindowPtr";
 
-    
+    const QString ENTRY_ANKERMAKE_MAINWINDOW = "EntryAnkerMakeMainwindow";
+
+    const QString LEAVE_NETWORK_TAB = "LeaveNetworkTab";
+    const QString TAB_SWITCH = "SwitchToNetworkTab";
+
+    //Network触发一键打印，让界面切换到Network打印控制主界面
     const QString SWITCH_NETWORK_WIDGET = "SwitchNetworkWidget";
 
-    
+    const QString SEND_LOGIN_WIDGET_PTR = "SendLoginWidgetPtr";
+
+    //Network应死掉了
     const QString NETWORK_DEAD = "NetworkDead";
 
     
@@ -208,6 +233,14 @@ namespace Msg {
     const QString PRIVACY_PROTOCOL = "PrivacyProtocol";
     // Log upload
     const QString LOG_UPLOAD = "LogUpload";
+    //open GCode or ACode in preview dlg
+    const QString PREVIEW_OPEN_FILE = "PreviewOpenFile";
+
+    const QString CLOSE_VIDEO_STREAM = "CloseVideoStream";
+
+    const QString LOAD_MODEL_FINISHED = "Load_MODEL_FINISHED";
+
+    const QString TAB_WIDGET_CHANGED = "TAB_WIDGET_CHANGED";
 }
 
 
@@ -267,12 +300,14 @@ namespace SettingKey
     const QString LAYER_HEIGHT = "layer_height";
     const QString LAYER_HEIGHT_0 = "layer_height_0";
     const QString INFILL_SPARSE_DENSITY = "infill_sparse_density";
+    const QString INFILL_SPARSE_THICKNESS = "infill_sparse_thickness";
     const QString MACHINE_EXTRUDER_COUNT = "machine_extruder_count";
     const QString EXTRUDERS_ENABLED_COUNT = "extruders_enabled_count";
     //const QString AK_MACHINE_ID = "ak_machine_id";
     //const QString AK_MATERIAL_ID = "ak_material_id";
     const QString MACHINE_NAME = "machine_name";
     const QString MATERIAL_NAME = "material_name";
+    const QString MACHINE_AI_CAMERA = "anker_param_ai_camera";
 
     const QString SUPPORT_ENABLE = "support_enable";
     const QString ADHESION_TYPE = "adhesion_type";
@@ -282,6 +317,19 @@ namespace SettingKey
     const QString EXTRACT_PARAM_FROM_GCODE = "extract_param_from_gcode";
 
     const QString CHECK_PARAM_LOST_INTERVAL = "check_param_lost_interval";
+
+    const QString QML_PRINT_MODE     = "param_print_mode";
+    const QString QML_MACHINE_NAME   = "machine_index_name";
+    const QString QML_MATERIAL_NAME  = "material_index_name";
+    const QString QML_NOZZLE_NAME    = "extruder_index_name";
+    const QString QML_PARAMETER_NAME = "parameter_index_name";
+
+    //default
+    const QString DEFAULT_PARAMETER_MODE     = "default_parameter_mode";
+    const QString DEFAULT_NOZZLE_SIZE_NAME   = "default_nozzle_size_name";
+    const QString DEFAULT_PRINT_MODE         = "default_print_mode";
+    const QString DEFAULT_MATERIAL           = "default_meterial_name";
+
 }
 
 namespace GlobalParameterKeys{
@@ -295,6 +343,7 @@ namespace GlobalParameterKeys{
 namespace ProfileName{
      const QString EXPERT_MODE   = "Expert Mode";
      const QString SIMPLE_MODE       = "Easy Mode";
+     const QStringList ALL_SERIES   = { EXPERT_MODE, SIMPLE_MODE};
      const QString More     = "More...";
 
      const QString X5_ABS = "X5_ABS";
@@ -304,20 +353,45 @@ namespace ProfileName{
 }
 namespace MachineName {
     const QString M5 = "AnkerMake M5";
-    const QString M10 = "AnkerMake M10";
+    const QString M5C = "AnkerMake M5C";
+    const QString M5C_B = "AnkerMake M5C-B";
+    const QStringList M5C_SERIES = { M5C, M5C_B};
+    const QStringList ALL_SERIES = { M5, M5C, M5C_B};
 }
 namespace MaterialName {
     const QString ABS = "ABS";
     const QString PLAPLUS = "PLA+";
+    const QString PLAPLUS_GLITTER = "PLA+ Glitter";
+    const QString PLAPLUS_SILK = "PLA+ Silk";
+    const QString PLAPLUS_METALIC = "PLA+ Metalic";
     const QString PETG = "PETG";
     const QString TPU = "TPU";
+    const QString PA_CF = "PA-CF";
+    const QString PLA_CF = "PLA-CF";
+    const QString PET_CF = "PET-CF";
+    const QString PLAPLUS_MATTE = "PLA+ Matte";
+    const QStringList PLAPLUS_SERIES = { PLAPLUS, PLAPLUS_GLITTER, PLAPLUS_SILK, PLAPLUS_METALIC};
+    const QStringList ALL_SERIES = QStringList{ ABS, PETG, TPU, PA_CF, PLA_CF, PET_CF, PLAPLUS_MATTE} + PLAPLUS_SERIES;
 }
 namespace NozzleSizeName {
     const QString SIZE2 = "0.2 mm";
     const QString SIZE4 = "0.4 mm";
     const QString SIZE6 = "0.6 mm";
     const QString SIZE8 = "0.8 mm";
+    const QStringList ALL_SERIES = { SIZE2, SIZE4, SIZE6, SIZE8};
 }
+namespace PrintMode {
+    const QString FAST = "fast";
+    const QString NORMAL = "normal";
+    const QString SMOOTH = "smooth";
+    const QStringList ALL_SERIES = { FAST, NORMAL, SMOOTH};
+}
+enum PrintModeIndex
+{
+    Normal = 0,
+    Fast,
+    Smooth
+};
 
 enum EGlobalSupportForbiddenState
 {
@@ -365,6 +439,7 @@ namespace EBuildPlateAdhesionType {
     const QString Skirt = "skirt";
     const QString Brim = "brim";
     const QString Raft = "raft";
+    const QString AutoBrim = "autobrim";
     const QString None = "none";
 }
 //

@@ -117,15 +117,15 @@ void FdmSettingsTreeModel::setRootNode(FdmParamNode *root)
     m_root = root;
 }
 
-QString FdmSettingsTreeModel::roleToString(int role) const
+QByteArray FdmSettingsTreeModel::roleToString(int role) const
 {
     QHash<int, QByteArray> roles = roleNames();
     if(roles.isEmpty()) {
-        return QString();
+        return QByteArray();
     }
-    QString str = roles.value(role);
+    QByteArray str = roles.value(role);
     if(str.isEmpty()) {
-        return QString();
+        return QByteArray();
     }
     switch (role) {
     case (datatype::label):
@@ -141,7 +141,7 @@ QString FdmSettingsTreeModel::roleToString(int role) const
     case (datatype::unit):
         return fdmPrinterJsonUnit;
     default:
-        return QString();
+        return QByteArray();
     }
 }
 

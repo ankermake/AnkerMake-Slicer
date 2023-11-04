@@ -38,6 +38,8 @@ char LogWithChars::buffer[BufferCount];
 void LogWithChars::setFuncEngineLogCallback(FuncEngineLogCallbackPtr callback)
 {
     funcEngineLogCallback = callback;
+    static char outBuf[4096];
+    setvbuf(stderr, outBuf, _IOLBF, sizeof(outBuf));
 }
 FuncEngineLogCallbackPtr LogWithChars::getFuncEngineLogCallback()
 {

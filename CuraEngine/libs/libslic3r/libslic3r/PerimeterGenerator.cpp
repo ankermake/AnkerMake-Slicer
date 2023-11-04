@@ -165,7 +165,7 @@ static ExtrusionEntityCollection traverse_loops(const PerimeterGenerator &perime
                 (float)perimeter_generator.layer_height);
             
             // get overhang paths by checking what parts of this loop fall 
-            
+            // outside the grown lower slices (thus where the distance between
             // the loop centerline and original lower slices is >= half nozzle diameter
             extrusion_paths_append(
                 paths,

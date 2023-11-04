@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "fdmqmlengine.h"
 #include "common/utilities/tlogger.h"
+#include "common/ak_const.h"
 
 /*================ class FdmQmlTreeApi ================*/
 FdmQmlTreeApi::FdmQmlTreeApi(FdmParamRoot *root, bool activateValueChangeEvent):m_fdmParamRoot(root){
@@ -127,13 +128,18 @@ void FdmQmlTreeApi::__setCategory(FdmParamNode *rootNode, const FdmProfileCatego
     if(rootNode){ //  && categoryNode->isCategory()
         const QList<FdmSettingItem> items = category.getSettings();
         for(const FdmSettingItem & item :items){
-            if(item.name == "anker_param_ai_camera" || item.name == "international_language"){
-                continue; 
-            }
-            if(FdmParamNode *node = rootNode->findChildNode(item.name, Qt::FindChildrenRecursively)){
-                node->nodeValueChange_fromCpp(item.value);
-            }
+            __setItemValue(rootNode, item);
         }
+    }
+}
+
+void FdmQmlTreeApi::__setNodeValue(FdmParamNode *rootNode, const QString &nodeName, const QVariant value)
+{
+    if(nodeName == "anker_param_ai_camera" || nodeName == "international_language"){
+        return; //  语言和AI 功能禁止还原，只能由偏好设置控制  add @2022-09-15 by CL
+    }
+    if(FdmParamNode *node = rootNode->findChildNode(nodeName, Qt::FindChildrenRecursively)){
+        node->nodeValueChange_fromCpp(value);
     }
 }
 
@@ -247,9 +253,9 @@ void FdmQmlSourceTree::afterInit()
 void FdmQmlSourceTree::setLanguage(int index)
 {
     auto trLanguage = [](FdmParamRoot * trRoot, FdmParamRoot * srcRoot){
-        const QString fdmLabel("fdmLabel");
-        const QString fdmDescr("fdmDescription");
-        const QString fdmOptions("fdmOptions");
+        const QByteArray fdmLabel("fdmLabel");
+        const QByteArray fdmDescr("fdmDescription");
+        const QByteArray fdmOptions("fdmOptions");
 
         const QList<FdmParamNode *> allChildren = srcRoot->allChildrenNode(Qt::FindChildrenRecursively);
         for(FdmParamNode* node : allChildren){
@@ -442,8 +448,14 @@ void FdmQmlSourceTree::updataEffects(FdmParamRoot *srcRoot)
 void FdmQmlSourceTree::updataLimitValue(FdmParamRoot *srcRoot)
 {
     QList<FdmParamNode*> allChildrenNode = srcRoot->allChildrenNode(Qt::FindChildrenRecursively);
-    const QString TypeDouble("float");
-    const QString TypeInt("int");
+    const static double LIMIT_DOUBLE_MAX = +std::numeric_limits<double>::infinity();
+    const static double LIMIT_DOUBLE_MIN = -std::numeric_limits<double>::infinity();
+    const static double LIMIT_INT_MAX = std::numeric_limits<int>::max();
+    const static double LIMIT_INT_MIN = std::numeric_limits<int>::min();
+    const static double FAST_RATE = 2.0;
+
+    const static QString TypeDouble("float");
+    const static QString TypeInt("int");
 
     for (int i = 0; i < allChildrenNode.size(); i++) {
         FdmParamNode* node = allChildrenNode[i];
@@ -456,21 +468,27 @@ void FdmQmlSourceTree::updataLimitValue(FdmParamRoot *srcRoot)
             if(!limitVar.isValid()){
                 double limit = 0;
                 if(type == TypeDouble)
-                    limit = -std::numeric_limits<double>::infinity();
+                    limit = LIMIT_DOUBLE_MIN;
                 else if(type == TypeInt)
-                    limit = std::numeric_limits<int>::min();
+                    limit = LIMIT_INT_MIN;
                 node->setStoreProperty(fdmsettings::fdmPrinterJsonMinValue, limit);
             }
         }
 
-        {   
+        QVariant limitMaxVar;
+        {  
             QVariant limitVar = node->getStoreProperty(fdmsettings::fdmPrinterJsonMaxValue);
+            if(limitVar.isValid()){
+                limitMaxVar = limitVar;
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValue0, limitVar);
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValue1, limitVar.toDouble() * FAST_RATE);
+            }
             if(!limitVar.isValid()){
                 double limit = 0;
                 if(type == TypeDouble)
-                    limit = +std::numeric_limits<double>::infinity();
+                    limit = LIMIT_DOUBLE_MAX;
                 else if(type == TypeInt)
-                    limit = std::numeric_limits<int>::max();
+                    limit = LIMIT_INT_MAX;
                 node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValue, limit);
             }
         }
@@ -478,35 +496,65 @@ void FdmQmlSourceTree::updataLimitValue(FdmParamRoot *srcRoot)
         {   
             QVariant limitVar = node->getStoreProperty(fdmsettings::fdmPrinterJsonMinValueWarning);
             if(!limitVar.isValid()){
-                QVariant limitMinValue = node->getStoreProperty(fdmsettings::fdmPrinterJsonMinValue);
-                if(limitMinValue.isValid()){
-                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMinValueWarning, limitMinValue);
-                }else{
-                    double limit = 0;
-                    if(type == TypeDouble)
-                        limit = -std::numeric_limits<double>::infinity();
-                    else if(type == TypeInt)
-                        limit = std::numeric_limits<int>::min();
-                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMinValueWarning, limit);
-                }
+                limitVar = node->getStoreProperty(fdmsettings::fdmPrinterJsonMinValue);
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMinValueWarning, limitVar);
             }
         }
 
         {   
             QVariant limitVar = node->getStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning);
+            if(limitVar.isValid()){
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning0, limitVar);
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning1, limitVar.toDouble() * FAST_RATE);
+            }else if(limitMaxVar.isValid()){
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning0, limitMaxVar);
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning1, limitMaxVar.toDouble() * FAST_RATE);
+            }
+
             if(!limitVar.isValid()){
-                QVariant limitMaxValue = node->getStoreProperty(fdmsettings::fdmPrinterJsonMaxValue);
-                if(limitMaxValue.isValid()){
-                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning, limitMaxValue);
-                }else{
-                    double limit = 0;
-                    if(type == TypeDouble)
-                        limit = +std::numeric_limits<double>::infinity();
-                    else if(type == TypeInt)
-                        limit = std::numeric_limits<int>::max();
-                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning, limit);
+                limitVar = node->getStoreProperty(fdmsettings::fdmPrinterJsonMaxValue);
+                node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning, limitVar);
+            }
+        }
+    }
+
+    //  add fast limit.  @2023-04-14 by ChunLian
+    {
+        auto DoSwitchingBoundary = [allChildrenNode](int fast){
+            for (int i = 0; i < allChildrenNode.size(); i++) {
+                FdmParamNode* node = allChildrenNode[i];
+
+                if(!node->getStoreProperty(fdmsettings::fdmPrinterJsonUnit).toString().startsWith("mm/")){continue;}
+
+                const QByteArray limitMaxErrKey = (fast == 1) ? fdmsettings::fdmPrinterJsonMaxValue1 : fdmsettings::fdmPrinterJsonMaxValue0;
+                const QByteArray limitMaxWarKey = (fast == 1) ? fdmsettings::fdmPrinterJsonMaxValueWarning1 : fdmsettings::fdmPrinterJsonMaxValueWarning0;
+
+                QVariant limitMaxErrVar = node->getStoreProperty(limitMaxErrKey);
+                QVariant limitMaxWarVar = node->getStoreProperty(limitMaxWarKey);
+
+                if(limitMaxErrVar.isValid())
+                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValue, limitMaxErrVar);
+                if(limitMaxWarVar.isValid())
+                    node->setStoreProperty(fdmsettings::fdmPrinterJsonMaxValueWarning, limitMaxWarVar);
+
+                if(limitMaxErrVar.isValid() || limitMaxWarVar.isValid()){
+                    node->nodeValueChange_fromTree(QVariant());
                 }
             }
+        };
+
+        if(FdmParamNode* node = srcRoot->findChildNode(AkConst::SettingKey::QML_PRINT_MODE)){
+            auto SwitchingBoundary = [node, DoSwitchingBoundary](){
+                QString print_mode = node->getFdmValue().toString();
+                if(print_mode == AkConst::PrintMode::FAST){
+                    DoSwitchingBoundary(1);
+                }
+                else if(!print_mode.isEmpty()){
+                    DoSwitchingBoundary(0);
+                }
+            };
+            SwitchingBoundary();
+            QObject::connect(node, &FdmParamNode::fdmValueChange, SwitchingBoundary);
         }
     }
 }

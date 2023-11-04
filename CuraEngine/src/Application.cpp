@@ -240,7 +240,7 @@ void Application::run(const size_t argc_, char** argv_)
     testArg.push_back(std::string("extParam"));
     testArg.push_back(std::string("-f"));
     //testArg.push_back(std::string("C:/Users/Administrator/AppData/Local/AnkerMake/AnkerMake_64bit_fp/stl/20221213143211778/sliceCmd.cmd"));
-    testArg.push_back(std::string("../stl/20230215102059757/sliceCmd.cmd"));
+    testArg.push_back(std::string("../stl/20230525181010274/sliceCmd.cmd"));
 
     std::vector<char*> vc;
     for (int i = 0; i < testArg.size(); i++)
@@ -283,11 +283,11 @@ void Application::run(const size_t argc_, char** argv_)
                     cura::logError("content of file is empty .file :%s\n", fileFullName);
                     return;
                 }
-                cura::log("file base64 content :%s\n", content.c_str());
+                //cura::log("file base64 content :%s\n", content.c_str());
                 //auto localContent = utf8ToLocalString(content);
                 auto localContent = base64Decode(content);
-                cura::log("base64 decode content :%s\n", localContent.c_str());
-                
+                //cura::log("base64 decode content :%s\n", localContent.c_str());
+ 
                 auto extendArgs = splitCommand(localContent);
                 for (size_t j = 0; j < extendArgs.size(); j++)
                 {
@@ -320,7 +320,7 @@ void Application::run(const size_t argc_, char** argv_)
         //for (int i = 1; i < argc; ++i) {
         //    logAlways("%s  ", argv[i]);
         //}
-        logAlways("\n---------- %d\n\n", argc);
+        logAlways("\argc---------- %ld\n", argc);
     }
 
     //printLicense();

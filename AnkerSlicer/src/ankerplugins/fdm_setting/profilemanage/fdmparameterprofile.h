@@ -27,7 +27,6 @@ public:
     
     void updateMachine(FdmMachineProfile* profile);
     void updateMaterial(FdmMaterialProfile* profile);
-    void updateNozzleSize(double nozzleSize);
     
     
 
@@ -37,11 +36,26 @@ public:
     QString getMachineName();
     QString getMaterialName();
     double getNozzleSize();
+    QString getPrintMode();
 
-    void setMachineName(QString name);
-    void setMaterialName(QString name);
+    //  add @2023-04-13 by ChunLian
+    virtual void setPrintMode       (QString value);
+    virtual void setMachineName     (QString value);
+    virtual void setMaterialName    (QString value);
+    virtual void setNozzleName      (QString value);
+    virtual void setNozzleSize      (double  value);
+    virtual void setProfileName     (QString value);
 
-    
+    virtual void setAdhesionType    (QString value);
+    virtual void setLayerHeight     (double  value);
+    virtual void setInfillDensity   (double  value);
+    virtual void setInfillThickness (double  value);
+    virtual void setSupportEnable   (bool    value);
+
+
+
+
+    ////当前选中的挤出头idx, 用于界面显示
     //int getActiveExtruderIdx();
     //void setActiveExtruderIdx(int idx);
 

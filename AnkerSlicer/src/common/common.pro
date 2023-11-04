@@ -81,7 +81,7 @@ CONFIG(release, debug|release){
 
 DEFINES += COMMONLIB
 
-message(MeshLab Version: $$MESHLAB_VERSION)
+message(AnkerMake Version: $$ANKER_MAKE_VERSION)
 
 # Input
 HEADERS += 	\
@@ -128,6 +128,7 @@ HEADERS += 	\
         controlInterface/controlInterface.h \
     controlInterface/line.h \
     controlInterface/messageDialog.h \
+    controlInterface/messagetip.h \
     controlInterface/pagewidget.h \
     controlInterface/progressbar.h \
     controlInterface/progressdialog.h \
@@ -176,6 +177,7 @@ HEADERS += 	\
     support/supportmeshfactory.h \
     utilities/AkMatrix3i.h \
     utilities/AkPoint3i.h \
+    utilities/GCodeConstant.hpp \
     utilities/akUtilSpace.h \
     utilities/math_utils.h \
 	utilities/eigen_mesh_conversions.h \
@@ -188,6 +190,7 @@ HEADERS += 	\
 	mlexception.h \
 	mlapplication.h \
 #	ml_selection_buffers.h \
+    utilities/string.h \
 	utilities/tlogger.h	\
 	file_property/app_params_property.h	\
 	file_property/document_property.h	\
@@ -249,6 +252,7 @@ SOURCES += \
 	controlInterface/bubbleWidget.cpp \
 	controlInterface/line.cpp \
 	controlInterface/messageDialog.cpp \
+    controlInterface/messagetip.cpp \
 	controlInterface/pagewidget.cpp \
 	controlInterface/progressbar.cpp \
 	controlInterface/progressdialog.cpp \

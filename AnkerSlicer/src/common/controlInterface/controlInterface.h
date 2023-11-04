@@ -67,6 +67,7 @@ namespace  control {
 		virtual void addPageToPreferences(PageWidget* widget, int index) = 0;
         virtual void openPreferences(int index) = 0;
 		// void openPreferences(QWidget *widget){};
+        virtual void selectIndex(const int index) = 0;
 
 	signals:
 		void openPreferencesDialog(int index);

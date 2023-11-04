@@ -258,7 +258,7 @@ class distributed_property_map
     property_map_multiput
   };
 
-  
+  // Code from Joaquín M López Muñoz to work around unusual implementation of
   // std::pair in VC++ 10:
   template<typename First,typename Second>
   class pair_first_extractor {

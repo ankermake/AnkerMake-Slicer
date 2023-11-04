@@ -364,6 +364,36 @@ void FffPolygonGenerator::processAnkerOptimize(SliceDataStorage& storage)
             Infill infill_comp();
         }
     */
+    // don't call this function
+    return;
+
+    ///2023-03-14 Binary  deal with the infill area , multilayer fill,one inset
+    size_t step = 2;
+    for (auto& mesh : storage.meshes)
+    {
+        std::string param_print_mode = mesh.settings.get<std::string>("param_print_mode");
+        if (param_print_mode !="fast") continue;
+        for (size_t layer_number = mesh.settings.get<size_t>("bottom_layers")+1;layer_number < mesh.layers.size()- mesh.settings.get<size_t>("top_layers"); layer_number+=step)
+        {
+            auto& layer = mesh.layers[layer_number];
+            auto& up_layer = mesh.layers[layer_number + 1];
+            Polygons upskins;
+            for (auto& uppart : up_layer.parts)
+            {
+                for (auto& upskin : uppart.skin_parts)
+                {
+                    upskins.add(upskin.outline);
+                }
+            }
+            for (auto& part : layer.parts)
+            {
+                if (upskins.intersection(part.outline).size() > 0) continue;
+                    part.infill_area.clear();
+                    part.infill_area_per_combine_per_density[0].clear();
+            }
+        }
+    }
+
 }
 
 void FffPolygonGenerator::slices2polygons(SliceDataStorage& storage, TimeKeeper& time_keeper)
@@ -1160,6 +1190,11 @@ void FffPolygonGenerator::processPlatformAdhesion(SliceDataStorage& storage)
     {
     case EPlatformAdhesion::SKIRT:
         // Already done, because of prime-tower-brim & ordering, see above.
+        break;
+    case EPlatformAdhesion::AUTO_BRIM:
+        primary_line_count = train.settings.get<size_t>("brim_line_count");
+        SkirtBrim::getFirstLayerOutline(storage, primary_line_count, false, first_layer_outline);
+        SkirtBrim::generateAutoBrim(storage, first_layer_outline, 0, primary_line_count);
         break;
     case EPlatformAdhesion::BRIM:
         primary_line_count = train.settings.get<size_t>("brim_line_count");

@@ -12,22 +12,22 @@ ClStoreData::ClStoreData(QObject *master):QObject(nullptr){
     }
 }
 
-bool ClStoreData::has(const QString &key) const{
-    return QObject::dynamicPropertyNames().contains(key.toLocal8Bit());
+bool ClStoreData::has(const QByteArray &key) const{
+    return QObject::dynamicPropertyNames().contains(key);
     //return get(key).type() != QVariant::Invalid;
 }
-QVariant ClStoreData::get(const QString &key) const{
-    return QObject::property(key.toLocal8Bit());
+QVariant ClStoreData::get(const QByteArray &key) const{
+    return QObject::property(key.constData());
 }
-void ClStoreData::set(const QString &key, QVariant value){
-    QObject::setProperty(key.toLocal8Bit(), value);
+void ClStoreData::set(const QByteArray &key, QVariant value){
+    QObject::setProperty(key.constData(), value);
 }
 
 int ClStoreData::size() const {
     return QObject::dynamicPropertyNames().size();
 }
 
-void ClStoreData::remove(const QString &key){
+void ClStoreData::remove(const QByteArray &key){
     set(key, QVariant());
 }
 
@@ -132,8 +132,8 @@ void ClItemProperty::dumpMetaShadow(int t, QString *log){
             QList<QByteArray> keys = Qobj_MetaPropertyKeys(qobjReal());
             for(auto ketIt : keys){
                 if(skip.contains(ketIt)){continue;}
-                QString  key   = ketIt;
-                QVariant value = getQobjProperty(key);
+                QByteArray  key   = ketIt;
+                QVariant    value = getQobjProperty(key);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;
@@ -145,8 +145,8 @@ void ClItemProperty::dumpMetaShadow(int t, QString *log){
             int count = Qobj_DynamicPropertyCount(qobjReal());
             QList<QByteArray> keys = Qobj_DynamicPropertyKeys(qobjReal());
             for(int i=0; i < count; ++i){
-                QString  key   = keys[i];
-                QVariant value = getQobjProperty(key);
+                QByteArray  key   = keys[i];
+                QVariant    value = getQobjProperty(key);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;
@@ -156,8 +156,8 @@ void ClItemProperty::dumpMetaShadow(int t, QString *log){
         if(storeData().size() > 0){
             debug << "\n" << QByteArray(t+8, ' ') << _property;
             for(auto keyIt : storeData().keys()){
-                QString  key   = keyIt;
-                QVariant value = storeData().get(keyIt);
+                QByteArray  key   = keyIt;
+                QVariant    value = storeData().get(keyIt);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;

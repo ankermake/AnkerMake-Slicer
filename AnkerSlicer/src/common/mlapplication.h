@@ -8,6 +8,7 @@
 #include "ml_document/cmesh.h"
 #include <QFileOpenEvent>
 #include "utilities/tlogger.h"
+#include <QFontDatabase>
 
 class COMMONLIB_EXPORT MeshLabApplication : public QApplication
 {
@@ -15,7 +16,9 @@ class COMMONLIB_EXPORT MeshLabApplication : public QApplication
 public:
 	enum HW_ARCHITECTURE {HW_32BIT = 32,HW_64BIT = 64};
 	MeshLabApplication(int &argc, char *argv[]): QApplication(argc,argv){}
-	~MeshLabApplication(){}
+	~MeshLabApplication(){
+        QFontDatabase::removeAllApplicationFonts();
+    }
 #ifdef NDEBUG
 	bool notify(QObject * rec, QEvent * ev);
 #endif	
@@ -42,7 +45,10 @@ public:
 
     bool event(QEvent *event)
     {
-        
+        if (event->type() == QEvent::LanguageChange) {
+            emit languageChangeSignal();
+        }
+       
         if(event->type() == QEvent::FileOpen){
             QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
             AkUtil::TDebug("Open File: " + openEvent->file());
@@ -59,6 +65,7 @@ public:
     QStringList fileList;
 signals:
     void openFileSignal(const QString &fileName);
+    void languageChangeSignal();
 	
 private:
 	static std::string versionString(int a, int b, int c);

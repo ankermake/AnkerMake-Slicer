@@ -9,13 +9,14 @@
 //#include <meshlab/glarea.h>
 #include <QElapsedTimer>
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QFileDialog>
 #include <QRegularExpression>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QSettings>
 #include "../common/controlInterface/messageDialog.h"
-
+#include "../common/utilities/GCodeConstant.hpp"
 
 FdmGcodeParser::FdmGcodeParser()
 {
@@ -61,6 +62,13 @@ FdmGcodeParser::FdmGcodeParser()
          data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, isC);
          this->sendMsg2Manager(data);
     });
+    connect(m_rpc_inner,&fdmRpcWrapper::previewOpenFile,[=](){
+         PluginMessageData data;
+         data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+         data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
+         data.msg = AkConst::Msg::PREVIEW_OPEN_FILE;
+         this->sendMsg2Manager(data);
+    });
     connect(m_rpc_inner,&fdmRpcWrapper::sendGCodePrint,[=](const QString &msg){
          qDebug() << "sendGCodePrint : " << msg;
          PluginMessageData data;
@@ -70,6 +78,21 @@ FdmGcodeParser::FdmGcodeParser()
          data.map.insert(AkConst::Param::A_KEY_PRINT_FILE_PATH, msg);
          QVariant maxSpeed = m_rpc_inner->property("maxSpeed");
          data.map.insert(AkConst::Param::MAX_PRINT_SPEED, maxSpeed);
+         AkUtil::TDebug("sendGCodePrint: "+msg);
+         this->sendMsg2Manager(data);
+    });
+    connect(m_rpc_inner,&fdmRpcWrapper::isAiModeChanged,[=](bool isAimode){
+         //no change return
+        qDebug()<< "fdmRpcWrapper::isAiModeChanged " <<isAimode;
+        if(isAimode == _isAiMode){
+            return ;
+        }
+         _isAiMode = isAimode;
+         PluginMessageData data;
+         data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+         data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
+         data.msg = AkConst::Msg::AIMODE_CHANGED;
+         data.map.insert(AkConst::Param::AIMODE_STATE, isAimode);
          this->sendMsg2Manager(data);
     });
 
@@ -82,33 +105,93 @@ void FdmGcodeParser::recMsgfromManager(PluginMessageData metaData)
     if (metaData.msg == AkConst::Msg::PREVIEW_GCODE
         && (metaData.from == AkConst::Plugin::AK_MAIN_WINDOW | metaData.from == AkConst::Plugin::FDM_SLICER))
     {
-        if(metaData.from == AkConst::Plugin::AK_MAIN_WINDOW){
-            reOpenGcodePreview(metaData);
+    //send to filter
+        if(CurMachine == ankerMachine::M5){
+            QString soure_file = metaData.map.value(AkConst::Param::GCODE_FILE, QString("")).toString();
+            if(soure_file.isEmpty()){
+                reOpenGcodePreview(metaData);
+                PluginMessageData data;
+                data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+                data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
+                data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
+                data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false);
+                this->sendMsg2Manager(data);
+            }
+            auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+            QString dirPath = writableLocation + "/AICamera";
+            QFileInfo sFileInfo = QFileInfo(soure_file);
+            QString des_file = dirPath + "/" +sFileInfo.fileName();
+            QString searchString = ".gcode";
+            QString replaceString = "_tmp.gcode";
+            int index = des_file.lastIndexOf(searchString);
+            if (index != -1) {
+                des_file.replace(index, searchString.length(), replaceString);
+            }
             PluginMessageData data;
             data.from = AkConst::Plugin::FDM_GCODE_PARSER;
-            data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
-            data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
-            data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false); 
-            this->sendMsg2Manager(data);
-
-        }else{
-            
-            reOpenGcodePreview(metaData);
-            PluginMessageData data;
-            data.from = AkConst::Plugin::FDM_GCODE_PARSER;
-            data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
-            data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
-            data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false); 
+            data.dest = AkConst::Plugin::FDM_GCODE_FILTER;
+            data.msg = AkConst::Msg::GET_GCODE_WITH_AI;
+            data.map.insert(AkConst::Param::SOURCE_GCODE_FILE, soure_file);
+            data.map.insert(AkConst::Param::GCODE_FILE, des_file);
+            QString originalStlName = metaData.map.value(AkConst::Param::ORIGINAL_STL_NAME, QString("")).toString();
+            data.map.insert(AkConst::Param::ORIGINAL_STL_NAME, originalStlName);
             this->sendMsg2Manager(data);
         }
+
+       if(CurMachine == ankerMachine::M5C){
+           QString soure_file = metaData.map.value(AkConst::Param::GCODE_FILE, QString("")).toString();
+           if(soure_file.isEmpty()){
+               reOpenGcodePreview(metaData);
+               PluginMessageData data;
+               data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+               data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
+               data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
+               data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false);
+               this->sendMsg2Manager(data);
+           }
+           auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+           QString dirPath = writableLocation + "/AICamera";
+           QFileInfo sFileInfo = QFileInfo(soure_file);
+           QString des_file = dirPath + "/" +sFileInfo.fileName();
+           QString searchString = ".gcode";
+           QString replaceString = "_tmp.gcode";
+           int index = des_file.lastIndexOf(searchString);
+           if (index != -1) {
+               des_file.replace(index, searchString.length(), replaceString);
+           }
+           PluginMessageData data;
+           data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+           data.dest = AkConst::Plugin::FDM_GCODE_FILTER;
+           data.msg = AkConst::Msg::GET_GCODE_WITH_AI;
+           data.map.insert(AkConst::Param::SOURCE_GCODE_FILE, soure_file);
+           data.map.insert(AkConst::Param::GCODE_FILE, des_file);
+           QString originalStlName = metaData.map.value(AkConst::Param::ORIGINAL_STL_NAME, QString("")).toString();
+           data.map.insert(AkConst::Param::ORIGINAL_STL_NAME, originalStlName);
+           this->sendMsg2Manager(data);
+       }
+
+
+    }
+
+
+    if(metaData.msg == AkConst::Msg::PREVIEW_GCODE
+        && (metaData.from == AkConst::Plugin::FDM_GCODE_FILTER))
+    {//if form FDM_GCODE_FILTER  start to reOpenGcode
+        reOpenGcodePreview(metaData);
+        PluginMessageData data;
+        data.from = AkConst::Plugin::FDM_GCODE_PARSER;
+        data.dest = AkConst::Plugin::AK_MAIN_WINDOW;
+        data.msg = AkConst::Msg::CHECKOUT_PREVIEW;
+        data.map.insert(AkConst::Param::GCODE_PREVIEW_WID, false);
+        this->sendMsg2Manager(data);
+
     }
 
     if (metaData.msg == AkConst::Msg::AIMODE_CHANGED
         && metaData.from == AkConst::Plugin::AK_MAIN_WINDOW)
     {
 
-         bool _isAiMode = metaData.map.value(AkConst::Param::AIMODE_STATE).toBool();
-         qDebug() << "aimode --------:" <<_isAiMode ;
+         _isAiMode = metaData.map.value(AkConst::Param::AIMODE_STATE).toBool();
          m_rpc_inner->setIsAiMode(_isAiMode);
     }
 
@@ -162,7 +245,7 @@ void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
     
     if(useTimes > 10)
     {
-        MessageDialog a(tr("Warning"), tr("can't open more gcode preview widgt whice numbers must less than 10."), 0x00400000 );
+        MessageDialog a(tr("Warning"), tr("Can't open more GCode preview widgets which numbers must be less than 10."), 0x00400000 );
         a.exec();
         return ;
     }
@@ -222,7 +305,25 @@ void FdmGcodeParser::messageProcessing(PluginMessageData msgBody)
 #include <QProgressDialog>
 void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
 {
+    QString src_file = msgBody.map.value(AkConst::Param::SOURCE_GCODE_FILE, QString("")).toString();
     QString file = msgBody.map.value(AkConst::Param::GCODE_FILE, QString("")).toString();
+
+    //  Improve robustness add  @2023-05-08 by ChunLian
+    QVariant gcodeInfoVar = msgBody.map.value(AkConst::Param::GCODE_INFO);
+    bool bFiltterOk = false;
+    GC::GCodeInfo gcodeInfo;
+    if(gcodeInfoVar.canConvert<GC::GCodeInfo>()){
+        gcodeInfo = gcodeInfoVar.value<GC::GCodeInfo>();
+        if(gcodeInfo.srcGcodeFilePath.isEmpty() || gcodeInfo.dstGcodeFilePath.isEmpty()){
+            bFiltterOk = false;
+        }
+        else{
+            bFiltterOk = true;
+            src_file = gcodeInfo.srcGcodeFilePath;
+            file     = gcodeInfo.dstGcodeFilePath;
+        }
+    }
+
     bool isSameFile = checkOpenFile(file);
     if(isSameFile){
         PluginMessageData data;
@@ -244,20 +345,43 @@ void FdmGcodeParser::reOpenGcodePreview(PluginMessageData msgBody)
         this->sendMsg2Manager(data);
     }
     QString originalStlName = msgBody.map.value(AkConst::Param::ORIGINAL_STL_NAME, QString("")).toString();
-    
-        m_rpc_inner->pubMsgFromFdmGcodePaser(file);
-        m_rpc_inner->setOStlName(originalStlName);
-        auto pass_params = getSceneParams();
-        qDebug() << "pass_params: " << pass_params;
-        m_rpc_inner->setPassParams(pass_params);
-        
-        queryLoggingStatus();
-        m_pDlg = new ProgressDialog(nullptr);//(QDialog*)this
-        connect(m_pDlg, &ProgressDialog::destroyed, this, [&]()->void { m_pDlg = nullptr; });
-        m_pDlg->setText(tr("Load G-Code"));
-        m_pDlg->setCancelVisible(false);
-        connect(preview->ww->getGcodeView(),SIGNAL(setValue(int)),m_pDlg,SLOT(setValue(int)));
-        m_pDlg->exec();
+
+    m_rpc_inner->pubMsgFromFdmGcodePaser(file);
+    m_rpc_inner->setOStlName(originalStlName);
+    auto pass_params = getSceneParams();
+    m_rpc_inner->setPassParams(pass_params);
+    m_rpc_inner->setAnkerMachine(static_cast<int>(this->CurMachine));
+
+    m_rpc_inner->setOStlGcodePath("null_name");
+
+    if(bFiltterOk){
+        QString ostGcodePath = src_file;
+        qDebug()<< "ostGcodePath "<<ostGcodePath;
+        GC::EGeneratedByProducer curproducer = gcodeInfo.producer;
+        auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        QString dirPath = writableLocation + "/AICamera";
+        QFileInfo sFileInfo = QFileInfo(ostGcodePath);
+        QString des_file = dirPath + "/" +sFileInfo.fileName();
+        QString searchString = ".gcode";
+        QString replaceString = "_source_tmp.gcode";
+        int index = des_file.lastIndexOf(searchString);
+        if (index != -1) {
+            des_file.replace(index, searchString.length(), replaceString);
+        }
+        QFile::copy(ostGcodePath, des_file);
+        qDebug()<<"des_file" <<des_file;
+        m_rpc_inner->setOStlGcodePath(des_file);
+    }else{
+        AkUtil::TDebug("filtter pass fail!");
+    }
+
+    queryLoggingStatus();
+    m_pDlg = new ProgressDialog(nullptr);//(QDialog*)this
+    connect(m_pDlg, &ProgressDialog::destroyed, this, [&]()->void { m_pDlg = nullptr; });
+    m_pDlg->setText(tr("Load G-Code"));
+    m_pDlg->setCancelVisible(false);
+    connect(preview->ww->getGcodeView(),SIGNAL(setValue(int)),m_pDlg,SLOT(setValue(int)));
+    m_pDlg->exec();
 }
 
 void FdmGcodeParser::openGcodePreviewWithoutFile()
@@ -275,6 +399,7 @@ void FdmGcodeParser::openGcodePreviewWithoutFile()
     }
     preview->createView(args);
     m_rpc_inner->setIsAiMode(isAIMode);
+    m_rpc_inner->setAnkerMachine(static_cast<int>(this->CurMachine));
 }
 
 
@@ -402,5 +527,47 @@ FdmGcodeParser::~FdmGcodeParser()
         }
     }
 };
+
+void FdmGcodeParser::initialize(ControlInterface *controlmanager, RichParameterList *globalParameterList) {
+    qDebug() << "controlmanager " <<controlmanager;
+    if (globalParameterList)
+        globalParams = globalParameterList;
+    else
+        return;
+
+    {
+        const RichParameter& param = globalParams->getParameterByName(AkConst::SettingKey::MACHINE_NAME);
+        QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[&param, this](const Value& value){
+            this->_machineType = value.getString();
+            if(this->_machineType==AkConst::MachineName::M5){
+                this->CurMachine =  ankerMachine::M5;
+                if(m_rpc_inner != nullptr)
+                {
+                    m_rpc_inner->setAnkerMachine(static_cast<int>(this->CurMachine));
+                }
+
+            }
+
+            if(AkConst::MachineName::M5C_SERIES.contains(this->_machineType)){
+                this->CurMachine =  ankerMachine::M5C;
+                if(m_rpc_inner != nullptr)
+                {
+                    m_rpc_inner->setAnkerMachine(static_cast<int>(this->CurMachine));
+                }
+            }
+            qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getString();
+        });
+    }
+
+//    {
+//        const RichParameter& param = globalParams->getParameterByName(AkConst::SettingKey::MACHINE_AI_CAMERA);
+//        QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[&param, this](const Value& value){
+//            //maybe need't to get value friva
+//            // this->_isAiMode = value.getBool();
+//            qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getBool();
+//        } );
+//    }
+
+}
 
 

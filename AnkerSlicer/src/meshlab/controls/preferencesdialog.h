@@ -35,6 +35,7 @@ public:
     QWidget* getWidget(const int index);
     void openWidget(int index);
     void openWidget(QWidget *widget);
+    void selectIndex(const int index);
 
 signals:
     void swicthPage(int index);

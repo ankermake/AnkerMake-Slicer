@@ -1,7 +1,7 @@
 #include "fdmparameterprofile.h"
 #include "common/ak_const.h"
 #include <QException>
-
+#include <QDebug>
 
 void FdmParameterProfile::setExtruderCategory(const FdmProfileCategory &category)
 {
@@ -137,14 +137,6 @@ void FdmParameterProfile::updateMaterial(FdmMaterialProfile *profile)
     setModifyTimeNow();
 }
 
-void FdmParameterProfile::updateNozzleSize(double nozzleSize)
-{
-    FdmSettingItem IdxItem;
-    IdxItem.name = AkConst::SettingKey::MACHINE_NOZZLE_SIZE;
-    IdxItem.value = nozzleSize;
-    setSetting(AkConst::Category::MACHINE_SETTINGS, IdxItem);
-}
-
 QString FdmParameterProfile::getMachineName()
 {
     //auto akMachineId = getSetting(AkConst::Category::MACHINE_SETTINGS, AkConst::SettingKey::AK_MACHINE_ID);
@@ -178,13 +170,84 @@ double FdmParameterProfile::getNozzleSize()
     return nozzleSizeVar.toDouble();
 }
 
-
-void FdmParameterProfile::setMachineName(QString name)
+QString FdmParameterProfile::getPrintMode()
 {
-    setMetaData(AkConst::SettingKey::META_CURRENT_MACHINE_NAME, name);
+    auto printModeVar = getSetting(AkConst::Category::BASE_PARAM, AkConst::SettingKey::QML_PRINT_MODE);
+    if (printModeVar.isNull())
+    {
+        qDebug() << "printModeVar.isNull()" << getOriginName();
+        return AkConst::PrintMode::NORMAL;
+    }
+    return printModeVar.toString();
 }
 
-void FdmParameterProfile::setMaterialName(QString name)
-{
-    setMetaData(AkConst::SettingKey::META_CURRENT_MATERIAL_NAME, name);
+/*
+    const QString QML_PRINT_MODE      = "param_print_mode";
+    const QString QML_MACHINE_NAME    = "machine_index_name";
+    const QString QML_MATERIAL_NAME   = "material_index_name";
+    const QString QML_NOZZLE_NAME     = "extruder_index_name";
+    const QString MACHINE_NOZZLE_SIZE = "machine_nozzle_size";
+    const QString QML_PARAMETER_NAME  = "parameter_index_name";
+*/
+void FdmParameterProfile::setPrintMode(QString value)
+{  
+    qDebug() << "FdmParameterProfile::setPrintMode" << value;
+    setBaseParamData(AkConst::SettingKey::QML_PRINT_MODE, value);
+    //qDebug() << "FdmParameterProfile::getPrintMode" << getPrintMode();
 }
+
+void FdmParameterProfile::setMachineName(QString value)
+{
+    setMetaData(AkConst::SettingKey::META_CURRENT_MACHINE_NAME, value);
+    setBaseParamData(AkConst::SettingKey::QML_MACHINE_NAME, value);
+}
+
+void FdmParameterProfile::setMaterialName(QString value)
+{
+    setMetaData(AkConst::SettingKey::META_CURRENT_MATERIAL_NAME, value);
+    setBaseParamData(AkConst::SettingKey::QML_MATERIAL_NAME, value);
+}
+
+void FdmParameterProfile::setNozzleName(QString value)
+{
+    setMetaData(AkConst::SettingKey::META_CURRENT_NOZZLE_NAME, value);
+    setBaseParamData(AkConst::SettingKey::QML_NOZZLE_NAME, value);
+}
+
+void FdmParameterProfile::setNozzleSize(double value)
+{
+    setBaseParamData(AkConst::SettingKey::MACHINE_NOZZLE_SIZE, value);
+}
+
+void FdmParameterProfile::setProfileName(QString value)
+{
+    //setRealTimeMetaDate(AkConst::SettingKey::META_CURRENT_PROFILE_NAME, value);
+    setBaseParamData(AkConst::SettingKey::QML_PARAMETER_NAME, value);
+}
+
+void FdmParameterProfile::setAdhesionType(QString value){
+    setBaseParamData(AkConst::SettingKey::ADHESION_TYPE, value);
+}
+
+void FdmParameterProfile::setLayerHeight(double value){
+    setBaseParamData(AkConst::SettingKey::LAYER_HEIGHT, value);
+}
+
+void FdmParameterProfile::setInfillDensity(double value){
+    setBaseParamData(AkConst::SettingKey::INFILL_SPARSE_DENSITY, value);
+}
+
+void FdmParameterProfile::setInfillThickness(double value){
+    setBaseParamData(AkConst::SettingKey::INFILL_SPARSE_THICKNESS, value);
+}
+
+void FdmParameterProfile::setSupportEnable(bool value){
+    setBaseParamData(AkConst::SettingKey::SUPPORT_ENABLE, value);
+}
+
+
+
+
+
+
+

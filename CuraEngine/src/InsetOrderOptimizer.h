@@ -86,7 +86,7 @@ public:
      * Generate the insets for all of the walls of a given layer part after optimizing the ordering.
      * \return Whether this function added anything to the layer plan
      */
-    bool processInsetsWithOptimizedOrdering();
+    bool processInsetsWithOptimizedOrdering(int role_flag);
 
     /*!
      * Test whether it looks to be worthwhile to optimize the inset order of a given layer part.

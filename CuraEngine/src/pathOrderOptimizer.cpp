@@ -9,6 +9,10 @@
 #include "pathPlanning/LinePolygonsCrossings.h"
 #include "pathPlanning/CombPath.h"
 
+#ifdef __linux__
+    #include <climits> //linux 
+#endif // __linux__
+
 #define INLINE static inline
 
 namespace cura {

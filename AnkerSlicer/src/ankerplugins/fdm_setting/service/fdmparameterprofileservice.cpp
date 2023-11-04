@@ -81,6 +81,27 @@ QStringList FdmParameterProfileService::getMaterialList()
     {
         resultList.removeOne(AkConst::MaterialName::TPU);
     }
+
+    if (getNozzleSize() != AkConst::NozzleSizeName::SIZE4)
+    {
+        resultList.removeOne(AkConst::MaterialName::PA_CF);
+        resultList.removeOne(AkConst::MaterialName::PLAPLUS_SILK);
+        resultList.removeOne(AkConst::MaterialName::PLAPLUS_METALIC);
+    }
+
+    if(!AkConst::MachineName::M5C_SERIES.contains(getMachineName()))
+    {
+        resultList.removeOne(AkConst::MaterialName::PA_CF);
+    }
+
+    if(getNozzleSize() == AkConst::NozzleSizeName::SIZE2
+            && AkConst::MachineName::M5C_SERIES.contains(getMachineName()))
+    {
+        resultList.removeOne(AkConst::MaterialName::TPU);
+        resultList.removeOne(AkConst::MaterialName::ABS);
+        resultList.removeOne(AkConst::MaterialName::PETG);
+    }
+
     return resultList;
 }
 
@@ -503,7 +524,7 @@ void FdmParameterProfileService::selectProfile(QString name)
         {
             m_currentMaterialName = AkConst::MaterialName::PLAPLUS;
         }
-        m_currentProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_currentMachineName, m_currentMaterialName, m_nozzleSize,getExpertSuccess);
+        m_currentProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_currentMachineName, m_currentMaterialName, AkConst::PrintMode::NORMAL, m_nozzleSize,getExpertSuccess);
     }
     else
     {

@@ -43,6 +43,9 @@ void MessageProcessing::recMsgfromManager(PluginMessageData metadata)
     if(AkConst::Msg::MANUAL_UPDATE == metadata.msg){
         emit sendMsg2Update(metadata);
     }
+    if(AkConst::Msg::START_AUTO_CHECK_SERVER_VERSION == metadata.msg){
+        emit sendMsg2Update(metadata);
+    }
     if(AkConst::Msg::CANCEL_AUTO_CHECK_SERVER_VERSION == metadata.msg){
         emit sendMsg2Update(metadata);
     }
@@ -61,17 +64,34 @@ void MessageProcessing::recMsgfromManager(PluginMessageData metadata)
         //emit networkSendWid2AnkerMake(wid);
         emit networkSendWid2AnkerMake(metadata.object);
     }
+    if(AkConst::Msg::SEND_LOGIN_WIDGET_PTR == metadata.msg){
+       AkUtil::TDebug("process SEND_LOGIN_WIDGET_PTR ...");
+       emit networkSendLoginWidgetPtr(metadata.object);
+    }
     if(AkConst::Msg::SWITCH_NETWORK_WIDGET == metadata.msg){
         emit swtichNetworkWidgetSignal();
     }
     if(AkConst::Msg::NETWORK_DEAD == metadata.msg){
         emit networkDeadSig();
     }
+    if(AkConst::Msg::VIDEO_STATUS == metadata.msg){
+        // AkUtil::TDebug("VIDEO_STATUS.");
+        bool status = metadata.map.value(AkConst::Param::VIDEO_IS_PLAYING).toBool();
+        emit videoStatusChangeSig(status);
+    }
     if(AkConst::Msg::ANKERMAKE_MAINWINDOW_MODAL == metadata.msg){
         AkUtil::TDebug("mainwindowModalSig.");
         emit mainwindowModalSig(metadata.map.find(AkConst::Msg::ANKERMAKE_MAINWINDOW_MODAL).value().toInt());
     }
 
+    if(AkConst::Msg::PREVIEW_OPEN_FILE == metadata.msg){
+        emit fdmOpenPreviewFile();
+    }
+
+    if(AkConst::Msg::AIMODE_CHANGED == metadata.msg){
+        bool status = metadata.map.value(AkConst::Param::AIMODE_STATE).toBool();
+        emit aiModeChanged(status);
+    }
 }
 
 
@@ -213,6 +233,11 @@ bool MessageProcessing::processingWriteAllMeshModelsToStlFile(PluginMessageData&
     //qDebug() <<"originalStlName" << originalStlName;
     //return getMeshDoc()->writeAllMeshModelsToStlFile(stlPath,true);
     //return getDoc()->writeAllMeshModelsToStlFile(stlPath, true);
-    return getDoc()->writeVisibleMeshesToStlFile(stlPath, true);
+    //return getDoc()->writeVisibleMeshesToStlFile(stlPath, true);
     //return writeAllMeshModelsToStlFile(getMeshDoc(), stlPath, true);
+
+    int visibleMeshCount= 0;
+    bool writeSuc =  getDoc()->writeVisibleMeshesToStlFile(stlPath,visibleMeshCount, true);
+    metadata.map.insert(AkConst::Param::VISIBLE_MESH_COUNT, visibleMeshCount);
+    return writeSuc;
 }

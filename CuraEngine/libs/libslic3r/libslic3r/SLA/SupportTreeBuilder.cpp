@@ -705,7 +705,7 @@ void SupportTreeBuilder::retrieve_meshLinkElements(MeshTypeElement meshtype, std
                             )
                         {
                             double  radiusDown = std::max(algPtr->m_cfg.base_top_radius_mm, algPtr->m_cfg.base_radius_mm);
-                            double  newpillHeight = pill.height * (1.0 - 0.618);
+                            double  newpillHeight = pill.height * (1.0 - 0.618);//按黄金比例拆分
                             Vec3d pillarStartpoint = pill.startpoint();
                             Vec3d pillarEndpoint = pill.endpoint();
                             Vec3d newsPedtartpoint = pillarStartpoint;
@@ -1177,7 +1177,7 @@ bool SupportTreeBuilder::addHead(const std::vector<Head>& heads, int add_status,
     {
         algPtr->m_addHeadsize += 1;
         ret = algPtr->add_pinheadSupport(head, algPtr->m_addHeadsize);
-        if (add_status == 0)
+        if (add_status == 0)//临时增加
         {
             algPtr->m_addHeadsize -= 1;
         }
@@ -1216,7 +1216,7 @@ bool SupportTreeBuilder::addHead(const std::vector<Head>& heads, int add_status,
                 }
             }
 
-            if (add_status == 0)
+            if (add_status == 0)//临时增加
             {
                 invalidateLinkRelationShip(meshlink);
                 invalidateMeshLinks(meshlink, true);
@@ -1284,7 +1284,7 @@ void SupportTreeBuilder::searchLeftTreeElement(SupportTreeNode& src, std::vector
                 if (sameflg)
                 {
                     bridgeIDsecond = supportTreeNodeIsValid(junction(linkid).linkR[1]);
-                    if (bridgeIDsecond == false)
+                    if (bridgeIDsecond == false)//另一半不可用,才继续搜索左侧
                     {
                         meshlinktemp.type = linktype;
                         meshlinktemp.id = linkid;
@@ -1300,7 +1300,7 @@ void SupportTreeBuilder::searchLeftTreeElement(SupportTreeNode& src, std::vector
                     if (sameflg)
                     {
                         bridgeIDsecond = supportTreeNodeIsValid(junction(linkid).linkR[0]);
-                        if (bridgeIDsecond == false)
+                        if (bridgeIDsecond == false)//另一半不可用,才继续搜索左侧
                         {
                             meshlinktemp.type = linktype;
                             meshlinktemp.id = linkid;
@@ -1393,7 +1393,7 @@ void SupportTreeBuilder::searchRightTreeElement(SupportTreeNode& src, std::vecto
                     return (src.treeNodeType == i.type) && (src.id == i.id);
                 });
 
-            if (item != linkNodes.end())
+            if (item != linkNodes.end())//排除结点自身，同时确保该信息的来源
             {
                 linkNodes.erase(item);
                 item = std::find_if(linkNodes.begin(), linkNodes.end(), 
@@ -1401,7 +1401,7 @@ void SupportTreeBuilder::searchRightTreeElement(SupportTreeNode& src, std::vecto
                 {
                     return ((linknd.id >= 0) && (linknd.type == MeshTypeElement::Bridge || linknd.type == MeshTypeElement::DiffBridge));
                 });
-                if (item == linkNodes.end())
+                if (item == linkNodes.end())//Pillar上没有Bridge链接才删除
                 {
                     bool deleteflg = true;
                     for (const SupportTreeNode2MeshLink &lknd : linkNodes)
@@ -1417,7 +1417,7 @@ void SupportTreeBuilder::searchRightTreeElement(SupportTreeNode& src, std::vecto
                                     {
                                         return ((linknd.id >= 0) && (linknd.type == MeshTypeElement::Head));
                                     });
-                                if (item != meshlinksR.end())
+                                if (item != meshlinksR.end())//Pillar上还存有Head链接,标识不删除
                                 {
                                     deleteflg = false;
                                 }
@@ -2714,7 +2714,7 @@ void SupportTreeBuilder::moveTreeElement(Slic3r::sla::SupportTreeNode2MeshLink s
                             ach.dir = taildir.normalized();
                             ach.setCreatedFlg(true);
                         }
-                        else
+                        else//强制合成在主支撑中
                         {
                             pillar(pillId).endpt = hit.position();
                             pillar(pillId).height = startpt(Z) - pillar(id).endpt(Z);
@@ -2735,7 +2735,7 @@ void SupportTreeBuilder::moveTreeElement(Slic3r::sla::SupportTreeNode2MeshLink s
 
         {
 
-            if (crossBridgeIDs.size()==0)
+            if (crossBridgeIDs.size()==0)//由于重建后再次产生链接
             {
                 std::cout << "**************************searchInterconnected=="<< std::endl;
                 std::vector<SupportTreeNode2MeshLink> outintermeshlink;
@@ -4690,11 +4690,11 @@ void SupportTreeBuilder::pushSupportTreeHistoryData(const std::vector< Slic3r::s
 }
 
 /**
-
-
-
-
-
+    获取支撑的各项数据
+    index:      int&,    代表对应的支撑数据,首次调用必需为0;
+    filename:   std::string&, 获取到的支撑数据对应的名称;
+    data:       char*,    支撑数据, 最大不能超过2*1024*1024 - 1;
+    length:     int&,     支撑数据的长度  
 */
 int SupportTreeBuilder::writeSupportTreeData(int& index, std::string& filename, char* data, int& length)
 {
@@ -4765,12 +4765,12 @@ int SupportTreeBuilder::writeSupportTreeData(int& index, std::string& filename, 
         writePadData(pad, this);
         src = (char*)pad.c_str();
         size = pad.size();
-        index = -1;
+        index = -1;//结束
         break;
 #else
         filename = std::string("8Pad");
         writePadData(writer, this);
-        
+        //index = -1;//结束
         break;
 
 #endif
@@ -4783,7 +4783,7 @@ int SupportTreeBuilder::writeSupportTreeData(int& index, std::string& filename, 
     break;
 
     default:
-        index = -1;
+        index = -1;//结束
         return index;
     }
     writer.EndObject();

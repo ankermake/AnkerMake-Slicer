@@ -170,6 +170,7 @@ signals:
 private:
     //void onExtruderSwitched(int extruderIdx, FdmQmlTreeApi & treeApi);
     void refreshTree();
+    void setTreeNodeValue(const QString & nodeName, const QVariant value); //  add @2023-04-13 by ChunLian
 
     FdmParameterProfile* m_currentProfile;
 

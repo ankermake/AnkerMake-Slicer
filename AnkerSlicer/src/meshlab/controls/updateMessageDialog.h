@@ -37,7 +37,10 @@ public:
     explicit updateMessageDialog(const QString &title, const QString &description,
                         int buttons, QWidget *parent = nullptr);
 
-    
+    explicit updateMessageDialog(const QString &title, const QString &description, const QString &DetailText,
+                        int buttons, QWidget *parent = nullptr);
+
+    // 修改按钮上默认的文本
     void setBottonText(BUTTONFLAG botton, const QString &string);
     // dhf 654321
     
@@ -67,7 +70,7 @@ signals:
     void buttonClick(int flag);
 
 private:
-      void init();
+      void init(bool showDetail);
       void setButton(int buttons);
       void setButtonValue(QPushButton *button, BUTTONFLAG flage);
 

@@ -21,15 +21,15 @@ ComboBox {
             }
             if(buttonVisible) {
                 if(index >= 0) {
-                    button.visible = (index == (control.model.length - 1)) ? false : true
+                    button.visible = (index === (control.model.length - 1)) ? false : true
                 }
             }
             else {
-                if(index == 0) {
+                if(index === 0) {
                     button.visible = false;
                 }
                 else if(index >0) {
-                    button.visible = (index == (control.model.length - 1)) ? false : true
+                    button.visible = (index === (control.model.length - 1)) ? false : true
                 }
             }
         }

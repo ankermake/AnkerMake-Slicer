@@ -32,6 +32,7 @@ HEADERS += \
         NewRender/CH3dView.h \
         NewRender/CHChildDocWindow.h \
         NewRender/CHRenderData.h \
+    ankerguidepage.h \
         ankermainwindow.h \
         controls/basetabwidget.h \
         controls/controlmanager.h \
@@ -86,6 +87,7 @@ SOURCES += \
         NewRender/CH3dView.cpp \
         NewRender/CHChildDocWindow.cpp \
         NewRender/CHRenderData.cpp \
+    ankerguidepage.cpp \
         ankermainwindow.cpp \
         controls/basetabwidget.cpp \
         controls/controlmanager.cpp \

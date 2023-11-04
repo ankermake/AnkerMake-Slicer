@@ -55,6 +55,7 @@ void TitleWidget::setCloseButtonIcon(QIcon icon)
    // qDebug() << " icon ========" << icon.isNull()  << " formats ==" << image.format() << " icon2 =" << icon2.format();
     titleCloseButton->setIcon(icon);
     titleCloseButton->setIconSize(QSize(20,20));
+    titleCloseButton->setStyleSheet("background-color: transparent;");
     titleCloseButton->show();
 }
 

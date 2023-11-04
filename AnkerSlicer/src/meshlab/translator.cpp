@@ -10,7 +10,7 @@ Translator::Translator(QObject *parent)
     d->mapLanguageTopLevelDomain[QT_TR_NOOP("Deutsch"               )] = "de";
     d->mapLanguageTopLevelDomain[QT_TR_NOOP("Français"               )] = "fr";
     d->mapLanguageTopLevelDomain[QT_TR_NOOP("Italiano"              )] = "it";
-    
+    //d->mapLanguageTopLevelDomain[QT_TR_NOOP("日本語"             )] = "ja";
     d->activatedLanguage = "English";
 }
 

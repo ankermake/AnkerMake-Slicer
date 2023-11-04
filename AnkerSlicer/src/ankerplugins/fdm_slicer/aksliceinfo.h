@@ -18,7 +18,9 @@ public:
     QString originalStlName;
     
     QString stlFile;
-    
+    //mesh count
+    int meshCount;
+
     QString gcodeFile;
     
     QString sliceCmd;

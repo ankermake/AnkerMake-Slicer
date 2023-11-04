@@ -40,9 +40,14 @@ SUBDIRS += fdm_gcode_parser
 fdm_gcode_parser.subdir = ankerplugins/fdm_gcode_parser
 fdm_gcode_parser.depends = common
 
+# fdm_gcode_filter plugin
+SUBDIRS += fdm_gcode_filter
+fdm_gcode_filter.subdir = ankerplugins/fdm_gcode_filter
+fdm_gcode_filter.depends = common
+
 SUBDIRS += AnkerMake
 AnkerMake.subdir = meshlab
-AnkerMake.depends = common anker_edit_model fdm_gcode_parser fdm_setting fdm_slicer
+AnkerMake.depends = common anker_edit_model fdm_gcode_parser fdm_setting fdm_slicer fdm_gcode_filter
 
 # if distrib folder is not in $$PWD/../distrib (shadow build case),
 # we need to copy all the files inside $$PWD/../distrib in the actual

@@ -56,6 +56,7 @@ public:
 
     const QStringList &getSupportMeshes() const;
     void setSupportMeshes(const QStringList &newSupportMeshes);
+    void setVisibleMeshCount(int meshCount);
 
 signals:
     
@@ -81,6 +82,7 @@ private:
     
     QString originalStlName;
     QString stlFile;
+    int visibleMeshCount;
     QStringList supportMeshes;
     //QString destFile;
     QString userSetting;

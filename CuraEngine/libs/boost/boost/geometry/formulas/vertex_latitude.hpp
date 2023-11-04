@@ -27,7 +27,7 @@ namespace boost { namespace geometry { namespace formula
 a point on the geodesic that maximizes (or minimizes) the latitude.
 \author See
     [Wood96] Wood - Vertex Latitudes on Ellipsoid Geodesics, SIAM Rev., 38(4),
-
+             637–644, 1996
 */
 
 template <typename CT>
@@ -51,7 +51,7 @@ public:
 /*
  * formula based on paper
  *   [Wood96] Wood - Vertex Latitudes on Ellipsoid Geodesics, SIAM Rev., 38(4),
-
+ *            637–644, 1996
     template <typename T1, typename T2, typename Spheroid>
     static inline CT apply(T1 const& lat1,
                            T2 const& alp1,

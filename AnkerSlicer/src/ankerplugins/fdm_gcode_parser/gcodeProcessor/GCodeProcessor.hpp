@@ -20,12 +20,14 @@
 namespace Anker {
     static constexpr double EPSILON = 1e-4;
 
-    typedef Eigen::Matrix<double, 2, 1, Eigen::DontAlign> Vec2d;
-    typedef std::vector<Vec2d>                              Pointfs;
-    typedef Eigen::Matrix<float, 3, 1, Eigen::DontAlign> Vec3f;
-    typedef Eigen::Matrix<int32_t, 3, 1, Eigen::DontAlign> Vec3i32;
-    typedef Eigen::Transform<double, 3, Eigen::Affine, Eigen::DontAlign> Transform3d;
-    typedef Eigen::Matrix<double,   3, 1, Eigen::DontAlign> Vec3d;  //enum &
+    typedef Eigen::Matrix   <double , 2, 1, Eigen::DontAlign> Vec2d;
+    typedef Eigen::Matrix   <float  , 3, 1, Eigen::DontAlign> Vec3f;
+    typedef Eigen::Matrix   <int32_t, 3, 1, Eigen::DontAlign> Vec3i32;
+    typedef Eigen::Matrix   <double , 3, 1, Eigen::DontAlign> Vec3d;  //enum &
+
+    typedef std::vector<Vec2d> Pointfs;
+    typedef Eigen::Transform<double , 3, Eigen::Affine, Eigen::DontAlign> Transform3d;
+
     namespace CustomGCode {
     enum Type{
         ColorChange,
@@ -117,6 +119,12 @@ namespace Anker {
     class MachineEnvelopeConfig
     {
     public:
+        struct AxisDefault {    //  move to *.hpp @2023-04-12 by ChunLian
+            std::string         name;
+            std::vector<double> max_feedrate;
+            std::vector<double> max_acceleration;
+            std::vector<double> max_jerk;
+        };
         MachineEnvelopeConfig();
     public:
         // Allowing the machine limits to be completely ignored or used just for time estimator.
@@ -363,6 +371,8 @@ namespace Anker {
 
             bool enabled;
             float acceleration; // mm/s^2
+            float travel_acceleration;
+            float max_travel_acceleration;
             // hard limit for the acceleration, to which the firmware will clamp.
             float max_acceleration; // mm/s^2
             float extrude_factor_override_percentage;
@@ -394,13 +404,9 @@ namespace Anker {
                 // Let's be conservative and plan for newer boards with more memory.
                 // The firmware recalculates last planner_queue_size trapezoidal blocks each time a new block is added.
                 // We are not simulating the firmware exactly, we calculate a sequence of blocks once a reasonable number of blocks accumulate.
-#if CL_OPT      //  add for test Marlin @2022-09-16 by CL
-                static constexpr size_t queue_size = 16; // 64;
-                static constexpr size_t refresh_threshold = 16; //  queue_size * 4
-#else
+
                 static constexpr size_t queue_size = 64;
                 static constexpr size_t refresh_threshold = queue_size * 4;
-#endif
             };
 
             // extruder_id is currently used to correctly calculate filament load / unload times into the total print time.
@@ -421,6 +427,7 @@ namespace Anker {
 
             // post process the file with the given filename to add remaining time lines M73
             void post_process(const std::string& filename);
+            void set_fast_mode();
         };
 
         struct TrapezoidFeedrateProfile
@@ -606,6 +613,7 @@ namespace Anker {
         CachedPosition m_cached_position;
         bool m_wiping;
         bool m_on_takepic;
+        bool fastMode;
         float m_feedrate; // mm/s
         float m_width; // mm
         float m_height; // mm
@@ -637,12 +645,14 @@ namespace Anker {
             SuperSlicer,
             Slic3rPE,
             Slic3r,
+            AnkerPrusa,
             Cura,
             Simplify3D,
             CraftWare,
             ideaMaker,
             KissSlicer,
-            AnkerMake
+            AnkerMake,
+            BambuStudio
         };
 
         static const std::vector<std::pair<GCodeProcessor::EProducer, std::string>> Producers;
@@ -696,6 +706,7 @@ namespace Anker {
         void process_tags(const std::string_view comment);
         bool process_producers_tags(const std::string_view comment);
         bool process_prusaslicer_tags(const std::string_view comment);
+        bool process_bambu_tags(const std::string_view comment);
         bool process_cura_tags(const std::string_view comment);
         bool process_simplify3d_tags(const std::string_view comment);
         bool process_craftware_tags(const std::string_view comment);
@@ -814,6 +825,8 @@ namespace Anker {
         float get_retract_acceleration(PrintEstimatedTimeStatistics::ETimeMode mode) const;
         float get_acceleration(PrintEstimatedTimeStatistics::ETimeMode mode) const;
         void set_acceleration(PrintEstimatedTimeStatistics::ETimeMode mode, float value);
+        float get_travel_acceleration(PrintEstimatedTimeStatistics::ETimeMode mode) const;
+        void set_travel_acceleration(PrintEstimatedTimeStatistics::ETimeMode mode, float value);
         float get_filament_load_time(size_t extruder_id);
         float get_filament_unload_time(size_t extruder_id);
 

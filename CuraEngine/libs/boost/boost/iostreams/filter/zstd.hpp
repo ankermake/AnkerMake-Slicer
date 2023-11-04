@@ -1,4 +1,4 @@
-
+// (C) Copyright Reimar Döffinger 2018.
 // Based on zstd.hpp by:
 // (C) Copyright Milan Svoboda 2008.
 // Distributed under the Boost Software License, Version 1.0. (See accompanying

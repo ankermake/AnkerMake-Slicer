@@ -41,6 +41,7 @@
 #include "settingmanager.h"
 #include "common/utilities/tlogger.h"
 #include "ankermainwindow.h"
+#include "ankerguidepage.h"
 #include "controls/useragreementwidget.h"
 #include "common/utilities/ioapi.h"
 #include "common/Socket/HeartBeatThead.h"
@@ -50,8 +51,10 @@
 
 #ifdef _WIN32
 #define ANKERMAKE "AnkerMake"
+#define ANKERMAKE_ALPHA "AnkerMake_alpha"
 #elif __APPLE__
 #define ANKERMAKE "AnkerMake"
+#define ANKERMAKE_ALPHA "AnkerMake_alpha"
 #endif
 
 #if defined(Q_OS_WIN32)   // Q_OS_WIN32
@@ -119,19 +122,25 @@ int main(int argc, char *argv[]){
         qDebug() << "outputStr: " << outputStr << ", ret: " << ret;
         //TDebug("outputStr: " + outputStr);
 #elif __APPLE__
-        std::string strCmd = "ps -ef|grep " + QString(ANKERMAKE).toStdString() + "* |grep -v grep |awk '{print $8}'";
+        std::string strCmd = std::string("ps -ef|grep \"") + QString(ANKERMAKE).toStdString() + std::string("*\" |grep -v grep |awk '{print $8}'");
         const char* strFindName = strCmd.c_str();
         FILE *pPipe = popen(strFindName, "r");
         int count = 0;
         if(pPipe != NULL)
         {
             char name[512] = { 0 };
-            while(fgets(name, sizeof(name), pPipe) != NULL)
+            while(1)
             {
+                char* fp = fgets(name, sizeof(name), pPipe);
+                qDebug() << "***fp: " << fp;
+                if(fp == NULL)
+                {
+                    break;
+                }
                 int nLen = strlen(name);
                 //TDebug("nLen: " + nLen + ", name: " + QString::fromUtf8(name));
-                qDebug() << "nLen: " << nLen << ", name: " << QString::fromUtf8(name);
-                if(QString::fromUtf8(name).contains(ANKERMAKE))
+                qDebug() << "****nLen: " << nLen << ", name: " << QString::fromUtf8(name);
+                if(QString::fromUtf8(name).contains(ANKERMAKE) && !QString::fromUtf8(name).contains(ANKERMAKE_ALPHA, Qt::CaseInsensitive))
                 {
                     count++;
                 }
@@ -187,13 +196,23 @@ int main(int argc, char *argv[]){
     }
 
     MeshLabApplication app(argc, argv);
-    
-    int clearLogCreatedMoreThanXDays = 2;
-    QString logPath = TLogger::instance()->getLogPath();
-    QStringList filter;
-    filter << "*.log";
-    QSet<QString> excludeSet;
-    IoApi::clearFilesUnderPath(clearLogCreatedMoreThanXDays*24*60*AkConst::Time::MINUTE_SECOND, logPath, filter,excludeSet);
+    //clear files end with timestame.and move the file operator to threadpool
+    static QString logPath = TLogger::instance()->getLogPath();
+    auto clearLog = [&]()->void {
+        QThreadPool::globalInstance()->start([&]()->void{
+            int clearLogCreatedMoreThanXDays = 2;
+            QStringList filter;
+
+            filter << "*.log*";
+            QSet<QString> excludeSet;
+            IoApi::clearFilesUnderPath(clearLogCreatedMoreThanXDays*24*60*AkConst::Time::MINUTE_SECOND, logPath, filter,excludeSet);
+        });
+    };
+    //clear log when app started. and then clear log every hour
+    clearLog();
+    QTimer *logTimer = new QTimer(&app);
+    QObject::connect(logTimer,&QTimer::timeout,[&](){clearLog();});
+    logTimer->start(1*60*60*1000);
 
     AkUtil::TWarning("\n\n\n\n");
     QString dbgStr;
@@ -219,6 +238,48 @@ int main(int argc, char *argv[]){
 //    font.setPixelSize(14);
 //    app.setFont(font);
 
+    auto defaultFontName = app.font().family();
+
+    //swith to the font . retry n times when not success.
+    auto swithFont = [&](const QFont &destFont)->void{
+
+        auto destFontName = destFont.family();
+        //qDebug() << "destFontName " << destFontName;
+        auto currentFontName = app.font().family();
+
+         //qDebug() << "currentFontName  " << currentFontName;
+        if (destFontName == currentFontName )
+        {
+            //qDebug() << "destFontName eque to  currentFontName " ;
+            return;
+        }
+
+        //switch from "Noto Sans" or switch to "Noto Sans". retry n times
+        int retryTime = 2;
+        if (currentFontName == "Noto Sans" || destFontName == "Noto Sans")
+        {
+            retryTime = 10;
+        }
+
+        while (retryTime > 0)
+        {
+            //QFont newFont = destFont;
+            //newFont.setFamily(defaultFontName);
+            retryTime--;
+            //app.setFont(newFont);
+            app.setFont(destFont);
+            currentFontName = app.font().family();
+            //qDebug() << "set font and now font is " << currentFontName ;
+            if (destFontName != currentFontName )
+            {
+                //qDebug() << "retry switch font";
+                QThread::msleep(50);
+                continue;
+            }
+            break;
+        }
+    };
+
     {
         int index =  SettingManager().getCurrentLanguage();
         QFontDatabase::addApplicationFont(":/qss/NotoSansJP-Regular.ttf");
@@ -227,7 +288,20 @@ int main(int argc, char *argv[]){
             font = QFont("Noto Sans");
         }
         font.setPixelSize(14);
-        app.setFont(font);
+        //app.setFont(font);
+        swithFont(font);
+        static bool init = true;
+        QObject::connect(&app, &MeshLabApplication::languageChangeSignal, [&]()->void {
+            if (init) { init = false; return; }
+            int index = SettingManager().getCurrentLanguage();
+            QFont font("Microsoft YaHei");
+            if (index == 2) {
+                font = QFont("Noto Sans");
+            }
+            font.setPixelSize(14);
+            //app.setFont(font);
+            swithFont(font);
+        });
     }
 
 
@@ -316,18 +390,36 @@ int main(int argc, char *argv[]){
 #endif
 
 
-    std::unique_ptr<AnkerMainWindow> window;
+
+    std::shared_ptr<AnkerMainWindow> window;
     try {
         TDebug("AnkerMainWindow start.");
-        window = std::unique_ptr<AnkerMainWindow>(new AnkerMainWindow());
+        window = std::shared_ptr<AnkerMainWindow>(new AnkerMainWindow());
         TDebug("AnkerMainWindow end.");
     }
     catch (const MLException& exc) {
         handleCriticalError(exc);
         return -1;
     }
-
-    window->showMaximized();
+    window->showMaximized();//ps :there are some wrong logic when setting send  m_printMachineBox signal
+    //andrew comment this 2023-3-6 18:59:56
+    window->hide();
+    QString pStr;
+    QDebug(&pStr) << "<window->isHidden()"<< window.get();
+    QDebug(&pStr) << "<window->isHidden()"<< window->isHidden();
+    AkUtil::TDebug(pStr);
+    std::unique_ptr<ankerGuidePage> window1;
+    try {
+        TDebug("AnkerMainWindow start.");
+        window1 = std::unique_ptr<ankerGuidePage>(new ankerGuidePage(nullptr,window));
+        TDebug("AnkerMainWindow end.");
+    }
+    catch (const MLException& exc) {
+        handleCriticalError(exc);
+        return -1;
+    }
+    window1->setWindowTitle("AnkerMake");
+    window1->showNormalWin();
     app.processEvents();
 
     // click .stl startup exe
@@ -341,8 +433,10 @@ int main(int argc, char *argv[]){
 #elif __APPLE__
     argvFileList = app.fileList;
 #endif
-    window->openFileList(argvFileList);
-    QObject::connect(&app, &MeshLabApplication::openFileSignal, window.get(), &AnkerMainWindow::openFileFromAppRaram, Qt::QueuedConnection);
+    window1->openFileList(argvFileList);
+    QObject::connect(&app, &MeshLabApplication::openFileSignal, window1.get(), &ankerGuidePage::openFileFromAppRaram, Qt::QueuedConnection);
+
+
 
 //    LocalServer server;
 //    QObject::connect(&server, &LocalServer::processArgvfileNameMsg, window.get(), &AnkerMainWindow::openFileList);

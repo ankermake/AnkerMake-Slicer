@@ -1,7 +1,7 @@
 // This file is part of Eigen, a lightweight C++ template library
 // for linear algebra.
 //
-
+// Copyright (C) 2012 Désiré Nuentsa-Wakam <desire.nuentsa_wakam@inria.fr>
 // Copyright (C) 2015 Gael Guennebaud <gael.guennebaud@inria.fr>
 //
 // This Source Code Form is subject to the terms of the Mozilla
@@ -18,7 +18,7 @@ namespace Eigen {
 /** 
   * \brief Modified Incomplete Cholesky with dual threshold
   *
-
+  * References : C-J. Lin and J. J. Moré, Incomplete Cholesky Factorizations with
   *              Limited memory, SIAM J. Sci. Comput.  21(1), pp. 24-45, 1999
   *
   * \tparam Scalar the scalar type of the input matrices
@@ -188,7 +188,7 @@ class IncompleteCholesky : public SparseSolverBase<IncompleteCholesky<Scalar,_Up
 }; 
 
 // Based on the following paper:
-
+//   C-J. Lin and J. J. Moré, Incomplete Cholesky Factorizations with
 //   Limited memory, SIAM J. Sci. Comput.  21(1), pp. 24-45, 1999
 //   http://ftp.mcs.anl.gov/pub/tech_reports/reports/P682.pdf
 template<typename Scalar, int _UpLo, typename OrderingType>

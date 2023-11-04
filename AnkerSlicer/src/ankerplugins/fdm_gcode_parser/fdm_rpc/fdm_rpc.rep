@@ -8,8 +8,10 @@ class fdmRpc
     SIGNAL(sendGCodePrint(const QString &msg));
     SIGNAL(processDlgValueChange(int pDlgValue));
     SIGNAL(cheeckoutPreview(bool isC));
+    SIGNAL(previewOpenFile());
     //SIGNAL(previewClose(int id));
     SLOT(msgFromGcodepreview(int id));
+    SLOT(previewOpenFileEvent());
     SLOT(checkoutPreviewEvent(bool kk));
     SLOT(sendGCodePrintSignal(const QString &msg));
     SIGNAL(progress(int id));
@@ -19,6 +21,7 @@ class fdmRpc
     PROP(QVariant wid);
     PROP(int linkNum);
     PROP(QString oStlName);
+    PROP(QString oStlGcodePath);
     PROP(bool isAiMode = true);
     PROP(bool loggingStatus = false);
     PROP(bool gcodeComplete = true);
@@ -27,4 +30,5 @@ class fdmRpc
     PROP(float gcodeExtruderTargetTemperature);
     PROP(float gcodeBedTargetTemperature);
     PROP(float maxSpeed);
+    PROP(int ankerMachine);
 }

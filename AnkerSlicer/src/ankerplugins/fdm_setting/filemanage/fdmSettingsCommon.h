@@ -6,62 +6,60 @@
 namespace fdmsettings {
 
 
-const QString fdmPrinterJsonSettings    = QStringLiteral("settings");
-const QString fdmPrinterJsonIcon        = QStringLiteral("icon");
-const QString fdmPrinterJsonType        = QStringLiteral("type");
-const QString fdmPrinterJsonChildern    = QStringLiteral("children");
+const QByteArray fdmPrinterJsonSettings    = QByteArray("settings");
+const QByteArray fdmPrinterJsonIcon        = QByteArray("icon");
+const QByteArray fdmPrinterJsonType        = QByteArray("type");
+const QByteArray fdmPrinterJsonChildren    = QByteArray("children");
 
-const QString fdmPrinterJsonLabel       = QStringLiteral("label");
-const QString fdmPrinterJsonDescription = QStringLiteral("description");
-const QString fdmPrinterJsonLabelRaw       = QStringLiteral("@label_raw");
-const QString fdmPrinterJsonDescriptionRaw = QStringLiteral("@description_raw");
+const QByteArray fdmPrinterJsonLabel       = QByteArray("label");
+const QByteArray fdmPrinterJsonDescription = QByteArray("description");
 
-const QString fdmPrinterAffects         = QStringLiteral("@fdmAffects");
-const QString fdmPrinterAffectedBy      = QStringLiteral("@fdmAffectedBy");
-const QString fdmPrinterAffectedById    = QStringLiteral("@fdmAffectedById");
-const QString fdmPrinterAffects_UI      = QStringLiteral("@fdmAffects_UI");
-const QString fdmPrinterAffectedBy_UI   = QStringLiteral("@fdmAffectedBy_UI");
-const QString fdmPrinterAffects_Map     = QStringLiteral("@fdmAffects_Map");
-const QString fdmPrinterAffectedBy_Map  = QStringLiteral("@fdmAffectedBy_Map");
+const QByteArray fdmPrinterAffects         = QByteArray("@fdmAffects");
+const QByteArray fdmPrinterAffectedBy      = QByteArray("@fdmAffectedBy");
+const QByteArray fdmPrinterAffectedById    = QByteArray("@fdmAffectedById");
+const QByteArray fdmPrinterAffects_UI      = QByteArray("@fdmAffects_UI");
+const QByteArray fdmPrinterAffectedBy_UI   = QByteArray("@fdmAffectedBy_UI");
+const QByteArray fdmPrinterAffects_Map     = QByteArray("@fdmAffects_Map");
+const QByteArray fdmPrinterAffectedBy_Map  = QByteArray("@fdmAffectedBy_Map");
 //paramItem
-const QString fdmPrinterJsonValue               = QStringLiteral("value");
-const QString fdmPrinterJsonDefaultValue        = QStringLiteral("default_value");
-const QString fdmPrinterJsonMinValueWarning     = QStringLiteral("minimum_value_warning");
-const QString fdmPrinterJsonMaxValueWarning     = QStringLiteral("maximum_value_warning");
-const QString fdmPrinterJsonMinValue            = QStringLiteral("minimum_value");
-const QString fdmPrinterJsonMaxValue            = QStringLiteral("maximum_value");
-const QString fdmPrinterJsonUnit                = QStringLiteral("unit");
+const QByteArray fdmPrinterJsonValue               = QByteArray("value");
+const QByteArray fdmPrinterJsonDefaultValue        = QByteArray("default_value");
+const QByteArray fdmPrinterJsonMinValueWarning     = QByteArray("minimum_value_warning");
+const QByteArray fdmPrinterJsonMaxValueWarning     = QByteArray("maximum_value_warning");
+const QByteArray fdmPrinterJsonMinValue            = QByteArray("minimum_value");
+const QByteArray fdmPrinterJsonMaxValue            = QByteArray("maximum_value");
 
-const QString fdmPrinterJsonValueWarning            = QStringLiteral("@value_warning");
-const QString fdmPrinterJsonValueError              = QStringLiteral("@value_error");
+const QByteArray fdmPrinterJsonMaxValueWarning0    = QByteArray("maximum_value_warning0");
+const QByteArray fdmPrinterJsonMaxValue0           = QByteArray("maximum_value0");
+const QByteArray fdmPrinterJsonMaxValueWarning1    = QByteArray("maximum_value_warning1");
+const QByteArray fdmPrinterJsonMaxValue1           = QByteArray("maximum_value1");
 
-const QString fdmPrinterJsonValueWork               = QStringLiteral("@value");
-const QString fdmPrinterJsonDefaultValueWork        = QStringLiteral("@default_value");
-const QString fdmPrinterJsonMinValueWarningWork     = QStringLiteral("@minimum_value_warning");
-const QString fdmPrinterJsonMaxValueWaringWork      = QStringLiteral("@maximum_value_warning");
-const QString fdmPrinterJsonMinValueWork            = QStringLiteral("@minimum_value");
-const QString fdmPrinterJsonMaxValueWork            = QStringLiteral("@maximum_value");
+const QByteArray fdmPrinterJsonUnit                = QByteArray("unit");
 
-const QString fdmPrinterJsonTablePerMesh        = QStringLiteral("settable_per_mesh");
-const QString fdmPrinterJsonTablePerExtruder    = QStringLiteral("settable_per_extruder");
-const QString fdmPrinterJsonTablePerMeshgroup   = QStringLiteral("settable_per_meshgroup");
-const QString fdmPrinterJsonTableGlobally       = QStringLiteral("settable_globally");
-const QString fdmPrinterJsonLimitToExtruder     = QStringLiteral("limit_to_extruder");
-const QString fdmPrinterJsonEnble               = QStringLiteral("enabled");
-const QString fdmPrinterJsonResolve             = QStringLiteral("resolve");
+const QByteArray fdmPrinterJsonValueWarning            = QByteArray("@value_warning");
+const QByteArray fdmPrinterJsonValueError              = QByteArray("@value_error");
 
-const QString fdmPrinterJsonOptions             = QStringLiteral("options"); // QMap<QString, QString>
-const QString fdmPrinterJsonChildren            = QStringLiteral("children");
+
+const QByteArray fdmPrinterJsonTablePerMesh        = QByteArray("settable_per_mesh");
+const QByteArray fdmPrinterJsonTablePerExtruder    = QByteArray("settable_per_extruder");
+const QByteArray fdmPrinterJsonTablePerMeshgroup   = QByteArray("settable_per_meshgroup");
+const QByteArray fdmPrinterJsonTableGlobally       = QByteArray("settable_globally");
+const QByteArray fdmPrinterJsonLimitToExtruder     = QByteArray("limit_to_extruder");
+const QByteArray fdmPrinterJsonEnabled             = QByteArray("enabled");
+const QByteArray fdmPrinterJsonResolve             = QByteArray("resolve");
+
+const QByteArray fdmPrinterJsonOptions             = QByteArray("options"); // QMap<QString, QString>
+
 //for ui
-const QString fdmNodeIcon                    = QStringLiteral("#fdmNodeIcon");         //QString-- icon path
-//const QString fdmNodeCheckState              = QStringLiteral("#fdmNodeCheckState");  //bool true-checked false-unchecked
-const QString fdmNodeLevel                   = QStringLiteral("#fdmNodeLevel");        //int
-const QString fdmNodeIsVisibility            = QStringLiteral("#fdmNodeIsVisibility"); //bool
-//const QString fdmNodeInitialValue            = QStringLiteral("#fdmNodeInitialValue");
-//const QString fdmNodeRealValue               = QStringLiteral("#fdmNodeRealValue");
-const QString fdmNodeValueRangeFlag          = QStringLiteral("#fdmNodeValueRangeFlag"); //int/enum  -1--error(red)  0--normal  1-- warning(orange)
-const QString fdmNodeExpand                  = QStringLiteral("#fdmNodeExpand");  
-const QString fdmNodeRowInModelList          = QStringLiteral("#fdmNodeRowInModelList");  
+const QByteArray fdmNodeIcon                    = QByteArray("#fdmNodeIcon");         //QString-- icon path
+//const QByteArray fdmNodeCheckState              = QByteArray("#fdmNodeCheckState");  //bool true-checked false-unchecked
+const QByteArray fdmNodeLevel                   = QByteArray("#fdmNodeLevel");        //int
+const QByteArray fdmNodeIsVisibility            = QByteArray("#fdmNodeIsVisibility"); //bool
+//const QByteArray fdmNodeInitialValue            = QByteArray("#fdmNodeInitialValue");
+//const QByteArray fdmNodeRealValue               = QByteArray("#fdmNodeRealValue");
+const QByteArray fdmNodeValueRangeFlag          = QByteArray("#fdmNodeValueRangeFlag"); //int/enum  -1--error(red)  0--normal  1-- warning(orange)
+const QByteArray fdmNodeExpand                  = QByteArray("#fdmNodeExpand");  // type = category专有属性
+const QByteArray fdmNodeRowInModelList          = QByteArray("#fdmNodeRowInModelList");  // type = category专有属性
 
 
 }

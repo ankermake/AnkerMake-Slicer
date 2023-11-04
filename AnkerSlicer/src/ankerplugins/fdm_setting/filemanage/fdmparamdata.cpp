@@ -111,8 +111,8 @@ bool FdmCppParamNode::eventFilter(QObject *watched, QEvent *event){
             qobjlog = qobjlog.leftJustified((qobjlog.size() / 16 + 1) * 16);
             qDebug().noquote().nospace() << qobjlog << "eventFilter( " << key.leftJustified(16) << " , " << value << ")";
         }
-        if(key == fdmPrinterJsonEnble){
-            if(value.toBool() == false || isTheCategoryExpand()){ 
+        if(key == fdmPrinterJsonEnabled){
+            if(value.toBool() == false || isTheCategoryExpand()){ //  OK  s2022Äê1ÔÂ26ÈÕ 09:34:16
                 setProperty(fdmNodeIsVisibility, value);
             }
             nodeValueChange_fromTree(QVariant());
@@ -161,8 +161,8 @@ void FdmCppParamNode::dumpParam(int t)
             QList<QByteArray> keys = Qobj_MetaPropertyKeys(qobjReal());
             for(const auto & keyIt : keys){
                 if(skip.contains(keyIt)){continue;}
-                QString  key   = keyIt;
-                QVariant value = getQobjProperty(key);
+                QByteArray  key   = keyIt;
+                QVariant    value = getQobjProperty(key);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;
@@ -175,8 +175,8 @@ void FdmCppParamNode::dumpParam(int t)
             int count = Qobj_DynamicPropertyCount(qobjReal());
             QList<QByteArray> keys = Qobj_DynamicPropertyKeys(qobjReal());
             for(int i=0; i < count; ++i){
-                QString  key   = keys[i];
-                QVariant value = getQobjProperty(key);
+                QByteArray  key   = keys[i];
+                QVariant    value = getQobjProperty(key);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;
@@ -190,8 +190,8 @@ void FdmCppParamNode::dumpParam(int t)
 
             for(auto keyIt : storeData().keys()){
                 if(skip.contains(keyIt)){continue;}
-                QString  key   = keyIt;
-                QVariant value = storeData().get(keyIt);
+                QByteArray  key   = keyIt;
+                QVariant    value = storeData().get(keyIt);
 
                 debug << "\n" << QByteArray(t+10, ' ');
                 debug << key.leftJustified(width) << value;

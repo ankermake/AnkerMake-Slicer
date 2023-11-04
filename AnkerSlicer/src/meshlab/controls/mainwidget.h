@@ -18,6 +18,7 @@
 #include "message/messageprocessing.h"
 #include "NewRender/CHChildDocWindow.h"
 #include "common/controlInterface/messageDialog.h"
+#include "common/controlInterface/messagetip.h"
 #include "copyrightwidget.h"
 #include "common/Socket/QMainSocket2.h"
 #include "controls/customtitle.h"
@@ -50,6 +51,7 @@ public:
 
     void setMainWindowId(WId id);
     void retranslateUi();
+    GeneralWidget* getGeneralWidget();
 protected:
     void changeEvent(QEvent *e);
 private:
@@ -73,6 +75,7 @@ signals:
     void updateSoftware();
 public slots:
       void currentPageChanged(int index);
+      void onEntryMainWindow();
 
 private slots:
     void open();

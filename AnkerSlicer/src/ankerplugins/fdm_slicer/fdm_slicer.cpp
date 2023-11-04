@@ -21,7 +21,7 @@
 #include "common/mlapplication.h"
 #include <QRegularExpression>
 #include "../common/controlInterface/messageDialog.h"
-
+#include <QDebug>
 using namespace AkUtil;
 
 FdmSlicer::FdmSlicer()
@@ -116,18 +116,262 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
             gcodeContent = IoApi::readAll(sliceResult.gcodeFile);
             count--;
         }
-        
+        QStringList strList;
 
-        auto getMaxSpeed = [&]()->float{
-            float maxSpeed = -99;
-            
+//        auto getMaxSpeedAndPrintParams = [&]()->float{
+//            float maxSpeed = -99;
+//            QString travelSpeed = "250";
+//            //遍历所有行. 获取打印速度
+//            auto lines = gcodeContent.split("\n",Qt::KeepEmptyParts);
+//            for(int i = 0; i< lines.size();i++)
+//            {
+//                QString line = lines[i].trimmed();
+//                strList.append(line);
+//                if (line.isEmpty())
+//                {
+//                    continue;
+//                }
+//                line = line.trimmed();
+//                //qDebug() << line;
+//                //add some line after this line
+//                if (line.startsWith(";TIME:"))
+//                {
+//                    //get param from realtimeprofile
+//                    QString filamentName = "";
+//                    QString nozzleSize = "";
+//                    QString printMode = "";
+//                    auto paramLines = content.split("\n",Qt::SkipEmptyParts);
+//                    int count = 0;
+//                    for(int j = 0; j< paramLines.size();j++)
+//                    {
+//                        QString parmLine = paramLines[j].trimmed();
+//                        if (parmLine.startsWith("meta_current_material_name="))
+//                        {
+//                            filamentName = parmLine.replace("meta_current_material_name=","");
+//                            count++;
+//                        }
+//                        if (parmLine.startsWith("machine_nozzle_size="))
+//                        {
+//                            nozzleSize = parmLine.replace("machine_nozzle_size=","");
+//                            count++;
+//                        }
+//                        if (parmLine.startsWith("param_print_mode="))
+//                        {
+//                            printMode = parmLine.replace("param_print_mode=","");
+//                            count++;
+//                        }
+//                        if (parmLine.startsWith("speed_travel="))
+//                        {
+//                            travelSpeed = parmLine.replace("speed_travel=","");
+//                            count++;
+//                        }
+//                        if (count == 4)
+//                        {
+//                            break;
+//                        }
+//                    }
 
-            auto lines = gcodeContent.split("\r",Qt::SkipEmptyParts);
-            for(int i = 0; i< lines.size();i++)
+//                    strList.append(QString(";Filament Name:%1").arg(filamentName));
+//                    strList.append(QString(";Machine Nozzle Size:%1").arg(nozzleSize));
+//                    strList.append(QString(";Print Mode:%1").arg(printMode));
+//                    qDebug() << "filamentName" << filamentName << "nozzleSize" << nozzleSize << "printMode" << printMode << "travelSpeed" << travelSpeed;
+//                }
+
+//                //跳过注释和非挤出的行
+//                if (line.trimmed().startsWith(";")
+//                    || !line.trimmed().startsWith("G")
+//                    || line.indexOf("E") < 0
+//                    || line.indexOf("F") < 0)
+//                {
+//                     continue;
+//                }
+//                auto words = line.split(" ",Qt::SkipEmptyParts);
+//                for(int j = 0; j< words.size();j++)
+//                {
+//                    if (!words[j].startsWith("F"))
+//                    {
+//                        continue;
+//                    }
+//                    try
+//                    {
+//                        float speed = words[j].mid(1).toFloat();
+//                        maxSpeed = (maxSpeed < speed) ? speed : maxSpeed;
+//                    }
+//                    catch(...){}
+//                }
+//            }
+//            //show travel speed as max speed
+//            float travelSpeedF = travelSpeed.toFloat()*60;
+//            maxSpeed = (maxSpeed < travelSpeedF) ? travelSpeedF : maxSpeed;
+//            return maxSpeed;
+//        };
+
+        QMap<QString, QString> kvMap;
+        const QString meta_current_material_name = AkConst::SettingKey::META_CURRENT_MATERIAL_NAME;
+        const QString machine_nozzle_size = AkConst::SettingKey::MACHINE_NOZZLE_SIZE;
+        const QString param_print_mode = AkConst::SettingKey::QML_PRINT_MODE;
+        const QString speed_travel = "speed_travel";
+        const QString meta_current_profile_name = AkConst::SettingKey::META_CURRENT_PROFILE_NAME;
+        QList<QString> keyList = {
+            meta_current_material_name,
+            machine_nozzle_size,
+            param_print_mode,
+            meta_current_profile_name,
+            speed_travel,
+            "material_print_temperature",
+            "material_print_temperature_layer_0",
+            "material_bed_temperature",
+            "material_bed_temperature_layer_0",
+            "layer_height_0",
+            "bridge_settings_enabled",
+            "bridge_wall_speed",
+            "bridge_skin_speed",
+            "bridge_skin_speed_2",
+            "bridge_skin_speed_3",
+            "speed_print",
+            "speed_infill",
+            "speed_wall",
+            "speed_wall_0",
+            "speed_wall_x",
+            "speed_topbottom",
+            "speed_roofing",
+            "support_enable",
+            "speed_support",
+            "speed_support_infill",
+            "speed_support_interface",
+            "speed_support_roof",
+            "speed_support_bottom",
+            "speed_layer_0",
+            "speed_print_layer_0",
+            "speed_travel_layer_0",
+            "speed_z_hop",
+            "retraction_amount",
+            "retraction_retract_speed",
+            "retraction_prime_speed",
+            "adhesion_type",
+            "skirt_brim_speed",
+            "raft_speed",
+            "raft_surface_speed",
+            "raft_interface_speed",
+            "raft_base_speed",
+            "acceleration_enabled",
+            "acceleration_travel",
+            "acceleration_print",
+            "jerk_enabled",
+            "jerk_travel",
+            "jerk_print",
+            "jerk_infill",
+            "jerk_wall",
+            "jerk_wall_0",
+            "jerk_wall_x",
+            "jerk_topbottom",
+            "jerk_roofing",
+            "jerk_support",
+            "jerk_support_infill",
+            "jerk_support_interface",
+            "jerk_support_roof",
+            "jerk_support_bottom",
+            "jerk_prime_tower",
+            "jerk_layer_0",
+            "jerk_travel_layer_0",
+            "jerk_print_layer_0",
+            "jerk_skirt_brim",
+            "ak_VAJK_J_E_enabled",
+            "ak_J_E_print",
+            "ak_J_E_infill",
+            "ak_J_E_wall",
+            "ak_J_E_wall_0",
+            "ak_J_E_wall_x",
+            "ak_J_E_topbottom",
+            "ak_J_E_support",
+            "ak_J_E_skirt_brim",
+            "ak_J_E_layer_0",
+            "ak_VAJK_K_enabled",
+            "ak_K_print",
+            "ak_K_infill",
+            "ak_K_wall",
+            "ak_K_wall_0",
+            "ak_K_wall_x",
+            "ak_K_topbottom",
+            "ak_K_support",
+            "ak_K_skirt_brim",
+            "ak_K_layer_0",
+        };
+
+        auto getValue = [&](const QString& key)->QString {
+            if (kvMap.contains(key))
             {
-                QString line = lines[i];
-                
+                return kvMap[key];
+            }
+            return "";
+        };
 
+        //parameter lines
+        auto initPrintParams = [&]()->void {
+            auto lines = content.split("\n", Qt::SkipEmptyParts);
+            for (int i = 0; i < lines.size(); i++)
+            {
+                QString line = lines[i].trimmed();
+                if (line.isEmpty() || line.startsWith(";"))
+                {
+                    continue;
+                }
+
+                auto words = line.split("=", Qt::KeepEmptyParts);
+                if (words.size() < 2)
+                {
+                    continue;
+                }
+                auto key = words[0].trimmed();
+                auto value = words[1].trimmed();
+                kvMap[key] = value;
+            }
+        };
+
+        //insert print parameters into gcode
+        auto insertPrintParams = [&](const QStringList& lines)->void {
+            for (int i = 0; i < lines.size(); i++)
+            {
+                QString line = lines[i].trimmed();
+                if(line.isEmpty() || line.startsWith(";IN jerk of travel")){
+                    continue;
+                }
+
+                strList.append(line);                     
+                line = line.trimmed();
+                //add some line after this line
+                if (line.startsWith(";TIME:"))
+                {
+                    //get param from realtimeprofile
+                    strList.append(QString(";Machine Name:%1").arg(getValue(AkConst::SettingKey::META_CURRENT_MACHINE_NAME)));
+                    strList.append(QString(";Filament Name:%1").arg(getValue(meta_current_material_name)));
+                    strList.append(QString(";Machine Nozzle Size:%1").arg(getValue(machine_nozzle_size)));
+                    strList.append(QString(";Print Mode:%1").arg(getValue(param_print_mode)));
+                    strList.append(QString(";Profile Name:%1").arg(getValue(meta_current_profile_name)));
+                    strList.append(QString(";multi_model:%1").arg(sliceInfo.meshCount>1?"true":"false"));
+                    strList.append(QString(";damaged:false"));
+                    strList.append(QString(";repaired:false"));
+                    for (int k = 4; k < keyList.size(); k++)
+                    {
+                        strList.append(QString(";%1:%2").arg(keyList[k]).arg(getValue(keyList[k])));
+                    }
+                }
+            }
+        };
+        auto getMaxSpeed = [&](const QStringList& lines)->float {
+            //get max speed
+            float maxSpeed = -99;
+            QString travelSpeed = getValue(speed_travel);
+            if (travelSpeed == "") { travelSpeed = "250"; }
+            for (int i = 0; i < lines.size(); i++)
+            {
+                QString line = lines[i].trimmed();
+                if (line.isEmpty())
+                {
+                    continue;
+                }
+                line = line.trimmed();
+    
                 if (line.trimmed().startsWith(";")
                     || !line.trimmed().startsWith("G")
                     || line.indexOf("E") < 0
@@ -150,22 +394,27 @@ void FdmSlicer::doSliceSuccess(AkSliceInfo sliceInfo)
                     catch(...){}
                 }
             }
+            //show travel speed as max speed
+            float travelSpeedF = travelSpeed.toFloat() * 60;
+            maxSpeed = (maxSpeed < travelSpeedF) ? travelSpeedF : maxSpeed;
             return maxSpeed;
         };
         
 
         if (gcodeContent.indexOf(";MAXSPEED:") > 0)
         {
-            float maxPrintSpeed = getMaxSpeed();
-            
+            auto lines = gcodeContent.split("\n", Qt::KeepEmptyParts);
+            initPrintParams();
+            insertPrintParams(lines);
+            float maxPrintSpeed = getMaxSpeed(lines);
+            QString newContent = strList.join("\r\n");
 
             if (maxPrintSpeed > 0)
             {
-                gcodeContent = gcodeContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
+                newContent = newContent.replace(QRegularExpression(";MAXSPEED:.*?\r"), ";MAXSPEED:" + QString::number(maxPrintSpeed) + "\r");
             }
-            
 
-            IoApi::write(sliceResult.gcodeFile, gcodeContent.toUtf8());
+            IoApi::write(sliceResult.gcodeFile, newContent.toUtf8());
         }
 
         
@@ -285,18 +534,12 @@ void FdmSlicer::getGlobalSupportStatus()
 
 void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus status, float percent, QString msg)
 {
-    
-
-    if (progressBar == nullptr)
+   if (progressBar == nullptr)
     {
         return;
     }
     if (status == AkSlicer::Doing)
     {
-        
-
-        
-
         if (slicePercent<30)
         {
             if (step == AkSlicer::SliceStep::FileLoad )
@@ -304,8 +547,6 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
                 slicePercent = percent;
             }
         }
-        
-
         else
         {
             if (step == AkSlicer::SliceStep::Slice)
@@ -332,10 +573,6 @@ void FdmSlicer::setProgressBar(AkSlicer::SliceStep step, AkSlicer::SliceStatus s
 
 void FdmSlicer::doSlice()
 {
-    
-
-    
-
     int buttonState = panel->getButtonState();
     if ((buttonState & ESliceBtnStat::MODEL_IS_SUSPEND_STATUS)
        && !(buttonState & ESliceBtnStat::GENERATE_SUPPORT_RESULT_T))
@@ -420,8 +657,6 @@ void FdmSlicer::doSlice()
         qint64 currentFileSize = -2;
         while (1)
         {
-            
-
             QFileInfo fi(stlFile);
             currentFileSize = fi.size();
             if (preFileSize == currentFileSize)
@@ -661,8 +896,10 @@ void FdmSlicer::recMsgfromManager(PluginMessageData metaData){
 
         slicer->setStlFile(stlPath);
         slicer->setOriginalStlName(OStlName);
-        
 
+        int visibleMeshCount = metaData.map.value(AkConst::Param::VISIBLE_MESH_COUNT, QString("0")).toInt();
+        slicer->setVisibleMeshCount(visibleMeshCount);
+        //这里需要获取支撑数据sptMesh开头的stl
         QStringList filter;
         filter << "sptMesh*.stl";
         QFileInfo stlFileInfo(stlPath);

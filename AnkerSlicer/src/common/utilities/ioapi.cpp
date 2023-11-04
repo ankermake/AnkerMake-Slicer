@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QStringList>
 #include <QTextStream>
+#include <QDataStream>
 #include <QTextCodec>
 #include <QDebug>
 #include <QCoreApplication>
@@ -158,6 +159,8 @@ QString IoApi::readAll(QString fileName, QString encode)
     file.close();
     return result;
 }
+
+
 QList<QString> IoApi::getLines(QString fileName, QString encode)
 {
     QList<QString> lines ;

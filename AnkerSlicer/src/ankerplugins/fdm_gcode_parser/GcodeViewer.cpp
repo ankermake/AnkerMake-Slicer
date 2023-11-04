@@ -221,6 +221,8 @@ GcodeViewer::GcodeViewer(QWidget* parent) :QOpenGLWidget(parent), m_scene3d(null
             { 0.112f, 0.422f, 0.103f }, // Extrude{ 0.112f, 0.422f, 0.103f }
             { 0.505f, 0.064f, 0.028f }  // Retract{ 0.505f, 0.064f, 0.028f }
         };
+
+        this->Zlap_Colors = {1.0f, 1.0f, 1.0f};
     }
 
     // initializes non OpenGL data of TBuffers
@@ -1934,10 +1936,11 @@ QDebug(&debugStr)<<"paths.size(): " <<paths.size();
                 else
                     color = { 0.25f, 0.25f, 0.25f };
 
-                break;
-            }
-            case EMoveType::Wipe: { color = Wipe_Color; break; }
-            default: { color = { 0.0f, 0.0f, 0.0f }; break; }
+                    break;
+                }
+                case EMoveType::Wipe: { color = Wipe_Color; break; }
+                case EMoveType::Zlap: {color = Zlap_Colors;break;}
+                default: { color = { 0.0f, 0.0f, 0.0f }; break; }
             }
 
 #if ENABLE_REDUCED_TOOLPATHS_SEGMENT_CAPS
@@ -2703,6 +2706,17 @@ void GcodeViewer::setTravelColor(unsigned int index,std::array<float, 3> setColo
     this->Travel_Colors[index] = setColor;
 }
 
+void GcodeViewer::setZlapColor(std::array<float, 3> setColor)
+{
+    this->Zlap_Colors = setColor;
+}
+
+bool GcodeViewer::isGcodeWithAI()
+{
+    return this->gcode_result.ai_pic_Layer_d.size() > 0;
+}
+
+
 void GcodeViewer::loadGcode()
 {
     if (cnt)
@@ -2729,6 +2743,7 @@ void GcodeViewer::loadGcode()
         QThreadPool::globalInstance()->start([=](){
             
             off_render_single(offImage);
+            off_render_single_org(offImage);
             emit setValue(100);
         });
     }else{
@@ -3138,91 +3153,96 @@ void GcodeViewer::paintGL()
 
 #include<QDateTime>
 void GcodeViewer::render_toolpaths(QMatrix4x4 vM, QMatrix4x4 pM)
-{
-    //    QElapsedTimer timer;
-    auto render_as_points = [this](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader){
-        for (const RenderPath& path : buffer.render_paths) {
-            if (path.ibuffer_id == ibuffer_id) {
-                //shader.setUniformValue();
-                glsafe(glMultiDrawElements(GL_POINTS, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
-            }
-        }
-    };
+{    std::array<float, 4> light_intensity = { 0.25f, 0.70f, 0.75f, 0.75f };
+     //    QElapsedTimer timer;
+     auto render_as_points = [this, light_intensity](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader){
+         for (const RenderPath& path : buffer.render_paths) {
+             if (path.ibuffer_id == ibuffer_id) {
+                 int id = -1;
+                 id = glGetUniformLocation(shader.programId(), "uniform_color");
+                 if (id >= 0) {
+                     glsafe(glUniform4fv(id, 1, static_cast<const GLfloat*>(path.color.data())));
+                 }
+                 //shader.setUniformValue();
+                 glsafe(glMultiDrawElements(GL_POINTS, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
+             }
+         }
+     };
 
-    auto render_as_triangles = [this](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
-        for (const RenderPath& path : buffer.render_paths) {
-            if (path.ibuffer_id == ibuffer_id) {
-                int id = -1;
-                id = glGetUniformLocation(shader.programId(), "uniform_color");
-                if (id >= 0) {
-                    glsafe(glUniform4fv(id, 1, static_cast<const GLfloat*>(path.color.data())));
-                }
-                glsafe(glMultiDrawElements(GL_TRIANGLES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
-            }
-        }
-    };
+      auto render_as_triangles = [this](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
+          for (const RenderPath& path : buffer.render_paths) {
+              if (path.ibuffer_id == ibuffer_id) {
+                  int id = -1;
+                  id = glGetUniformLocation(shader.programId(), "uniform_color");
+                  if (id >= 0) {
+                      glsafe(glUniform4fv(id, 1, static_cast<const GLfloat*>(path.color.data())));
+                  }
+                  glsafe(glMultiDrawElements(GL_TRIANGLES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
+              }
+          }
+      };
 
-    std::array<float, 4> light_intensity = { 0.25f, 0.70f, 0.75f, 0.75f };
-    auto render_as_lines = [this, light_intensity](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
-        //shader.set_uniform("light_intensity", light_intensity);
-        int lid = -1;
-        lid = glGetUniformLocation(shader.programId(), "light_intensity");
-        if (lid >= 0) {
-            glsafe(glUniform4fv(lid, 1, static_cast<const GLfloat*>(light_intensity.data())));
-        }
-        for (const RenderPath& path : buffer.render_paths) {
-            if (path.ibuffer_id == ibuffer_id) {
-                //set_uniform_color(path.color, shader);
-                int id = -1;
-                id = glGetUniformLocation(shader.programId(), "uniform_color");
-                if (id >= 0) {
-                    glsafe(glUniform4fv(id, 1, static_cast<const GLfloat*>(path.color.data())));
-                }
-                glsafe(glMultiDrawElements(GL_LINES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
-            }
-        }
-    };
 
-    auto render_as_ankermove = [this](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
-        //shader.set_uniform("light_intensity", light_intensity)
-        for (const RenderPath& path : buffer.render_paths) {
-            if (path.ibuffer_id == ibuffer_id) {
-                //set_uniform_color(path.color, shader);
-                shader.setUniformValue("uniform_color",path.color[0],path.color[1],path.color[2],path.render_cap);
-                glsafe(glMultiDrawElements(GL_LINES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
-            }
-        }
-    };
+       auto render_as_lines = [this, light_intensity](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
+           //shader.set_uniform("light_intensity", light_intensity);
+           int lid = -1;
+           lid = glGetUniformLocation(shader.programId(), "light_intensity");
+           if (lid >= 0) {
+               glsafe(glUniform4fv(lid, 1, static_cast<const GLfloat*>(light_intensity.data())));
+           }
+           for (const RenderPath& path : buffer.render_paths) {
+               if (path.ibuffer_id == ibuffer_id) {
+                   //set_uniform_color(path.color, shader);
+                   int id = -1;
+                   id = glGetUniformLocation(shader.programId(), "uniform_color");
+                   if (id >= 0) {
+                       glsafe(glUniform4fv(id, 1, static_cast<const GLfloat*>(path.color.data())));
+                   }
+                   glsafe(glMultiDrawElements(GL_LINES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
+               }
+           }
+       };
 
-    unsigned char begin_id = buffer_id(EMoveType::Retract);
-    unsigned char end_id = buffer_id(EMoveType::Count);
-    for (unsigned char i = begin_id; i < end_id; ++i) {
-        const TBuffer& buffer = m_buffers[i];
-        if (!buffer.visible || !buffer.has_data())
-            continue;
-        //         timer.start();
-        QOpenGLShaderProgram* shaderProgram = nullptr;//= &this->shaderProgram1;
-        if (buffer.shader == "gouraud_light")
-        {
-            if (m_isNotOffScreen || m_orceShader1)
-            {
-                if(this->isTRender){
-                    shaderProgram = &this->shaderProgram_tr;
+        auto render_as_ankermove = [this](const TBuffer& buffer, unsigned int ibuffer_id, QOpenGLShaderProgram& shader) {
+            //shader.set_uniform("light_intensity", light_intensity)
+            for (const RenderPath& path : buffer.render_paths) {
+                if (path.ibuffer_id == ibuffer_id) {
+                    //set_uniform_color(path.color, shader);
+                    shader.setUniformValue("uniform_color",path.color[0],path.color[1],path.color[2],path.render_cap);
+                    glsafe(glMultiDrawElements(GL_LINES, (const GLsizei*)path.sizes.data(), GL_UNSIGNED_SHORT, (const void* const*)path.offsets.data(), (GLsizei)path.sizes.size()));
                 }
-                else{
-                    shaderProgram = &this->shaderProgram1;
-                }
-            }else{
-                shaderProgram = &this->shaderProgram_or;
             }
-        }
-        if (buffer.shader == "toolpaths_lines")
-        {
-            shaderProgram = &this->shaderProgram2;
-        }
-        if (buffer.shader == "toolpaths_point"){
-            shaderProgram = &shaderProgram_point;
-        }
+        };
+
+         unsigned char begin_id = buffer_id(EMoveType::Retract);
+          unsigned char end_id = buffer_id(EMoveType::Count);
+           for (unsigned char i = begin_id; i < end_id; ++i) {
+               const TBuffer& buffer = m_buffers[i];
+               if (!buffer.visible || !buffer.has_data())
+                   continue;
+               //         timer.start();
+               QOpenGLShaderProgram* shaderProgram = nullptr;//= &this->shaderProgram1;
+               if (buffer.shader == "gouraud_light")
+               {
+                   if (m_isNotOffScreen || m_orceShader1)
+                   {
+                       if(this->isTRender){
+                           shaderProgram = &this->shaderProgram_tr;
+                       }
+                       else{
+                           shaderProgram = &this->shaderProgram1;
+                       }
+                   }else{
+                       shaderProgram = &this->shaderProgram_or;
+                   }
+               }
+               if (buffer.shader == "toolpaths_lines")
+               {
+                   shaderProgram = &this->shaderProgram2;
+               }
+               if (buffer.shader == "toolpaths_point"){
+                   shaderProgram = &shaderProgram_point;
+               }
 
         if (shaderProgram == nullptr)
         {
@@ -3650,13 +3670,13 @@ QString GcodeViewer::sendOriginalStlNamedFile(bool isNeedReplace)
         QString debugstr;
         QDebug(&debugstr) << "m_gcode_name gcode :" << this->m_gcode_name;
         QDebug(&debugstr) << "originalGcodeName gcode :" << this->originalGcodeName;
-        QDebug(&debugstr) << "m_gcode_path gcode :" << QString::fromStdString(this->m_gcode_path);
+        QDebug(&debugstr) << "originalGcodePath gcode :" << originalGcodePath;
         QDebug(&debugstr) << "sendOriginalStlNamedFile gcode :" << senStr;
         AkUtil::TDebug(debugstr);
-        if(QFile::exists(QString::fromStdString(m_gcode_path)))
+        if(QFile::exists(originalGcodePath))
         {
-            QFile::rename(QString::fromStdString(m_gcode_path), senStr);
-            m_gcode_path = senStr.toStdString();
+            QFile::rename(originalGcodePath, senStr);
+            originalGcodePath = senStr;
         }
     }
     return senStr;
@@ -3679,6 +3699,15 @@ bool GcodeViewer::setGcodePath(const std::string & gcodePath)
 {
     this->m_gcode_path = gcodePath;
     return this->matchGcodeName();
+}
+
+void GcodeViewer::setOriginalGcodePath(const QString &gcodePath)
+{
+    QString debugstr;
+    originalGcodePath = gcodePath;
+    QDebug(&debugstr) <<"setOriginalGcodePath originalGcodePath" <<originalGcodePath;
+    AkUtil::TDebug(debugstr);
+    return;
 }
 
 std::string GcodeViewer::getGcodePath()
@@ -3811,6 +3840,9 @@ QImage GcodeViewer::render_singe_iamge()
     AkUtil::TFunction("");
 
     paramsStack pst(this);
+  	m_extrusions.role_visibility_flags = 524287;
+ 	//travel  role_visibility_flags
+    set_toolpath_move_type_visible(EMoveType::Travel, false);
     boolLock orc(this->m_orceShader1);
     m_scene3d->setVerticalAngle(30.0);
 
@@ -3950,7 +3982,7 @@ void GcodeViewer::off_render_single(const QImage& res)
     //AkUtil::TDebug("---Time start--");
     postProcessGcode tpg;
 
-    QRegularExpression re("(?<=;Generated).+(?=AnkerSlicer)");
+    QRegularExpression re("(?<=Generated).+(?=Anker(Slicer|Make for))");
     QRegularExpression reTb("(?<=;).*(?=thumbnail begin)");
     QRegularExpression reTe("(?<=;).*(?=thumbnail end)");
     bool inThumbnailLine = false;
@@ -3964,15 +3996,126 @@ void GcodeViewer::off_render_single(const QImage& res)
     QFile wfile(pngPath);
     if(!wfile.open(QIODevice::WriteOnly|QIODevice::Text)){
     }
-    QStringList resStrList;
     //AkUtil::TDebug("---start read_file--");
-    
-    tpg.read_file(this->m_gcode_path,[this,&re,&res,&wfile,&reTb,&reTe,&isWritePng,&inThumbnailLine,&inHead,&resStrList](postProcessGcode& reader, const QString& line){
-        resStrList<<line;
-        QByteArray resstr = line.toUtf8();
-        if(inHead)
+    tpg.read_file(this->m_gcode_path,[this,&re,&res,&wfile,&reTb,&reTe,&isWritePng,&inThumbnailLine,&inHead](postProcessGcode& reader, const std::string_view& line_view){
+
+        QByteArray resstr = QByteArray(line_view.data(), line_view.size());  //  just reference const char *
+        if(inHead && line_view.front() == ';')
         {
             //AkUtil::TDebug("---read_file head--");
+            QString line = QString::fromUtf8(resstr);
+            QRegularExpressionMatch match = re.match(line);
+            if(match.hasMatch())
+            {
+                //res.save("testpng.png","PNG");
+                QByteArray arr;
+                QBuffer buffer(&arr);
+                buffer.open(QIODevice::WriteOnly);
+                res.save(&buffer, "PNG");
+                buffer.close();
+                arr = arr.toBase64(); //  Faster optimization add @2023-05-09 by ChunLian
+
+                wfile.write(resstr);
+                wfile.write("; thumbnail begin 256 256\n");
+                int curi = 0;
+                int stride = 200;
+                //AkUtil::TDebug("---read_file render_singe_iamge write--");
+                while(curi + stride < arr.size())
+                {
+                    wfile.write("; ");
+                    wfile.write(arr.constData() + curi,stride);
+                    wfile.write("\n");
+                    curi += stride;
+                    //qDebug() <<"teste";
+                }
+                wfile.write("; ");
+                wfile.write(arr.constData() + curi ,arr.size() - curi);
+                wfile.write("\n");
+                //wfile.write(arr..constData()+10,arr.size()-10);
+                wfile.write("; thumbnail end \n");
+                isWritePng = true;
+                return ;
+            }else{
+                QRegularExpressionMatch matchTb = reTb.match(line);
+                QRegularExpressionMatch matchTe = reTe.match(line);
+                if(matchTb.hasMatch())
+                {
+                    inThumbnailLine = true;
+                    return ;
+                }
+                if(!inThumbnailLine)
+                {
+                    if(isWritePng){
+                        inHead = false;
+                    }
+                    // AkUtil::TDebug("---read_file test--");
+                    QString reline;
+                    bool needUpdate = postGcodeHead(line,reline);
+                    resstr = needUpdate ? reline.toUtf8(): resstr;
+                    //AkUtil::TDebug("---read_file test 111--");
+                    wfile.write(resstr);
+                    return ;
+                }
+                if(matchTe.hasMatch())
+                {
+                    inThumbnailLine = false;
+                    inHead = false;
+                    return ;
+                }
+                
+                return;
+            }
+        }
+
+      
+        wfile.write(resstr);
+        return ;
+    });
+    wfile.close();
+    QString debugstr;
+    QDebug(&debugstr) << "off_render_single gcode Path:" << QString::fromStdString(this->m_gcode_path);
+    AkUtil::TDebug(debugstr);
+    QFile::remove(QString::fromStdString(this->m_gcode_path));
+    this->m_gcode_path = pngPath.toStdString();
+}
+
+void GcodeViewer::off_render_single_org(const QImage &res)
+{
+    AkUtil::TFunction("");
+    //AkUtil::TDebug("---Time start--");
+    postProcessGcode tpg;
+
+    QRegularExpression re("(?<=Generated).+(?=Anker(Slicer|Make for))");
+    QRegularExpression reTb("(?<=;).*(?=thumbnail begin)");
+    QRegularExpression reTe("(?<=;).*(?=thumbnail end)");
+    bool inThumbnailLine = false;
+    bool inHead = true;
+    bool isWritePng = false;
+
+    QString beforeReplace = originalGcodePath;
+    QString searchString = ".gcode";
+    QString replaceString = "_withpng.gcode";
+    int index = originalGcodePath.lastIndexOf(searchString);
+    if (index != -1) {
+        originalGcodePath.replace(index, searchString.length(), replaceString);
+    }
+
+    qDebug()<< "this->beforeReplace" << beforeReplace;
+    qDebug()<<"originalGcodePath" << originalGcodePath;
+    //pngPath.replace(".gcode","withpng.gcode");
+    QFile wfile(originalGcodePath);
+    if(!wfile.open(QIODevice::WriteOnly|QIODevice::Text)){
+        qDebug()<<"文件打开失败";
+    }
+
+    //AkUtil::TDebug("---start read_file--");
+    tpg.read_file(beforeReplace.toStdString(),[this,&re,&res,&wfile,&reTb,&reTe,&isWritePng,&inThumbnailLine,&inHead](postProcessGcode& reader, const std::string_view& line_view){
+
+        QByteArray resstr = QByteArray(line_view.data(), line_view.size());  //  just reference const char *
+        if(inHead && line_view.front() == ';')
+        {
+            //AkUtil::TDebug("---read_file head--");
+            QString line = QString::fromUtf8(resstr);
             QRegularExpressionMatch match = re.match(line);
             if(match.hasMatch())
             {
@@ -3983,21 +4126,23 @@ void GcodeViewer::off_render_single(const QImage& res)
                 buffer.open(QIODevice::WriteOnly);
                 res.save(&buffer, "PNG");
                 buffer.close();
-                wfile.write(resstr+'\n');
+                arr = arr.toBase64();    //  Faster optimization add @2023-05-09 by ChunLian
+
+                wfile.write(resstr);
                 wfile.write("; thumbnail begin 256 256\n");
                 int curi = 0;
                 int stride = 200;
                 //AkUtil::TDebug("---read_file render_singe_iamge write--");
-                while(curi + stride < arr.toBase64().size())
+                while(curi + stride <= arr.size())
                 {
                     wfile.write("; ");
-                    wfile.write(arr.toBase64().constData() + curi,stride);
+                    wfile.write(arr.constData() + curi,stride);
                     wfile.write("\n");
                     curi += stride;
                     //qDebug() <<"teste";
                 }
                 wfile.write("; ");
-                wfile.write(arr.toBase64().constData() + curi ,arr.toBase64().size() - curi);
+                wfile.write(arr.constData() + curi ,arr.size() - curi);
                 wfile.write("\n");
                 //wfile.write(arr.toBase64().constData()+10,arr.toBase64().size()-10);
                 wfile.write("; thumbnail end \n");
@@ -4021,7 +4166,7 @@ void GcodeViewer::off_render_single(const QImage& res)
                     bool needUpdate = postGcodeHead(line,reline);
                     resstr = needUpdate ? reline.toUtf8(): resstr;
                     //AkUtil::TDebug("---read_file test 111--");
-                    wfile.write(resstr+'\n');
+                    wfile.write(resstr);
                     return ;
                 }
                 if(matchTe.hasMatch())
@@ -4036,15 +4181,15 @@ void GcodeViewer::off_render_single(const QImage& res)
         }
 
         
-        wfile.write(resstr+'\n');
+         wfile.write(resstr);
         return ;
     });
     wfile.close();
     QString debugstr;
-    QDebug(&debugstr) << "off_render_single gcode Path:" << QString::fromStdString(this->m_gcode_path);
+    QDebug(&debugstr) << "off_render_single gcode Path:" << originalGcodePath;
     AkUtil::TDebug(debugstr);
-    QFile::remove(QString::fromStdString(this->m_gcode_path));
-    this->m_gcode_path = pngPath.toStdString();
+    QFile::remove(beforeReplace);
+
 }
 
 void GcodeViewer::offPaint()
@@ -4129,19 +4274,15 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         QRegularExpression re(".+(?=.gcode)");
         QRegularExpressionMatch match = re.match(_gPath);
 
-#ifdef USE_EXTRA_UI
-        QString matchName;
-#endif
-        if (match.hasMatch()) //&& !m_offscreenSurface)
-        {
-            akpicSave = match.captured(0);
-#ifdef USE_EXTRA_UI
-            matchName = match.captured(0);
-#endif
-            akpicSave += ".akpic";
-        }
+
         if(isAiMode)
         {
+            if (match.hasMatch()) //&& !m_offscreenSurface)
+            {
+                akpicSave = match.captured(0);
+                akpicSave += ".akpic";
+            }
+
             paramsStack pst(this);
             //m_extrusions.role_visibility_flags = 24630;
             m_extrusions.role_visibility_flags = 524287;
@@ -4286,18 +4427,35 @@ void GcodeViewer::off_render(QString savePath,bool isAiMode)
         }
         });
     }else{
-        
-        if(QFile::exists(QString::fromStdString(this->m_gcode_path)))
-        {
-            QThreadPool::globalInstance()->start([=](){
-                QFile::copy(QString::fromStdString(this->m_gcode_path), savePath);
-            });
+        qDebug()<< "originalGcodePath" <<originalGcodePath;
+        if(originalGcodePath != ""){
+            if(QFile::exists(originalGcodePath))
+            {
+                QThreadPool::globalInstance()->start([=](){
+                    QFile::copy(originalGcodePath, savePath);
+                });
+            }else{
+                AkUtil::TDebug("error : file not exit");
+            }
+                saveSize = QFileInfo(originalGcodePath).size();
         }else{
-            AkUtil::TDebug("error : file not exit");
+            //the old logic
+            if(QFile::exists(QString::fromStdString(this->m_gcode_path)))
+            {
+                QThreadPool::globalInstance()->start([=](){
+                    QFile::copy(QString::fromStdString(this->m_gcode_path), savePath);
+                });
+            }else{
+                AkUtil::TDebug("error : file not exit");
+            }
+            AkUtil::TDebug(QString("this->m_gcode_path " )+QString::fromStdString(this->m_gcode_path.c_str()));
+            AkUtil::TDebug(QString("savePath " )+savePath);
+            saveSize = QFileInfo(QString::fromStdString(this->m_gcode_path)).size();
         }
-        AkUtil::TDebug(QString("this->m_gcode_path " )+QString::fromStdString(this->m_gcode_path.c_str()));
-        AkUtil::TDebug(QString("savePath " )+savePath);
-        saveSize = QFileInfo(QString::fromStdString(this->m_gcode_path)).size();
+
+
+
+
     }
 
     QThreadPool::globalInstance()->start([=](){

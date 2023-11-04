@@ -153,6 +153,40 @@ void AnkerMainWindow::initRichParameterList()
         defaultGlobalParams.addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, 90.0f));
     }
 
+    {   //  add @2023-03-23 by ChunLian�� info machine、nozzle、extruder、material、parameter
+        defaultGlobalParams.addParam(RichString(AkConst::SettingKey::MACHINE_NAME               , "Unknown" ));
+        defaultGlobalParams.addParam(RichFloat (AkConst::SettingKey::MACHINE_NOZZLE_SIZE        , 0.401f    ));
+        defaultGlobalParams.addParam(RichBool  (AkConst::SettingKey::MACHINE_AI_CAMERA          , false     ));
+        defaultGlobalParams.addParam(RichBool  (AkConst::SettingKey::EXTRACT_PARAM_FROM_GCODE   , false     ));
+
+
+        //  example @2023-03-24 by ChunLian
+        {
+            const RichParameter& param = defaultGlobalParams.getParameterByName(AkConst::SettingKey::MACHINE_NAME);
+            QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[& param](const Value& value){
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getString();
+            } );
+        }
+        {
+            const RichParameter& param = defaultGlobalParams.getParameterByName(AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
+            QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[& param](const Value& value){
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getFloat();
+            } );
+        }
+        {
+            const RichParameter& param = defaultGlobalParams.getParameterByName(AkConst::SettingKey::MACHINE_AI_CAMERA);
+            QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[& param](const Value& value){
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getBool();
+            } );
+        }
+        {
+            const RichParameter& param = defaultGlobalParams.getParameterByName(AkConst::SettingKey::EXTRACT_PARAM_FROM_GCODE);
+            QObject::connect(param.qobj.data(),  &RichParameterQObject::valueChange,[& param](const Value& value){
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value.getBool();
+            } );
+        }
+    }
+
     static auto createMachineSize = [this]() {
         {  
             const RichPoint3f& param = static_cast<const RichPoint3f&>(defaultGlobalParams.getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE));
@@ -205,11 +239,11 @@ void AnkerMainWindow::initRichParameterList()
     static std::function<void(void)> delay_createMachineSize;
     delay_createMachineSize = [&](){
         if(curScene){
-            createMachineSize();
             qDebug() << "createMachineSize";
+            createMachineSize();
         }
         else{
-           QTimer::singleShot(1,delay_createMachineSize);
+           QTimer::singleShot(10,delay_createMachineSize);
         }
     };
     delay_createMachineSize();
@@ -248,7 +282,7 @@ void AnkerMainWindow::initFdmWidget()
 {
     TFunction("");
     qDebug() << "MainWindow Widget: " << this << "WindId: " << window()->winId();
-    FdmMainWidget* mainwidget = new FdmMainWidget(messageProcessing, m_mainTitleBar, m_controlManager, this);
+    mainwidget = new FdmMainWidget(messageProcessing, m_mainTitleBar, m_controlManager, this);
     mainwidget->setMainWindowId(window()->winId());
     connect(mainwidget, &FdmMainWidget::unloadPlugins, this, &AnkerMainWindow::unloadPluginsSlot);
     connect(mainwidget, &FdmMainWidget::otaNeedSaveProjectSignal, this, &AnkerMainWindow::otaNeedSaveProject);
@@ -256,12 +290,15 @@ void AnkerMainWindow::initFdmWidget()
     connect(this, &AnkerMainWindow::pluginsUnloaded, mainwidget, &FdmMainWidget::pluginsUnloaded);
 
     connect(mainwidget, SIGNAL(fdmOpenFile()), this, SLOT(open()));
+    connect(messageProcessing, SIGNAL(fdmOpenPreviewFile()), this, SLOT(OPenOnPreview()));
     connect(mainwidget, SIGNAL(fdmSaveAllMesh()), this, SLOT(saveAllMesh()));
     connect(mainwidget, SIGNAL(fdmSaveMesh()), this, SLOT(saveMesh()));
     connect(mainwidget, SIGNAL(fdmSaveProject()), this, SLOT(slotSaveProject()));
     connect(mainwidget, SIGNAL(fdmSaveAsProject()), this, SLOT(slotSaveAsProject()));
     connect(mainwidget, SIGNAL(fdmOpenRecent(QStringList)), this, SLOT(openFileList(QStringList)));
     connect(this, SIGNAL(openFileSucessful(QStringList)), mainwidget, SLOT(insertRecent(QStringList)));
+
+    connect(messageProcessing, &MessageProcessing::videoStatusChangeSig, this, &AnkerMainWindow::videoStatusChangeSlot);
     this->setCentralWidget(mainwidget);
 }
 
@@ -520,6 +557,16 @@ void AnkerMainWindow::openFileList(QStringList fileNameList)
             return;
         }
     }
+
+    {   //  add  @2023-06-21 by ChunLian
+        if(fileNameList.size() > 0){
+            QString suffix = QFileInfo(fileNameList.front()).suffix();
+             if((suffix == m_gcodeSuffix || suffix == m_acodeSuffix)){
+                while(fileNameList.size() > 1){ fileNameList.removeFirst(); }
+             }
+        }
+    }
+
     QStringList openSuccessFileList;
     for (auto file : fileNameList) {
         QFileInfo info(file);
@@ -844,7 +891,7 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
     if(m_cmdErrorData.contains("could not chdir"))
     {
         AkUtil::TDebug("acode file name too long");
-        control::MessageDialog messageBox(tr("Error"), tr("acode file name too long"), MessageDialog::OK);
+        control::MessageDialog messageBox(tr("Error"), tr("Open File Failed!"), MessageDialog::OK);
         messageBox.exec();
         return;
     }
@@ -876,6 +923,29 @@ void AnkerMainWindow::openAcodePreview(const QString &fileName)
     messageProcessing->sendMsg2Manager(data1);
 }
 
+void AnkerMainWindow::sendCloseVideoStreamMSG()
+{
+    AkUtil::TFunction("");
+    PluginMessageData data;
+    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    data.dest = AkConst::Plugin::FDM_NETWORK;
+    data.msg = AkConst::Msg::CLOSE_VIDEO_STREAM;
+
+    messageProcessing->sendMsg2Manager(data);
+}
+
+void AnkerMainWindow::videoStatusChangeSlot(bool isPlaying)
+{
+    AkUtil::TFunction(" isPlaying:"+QString::number(isPlaying));
+    m_videoPlaying = isPlaying;
+
+    if (m_QuitAppAfterVideoClose && isPlaying == false)
+    {
+        AkUtil::TDebug("video closed, to quit app!");
+        QApplication::quit();
+        QCoreApplication::processEvents();
+    }
+}
 
 void AnkerMainWindow::slotSaveProject()
 {
@@ -1052,7 +1122,39 @@ void AnkerMainWindow::open()
 //    QStringList fileNameList = QFileDialog::getOpenFileNames(this, tr("Open"), dir.path(), filter);
 //    if (!fileNameList.isEmpty()) {
 //        openFileList(fileNameList);
-//    }
+    //    }
+}
+
+void AnkerMainWindow::OPenOnPreview()
+{
+    TFunction("");
+    QString  filter = openFilter(m_projectSuffix, m_meshSuffixList, m_gcodeSuffix, m_acodeSuffix);
+    QStringList recentList = m_settings->readRecent();
+    QString lastPath = QApplication::applicationDirPath() + "//document";
+    if (!recentList.isEmpty()) {
+        lastPath = recentList.first();
+    }
+    QDir dir(lastPath);
+    dir.cdUp();
+
+    QFileDialog *fileDialog = new QFileDialog();
+    fileDialog->setWindowTitle(tr("Open"));
+    fileDialog->setDirectory(dir.path());
+    fileDialog->setFileMode(QFileDialog::ExistingFiles);
+    QStringList filters;
+    filters.push_back(("*.gcode *.acode"));
+    filters.push_back("*.gcode");
+    filters.push_back("*.acode");
+    fileDialog->setNameFilters(filters);
+    if(fileDialog->exec() == QDialog::Accepted)
+    {
+        QStringList fileNameList = fileDialog->selectedFiles();
+        if (!fileNameList.isEmpty()) {
+            openFileList(fileNameList);
+        }
+    }
+    delete fileDialog;
+
 }
 
 //bool AnkerMainWindow::save_ak(const bool saveAllPossibleAttributes)
@@ -1509,10 +1611,20 @@ void AnkerMainWindow::closeEvent(QCloseEvent* event)
     AkUtil::TFunction("");
     if(m_ota)
     {
-        AkUtil::TDebug("to close QMainWindow");
-        QMainWindow::closeEvent(event);
-        QApplication::quit();
-        QCoreApplication::processEvents();
+        if (m_videoPlaying){
+            AkUtil::TDebug("video is playing, close video befor app close for OTA update");
+            m_QuitAppAfterVideoClose = true;
+            sendCloseVideoStreamMSG();
+            event->ignore();
+        }
+        else
+        {
+            AkUtil::TDebug("to close QMainWindow");
+            QMainWindow::closeEvent(event);
+            QApplication::quit();
+            QCoreApplication::processEvents();
+        }
+
         return;
     }
     
@@ -1536,7 +1648,17 @@ void AnkerMainWindow::closeEvent(QCloseEvent* event)
 //        }
         
         //unloadPluginsSlot();
-        QMainWindow::closeEvent(event);
+
+        if (m_videoPlaying){
+            AkUtil::TDebug("video is playing, close video befor app close");
+            m_QuitAppAfterVideoClose = true;
+            sendCloseVideoStreamMSG();
+            event->ignore();
+        }
+        else
+        {
+            QMainWindow::closeEvent(event);
+        }
 
         return;
 

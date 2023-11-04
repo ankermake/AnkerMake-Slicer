@@ -69,13 +69,17 @@ void SnapshotLayerCommand::init(cura::GCodeExport *gcodeExport){
     m_gcodeExport = gcodeExport;
     const cura::Settings& settingsScene = m_gcodeExport->getSettings_Scene();
 
+    snapshot_layer_M1024_enable0= false;
     snapshot_layer_M1024_enable = false;
     snapshot_uplayer_enable     = false;
 
     do{
         if(settingsScene.has(key_snapshot_layer_M1024_enable)) ; else {break;}
 
-        snapshot_layer_M1024_enable    = settingsScene.get<bool>(key_snapshot_layer_M1024_enable);
+        if( settingsScene.has(key_snapshot_layer_M1024_enable0) ){ //  add @2023-03-28 by ChunLian
+            snapshot_layer_M1024_enable0 = settingsScene.get<bool>(key_snapshot_layer_M1024_enable0);
+        }
+        snapshot_layer_M1024_enable    = settingsScene.get<bool>(key_snapshot_layer_M1024_enable) && snapshot_layer_M1024_enable0;
         anker_camera_take_picture_time = settingsScene.get<double>(key_camera_take_picture_time);
 
         if(snapshot_layer_M1024_enable == true); else {break;}
@@ -254,9 +258,11 @@ bool SnapshotLayerCommand::snapshot_finalize() {
     auto L_Count    = m_gcodeExport->clCurrentStatus->getL_Count();
     auto new_line   = m_gcodeExport->new_line;
 
+    (*(m_gcodeExport->output_stream)) << "; Z_TakePictureStart: " << L_Nr << new_line;
     (*(m_gcodeExport->output_stream)) << "M1024 L" << L_Nr << "/" << L_Count << " 3" << new_line; // (res ? " 3" : " 1")
-    (*(m_gcodeExport->output_stream)) << "G0 Z" << UM2MM{L_Z + 2000} << "; Z_TakePictureStart: " << L_Nr << new_line;
+    (*(m_gcodeExport->output_stream)) << "G0 Z" << UM2MM{L_Z + 2000} << new_line;
     (*(m_gcodeExport->output_stream)) << ";LAYER:" << L_Nr << new_line; // writeLayerComment(layer_nr);
+    (*(m_gcodeExport->output_stream)) << "; Z_TakePictureEnd: " << L_Nr << new_line;
     return true;
 }
 

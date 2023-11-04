@@ -38,6 +38,9 @@ public:
     void setAcceptUserAgreement(bool flag);
     bool getAcceptUserAgreement();
 
+    void setMachineSelectDontRemind(bool flag);
+    bool getMachineSelectDontRemind();
+
 private:
     QSettings m_settings;
 };

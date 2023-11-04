@@ -442,6 +442,15 @@ QVariant FdmBaseProfile::getMetaData(const QString &key) const
     return categoryDict[AkConst::Category::AK_META]->get(key);
 }
 
+void FdmBaseProfile::setBaseParamData(const QString &key, const QVariant &value)
+{
+    if (!categoryDict.contains(AkConst::Category::BASE_PARAM)) {
+        FdmProfileCategory category(AkConst::Category::BASE_PARAM);
+        setCategory(category);
+    }
+    categoryDict[AkConst::Category::BASE_PARAM]->set(key, value);
+}
+
 int FdmBaseProfile::getStatus() const
 {
     return status;
@@ -519,7 +528,27 @@ void FdmBaseProfile::setVisible(bool visible)
     setMetaData(AkConst::SettingKey::META_PROFILE_VISIBLE,  visible);
 }
 
+QString FdmBaseProfile::getDefaultParameterMode()
+{
+    return getSetting(AkConst::Category::BASE_PARAM, AkConst::SettingKey::DEFAULT_PARAMETER_MODE).toString();
+}
 
+QString FdmBaseProfile::getDefaultMaterialName()
+{
+    return getSetting(AkConst::Category::BASE_PARAM, AkConst::SettingKey::DEFAULT_MATERIAL).toString();
+}
+
+QString FdmBaseProfile::getDefaultPrintMode()
+{
+    return getSetting(AkConst::Category::BASE_PARAM, AkConst::SettingKey::DEFAULT_PRINT_MODE).toString();
+}
+
+QString FdmBaseProfile::getDefaultNozzleSizeName()
+{
+    return getSetting(AkConst::Category::BASE_PARAM, AkConst::SettingKey::DEFAULT_NOZZLE_SIZE_NAME).toString();
+}
+
+////»ñÈ¡ÎÄµµid
 //const QString FdmBaseProfile::getId() const
 //{
 //    return getMetaData(AkConst::SettingKey::META_PROFILE_ID).toString();

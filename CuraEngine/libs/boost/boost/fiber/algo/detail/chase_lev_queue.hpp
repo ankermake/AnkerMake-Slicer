@@ -20,11 +20,11 @@
 #include <boost/fiber/context.hpp>
 
 // David Chase and Yossi Lev. Dynamic circular work-stealing deque.
-
-
+// In SPAA ’05: Proceedings of the seventeenth annual ACM symposium
+// on Parallelism in algorithms and architectures, pages 21–28,
 // New York, NY, USA, 2005. ACM.
 //
-
+// Nhat Minh Lê, Antoniu Pop, Albert Cohen, and Francesco Zappa Nardelli. 2013.
 // Correct and efficient work-stealing for weak memory models.
 // In Proceedings of the 18th ACM SIGPLAN symposium on Principles and practice
 // of parallel programming (PPoPP '13). ACM, New York, NY, USA, 69-80.

@@ -38,6 +38,14 @@ class FdmRightParameterService : public QObject
     Q_PROPERTY(QString nozzleSize READ getNozzleSize NOTIFY nozzleSizeChanged)
     Q_PROPERTY(QStringList nozzleSizeList READ getNozzleSizeList NOTIFY nozzleSizeListChanged)
 
+    //speed
+    Q_PROPERTY(QString printMode READ getPrintMode NOTIFY printModeChanged)
+    Q_PROPERTY(QStringList printModeList READ getPrintModeList NOTIFY printModeListChanged)
+    //Q_PROPERTY(QVariant printModeList READ getPrintModeList NOTIFY printModeListChanged)
+
+    //test
+    Q_PROPERTY(QString infillThickness READ getInfillThicknesse NOTIFY infillThicknessChanged)
+
 public:
     FdmRightParameterService(){}
 public:
@@ -85,7 +93,11 @@ public:
     void setSupportMeshCount(int newSupportMeshCount);
     void setGlobalSupportForbidden(bool forbidden);
 
-    
+    //test
+    QString getInfillThicknesse()
+    {
+        return QString::number(m_realTimeProfile->getSetting(AkConst::Category::BASE_PARAM, "infill_sparse_thickness").toFloat(), 'g', 2);
+    }
     void syncRightTreeToRealtimeprofile();
 
     
@@ -96,6 +108,10 @@ public:
 
     void applySimpleModeData();
     void setDefaultValueFromExpertMode();
+
+    QString getPrintMode();
+    QStringList getPrintModeList();
+    QStringList getPrintModeOriginList();
 
 public slots:
     
@@ -135,6 +151,13 @@ public slots:
 
     void doMainWindowInitFinished();
 
+    //change speed mode
+    void onPrintModeChanged(const QString name);
+
+    void onPrintModeIdxChanged(int index);
+
+    void checkPrintMode();
+
 signals:
     void currentParameterNameChanged();
     void machineNameChanged();
@@ -166,6 +189,15 @@ signals:
     
     void setSupportEnabled(bool enable);
 
+
+    void printModeListChanged();
+    void printModeChanged();
+
+    void printModeVisibleChanged();
+    void componentModeChanged();
+
+    void infillThicknessChanged();
+
 private:
     QList<float> getAiQualityList();
     QList<int> getAiInfillDensityList() ;
@@ -174,9 +206,10 @@ private:
     void onExtruderSwitched(int extruderIdx, FdmQmlTreeApi & treeApi);
     
     void refreshTree();
+    void setTreeNodeValue(const QString & nodeName, const QVariant value); //  add @2023-04-13 by ChunLian
 
     //void updateRealtimeProfile(FdmParameterProfile* destProfile);
-
+    void selectDefaultParamFromMachine();
 
     FdmRealTimeProfile* m_realTimeProfile;
 
@@ -192,6 +225,12 @@ private:
     int getAiInfillDensityIdx(float density);
     int getGlobalSupportState(bool enable);
     int getAdhesionTypeState(QString type);
+
+#ifdef TOOL_SAVE_AS_PARAM_INI
+public:
+    QString __ToolSaveAs_1();
+    QString __ToolSaveAs_2(QString);
+#endif
 };
 
 #endif // FDMRIGHTPARAMETERSERVICE_H

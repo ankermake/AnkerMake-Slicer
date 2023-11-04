@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 /// @file search.hpp
 /// @brief
-
+/// @author Copyright (c) 2017 Francisco José Tapia (fjtapia@gmail.com )\n
 ///         Distributed under the Boost Software License, Version 1.0.\n
 ///         ( See copy at http://www.boost.org/LICENSE_1_0.txt  )
 /// @remarks

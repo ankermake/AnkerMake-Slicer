@@ -8,6 +8,7 @@
 #include "viewwidget.h"
 #include "meshinfowidget.h"
 #include "toolBar.h"
+#include "common/controlInterface/messagetip.h"
 
 namespace  control{
 class GlareaTopView : public QObject

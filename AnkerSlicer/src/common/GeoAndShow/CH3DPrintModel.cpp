@@ -44,16 +44,17 @@ void CH3DPrintModel::copy(CHShowObjPtr& obj)
     out->m_meshPath = m_meshPath;
     out->m_oldMesh = new CMeshO(*m_oldMesh);
     CHMeshShowObj::copy(obj);
-    int i = 0;
-    for(int i = 0; i < m_vertices.size(); i++)
+//    out->m_oldMesh->vert.resize(out->m_vertices.size());
+//    out->m_oldMesh->vn = out->m_vertices.size();
+    for(int i = 0; i < out->m_vertices.size(); i++)
     {
         out->m_oldMesh->vert[i].P()[0] = out->m_vertices[i].x();
         out->m_oldMesh->vert[i].P()[1] = out->m_vertices[i].y();
         out->m_oldMesh->vert[i].P()[2] = out->m_vertices[i].z();
     }
 
-    
-    for(int i = 0; i < m_nors.size(); i++)
+
+    for(int i = 0; i < out->m_nors.size(); i++)
     {
         out->m_oldMesh->vert[i].N()[0] = out->m_nors[i].x();
         out->m_oldMesh->vert[i].N()[1] = out->m_nors[i].y();

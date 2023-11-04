@@ -62,6 +62,7 @@ class SnapshotLayerCommand{
 
     
 public:
+    bool snapshot_layer_M1024_enable0   {false};            const std::string key_snapshot_layer_M1024_enable0  {"anker_abc_0"};  //  add @2023-03-28 by ChunLian
     bool snapshot_layer_M1024_enable    {false};            const std::string key_snapshot_layer_M1024_enable   {"anker_param_ai_camera"};
     bool snapshot_uplayer_enable        {false};
 

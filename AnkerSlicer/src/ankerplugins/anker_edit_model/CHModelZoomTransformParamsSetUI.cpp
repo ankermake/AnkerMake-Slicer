@@ -507,6 +507,7 @@ void CHModelZoomTransformParamsSetUI::scaleRatioChanged(double value, ZoomChange
 
 SizeDoubleSpinBox::SizeDoubleSpinBox(QWidget *parent, ZoomAxisType axisType) : QDoubleSpinBox{parent}, axis(axisType)
 {
+    installEventFilter(this);
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(sizeValueChanged(double)));
 }
 
@@ -531,6 +532,15 @@ double SizeDoubleSpinBox::getInitValue() const
 ZoomAxisType SizeDoubleSpinBox::getAxis() const
 {
     return axis;
+}
+
+bool SizeDoubleSpinBox::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::ContextMenu) {
+        // Ignore right key event.
+        return true;
+    }
+    return QDoubleSpinBox::eventFilter(obj, event);
 }
 
 void SizeDoubleSpinBox::sizeValueChanged(double value, ZoomChangedType type)
@@ -559,6 +569,7 @@ void SizeDoubleSpinBox::sizeValueChanged(double value, ZoomChangedType type)
 
 ScaleDoubleSpinBox::ScaleDoubleSpinBox(QWidget *parent, ZoomAxisType axisType) : QDoubleSpinBox{parent}, axis(axisType)
 {
+    installEventFilter(this);
     connect(this, SIGNAL(valueChanged(double)), this, SLOT(scaleValueChanged(double)));
 }
 
@@ -570,6 +581,15 @@ void ScaleDoubleSpinBox::setInitValue(double value)
 ZoomAxisType ScaleDoubleSpinBox::getAxis() const
 {
     return axis;
+}
+
+bool ScaleDoubleSpinBox::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::ContextMenu) {
+        // Ignore right key event.
+        return true;
+    }
+    return QDoubleSpinBox::eventFilter(obj, event);
 }
 
 void ScaleDoubleSpinBox::scaleValueChanged(double value, ZoomChangedType type)

@@ -42,7 +42,7 @@ namespace fdmsettings {
 	{
 		auto isEnable = [node]() -> bool
 		{
-			QVariant qmlEnable = node->getProperty(fdmPrinterJsonEnble);
+			QVariant qmlEnable = node->getProperty(fdmPrinterJsonEnabled);
 			return qmlEnable.isValid() ? qmlEnable.toBool() : true;
 		};
 

@@ -194,4 +194,18 @@ bool SettingManager::getAcceptUserAgreement()
     return  m_settings.value("AcceptUserAgreement").toBool();
 }
 
+void SettingManager::setMachineSelectDontRemind(bool flag)
+{
+    m_settings.setValue("MachineSelectDontRemind",flag);
+}
+
+bool SettingManager::getMachineSelectDontRemind()
+{
+    QVariant var = m_settings.value("MachineSelectDontRemind");
+    if(!var.isValid()) {
+        setMachineSelectDontRemind(false);
+    }
+    return  m_settings.value("MachineSelectDontRemind").toBool();
+}
+
 }

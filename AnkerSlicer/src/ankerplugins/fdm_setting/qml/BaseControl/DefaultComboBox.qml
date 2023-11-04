@@ -45,7 +45,7 @@ ComboBox {
             text: combox.displayText
             horizontalAlignment: Text.AlignJustify
             verticalAlignment: Text.AlignVCenter
-            color: combox.enabled == true ? "#FFFFFF" : "#666666"
+            color: combox.enabled === true ? "#FFFFFF" : "#666666"
             elide: Text.ElideRight
         }
     }

@@ -48,7 +48,7 @@ namespace Slic3r
             // Width in mm from the back sphere center to the front sphere center.
             double head_width_mm = 2.0;
 
-            double head_width_min_mm = 0.1;
+            double head_width_min_mm = 0.1;//最小长度
             // How to connect pillars
             PillarConnectionMode pillar_connection_mode = PillarConnectionMode::zigzag;
 
@@ -114,7 +114,7 @@ namespace Slic3r
             // The shortest distance of any support structure from the model surface
             static const double constexpr safety_distance_mm = 0.5;
 
-            static const double constexpr max_pillar_scaled_height_mm = 20.0;
+            static const double constexpr max_pillar_scaled_height_mm = 20.0;//加粗主支撑的最小高度阙值
 
             static const double constexpr max_solo_pillar_height_mm = 15.0;
             static const double constexpr max_dual_pillar_height_mm = 35.0;

@@ -11,7 +11,7 @@
 #define BUTTON_WIDTH 30			
 #define TITLE_HEIGHT 30			
 
-customTitle::customTitle(QWidget *parent, QMenuBar *menuBar)
+customTitle::customTitle(QWidget *parent, QMenuBar *menuBar,bool inGuidePage)
     : QWidget(parent)
     , m_colorR(52)
     , m_colorG(53)
@@ -21,6 +21,7 @@ customTitle::customTitle(QWidget *parent, QMenuBar *menuBar)
     , m_windowBorderWidth(0)
     , m_isTransparent(false)
     , m_menuBar(menuBar)
+    , m_inGuidePage(inGuidePage)
 {
     
     initControl();
@@ -66,7 +67,11 @@ void customTitle::initControl()
     QHBoxLayout* mylayout = new QHBoxLayout(this);
     mylayout->setContentsMargins(11, 0, 11, 0);
     mylayout->addWidget(m_pIcon);
-    mylayout->addWidget(m_menuBar);
+    if(m_inGuidePage){
+        mylayout->addItem(new QSpacerItem(300, 0, QSizePolicy::MinimumExpanding, QSizePolicy::Maximum));
+    }else{
+        mylayout->addWidget(m_menuBar);
+    }
     mylayout->addStretch();
     mylayout->addWidget(m_pTitleContent);
     mylayout->addStretch();

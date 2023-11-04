@@ -11,6 +11,7 @@
 #include "service/fdmpreferencedialogservice.h"
 #include "service/fdmrightparameterservice.h"
 #include "service/fdmprofilebackupservice.h"
+#include "common/controlInterface/messagetip.h"
 
 #include <QPushButton>
 #include <QMainWindow>
@@ -63,17 +64,17 @@ namespace fdmsettings {
     bool FdmSettingPlugin::loadRealTimeProfile(const QString& filePath)
     {
         auto newProfile = FdmRealTimeProfile(filePath);
-        FdmRightParameterService::instance()->reload(&newProfile);
-        //if ()
+        //the refreshUI in this function may reset the realtimeProfile's value. because some new materila/machine was not create yet
+        //FdmRightParameterService::instance()->reload(&newProfile);
 
-        
+
         auto realtimeProfile = FdmParameterProfileManager::Instance().getRightRealTimeProfile();
-        auto meterialName = realtimeProfile->getMaterialName();
+        auto meterialName = newProfile.getMaterialName();
         auto meterialProfile = FdmMaterialProfileManager::Instance().getProfileByName(meterialName);
         if (!meterialName.isEmpty() && meterialProfile == nullptr)
         {
-             QList<FdmProfileCategory> categories;
-            auto pCategory = realtimeProfile->getCategory(AkConst::Category::MATERIAL);
+            QList<FdmProfileCategory> categories;
+            auto pCategory = newProfile.getCategory(AkConst::Category::MATERIAL);
             categories.push_back(*pCategory);
             auto newProfile = FdmMaterialProfileManager::Instance().createProfile(meterialName, categories);
             newProfile->setVisible(true);
@@ -83,13 +84,13 @@ namespace fdmsettings {
             FdmProfileBackupService::instance()->backup(newProfile->getDataSource());
         }
 
-        
-        auto machineName = realtimeProfile->getMachineName();
+        //2022年7月12日17:52:22 如果没有这个机器文件，需要创建一个
+        auto machineName = newProfile.getMachineName();
         auto machineProfile = FdmMachineProfileManager::Instance().getProfileByName(machineName);
         if (!machineName.isEmpty() && machineProfile == nullptr)
         {
             QList<FdmProfileCategory> categories;
-            auto pCategory = realtimeProfile->getCategory(AkConst::Category::MACHINE_SETTINGS);
+            auto pCategory = newProfile.getCategory(AkConst::Category::MACHINE_SETTINGS);
             categories.push_back(*pCategory);
             auto newProfile = FdmMachineProfileManager::Instance().createProfile(machineName, categories);
             newProfile->setVisible(true);
@@ -99,7 +100,11 @@ namespace fdmsettings {
             FdmProfileBackupService::instance()->backup(newProfile->getDataSource());
         }
 
-        
+        //refresh ui . when project import. there may add some new parameter/machine/material profile
+        //FdmRightParameterService::instance()->refreshUI();
+        FdmRightParameterService::instance()->reload(&newProfile);
+        FdmParameterProfileService::instance()->refreshUI();
+
         auto nameInProfile = realtimeProfile->getProfileName();
         
         if (nameInProfile != AkConst::ProfileName::SIMPLE_MODE)
@@ -190,10 +195,10 @@ namespace fdmsettings {
             if(AkConst::Msg::AIMODE_CHANGED == metaData.msg){
                 if(metaData.map.contains(AkConst::Param::AIMODE_STATE)){
                     qDebug() << "AkConst::Msg::AIMODE_STATE" << metaData.map;
-                    QTimer::singleShot(10, [metaData](){
-                        bool aiCheck = metaData.map[AkConst::Param::AIMODE_STATE].toBool();
-                        FdmQmlSourceTree::instance().setAiCheck(aiCheck);
-                    });
+//                    QTimer::singleShot(10, [metaData](){
+//                        bool aiCheck = metaData.map[AkConst::Param::AIMODE_STATE].toBool();
+//                        FdmQmlSourceTree::instance().setAiCheck(aiCheck);
+//                    });
                 }
             }
             
@@ -231,6 +236,62 @@ namespace fdmsettings {
 
             if (AkConst::Msg::MAIN_WINDOW_INIT_FINISHED == metaData.msg) {
                 FdmRightParameterService::instance()->doMainWindowInitFinished();
+            }
+        }
+
+        static bool isFirstTip = true;
+        static MessageTipWidget* tipWidget = nullptr;
+        if(AkConst::Msg::LOAD_MODEL_FINISHED == metaData.msg && isFirstTip)
+        {
+            QSettings settings;
+            QVariant var = settings.value("MachineSelectDontRemind");
+            if(!var.isValid()) {
+                settings.setValue("MachineSelectDontRemind", false);
+            }
+
+            bool isDontRemind = settings.value("MachineSelectDontRemind").toBool();
+            if(!isDontRemind)
+            {
+                 auto parent = static_cast<QWidget*>(metaData.object);
+                 tipWidget = new MessageTipWidget(tr("Print settings vary amont different printers,\
+please select the appropriate printer you will be using"), parent);
+                 //tipWidget->setAttribute(Qt::WA_DeleteOnClose);
+
+                 connect(tipWidget, &MessageTipWidget::UserPressOkButton, this, [&](bool dontRemindAgain){
+                     QSettings settings;
+                     settings.setValue("MachineSelectDontRemind", dontRemindAgain);
+                     tipWidget->deleteLater();
+                     tipWidget = nullptr;
+                 });
+
+                  connect(tipWidget, &MessageTipWidget::LanguageUpdate, this, [=](){
+                      tipWidget->setTipText(tr("Print settings vary amont different printers,\
+please select the appropriate printer you will be using"));
+                  });
+
+                 //fdmParamSettingsWidget 查找MachineName控件
+                 auto pos = fdmParamSettingsWidget->getMachineNameControlPos();
+                 pos -= QPoint(tipWidget->width(), 15);
+                 auto widgetPos = tipWidget->mapFromGlobal(pos);
+                 tipWidget->move(tipWidget->mapToParent(widgetPos));
+                 tipWidget->show();
+
+                 isFirstTip = false;
+            }
+        }
+
+        if(AkConst::Msg::TAB_WIDGET_CHANGED == metaData.msg && !isFirstTip){
+            if(tipWidget != nullptr && !tipWidget->hasPressOK()){
+                if(metaData.map[AkConst::Param::CURRENT_PAGE_INDEX].toInt() == 0)
+                {
+                    qDebug() << "tipWidget->show";
+                    tipWidget->show();
+                }
+                else
+                {
+                    qDebug() << "tipWidget->hide";
+                    tipWidget->hide();
+                }
             }
         }
     }
@@ -507,7 +568,7 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getOpenFileName(
 				nullptr,
-                tr("Import ini config "),
+				QString::fromLocal8Bit("导入ini配置文件"),
 				QString(),
 				QString("Ini File(*.ini)"));
 			return fileName;
@@ -517,7 +578,7 @@ namespace fdmsettings {
 		{
 			QString fileName = QFileDialog::getSaveFileName(
 				nullptr,
-                tr("Export ini config file"),
+				QString::fromLocal8Bit("导出ini配置文件"),
 				QString(),
 				QString("Ini File(*.ini)"));
 			return fileName;
@@ -571,6 +632,7 @@ namespace fdmsettings {
 			FdmParamNode* machineSizeX = findNode("machine_width");
 			FdmParamNode* machineSizeY = findNode("machine_depth");
 			FdmParamNode* machineSizeZ = findNode("machine_height");
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE);
 
 			auto getMachineSize = [machineSizeX, machineSizeY, machineSizeZ]() -> Point3m
 			{
@@ -578,103 +640,106 @@ namespace fdmsettings {
 				return size;
 			};
 
-			auto updateMachineSize = [this, getMachineSize]() {
-				Point3m size = getMachineSize();
+            auto slotUpdate_MachineSize = [this, getMachineSize, &param]() {
+                Point3m size = getMachineSize();
 				Point3fValue value(size);
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE);
                 param.qobj->setValue(value);
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << size.X() << size.Y() << size.Z();
 			};
 
             
             //RichParameter& param = globalParameterList->addParam(RichPoint3f(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE, getMachineSize()));
-			QObject::connect(machineSizeX, &FdmParamNode::fdmValueChange, updateMachineSize);
-			QObject::connect(machineSizeY, &FdmParamNode::fdmValueChange, updateMachineSize);
-			QObject::connect(machineSizeZ, &FdmParamNode::fdmValueChange, updateMachineSize);
+            QObject::connect(machineSizeX, &FdmParamNode::fdmValueChange, slotUpdate_MachineSize);
+            QObject::connect(machineSizeY, &FdmParamNode::fdmValueChange, slotUpdate_MachineSize);
+            QObject::connect(machineSizeZ, &FdmParamNode::fdmValueChange, slotUpdate_MachineSize);
 
-            updateMachineSize();
+            QTimer::singleShot(100, slotUpdate_MachineSize);
+        }
 
-			if (0) 
-			{
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE);
-				
-				QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, [](const Value& value) {
-					Point3m size = value.getPoint3f();
-					qDebug() << size.X() << size.Y() << size.Z() << AkConst::GlobalParameterKeys::ANKER_MACHINE_SIZE << "&RichParameterQObject::valueChange";
-				});
+        {   // support_enable
+            FdmParamNode* node = findNode("support_enable");
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE);
 
-				for (int i = 5; i < 30; i += 5) {  
-					QTimer::singleShot(i * 1000, [i, machineSizeX, machineSizeY, machineSizeZ, getMachineSize]() {
-						Point3m size = getMachineSize();
-						if (i % 3 == 0)
-							machineSizeX->nodeValueChange_fromCpp(size.X() + 20);
-						if (i % 3 == 1)
-							machineSizeY->nodeValueChange_fromCpp(size.Y() + 30);
-						if (i % 3 == 2)
-							machineSizeZ->nodeValueChange_fromCpp(size.Z() + 40);
-					});
-				}
-			}
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toBool();
+                param.qobj->setValue(BoolValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
+
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
+        }
+
+        {   // support_angle
+            FdmParamNode* node = findNode("support_angle");
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE);
+
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toFloat();
+                param.qobj->setValue(FloatValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
+
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
 		}
 
-		{  
-			FdmParamNode* support_enable = findNode("support_enable");
-			bool enable = support_enable->getFdmValue().toBool();
-            //globalParameterList->addParam(RichBool(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE, enable));
-			QObject::connect(support_enable, &FdmParamNode::fdmValueChange, [this](QVariant var) {
-				bool enable = var.toBool();
-				BoolValue value(enable);
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE);
-				param.qobj->setValue(value);
-			});
+        {   //  add MACHINE_NAME notifying  add @2023-03-23 by ChunLian
+            FdmParamNode* node = findNode(AkConst::SettingKey::MACHINE_NAME);
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::SettingKey::MACHINE_NAME);
+
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toString();
+                param.qobj->setValue(StringValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
+
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
+        }
 
 
-			FdmParamNode* support_angle = findNode("support_angle");
-			float angle = support_angle->getFdmValue().toFloat();
-            //globalParameterList->addParam(RichFloat(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE, angle));
-			QObject::connect(support_angle, &FdmParamNode::fdmValueChange, [this](QVariant var) {
-				float angle = var.toFloat();
-				FloatValue value(angle);
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE);
-				param.qobj->setValue(value);
-			});
+        {   //  add MACHINE_NOZZLE_SIZE notifying  add @2023-03-23 by ChunLian
+            FdmParamNode* node = findNode(AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
 
-			if (0) 
-			{
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE);
-				
-				QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, [](const Value& value) {
-					bool enable = value.getBool();
-					qDebug() << enable << AkConst::GlobalParameterKeys::ANKER_SUPPORT_ENABLE << "&RichParameterQObject::valueChange";
-				});
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toFloat();
+                param.qobj->setValue(FloatValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
 
-				for (int i = 4; i < 30; i += 3) {  
-					QTimer::singleShot(i * 1000, [i, support_enable, support_angle]() {
-						bool enable = support_enable->getFdmValue().toBool();
-						support_enable->nodeValueChange_fromCpp(!enable);
-					});
-				}
-			}
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
+        }
 
-			if (0) 
-			{
-				const RichParameter& param = globalParameterList->getParameterByName(AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE);
-				
-				QObject::connect(param.qobj.data(), &RichParameterQObject::valueChange, [](const Value& value) {
-					float angle = value.getFloat();
-					qDebug() << angle << AkConst::GlobalParameterKeys::ANKER_SUPPORT_ANGLE << "&RichParameterQObject::valueChange";
-				});
+        {   //  add MACHINE_AI_CAMERA notifying  add @2023-03-23 by ChunLian
+            FdmParamNode* node = findNode(AkConst::SettingKey::MACHINE_AI_CAMERA);
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::SettingKey::MACHINE_AI_CAMERA);
 
-				for (int i = 4; i < 30; i += 3) {  
-					QTimer::singleShot(i * 1000, [i, support_enable, support_angle]() {
-						float angle = support_angle->getFdmValue().toFloat();
-						support_angle->nodeValueChange_fromCpp(angle + 3.6);
-					});
-				}
-			}
-		}
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toBool();
+                param.qobj->setValue(BoolValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
 
-		{   
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
+        }
 
-		}
+        {   //  add EXTRACT_PARAM_FROM_GCODE notifying  add @2023-03-23 by ChunLian
+            FdmParamNode* node = findNode(AkConst::SettingKey::EXTRACT_PARAM_FROM_GCODE);
+            const RichParameter& param = globalParameterList->getParameterByName(AkConst::SettingKey::EXTRACT_PARAM_FROM_GCODE);
+
+            auto slotUpdata = [this, node, &param]() {
+                auto value = node->getFdmValue().toBool();
+                param.qobj->setValue(BoolValue(value));
+                qDebug() << __FUNCTION__ << __LINE__ << param.name() << value;
+            };
+
+            QObject::connect(node, &FdmParamNode::fdmValueChange, slotUpdata);
+            QTimer::singleShot(100, slotUpdata);
+        }
+
 	}
 }

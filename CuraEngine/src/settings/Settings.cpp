@@ -63,8 +63,9 @@ template<> std::string Settings::get<std::string>(const std::string& key) const
         return parent->get<std::string>(key);
     }
 
-    logError("Trying to retrieve setting with no value given: '%s'\n", key.c_str());
-    std::exit(2);
+    logWarning("Trying to retrieve setting with no value given: '%s'\n", key.c_str());
+    return std::string("");
+    //std::exit(2);
 }
 
 template<> double Settings::get<double>(const std::string& key) const
@@ -365,6 +366,10 @@ template<> EPlatformAdhesion Settings::get<EPlatformAdhesion>(const std::string&
     else if (value == "raft")
     {
         return EPlatformAdhesion::RAFT;
+    }
+    else if (value == "autobrim")
+    {
+        return EPlatformAdhesion::AUTO_BRIM;
     }
     else if (value == "none")
     {

@@ -71,8 +71,10 @@ public:
     void openPreferences(int index );
     QWidget* getPageWidgetFromPreferences(const int index);
     // void openPreferences(QWidget *widget);
+    void selectIndex(const int index);
 
-private slots:
+
+public slots:
     void clickedToSwitchPreferencesPage(int index);
 
 private:

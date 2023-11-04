@@ -27,7 +27,8 @@ public:
     {
         Velocity speed; //!< movement speed (mm/s)
         Acceleration acceleration; //!< acceleration of head movement (mm/s^2)
-        Velocity jerk; //!< jerk of the head movement (around stand still) as instantaneous speed change (mm/s)
+        Velocity jerkXY; //!< jerk of the head movement (around stand still) as instantaneous speed change (mm/s)
+        Velocity jerkEE {0}; //!< add @2023-04-23 by ChunLian
     };
     struct AkPathFeature{   //  add  @2022-06-08 by CL
         uint32_t isSmall        : 1;
@@ -40,6 +41,7 @@ public:
         uint32_t isLikeCycle    : 1;
         
         uint32_t isOverhangLayer: 1;
+        uint32_t isCombing      : 1;
     }akPathFeature{0};
 
     PrintFeatureType type; //!< name of the feature type
@@ -91,10 +93,11 @@ public:
     /*!
      * Get the current jerk of this config
      */
-    Velocity getJerk() const;
+    Velocity getJerkXY() const;
+    Velocity getJerkEE() const;
 
     coord_t getLineWidth() const;
-    void setLineWidth(const coord_t& width) { line_width = width; };
+    void setLineWidth(const coord_t& width) { line_width = width; }
 
     bool isTravelPath() const;
 

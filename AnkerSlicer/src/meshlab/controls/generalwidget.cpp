@@ -23,6 +23,7 @@ GeneralWidget::GeneralWidget(MessageProcessing *messageProcessing, PageWidget *p
     m_displayName = QString("    ") + tr("General");
     m_messageProcessing = messageProcessing;
     connect(m_messageProcessing, &MessageProcessing::sendMsg2Update, this, &GeneralWidget::receiveMsgFromNetwork);
+    connect(m_messageProcessing, &MessageProcessing::aiModeChanged, this, &GeneralWidget::updateAiCheckbox);
     init();
 }
 void GeneralWidget::init()
@@ -81,7 +82,7 @@ void GeneralWidget::init()
     QVBoxLayout *aiLayout = new QVBoxLayout();
     aiLayout->setSpacing(12);
     aiLayout->setContentsMargins(0,0,0,0);
-    m_aiLabel = new QLabel(tr("Create AI File"),this);
+    m_aiLabel = new QLabel(tr("AI Detect"),this);
     m_aiLabel->setFont(font);
     aiLayout->addWidget(m_aiLabel);
 
@@ -133,13 +134,68 @@ void GeneralWidget::init()
     //connect(m_updateCheckBox, &QCheckBox::stateChanged, this, &GeneralWidget::updateCheckBox);
     //m_updateCheckBox->setCheckable(true);
 
+
+    versionLayout->addLayout(hlayout);
+    versionLayout->addWidget(m_updateCheckBox);
+
+    mainLayout->addLayout(languageLayout);
+    mainLayout->addLayout(aiLayout);
+    mainLayout->addLayout(versionLayout);
+    mainLayout->addStretch();
+
+
+
+
+
+
+
+    QString recentVersion = m_settings.getRecentDownloadNetworkVersion();
+    QString recentPath = m_settings.getRecentDownloadNetworkPath(); 
+    QSettings settings;
+    m_releaseNote = settings.value("release_note").toString();
+    qDebug() << "recentVersion: " << recentVersion << ", recentPath: " << recentPath << ", versionStr: " << versionStr;
+    AkUtil::TDebug("Recent Version: " + recentVersion + ", Recent Path: " + recentPath);
+    settings.setValue("appVer", versionStr);
+    QString recentInstallNetworkVersion = settings.value("RecentInstallNetworkVersion").toString();
+    if (versionCompare(recentInstallNetworkVersion, versionStr) > 0)
+    {
+        settings.setValue("RecentInstallNetworkVersion", "");
+        settings.sync();
+    }
+}
+
+void GeneralWidget::autoUpdateChecker()
+{
+    if (m_loginWidget && m_loginWidget->isVisible())
+    {
+        // show OTA update popup dialog later if login window showing
+        AkUtil::TDebug("loginWidget is showing, start autoUpdateChecker later");
+        QTimer::singleShot(4 * 1000,[=](){
+            this->autoUpdateChecker();
+        });
+        return;
+    }
+
+    AkUtil::TFunction("");
+    // every 30 min check
+    AkUtil::TDebug("send START_AUTO_CHECK_SERVER_VERSION msg to start every 30 min check timer");
+    PluginMessageData updateData;
+    updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    updateData.dest = AkConst::Plugin::FDM_NETWORK;
+    updateData.msg = AkConst::Msg::START_AUTO_CHECK_SERVER_VERSION;
+    emit m_messageProcessing->sendMsg2Manager(updateData);
+
+    // start up chehck
     MessageProcessing *tmpMessageProcessing = m_messageProcessing;
+    QString recentPath = m_settings.getRecentDownloadNetworkPath();
+    bool autoUpdateChecked = m_settings.getAutomaticallyUpdate();
+    QString versionStr = MeshLabApplication::appVer(false, false);
     auto autoUpdateCheck = [this, autoUpdateChecked, versionStr, tmpMessageProcessing]()
     {
         this->m_StartUpCheck = true;
-        int waitTime = 5000;
+        int waitTime = 20 * 1000;
         QTimer::singleShot(waitTime, [this, autoUpdateChecked, versionStr, tmpMessageProcessing]() {
-            AkUtil::TDebug("-------dhf---to send AUTO_UPDATE msg in autoUpdateCheck");
+            AkUtil::TDebug("to send AUTO_UPDATE msg in autoUpdateCheck to check version on start up");
             PluginMessageData updateData;
             updateData.from = AkConst::Plugin::AK_MAIN_WINDOW;
             updateData.dest = AkConst::Plugin::FDM_NETWORK;
@@ -157,27 +213,7 @@ void GeneralWidget::init()
 
     };
 
-    versionLayout->addLayout(hlayout);
-    versionLayout->addWidget(m_updateCheckBox);
-
-    mainLayout->addLayout(languageLayout);
-    mainLayout->addLayout(aiLayout);
-    mainLayout->addLayout(versionLayout);
-    mainLayout->addStretch();
-
     QString recentVersion = m_settings.getRecentDownloadNetworkVersion();
-    QString recentPath = m_settings.getRecentDownloadNetworkPath(); 
-    QSettings settings;
-    m_releaseNote = settings.value("release_note").toString();
-    qDebug() << "recentVersion: " << recentVersion << ", recentPath: " << recentPath << ", versionStr: " << versionStr;
-    AkUtil::TDebug("Recent Version: " + recentVersion + ", Recent Path: " + recentPath);
-    settings.setValue("appVer", versionStr);
-    QString recentInstallNetworkVersion = settings.value("RecentInstallNetworkVersion").toString();
-    if (versionCompare(recentInstallNetworkVersion, versionStr) > 0)
-    {
-        settings.setValue("RecentInstallNetworkVersion", "");
-        settings.sync();
-    }
 
     if(!recentVersion.isEmpty() && !recentPath.isEmpty() && recentVersion != versionStr)
     {
@@ -288,7 +324,7 @@ void GeneralWidget::changeEvent(QEvent *e)
              m_languageCombox->setToolTip(tr("Language will change after software restarts."));
         }
         if (m_aiLabel != nullptr) {
-            m_aiLabel->setText(tr("Create AI File"));
+            m_aiLabel->setText(tr("AI Detect"));
         }
         if (m_aiCheckBox != nullptr) {
             m_aiCheckBox->setText(tr("Create AI file when slicing."));
@@ -306,10 +342,15 @@ void GeneralWidget::changeEvent(QEvent *e)
         if (m_updateCheckBox != nullptr) {
             m_updateCheckBox->setText(tr("Auto-Check for Updates"));
         }
+        //update m_checkText
+        updateCheckText();
         m_languageList = m_settings.getLanguageList();
         for (int i = 0; i < m_languageList.size(); i++) {
             m_languageCombox->setItemText(i, m_languageList.at(i));
         }
+
+
+
     }
     QWidget::changeEvent(e);
 }
@@ -325,6 +366,7 @@ void GeneralWidget::closeWidget()
 
 void GeneralWidget::save()
 {
+    AkUtil::TFunction("");
     if(m_settings.getAiMode() != (m_aiCheckBox->checkState() == Qt::Checked ? true : false)) {
 
         PluginMessageData data;
@@ -360,6 +402,7 @@ void GeneralWidget::save()
                 updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
                 updateData.map.insert(AkConst::Param::APP_STARTUP, false);
                 updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
+                updateData.map.insert(AkConst::Param::LANGUAGE_CHANGE, true); 
                 emit m_messageProcessing->sendMsg2Manager(updateData);
             });
 
@@ -376,6 +419,7 @@ void GeneralWidget::save()
     m_settings.setAutomaticallyUpdate(autoUpdateCheck);
     if (!m_autoUpdateCheck && autoUpdateCheck)    
     {
+        /*
         qint64 id = QDateTime::currentSecsSinceEpoch();
         QString versionStr = MeshLabApplication::appVer(false, false);
         int check = (m_updateCheckBox->checkState()  == Qt::Checked ? 1 : 0);
@@ -384,10 +428,11 @@ void GeneralWidget::save()
         updateData.dest = AkConst::Plugin::FDM_NETWORK;
         updateData.msg = AkConst::Msg::AUTO_UPDATE;
         updateData.map.insert(AkConst::Param::UPDATE_DO, check);
-        updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  
+        updateData.map.insert(AkConst::Param::UPDATE_PHASE, 1);  //  1： 后台版本查询 ； 2：版本下载
         updateData.map.insert(AkConst::Param::APP_STARTUP, m_StartUpCheck);
         updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
         m_messageProcessing->sendMsg2Manager(updateData);
+        */
     }
     m_autoUpdateCheck = autoUpdateCheck;
     emit saveButtonClicked();
@@ -472,22 +517,22 @@ void GeneralWidget::checkButtonClicked()
         m_settings.setRecentDownloadNetworkVersion(version);
         m_settings.setRecentDownloadNetworkPath(m_filePath);
         qDebug() << "install version: " << version;
-		QString updatMsg = tr("is ready, the changes will effective once you restart the app.");
-		QString updatMsg1 = QString("AnkerMake %1 ").arg(version) + updatMsg;
+        QString updatMsg = tr("is ready, the change will take effect once you restart the app.");
+        QString updatMsg1 = QString("AnkerMake %1 ").arg(version) + updatMsg;
         auto messageDialog = new updateMessageDialog(tr("Check for Update"), updatMsg1,
+                                               m_releaseNote.trimmed(),
                                                updateMessageDialog::NO|updateMessageDialog::YES,this);
         messageDialog->setOTAReleaseNoteVisible(true);
         messageDialog->setBottonText(updateMessageDialog::NO, tr("Later"));
         messageDialog->setBottonText(updateMessageDialog::YES, tr("Restart"));
-        if (m_releaseNote.trimmed().isEmpty())
-        {
-            messageDialog->setDetailTitleText("");
-        }
-        else
+        if (!m_releaseNote.trimmed().isEmpty())
         {
             messageDialog->setDetailTitleText(QString(tr("What's new")) );
+            messageDialog->setDetailText(QString("\n%1").arg(m_releaseNote));
+//            messageDialog->setBottonText(updateMessageDialog::NO, tr("Cancel"));
+//            messageDialog->setBottonText(updateMessageDialog::YES, tr("OK"));
         }
-        messageDialog->setDetailText(QString("\n%1").arg(m_releaseNote));
+
         int ret = messageDialog->exec();
         if (ret == updateMessageDialog::YES) {
             update_app(m_filePath);
@@ -499,6 +544,24 @@ void GeneralWidget::update_app(const QString& fileName)
 {
     AkUtil::TFunction("");
     emit otaNeedSaveProjectSignal(fileName);
+}
+
+void GeneralWidget::updateCheckText()
+{
+    if (m_checkText != nullptr) {
+        if (m_updateText == "AnkerMake is up to date.")
+        {
+            m_checkText->setText(tr("AnkerMake is up to date."));
+        }
+        else if  (m_updateText == "Downloading...")
+        {
+            m_checkText->setText(tr("Downloading..."));
+        }
+        else
+        {
+            m_checkText->setText("");
+        }
+    }
 }
 
 
@@ -555,9 +618,12 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
     {
         if(metadata.map.contains(AkConst::Param::CHECK_UPDATE_TEXT))
         {
-            QString text = metadata.map.find(AkConst::Param::CHECK_UPDATE_TEXT).value().toString();
-            m_checkText->setText(text);
-            qDebug() << "CHECK_UPDATE_TEXT: " << text;
+            //QString text = metadata.map.find(AkConst::Param::CHECK_UPDATE_TEXT).value().toString();
+            //m_checkText->setText(text);
+            //qDebug() << "CHECK_UPDATE_TEXT: " << text;
+            m_updateText = metadata.map.find(AkConst::Param::CHECK_UPDATE_TEXT).value().toString();
+            updateCheckText();
+            qDebug() << "CHECK_UPDATE_TEXT: " << m_updateText;
         }
     }
     else if(metadata.from == AkConst::Plugin::FDM_NETWORK &&
@@ -592,27 +658,37 @@ void GeneralWidget::receiveMsgFromNetwork(PluginMessageData metadata)
             updateData.msg = AkConst::Msg::AUTO_UPDATE;
             updateData.map.insert(AkConst::Param::UPDATE_DO, check);
             updateData.map.insert(AkConst::Param::UPDATE_PHASE, 2);  
-            updateData.map.insert(AkConst::Param::APP_STARTUP, 0);
+            updateData.map.insert(AkConst::Param::APP_STARTUP, m_StartUpCheck);
             updateData.map.insert(AkConst::Param::ANKERMAKE_VERSION, versionStr);
             emit m_messageProcessing->sendMsg2Manager(updateData);
         }
         else
         {
-            AkUtil::TDebug("tell user have new version" );
-            m_downLoadNewverDlg = new updateMessageDialog(tr("Check for Update"), QString("AnkerMake %1 ").arg(version) + tr("is ready, click to download new version"),
-                                                   updateMessageDialog::NO|updateMessageDialog::YES,nullptr);
-            m_downLoadNewverDlg->setOTAReleaseNoteVisible(true);
-            m_downLoadNewverDlg->setBottonText(updateMessageDialog::NO, tr("Close"));
-            m_downLoadNewverDlg->setBottonText(updateMessageDialog::YES, tr("OK"));
-            if (m_releaseNote.trimmed().isEmpty())
+            QWidget *parent =  this;
+            if (m_loginWidget && m_loginWidget->isVisible())
             {
-                m_downLoadNewverDlg->setDetailTitleText("");
+                parent = m_loginWidget;
+                AkUtil::TDebug("loginWidget is show, set updateMessageDialog parent to loginWidget");
             }
             else
             {
-                m_downLoadNewverDlg->setDetailTitleText(QString(tr("What's new")) );
+                AkUtil::TDebug("loginWidget is hide, set updateMessageDialog parent to this");
             }
-            m_downLoadNewverDlg->setDetailText( QString("\n%1").arg(m_releaseNote) );
+
+            AkUtil::TDebug("tell user have new version" );
+            m_downLoadNewverDlg = new updateMessageDialog(tr("Check for Update"), QString("AnkerMake %1 ").arg(version) + tr("is ready, click OK to download the new version."),
+                                                   m_releaseNote.trimmed(),
+                                                   updateMessageDialog::NO|updateMessageDialog::YES, parent);
+            m_downLoadNewverDlg->setOTAReleaseNoteVisible(true);
+            m_downLoadNewverDlg->setBottonText(updateMessageDialog::NO, tr("Later"));
+            m_downLoadNewverDlg->setBottonText(updateMessageDialog::YES, tr("OK"));
+            if (!m_releaseNote.trimmed().isEmpty())
+            {
+                m_downLoadNewverDlg->setDetailTitleText(QString(tr("What's new")) );
+                m_downLoadNewverDlg->setDetailText( QString("\n%1").arg(m_releaseNote) );
+//                m_downLoadNewverDlg->setBottonText(updateMessageDialog::NO, tr("Later"));
+//                m_downLoadNewverDlg->setBottonText(updateMessageDialog::YES, tr("OK"));
+            }
             int ret = m_downLoadNewverDlg->exec();
             if (ret == updateMessageDialog::YES) {
                 PluginMessageData updateData;
@@ -667,10 +743,24 @@ void GeneralWidget::doPluginUnloaded()
 #endif
 }
 
+void GeneralWidget::updateAiCheckbox(bool statu)
+{
+    qDebug()<< " updateAiCheckbox"<<statu;
+   m_aiCheckBox->setChecked(statu);
+   m_settings.setAiMode(statu);
+}
+
+void GeneralWidget::setLoginWidgetPtr(QObject *object)
+{
+    AkUtil::TFunction("  ptr:"+QString::number((unsigned long long)object));
+    m_loginWidget = qobject_cast<QWidget *>(object);
+}
+
 void GeneralWidget::forcedUpdateApp()
 {
     AkUtil::TFunction("");
     qDebug() << "filePath: " << m_filePath;
+    AkUtil::TDebug("filePath:"+m_filePath);
     if(m_filePath.isNull()) {
         return;
     }
@@ -688,30 +778,49 @@ void GeneralWidget::forcedUpdateApp()
     QSettings settings;
     qDebug() << "forcedUpdateApp: " << settings.value("is_forced").toBool();
 
+    qDebug() << "this Hidden: " << this->isHidden() << ", isvisible: " << this->isVisible() <<
+                ", parent Hidden: " << parentWidget()->isHidden() << ", isvible: " << parentWidget()->isVisible();
+
     QString releaseNote = settings.value("release_note").toString();
-    QString updatMsg = tr("is ready, the changes will effective once you restart the app.");
+    QString updatMsg = tr("is ready, the change will take effect once you restart the app.");
     QString updatMsg1 = QString("AnkerMake %1 ").arg(version) + updatMsg;
+    AkUtil::TDebug("is_forced"+QString::number((int)settings.value("is_forced:").toBool()));
+
+    QWidget *parent =  this;
+    if (m_loginWidget && m_loginWidget->isVisible())
+    {
+        parent = m_loginWidget;
+        AkUtil::TDebug("loginWidget is show, set updateMessageDialog parent to loginWidget");
+    }
+    else
+    {
+        AkUtil::TDebug("loginWidget is hide, set updateMessageDialog parent to this");
+    }
+
     if (settings.value("is_forced").toBool()) {
         updateMessageDialog *messageDialog = new updateMessageDialog(tr("Check for Update"), updatMsg1,
-                                                         updateMessageDialog::NO|updateMessageDialog::YES, this);
+                                                         releaseNote.trimmed(),
+                                                         updateMessageDialog::NO|updateMessageDialog::YES, parent);
         messageDialog->setOTAReleaseNoteVisible(true);
         messageDialog->setBottonText(updateMessageDialog::NO, tr("Later"));
         messageDialog->setBottonText(updateMessageDialog::YES, tr("Restart"));
-        if (releaseNote.trimmed().isEmpty())
-        {
-            messageDialog->setDetailTitleText("");
-        }
-        else
+        if (!releaseNote.trimmed().isEmpty())
         {
             messageDialog->setDetailTitleText(QString(tr("What's new")) );
+            messageDialog->setDetailText( QString("\n%1").arg(releaseNote) );
+//            messageDialog->setBottonText(updateMessageDialog::NO, tr("Cancel"));
+//            messageDialog->setBottonText(updateMessageDialog::YES, tr("OK"));
         }
         messageDialog->setDetailText( QString("\n%1").arg(releaseNote) );
-        int ret = messageDialog->exec();
-        if (ret == updateMessageDialog::YES) {
-            QSettings settings;
-            settings.setValue("RecentInstallNetworkVersion", version);
-            settings.sync();
-            update_app(m_filePath);
+        // if(!parentWidget()->isHidden())
+        {
+            int ret = messageDialog->exec();
+            if (ret == updateMessageDialog::YES) {
+                QSettings settings;
+                settings.setValue("RecentInstallNetworkVersion", version);
+                settings.sync();
+                update_app(m_filePath);
+            }
         }
     }
     else

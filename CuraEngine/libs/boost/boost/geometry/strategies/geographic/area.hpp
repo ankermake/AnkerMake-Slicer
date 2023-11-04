@@ -40,7 +40,7 @@ namespace strategy { namespace area
 \tparam Spheroid The spheroid model
 \tparam CalculationType \tparam_calculation
 \author See
-
+- Danielsen JS, The area under the geodesic. Surv Rev 30(232): 61–66, 1989
 - Charles F.F Karney, Algorithms for geodesics, 2011 https://arxiv.org/pdf/1109.4448.pdf
 
 \qbk{

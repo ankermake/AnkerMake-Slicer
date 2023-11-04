@@ -37,9 +37,9 @@
 //  31 Oct 06  Recoded both operator< to use round-to-negative-infinity
 //             divisions; the rational-value version now uses continued fraction
 //             expansion to avoid overflows, for bug #798357 (Daryle Walker)
-
+//  20 Oct 06  Fix operator bool_type for CW 8.3 (Joaquín M López Muñoz)
 //  18 Oct 06  Use EXPLICIT_TEMPLATE_TYPE helper macros from Boost.Config
-
+//             (Joaquín M López Muñoz)
 //  27 Dec 05  Add Boolean conversion operator (Daryle Walker)
 //  28 Sep 02  Use _left versions of operators from operators.hpp
 //  05 Jul 01  Recode gcd(), avoiding std::swap (Helmut Zeisel)

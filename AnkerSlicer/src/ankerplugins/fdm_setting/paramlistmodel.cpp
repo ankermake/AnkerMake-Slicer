@@ -35,7 +35,7 @@ QVariant ParamListModel::data(const QModelIndex &index, int role) const
         bool v = item->getFdmEnable() && item->getProperty(roleToString(role)).toBool();
         return QVariant(v);
     }
-    QString  str = roleToString(role);
+    QByteArray  str = roleToString(role);
    //item->dumpParam();
     return  item->getProperty(str);
 }
@@ -148,17 +148,17 @@ void ParamListModel::setListDatas(const QList<FdmParamNode *> &datas)
     endResetModel();
 }
 
-QString ParamListModel::roleToString(int role) const
+QByteArray ParamListModel::roleToString(int role) const
 {
     QHash<int, QByteArray> roles = roleNames();
 
 
     if(roles.isEmpty()) {
-        return QString();
+        return QByteArray();
     }
-    QString str = roles.value(role);
+    QByteArray str = roles.value(role);
     if(str.isEmpty()) {
-        return QString();
+        return QByteArray();
     }
     switch (role) {
     case (datatype::label):
@@ -194,7 +194,7 @@ QString ParamListModel::roleToString(int role) const
     case(datatype::maximumValueWarning):
         return fdmPrinterJsonMaxValueWarning;
     default:
-        return QString();
+        return QByteArray();
 
     }
 }
@@ -256,7 +256,7 @@ void ParamListModel::onNodeValueChange(QVariant row){
     //if(m_datas.at(r)->getNodeName().compare("acceleration_"))
     //    qDebug() << "    "  << m_datas[r]->getNodeName() << m_datas.at(r)->getFdmEnable() << row;
     //qDebug() << "    " << __LINE__ << __FUNCTION__ << row;
-    emit dataChanged(createIndex(r,0),createIndex(r,0),QVector<int>() << datatype::label << datatype::value << datatype::visible);
+    emit dataChanged(createIndex(r,0),createIndex(r,0));
 
 }
 

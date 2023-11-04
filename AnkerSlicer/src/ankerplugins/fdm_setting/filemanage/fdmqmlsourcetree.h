@@ -19,6 +19,8 @@ public:
     void setCategory(const FdmProfileCategory & category);
     QVariant::Type getTypeOfKey(const QString &key);
 
+    inline void setNodeValue(const QString & nodeName, const QVariant value) {__setNodeValue(m_fdmParamRoot, nodeName, value);}
+    inline void setItemValue(const FdmSettingItem & item) { __setItemValue(m_fdmParamRoot, item); }
 
     //get setting for slice
     QString getCustomSetting();
@@ -32,6 +34,8 @@ private:
     FdmQmlTreeApi(FdmParamRoot *root, bool activateValueChangeEvent);
     static void __getCategory(FdmParamNode *categoryNode,       FdmProfileCategory & category);
     static void __setCategory(FdmParamNode *rootNode    , const FdmProfileCategory & category);
+    static void __setNodeValue(FdmParamNode *rootNode, const QString & nodeName, const QVariant value);
+    static void __setItemValue(FdmParamNode *rootNode, const FdmSettingItem & item) { __setNodeValue(rootNode, item.name, item.value); }
     const QList<FdmParamNode *> __getCategoryNodes();
     FdmParamRoot * m_fdmParamRoot;
 };

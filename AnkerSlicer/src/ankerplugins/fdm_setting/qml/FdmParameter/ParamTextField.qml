@@ -11,9 +11,9 @@ Rectangle {
     BaseControl.BaseTextInput {
         id: input
         anchors.fill: parent
-        textInput:  inputFocus ? input.textInput : (model.type == "float" )  ? Math.round(model.value * 1000 ) / 1000 : model.value
+        textInput:  inputFocus ? input.textInput : (model.type === "float" )  ? Math.round(model.value * 1000 ) / 1000 : model.value
         textLabel: model.unit
-        validator: RegExpValidator{ regExp: (model.type == "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (model.type == "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type == "int") ? /^-?[0-9]{0,10}$/ : (model.type == "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
+        validator: RegExpValidator{ regExp: (model.type === "float" ) ? /^-?[0-9]{0,5}[.,]?[0-9]{0,3}$/ : (model.type === "[int]" ) ? /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/ : /^-?[0-9]{0,9}$/  /* /^\[?(\s*-?[0-9]{0,9}\s*,)*(\s*-?[0-9]{0,9})\s*\]?$/*/  /*(model.type === "int") ? /^-?[0-9]{0,10}$/ : (model.type === "float") ? /^-?[0-9]{0,9}[.,]?[0-9]{0,3}$/*/ /*: /^.*$/*/ }
         borderColor : isError() ? "red" : (isWarning() ? "yellow" : "#4F5259")
         onInputTextEdited: {
             paramModel.changeData(model.index,textInput);

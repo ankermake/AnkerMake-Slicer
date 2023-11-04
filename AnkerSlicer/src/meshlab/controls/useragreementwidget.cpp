@@ -57,7 +57,7 @@ void UserAgreementWidget::initUi()
         privacyUrl = AkConst::WebAddress::PrivacyPolicyURLJapanese;
     }
 
-    QString url = getCurrentRegion() ? QString("<body>") + tr("Read the ") + QString("<a href=\"%1\"><font color = #61D37D><text-decoration: none>").arg(termUrl) + tr("Terms of Use") + QString("</a> ") + QString(tr("and"))  + QString(" <a href=\"%1\"><font color = #61D37D><>").arg(privacyUrl)+ tr("Privacy Policy") +QString("</a> </body>") :  QString("<body>") + QString("<a href=\"%1\"><font color = #61D37D><text-decoration: none>").arg(termUrl) + tr("Terms of Use") + QString("</a> ") + QString(tr("and"))  + QString(" <a href=\"%1\"><font color = #61D37D><>").arg(privacyUrl)+ tr("Privacy Policy") +QString("</a> " ) + tr("Please read and accept") + QString(" </body>" ) ;
+    QString url = getCurrentRegion() ? QString("<body>") + tr("Read the") + " " + QString("<a href=\"%1\"><font color = #61D37D><text-decoration: none>").arg(termUrl) + tr("Terms of Use") + QString("</a> ") + QString(tr("and"))  + QString(" <a href=\"%1\"><font color = #61D37D><>").arg(privacyUrl)+ tr("Privacy Policy") +QString("</a> </body>") :  QString("<body>") + QString("<a href=\"%1\"><font color = #61D37D><text-decoration: none>").arg(termUrl) + tr("Terms of Use") + QString("</a> ") + QString(tr("and"))  + QString(" <a href=\"%1\"><font color = #61D37D><>").arg(privacyUrl)+ tr("Privacy Policy") +QString("</a> " ) + tr("Please read and accept") + QString(" </body>" ) ;
 
     m_privacyLabel->setText(url);
 }

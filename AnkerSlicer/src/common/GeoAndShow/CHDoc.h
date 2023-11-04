@@ -40,7 +40,7 @@ public:
     
     
     bool writeAllMeshModelsToStlFile(const QString& path, bool binary = true);
-    bool writeVisibleMeshesToStlFile(const QString& path, bool binary = true);
+    bool writeVisibleMeshesToStlFile(const QString& path, int& visibleMeshCount, bool binary = true);
 
     CH3DPrintModelPtr addNewMesh(const QString& fileName, const QString& infoFileName);
 

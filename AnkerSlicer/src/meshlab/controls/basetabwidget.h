@@ -36,7 +36,7 @@ public:
    // Q_PROPERTY(TabPosition tabPosition READ tabPosition WRITE setTabPosition);
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentChanged)
     //int addTab(QWidget *page, const QString &label);
-    int addTab(QWidget *page, const QIcon &icon, const QString &label, int index = -1);
+    int addTab(QWidget *page, const QIcon &iconSelect, const QIcon &iconNotSelect, const QString &label, int index = -1);
     int count() const;
     QMap<int, QLabel *> &titleLabels() { return m_titleLabels; };
 //    const QSize &iconSize() const;
@@ -49,6 +49,7 @@ public:
     int currentIndex() const;
     QWidget *currentWidget() const;
 
+    void updateTabMergein();
 Q_SIGNALS:
     void currentChanged(int index);
 
@@ -71,6 +72,7 @@ private:
     QHBoxLayout *m_topHboxLayout;
     QButtonGroup *m_buttonGroup;
     QMap<int, QLabel *> m_titleLabels;
+    QMap<int, QVector<QIcon>> m_iconMaps;
 };
 
 #endif // BASETABWIDGET_H

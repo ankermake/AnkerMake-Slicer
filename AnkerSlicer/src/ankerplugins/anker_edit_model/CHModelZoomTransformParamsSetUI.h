@@ -64,6 +64,7 @@ public:
     void setOnlyValue(double value); 
     double getInitValue() const;
     ZoomAxisType getAxis() const;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 signals:
     void scaleValueChanged(double value, ZoomChangedType type);
     void sizeRatioCheck(double value, ZoomChangedType type = ZoomChangedType_Ratio, ZoomAxisType axisType = ZoomAxisType_Unknown); 
@@ -85,6 +86,7 @@ public:
     ScaleDoubleSpinBox(QWidget *parent = nullptr, ZoomAxisType axisType = ZoomAxisType_X);
     void setInitValue(double value);
     ZoomAxisType getAxis() const;
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
 signals:
     void viewValueChanged(double value, ZoomChangedType type, ZoomAxisType axisType = ZoomAxisType_X);

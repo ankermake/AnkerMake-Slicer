@@ -137,11 +137,27 @@ void FdmParameterProfileManager::readProfile(QString profile, QList<FdmProfileCa
     categories.append(*newProfile.getAllCategories());
 }
 
-FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machineName, QString materialName, double nozzleSize,bool& success)
+FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machineName, QString materialName, QString printMode, double nozzleSize,bool& success)
 {
-    
+    success = false;
+
+    if(machineName.isEmpty()){
+        machineName = AkConst::MachineName::M5;
+    }
+
+    if(materialName.isEmpty()){
+        materialName = AkConst::MaterialName::PLAPLUS;
+    }
+
+    if(printMode.isEmpty()){
+        printMode = AkConst::PrintMode::NORMAL;
+    }
+
+    qDebug() << "getExpertProfile:" << machineName << materialName << nozzleSize << printMode;
+
     int nozzleSizeInt = 100*nozzleSize;
-    
+
+    FdmParameterProfile* candidateProfile = nullptr;
     for (int i = 0; i < defaultProfiles.size(); i++)
     {
         FdmParameterProfile& profile = defaultProfiles[i];
@@ -150,19 +166,37 @@ FdmParameterProfile* FdmParameterProfileManager::getExpertProfile(QString machin
             materialName == profile.getMaterialName() &&
             nozzleSizeInt ==  int(profile.getNozzleSize()*100))
         {
-            //qDebug() << "get " << machineName << "&" << materialName << " parameter package";
+//            qDebug() <<"profile.getPrintMode()" << profile.getPrintMode()
+//                     << "profile.getMachineName()" << profile.getMachineName()
+//                     <<"profile.getMaterialName()" << profile.getMaterialName()
+//                     <<"profile.getNozzleSize()" << profile.getNozzleSize();
+
+            candidateProfile = &profile;
+            if(profile.getPrintMode() != printMode)
+            {
+                continue;
+            }
+
+            qDebug() << profile.getPrintMode() << "parameter found: " << profile.getName();
             success = true;
             return &profile;
         }
     }
-    
+
+    //no fast paremeter but a expert one. return this one
+    if (candidateProfile != nullptr)
+    {
+        success = true;
+        return candidateProfile;
+    }
+
     auto newProfile = newDefaultProfile(machineName, materialName);
     auto machineProfile = FdmMachineProfileManager::Instance().getProfileByName(machineName);
     auto materialProfile = FdmMaterialProfileManager::Instance().getProfileByName(materialName);
     newProfile->updateMachine(machineProfile);
     newProfile->updateMaterial(materialProfile);
-    
-    newProfile->updateNozzleSize(nozzleSize);
+
+    newProfile->setNozzleSize(nozzleSize);
     return newProfile;
 }
 

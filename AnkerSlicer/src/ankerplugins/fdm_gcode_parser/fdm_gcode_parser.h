@@ -31,14 +31,16 @@ class FdmGcodeParser : public QObject, public AnkerPlugin
         DP_DOCK_FDM_GCODE_PASER,
     };
 
+    enum ankerMachine{
+        M5 = 0,
+        M5C
+    };
     //QMainWindow* MW;
 
 public:
     FdmGcodeParser();
     virtual ~FdmGcodeParser();
-    inline void initialize(ControlInterface* controlmanager, RichParameterList* globalParameterList) {
-        qDebug() << "controlmanager " <<controlmanager;
-        if (globalParameterList) globalParams = globalParameterList; }
+    void initialize(ControlInterface* controlmanager, RichParameterList* globalParameterList);
 //    std::unique_ptr<Anker::GCodeProcessor> processor;
 //    QList<viewWidget*>  mviewer;
 
@@ -76,6 +78,9 @@ private:
     qint64 CurrentShowFileSize;
     FdmGcodePreviewEntry* preview = nullptr;
     QList<FdmGcodePreviewEntry *> previewNetworkList;
+    bool _isAiMode = false;
+    ankerMachine CurMachine = ankerMachine::M5;
+    QString _machineType;
 private slots:
     void setUseTimes(int ut);
     void loggingStausChange(bool status);

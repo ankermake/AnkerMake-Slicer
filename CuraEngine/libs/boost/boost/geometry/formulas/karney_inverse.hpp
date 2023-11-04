@@ -754,7 +754,7 @@ public:
 
     /*
      Solve the astroid problem using the equation:
-
+     κ4 + 2κ3 + (1 − x2 − y 2 )κ2 − 2y 2 κ − y 2 = 0.
 
      For details, please refer to Eq. (65) in,
      Geodesics on an ellipsoid of revolution, Charles F.F Karney,

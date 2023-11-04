@@ -11,7 +11,7 @@
 namespace libnest2d { namespace selections {
 
 /**
-
+ * Selection heuristic based on [López-Camacho]\
  * (http://www.cs.stir.ac.uk/~goc/papers/EffectiveHueristic2DAOR2013.pdf)
  */
 template<class RawShape>
@@ -64,7 +64,7 @@ public:
          * trying items one by one, or pairs or triplets.
          *
          * The initial fill proportion suggested by
-
+         * [López-Camacho]\
          * (http://www.cs.stir.ac.uk/~goc/papers/EffectiveHueristic2DAOR2013.pdf)
          * is one third of the area of bin.
          */

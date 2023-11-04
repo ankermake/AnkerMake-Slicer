@@ -80,4 +80,4 @@ message($$PWD)
 QT += widgets
 QT += remoteobjects
 
-
+#DEFINES += USE_EXTRA_UI

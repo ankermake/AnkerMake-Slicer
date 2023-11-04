@@ -39,6 +39,7 @@ public:
     RotateDoubleSpinBox(QWidget* parent = nullptr);
     void setInitValue(double value);
     void setOnlyValue(double value);
+    bool eventFilter(QObject* obj, QEvent* event) override;
 
 protected:
     void keyPressEvent(QKeyEvent *event);

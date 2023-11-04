@@ -73,7 +73,7 @@ Rectangle {
         target: nozzleTitle
         function onExpandCurrent(ifexpand) {
             nozzleSettings.visible = !nozzleSettings.visible
-            // console.log("nozzleSettings  == " , nozzleSettings.visible )
+            // console.log("nozzleSettings  === " , nozzleSettings.visible )
             nozzleSettings.height =  nozzleSettings.visible ? (30 + nozzleSettings.spacing - 1) *4 : 0
         }
     }

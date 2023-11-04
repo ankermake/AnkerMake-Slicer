@@ -38,7 +38,7 @@ Rectangle {
 
         }
         onCurrentIndexChanged: {
-           // console.log("current currentIndex ===",combox.currentIndex,"commboxListmodel ===" , commboxListmodel.get(combox.currentIndex).key, " comboxCurrentValue == ",comboxCurrentValue)
+           // console.log("current currentIndex ===",combox.currentIndex,"commboxListmodel ===" , commboxListmodel.get(combox.currentIndex).key, " comboxCurrentValue === ",comboxCurrentValue)
             comboxCurrentTextChanged(commboxListmodel.get(combox.currentIndex).key)
         }
     }

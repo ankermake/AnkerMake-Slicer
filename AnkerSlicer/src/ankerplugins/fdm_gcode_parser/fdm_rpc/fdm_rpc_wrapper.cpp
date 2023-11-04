@@ -29,6 +29,10 @@ void fdmRpcWrapper::checkoutPreviewEvent(bool kk)
     emit cheeckoutPreview(kk);
 }
 
+void fdmRpcWrapper::previewOpenFileEvent()
+{
+    emit previewOpenFile();
+}
 
 //void fdmRpcWrapper::previewCloseSlot(int id)
 //{

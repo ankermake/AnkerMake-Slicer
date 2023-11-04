@@ -42,6 +42,7 @@ QString FdmRealTimeProfile::getProfileName()
 void FdmRealTimeProfile::setProfileName(QString name)
 {
     setRealTimeMetaDate(AkConst::SettingKey::META_CURRENT_PROFILE_NAME, name);
+    FdmParameterProfile::setProfileName(name);
 }
 
 void FdmRealTimeProfile::setRealTimeMetaDate(const QString& key, const QVariant& value)

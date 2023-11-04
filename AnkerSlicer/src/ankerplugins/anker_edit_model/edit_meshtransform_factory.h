@@ -55,8 +55,8 @@ public:
     void wheelEvent         (QWheelEvent  *event, void *arg1, void *arg2) override;
     void tableEvent         (QTabletEvent *event, void *arg1, void *arg2) override;
 
-
-    
+    ActionEditTool* getCurrentAction(){ return m_currAction; }
+    /// ActionEditTool ≥ı ºªØ
 private:
     void __initActionEditTools();
     
@@ -66,6 +66,7 @@ private:
     ActionEditTool* m_mirrorMeshTransform {nullptr};
     ActionEditTool* m_manualSupport       {nullptr};
     ActionEditTool* m_manualTreeSupport   {nullptr};
+    ActionEditTool* m_autoArrange         { nullptr };
 
     ActionEditTool* m_currAction {nullptr};
     void *m_arg1 {nullptr};

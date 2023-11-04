@@ -86,7 +86,7 @@ void ConcaveHull::add_connector_rectangles(const Points &centroids,
                                            coord_t       max_dist,
                                            ThrowOnCancel thr)
 {
-    
+    //不采用轮廓整体中心计算
 #if 0
     // Centroid of the centroids of islands. This is where the additional
     // connector sticks are routed.

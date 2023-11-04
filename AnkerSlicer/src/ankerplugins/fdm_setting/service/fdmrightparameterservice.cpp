@@ -90,6 +90,91 @@ void FdmRightParameterService::doMainWindowInitFinished()
     //    });
 }
 
+//when this function be triggled . it means (m5  pla+ 0.4 simplemode)
+void FdmRightParameterService::onPrintModeChanged(const QString name)
+{
+    if (NULL == m_realTimeProfile)
+    {
+        qDebug() << "realtimeProfile is null";
+        return ;
+    }
+    qDebug() << "onPrintModeChanged name is " << name;
+
+    //save value to realtimeFile
+    m_realTimeProfile->setPrintMode(name);
+
+    checkPrintMode();
+
+    qDebug() << "onPrintModeChanged" << m_realTimeProfile->getPrintMode();
+    selectProfile(m_realTimeProfile->getProfileName());
+
+    emit printModeChanged();
+    m_updateTime++;
+}
+
+void FdmRightParameterService::onPrintModeIdxChanged(int index)
+{
+    auto list = getPrintModeOriginList();
+    if(index >=0 && index < list.size())
+    {
+        onPrintModeChanged(list[index]);
+    }
+    else
+    {
+        onPrintModeChanged(AkConst::PrintMode::NORMAL);
+    }
+}
+
+void FdmRightParameterService::checkPrintMode()
+{
+    qDebug() << "getNozzleSize " <<  m_realTimeProfile->getNozzleSize()
+             << "getProfileName " << m_realTimeProfile->getProfileName()
+             << "getMaterialName " <<  m_realTimeProfile->getMaterialName()
+                << "getMachineName " <<  m_realTimeProfile->getMachineName()
+                   << "getPrintMode " <<  m_realTimeProfile->getPrintMode();
+
+    QString printMode = m_realTimeProfile->getPrintMode();
+    //set value of printmode
+    if (m_realTimeProfile->getNozzleSize()*100 == 40
+            && (m_realTimeProfile->getProfileName() == AkConst::ProfileName::SIMPLE_MODE
+                || m_realTimeProfile->getProfileName() == AkConst::ProfileName::EXPERT_MODE)
+            && (m_realTimeProfile->getMachineName() == AkConst::MachineName::M5)
+            )
+    {
+        if (AkConst::MaterialName::PLAPLUS_SERIES.contains(m_realTimeProfile->getMaterialName())
+             && m_realTimeProfile->getPrintMode() == AkConst::PrintMode::FAST)
+        {
+            printMode = AkConst::PrintMode::FAST;
+        }
+        else if  (m_realTimeProfile->getMaterialName() == AkConst::MaterialName::PLAPLUS
+                   && m_realTimeProfile->getPrintMode() == AkConst::PrintMode::SMOOTH)
+        {
+            printMode = AkConst::PrintMode::SMOOTH;
+        }
+        else
+        {
+            printMode = AkConst::PrintMode::NORMAL;
+        }
+    }
+
+    //更新树中的数据 change @2023-04-14 by ChunLian
+    m_realTimeProfile->setPrintMode(printMode);
+    setTreeNodeValue(AkConst::SettingKey::QML_PRINT_MODE        , printMode             );
+
+    qDebug() << "m_realTimeProfile->updatePrintMode " <<  printMode;
+    //更新树中的数据
+    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
+    QList<FdmProfileCategory> categorys;
+    FdmProfileCategory category;
+    category.name = AkConst::Category::BASE_PARAM;
+    category.set(AkConst::SettingKey::QML_PRINT_MODE, printMode);
+    categorys.append(category);
+    rightTree.setAny(categorys);
+
+    emit printModeChanged();
+    m_updateTime++;
+}
+
 void FdmRightParameterService::reload(FdmRealTimeProfile* newProfile)
 {
     m_realTimeProfile->reload(newProfile);
@@ -113,7 +198,65 @@ QString FdmRightParameterService::getMachineName()
     return name;
 }
 
+void FdmRightParameterService::selectDefaultParamFromMachine()
+{
+    auto machineName = m_realTimeProfile->getMachineName();
+    auto machineProfile = FdmMachineProfileManager::Instance().getProfileByName(machineName);
 
+    if(machineProfile == nullptr){
+        return;
+    }
+
+    {
+        auto dafultMaterialName= machineProfile->getDefaultMaterialName();
+        qDebug() << "dafultMaterialName" << dafultMaterialName;
+        if(dafultMaterialName.isEmpty() || !AkConst::MaterialName::ALL_SERIES.contains(dafultMaterialName))
+        {
+            dafultMaterialName = AkConst::MaterialName::PLAPLUS;
+        }
+
+        selectMaterial(dafultMaterialName);
+    }
+
+    {
+        auto dafultPrintMode= machineProfile->getDefaultPrintMode();
+        qDebug() << "machineProfile->getDefaultPrintMode" << dafultPrintMode;
+        if(!dafultPrintMode.isEmpty() && AkConst::PrintMode::ALL_SERIES.contains(dafultPrintMode))
+        {
+            m_realTimeProfile->setPrintMode(dafultPrintMode);
+        }
+        else
+        {
+            m_realTimeProfile->setPrintMode(AkConst::PrintMode::NORMAL);
+        }
+    }
+
+    {
+        auto dafultParameterMode= machineProfile->getDefaultParameterMode();
+        if(!dafultParameterMode.isEmpty() && AkConst::ProfileName::ALL_SERIES.contains(dafultParameterMode))
+        {
+            m_realTimeProfile->setProfileName(dafultParameterMode);
+        }
+        else
+        {
+            m_realTimeProfile->setProfileName(AkConst::ProfileName::SIMPLE_MODE);
+        }
+    }
+
+    //必须在前面模式切换之后
+    {
+        auto dafultNozzleSizeName= machineProfile->getDefaultNozzleSizeName();
+        qDebug() << "dafultNozzleSizeName" << dafultNozzleSizeName;
+        if(dafultNozzleSizeName.isEmpty() || !AkConst::NozzleSizeName::ALL_SERIES.contains(dafultNozzleSizeName))
+        {
+            dafultNozzleSizeName = AkConst::NozzleSizeName::SIZE4;
+        }
+
+        selectNozzle(dafultNozzleSizeName);
+    }
+}
+
+//切换machine
 void FdmRightParameterService::onMachineNameChanged(const QString name)
 {
     if (name == AkConst::ProfileName::More)
@@ -124,16 +267,23 @@ void FdmRightParameterService::onMachineNameChanged(const QString name)
 
     emit currentMachineSwitched(name);
 
-    
-    if (m_realTimeProfile->getProfileName() != AkConst::ProfileName::EXPERT_MODE
-        && m_realTimeProfile->getProfileName() != AkConst::ProfileName::SIMPLE_MODE)
+    m_realTimeProfile->setMachineName(name);
+    if(AkConst::MachineName::ALL_SERIES.contains(name))
+    {
+        selectDefaultParamFromMachine();
+    }
+    else
+    {
+        checkPrintMode();
+    }
+
+    if (!AkConst::ProfileName::ALL_SERIES.contains(m_realTimeProfile->getProfileName()))
     {
         selectMachine(name);
     }
     
     else
     {
-        m_realTimeProfile->setMachineName(name);
         selectProfile(m_realTimeProfile->getProfileName());
     }
     m_updateTime++;
@@ -175,7 +325,9 @@ void FdmRightParameterService::onMaterialNameChanged(const QString name)
 
     emit currentMaterialSwitched(name);
 
-    
+    m_realTimeProfile->setMaterialName(name);
+    checkPrintMode();
+
     if (m_realTimeProfile->getProfileName() != AkConst::ProfileName::EXPERT_MODE
         && m_realTimeProfile->getProfileName() != AkConst::ProfileName::SIMPLE_MODE)
     {
@@ -184,7 +336,7 @@ void FdmRightParameterService::onMaterialNameChanged(const QString name)
     
     else
     {
-        m_realTimeProfile->setMaterialName(name);
+
         selectProfile(m_realTimeProfile->getProfileName());
     }
     emit nozzleSizeListChanged();
@@ -247,7 +399,7 @@ void FdmRightParameterService::selectProfile(QString name)
     if (name.isEmpty())
     {
         name = AkConst::ProfileName::SIMPLE_MODE;
-        m_realTimeProfile->updateNozzleSize(0.4);
+        m_realTimeProfile->setNozzleSize(0.4);
     }
     bool getExpertSuccess = false;
 
@@ -266,12 +418,60 @@ void FdmRightParameterService::selectProfile(QString name)
             m_realTimeProfile->setMachineName(AkConst::MachineName::M5);
             m_updateTime++;
         }
-        if (m_realTimeProfile->getMaterialName().isEmpty())
+
+        if (m_realTimeProfile->getMaterialName().isEmpty()
+                || !getMaterialList().contains(m_realTimeProfile->getMaterialName()))
         {
             m_realTimeProfile->setMaterialName(AkConst::MaterialName::PLAPLUS);
             m_updateTime++;
         }
-        destProfile = FdmParameterProfileManager::Instance().getExpertProfile(m_realTimeProfile->getMachineName(), m_realTimeProfile->getMaterialName(),m_realTimeProfile->getNozzleSize(),getExpertSuccess);
+
+        if (!getNozzleSizeList().contains(QString("%1 mm").arg(m_realTimeProfile->getNozzleSize(), 3)))
+        {
+            m_realTimeProfile->setNozzleSize(0.4);
+            m_realTimeProfile->setNozzleName(AkConst::NozzleSizeName::SIZE4);
+            m_updateTime++;
+        }
+
+        if(!getPrintModeList().contains(getPrintMode())){
+            QString materialName = m_realTimeProfile->getMaterialName();
+            QString machineName = m_realTimeProfile->getMachineName();
+            double nozzleSize = m_realTimeProfile->getNozzleSize();
+
+            if((int)(nozzleSize*100) == 40)
+            {
+                if(materialName == AkConst::MaterialName::PLAPLUS_METALIC
+                        || materialName == AkConst::MaterialName::PLAPLUS_SILK
+                        || materialName == AkConst::MaterialName::PLAPLUS_MATTE)
+                {
+                    m_realTimeProfile->setPrintMode(AkConst::PrintMode::FAST);
+                }
+                else if(AkConst::MachineName::M5C_SERIES.contains(machineName)
+                        && materialName == AkConst::MaterialName::PLA_CF)
+                {
+                    m_realTimeProfile->setPrintMode(AkConst::PrintMode::FAST);
+                }
+                else
+                {
+                    m_realTimeProfile->setPrintMode(AkConst::PrintMode::NORMAL);
+                }
+            }
+            else
+            {
+                m_realTimeProfile->setPrintMode(AkConst::PrintMode::NORMAL);
+            }
+
+            m_updateTime++;
+        }
+
+        destProfile = FdmParameterProfileManager::Instance().
+                getExpertProfile(m_realTimeProfile->getMachineName(),
+                                 m_realTimeProfile->getMaterialName(),
+                                 m_realTimeProfile->getPrintMode(),
+                                 m_realTimeProfile->getNozzleSize(),
+                                 getExpertSuccess);
+
+        qDebug() << "destProfile->getPrintMode()" << destProfile->getPrintMode() << getExpertSuccess;
     }
     else
     {
@@ -286,6 +486,9 @@ void FdmRightParameterService::selectProfile(QString name)
 //    m_realTimeProfile->setMachineName(destProfile->getMachineName());
 //    m_realTimeProfile->setMaterialName(destProfile->getMaterialName());
       m_realTimeProfile->updateProfile(destProfile);
+
+    auto material_print_temperature = m_realTimeProfile->getSetting(AkConst::Category::BASE_PARAM, "material_print_temperature");
+    qDebug() << "material_print_temperature:" << material_print_temperature;
 
     emit currentParameterSwitched(name);
 
@@ -303,10 +506,13 @@ void FdmRightParameterService::selectProfile(QString name)
 
     
     auto parameterModifyTime = destProfile->getModifyTime();
-    
+    qDebug() << "parameterModifyTime" << parameterModifyTime;
+
+    //如果最近有更新过引用的machine文件，需要更新
     auto machineProfile = FdmMachineProfileManager::Instance().getProfileByName(m_realTimeProfile->getMachineName());
     if (nullptr != machineProfile && machineProfile->getModifyTime() > parameterModifyTime)
     {
+        qDebug() << "machineProfile->getModifyTime()" << machineProfile->getModifyTime();
         selectMachine(m_realTimeProfile->getMachineName());
     }
 
@@ -314,6 +520,7 @@ void FdmRightParameterService::selectProfile(QString name)
     auto materialProfile = FdmMaterialProfileManager::Instance().getProfileByName(m_realTimeProfile->getMaterialName());
     if (nullptr != materialProfile && materialProfile->getModifyTime() > parameterModifyTime)
     {
+        qDebug() << "materialProfile->getModifyTime()" << materialProfile->getModifyTime();
         selectMaterial(m_realTimeProfile->getMaterialName());
     }
 
@@ -412,6 +619,84 @@ void FdmRightParameterService::setDefaultValueFromExpertMode()
     }
 }
 
+//
+QString FdmRightParameterService::getPrintMode()
+{
+    auto printMode =  m_realTimeProfile->getPrintMode();
+    qDebug() << "getPrintMode" << printMode;
+    if (printMode == AkConst::PrintMode::FAST)
+    {
+        return tr("Fast");
+    }
+    else if(printMode == AkConst::PrintMode::SMOOTH)
+    {
+        return tr("Smooth");
+    }
+    else
+    {
+        return tr("Normal");
+    }
+}
+
+QStringList FdmRightParameterService::getPrintModeList()
+{
+    QList<QString> resultList;
+
+    auto machineName = getMachineName();
+    auto nozzleSize = getNozzleSize();
+    auto meterialName = getMaterialName();
+
+    if(!AkConst::MachineName::ALL_SERIES.contains(machineName)
+            || !AkConst::MaterialName::ALL_SERIES.contains(meterialName))
+    {
+        return QList<QString> { tr("Normal") };
+    }
+
+    if(AkConst::NozzleSizeName::SIZE4==nozzleSize
+            && (AkConst::MaterialName::PLAPLUS_SERIES.contains(meterialName)))
+    {
+        resultList << tr("Fast");
+    }
+
+    if(meterialName != AkConst::MaterialName::PLAPLUS_SILK
+            && meterialName != AkConst::MaterialName::PLAPLUS_METALIC
+            && meterialName != AkConst::MaterialName::PLA_CF
+            && meterialName != AkConst::MaterialName::PLAPLUS_MATTE)
+    {
+            resultList << tr("Normal");
+    }
+
+    if(AkConst::MachineName::ALL_SERIES.contains(machineName)
+            && meterialName==AkConst::MaterialName::PLAPLUS
+            && (nozzleSize==AkConst::NozzleSizeName::SIZE4 || nozzleSize==AkConst::NozzleSizeName::SIZE2))
+    {
+        resultList << tr("Smooth");
+    }
+
+    return resultList;
+}
+
+QStringList FdmRightParameterService::getPrintModeOriginList()
+{
+    auto list = getPrintModeList();
+    QStringList resultList;
+    for(QString& item : list){
+        if(tr("Fast") == item){
+            resultList.append(AkConst::PrintMode::FAST);
+        }
+        else if(tr("Normal") == item){
+            resultList.append(AkConst::PrintMode::NORMAL);
+        }
+        else if(tr("Smooth") == item){
+            resultList.append(AkConst::PrintMode::SMOOTH);
+        }
+        else{
+            resultList.append(AkConst::PrintMode::NORMAL);
+        }
+    }
+
+    return resultList;
+}
 
 void FdmRightParameterService::selectMachine(QString name)
 {
@@ -461,6 +746,7 @@ void FdmRightParameterService::selectMaterial(QString name)
     QList<FdmProfileCategory> materialContent;
     materialProfile->getCategoriesForRefreshTree(materialContent);
     FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right().setAny(materialContent);
+    FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right().setNodeValue(AkConst::SettingKey::MATERIAL_NAME, name); //  add @2023-04-12 by ChunLian
 
     emit materialNameChanged();
 }
@@ -518,6 +804,32 @@ QStringList FdmRightParameterService::getMaterialList()
     {
         resultList.removeOne(AkConst::MaterialName::TPU);
     }
+
+    if (getNozzleSize() != AkConst::NozzleSizeName::SIZE4)
+    {
+        resultList.removeOne(AkConst::MaterialName::PLAPLUS_MATTE);
+        resultList.removeOne(AkConst::MaterialName::PLA_CF);
+        resultList.removeOne(AkConst::MaterialName::PET_CF);
+        resultList.removeOne(AkConst::MaterialName::PA_CF);
+        resultList.removeOne(AkConst::MaterialName::PLAPLUS_SILK);
+        resultList.removeOne(AkConst::MaterialName::PLAPLUS_METALIC);
+    }
+
+    if(!AkConst::MachineName::M5C_SERIES.contains(m_realTimeProfile->getMachineName()))
+    {
+        resultList.removeOne(AkConst::MaterialName::PLA_CF);
+        resultList.removeOne(AkConst::MaterialName::PET_CF);
+        resultList.removeOne(AkConst::MaterialName::PA_CF);
+    }
+
+    if(getNozzleSize() == AkConst::NozzleSizeName::SIZE2
+            && AkConst::MachineName::M5C_SERIES.contains(m_realTimeProfile->getMachineName()))
+    {
+        resultList.removeOne(AkConst::MaterialName::TPU);
+        resultList.removeOne(AkConst::MaterialName::ABS);
+        resultList.removeOne(AkConst::MaterialName::PETG);
+    }
+
     return resultList;
 }
 
@@ -583,6 +895,9 @@ void FdmRightParameterService::refreshUI()
 
     emit nozzleSizeChanged();
     emit nozzleSizeListChanged();
+    emit printModeListChanged();
+
+    emit infillThicknessChanged();
 }
 
 
@@ -619,6 +934,31 @@ void FdmRightParameterService::onSaveBtnClicked()
 
 void FdmRightParameterService::onSaveAsBtnClicked(QString profileName)
 {
+#ifdef TOOL_SAVE_AS_PARAM_INI
+    {
+        m_realTimeProfile->setMachineName (m_realTimeProfile->getMachineName ());
+        m_realTimeProfile->setMaterialName(m_realTimeProfile->getMaterialName());
+        m_realTimeProfile->setProfileName (profileName.split(".").first());
+        m_realTimeProfile->setNozzleSize  (m_realTimeProfile->getNozzleSize  ());
+        m_realTimeProfile->setNozzleName  (getNozzleSize());
+
+        qDebug() <<"onSaveAsBtnClicked";
+        //QString path = FdmParameterProfileManager::Instance().getValidCustomProfilePath(profileName);
+
+        QList<FdmProfileCategory> categories;
+        m_realTimeProfile->getInnerProfileCategories(categories);
+        auto newProfile = FdmParameterProfileManager::Instance().createProfile(profileName, categories);
+        newProfile->setVisible(true);
+        newProfile->save(__ToolSaveAs_2(profileName));
+
+        //刷新排序
+        emit allParameterListChanged();
+
+        //使用当前保存的数据作为当前数据
+        selectProfile(profileName);
+        return;
+    }
+#endif
     qDebug() <<"onSaveAsBtnClicked";
     //QString path = FdmParameterProfileManager::Instance().getValidCustomProfilePath(profileName);
 
@@ -709,11 +1049,23 @@ void FdmRightParameterService::refreshTree()
     refreshUI();
 }
 
+void FdmRightParameterService::setTreeNodeValue(const QString &nodeName, const QVariant value)
+{
+    if(AkConst::SettingKey::QML_PRINT_MODE == nodeName)
+    {
+        qDebug() << "FdmRightParameterService::setTreeNodeValue:" << value;
+    }
+    FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right().setNodeValue(nodeName, value);
+}
 
 
 void FdmRightParameterService::onAiQualityCurrentIdxChanged(int idx)
 {
      qDebug() << "onAiQualityCurrentIdxChanged is " << idx;
+     if(idx == 0){
+         int a = 0;
+     }
+
     if (NULL == m_realTimeProfile)
     {
         qDebug() << "realtimeProfile is null";
@@ -733,14 +1085,14 @@ void FdmRightParameterService::onAiQualityCurrentIdxChanged(int idx)
     qualityIdxItem.value = idx;
     m_realTimeProfile->setSetting(AkConst::Category::AK_AI, qualityIdxItem);
 
-    
-    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
-    QList<FdmProfileCategory> categorys;
-    FdmProfileCategory category;
-    category.name = AkConst::Category::RESOLUTION;
-    category.set(AkConst::SettingKey::LAYER_HEIGHT, newAiQuality);
-    categorys.append(category);
-    rightTree.setAny(categorys);
+    m_realTimeProfile->setLayerHeight(newAiQuality);
+    setTreeNodeValue(AkConst::SettingKey::LAYER_HEIGHT          , newAiQuality          );
+    if(m_realTimeProfile->getPrintMode() == AkConst::PrintMode::SMOOTH)
+    {
+        float thickness = newAiQuality*2;
+        m_realTimeProfile->setInfillThickness(thickness);
+        setTreeNodeValue(AkConst::SettingKey::INFILL_SPARSE_THICKNESS, thickness);
+    }
 
     m_updateTime++;
 
@@ -751,16 +1103,12 @@ void FdmRightParameterService::selectNozzle(QString name)
 {
     
     auto valueList = name.split(" ");
-    auto nozzleSize = valueList[0].toFloat();
+    auto nozzleSize = valueList[0].toDouble();
 
-    
-    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
-    QList<FdmProfileCategory> categorys;
-    FdmProfileCategory category;
-    category.name = AkConst::Category::EXTRUDER_SETTINGS;
-    category.set(AkConst::SettingKey::MACHINE_NOZZLE_SIZE, nozzleSize);
-    categorys.append(category);
-    rightTree.setAny(categorys);
+    m_realTimeProfile->setNozzleName(name      );
+    m_realTimeProfile->setNozzleSize(nozzleSize);
+    setTreeNodeValue(AkConst::SettingKey::QML_NOZZLE_NAME       , name       );
+    setTreeNodeValue(AkConst::SettingKey::MACHINE_NOZZLE_SIZE   , nozzleSize );
 
     m_updateTime++;
 
@@ -776,11 +1124,12 @@ void FdmRightParameterService::onNozzleSizeChanged(const QString name)
 {
     auto valueList = name.split(" ");
     auto nozzleSize = valueList[0].toDouble();
-    m_realTimeProfile->updateNozzleSize(nozzleSize);
+    m_realTimeProfile->setNozzleName(name);
+    m_realTimeProfile->setNozzleSize(nozzleSize);
 
-    
-    if (m_realTimeProfile->getProfileName() != AkConst::ProfileName::EXPERT_MODE
-        && m_realTimeProfile->getProfileName() != AkConst::ProfileName::SIMPLE_MODE)
+    checkPrintMode();
+
+    if (!AkConst::ProfileName::ALL_SERIES.contains(m_realTimeProfile->getProfileName()))
     {
         selectNozzle(name);
     }
@@ -873,14 +1222,9 @@ void FdmRightParameterService::onAiInfillDensityIdxChanged(int idx)
     IdxItem.value = idx;
     m_realTimeProfile->setSetting(AkConst::Category::AK_AI, IdxItem);
 
-    
-    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
-    QList<FdmProfileCategory> categorys;
-    FdmProfileCategory category;
-    category.name = AkConst::Category::INFILL;
-    category.set(AkConst::SettingKey::INFILL_SPARSE_DENSITY, newDensity);
-    categorys.append(category);
-    rightTree.setAny(categorys);
+
+    m_realTimeProfile->setInfillDensity(newDensity);
+    setTreeNodeValue(AkConst::SettingKey::INFILL_SPARSE_DENSITY , newDensity          );
 
     m_updateTime++;
 
@@ -1009,7 +1353,7 @@ void FdmRightParameterService::receiveOperLog(OperateLogPtr operLogPtr)
         m_realTimeProfile->setProfileName(AkConst::ProfileName::SIMPLE_MODE);
         m_realTimeProfile->setMachineName("");
         m_realTimeProfile->setMaterialName("");
-        m_realTimeProfile->updateNozzleSize(0.4);
+        m_realTimeProfile->setNozzleSize(0.4);
         m_updateTime++;
         selectProfile(m_realTimeProfile->getProfileName());
         AkUtil::TDebug(oriProfileName + " was deleted. enter simple mode");
@@ -1216,14 +1560,8 @@ void FdmRightParameterService::onGlobalSupportStateChanged(int state)
 
     
     bool supportEnable = (state == EGlobalSupportState::Selected) ? true : false;
-
-    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
-    QList<FdmProfileCategory> categorys;
-    FdmProfileCategory category;
-    category.name = AkConst::Category::SUPPORT;
-    category.set(AkConst::SettingKey::SUPPORT_ENABLE, supportEnable);
-    categorys.append(category);
-    rightTree.setAny(categorys);
+    m_realTimeProfile->setSupportEnable(supportEnable);
+    setTreeNodeValue(AkConst::SettingKey::SUPPORT_ENABLE        , supportEnable         );
 
     m_updateTime++;
 
@@ -1262,16 +1600,12 @@ void FdmRightParameterService::onGenerateAdhesionStateChanged(int state)
         }
         else
         {
-            adhesionType = EBuildPlateAdhesionType::Brim;
+            adhesionType = EBuildPlateAdhesionType::AutoBrim;
         }
     }
-    FdmQmlTreeApi& rightTree = FdmQmlSourceTree::instance().getFdmQmlTreeApi_Right();
-    QList<FdmProfileCategory> categorys;
-    FdmProfileCategory category;
-    category.name = AkConst::Category::PLATFORM_ADHESION;
-    category.set(AkConst::SettingKey::ADHESION_TYPE, adhesionType);
-    categorys.append(category);
-    rightTree.setAny(categorys);
+
+    m_realTimeProfile->setAdhesionType(adhesionType);
+    setTreeNodeValue(AkConst::SettingKey::ADHESION_TYPE         , adhesionType          );
 
     m_updateTime++;
 
@@ -1325,6 +1659,15 @@ void FdmRightParameterService::doOperateComplete()
 
 void FdmRightParameterService::onCurrentSelectedNameChanged(const QString &parameterName)
 {
+    if (parameterName == AkConst::ProfileName::More)
+    {
+        emit currentParameterNameChanged();
+        return;
+    }
+    m_realTimeProfile->setProfileName(parameterName);
+    checkPrintMode();
+
+
     selectProfile(parameterName);
 //
 //    //return FdmParameterProfileManager::Instance().setCurrentSelectedName(newCurrentParameterName);
@@ -1417,21 +1760,28 @@ QStringList FdmRightParameterService::getAiQualityStrList()
 }
 int FdmRightParameterService::getAiQualityIdx(float layerHeight)
 {
-    QList<QString> resultList;
-    int layerHeightInt = layerHeight * 100;
-    auto list = getAiQualityList();
-    for (int i = 0; i < list.size(); i++)
+//    if(m_realTimeProfile->getPrintMode() == AkConst::PrintMode::SMOOTH)
+//    {
+//        return getNozzleSize() == AkConst::NozzleSizeName::SIZE2 ? 1 : 0;
+//    }
+//    else
     {
-        int quality = list[i] * 100;
-
-        if (quality == layerHeightInt)
+        int layerHeightInt = layerHeight * 100;
+        auto list = getAiQualityList();
+        for (int i = 0; i < list.size(); i++)
         {
-            return i;
+            int quality = list[i] * 100;
+
+            if (quality == layerHeightInt)
+            {
+                return i;
+            }
         }
-    }
-    if (list.size() > 2)
-    {
-        return 1;
+
+        if (list.size() > 2)
+        {
+            return 1;
+        }
     }
     return 0;
 }
@@ -1463,25 +1813,73 @@ int FdmRightParameterService::getGlobalSupportState(bool enable)
 
 QList<float> FdmRightParameterService::getAiQualityList()
 {
-    QList<float> defaultList;
+    QList<float> resultList { 0.10, 0.20, 0.30};
 
-    
-    QString defaultValue = AkConst::NozzleSizeName::SIZE4;
-    auto realtimeProfile = FdmParameterProfileManager::Instance().getRightRealTimeProfile();
-    auto machineNozzleSize = realtimeProfile->getSetting(AkConst::Category::EXTRUDER_SETTINGS, AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
-    if (machineNozzleSize.isNull())
+    auto machineName = getMachineName();
+    auto nozzleSizeName = getNozzleSize();
+    auto printMode = m_realTimeProfile->getPrintMode();
+
+    if(printMode != AkConst::PrintMode::SMOOTH)
     {
-        defaultList << 0.05;
-        defaultList << 0.10;
-        defaultList << 0.20;
-        return defaultList;
+        if(printMode == AkConst::PrintMode::NORMAL
+                && nozzleSizeName == AkConst::NozzleSizeName::SIZE2
+                && AkConst::MachineName::M5C_SERIES.contains(machineName)){
+            return QList<float>{ 0.10 };
+        }
+
+        //新需求，根据喷嘴直径设置list  1/4 2/4 3/4
+        QString defaultValue = AkConst::NozzleSizeName::SIZE4;
+        auto realtimeProfile = FdmParameterProfileManager::Instance().getRightRealTimeProfile();
+        auto machineNozzleSize = realtimeProfile->getSetting(AkConst::Category::EXTRUDER_SETTINGS, AkConst::SettingKey::MACHINE_NOZZLE_SIZE);
+        if (machineNozzleSize.isNull())
+        {
+            return resultList;
+        }
+
+        float nozzleSize = machineNozzleSize.toFloat();
+        resultList = {
+            nozzleSize*0.25f,
+            nozzleSize*0.5f,
+            nozzleSize*0.75f
+        };
+
+        if (realtimeProfile->getPrintMode() == AkConst::PrintMode::FAST)
+        {
+            resultList = {
+                0.10f,
+                0.20f,
+                0.25f,
+                0.30f,
+            };
+        }
     }
-    float nozzleSize = machineNozzleSize.toFloat();
-    QList<float> resultList{
-        nozzleSize*0.25f,
-        nozzleSize*0.5f,
-        nozzleSize*0.75f,
-    };
+    else
+    {
+        if(nozzleSizeName == AkConst::NozzleSizeName::SIZE4)
+        {
+            resultList = {
+                0.12f,
+                0.16f
+            };
+        }
+        else if(nozzleSizeName == AkConst::NozzleSizeName::SIZE2)
+        {
+//            if(machineName == AkConst::MachineName::M5)
+//            {
+//                resultList = {
+//                    0.1f
+//                };
+//            }
+//            else
+            {
+                resultList = {
+                    0.05f,
+                    0.1f
+                };
+            }
+        }
+    }
+
     return resultList;
 }
 //QList<float> FdmRightParameterService::getAiQualityList()
@@ -1638,10 +2036,25 @@ QStringList FdmRightParameterService::getNozzleSizeList()
     resultList << AkConst::NozzleSizeName::SIZE2;
     resultList << AkConst::NozzleSizeName::SIZE4;
     resultList << AkConst::NozzleSizeName::SIZE6;
-    
-    if (getMaterialName() != AkConst::MaterialName::TPU)
+    resultList << AkConst::NozzleSizeName::SIZE8;
+
+    //材料不影响喷嘴 不反向传播 2023、07、31
+//    //先屏蔽掉0.8的nozzle。打印效果不好
+//    if (getMaterialName() == AkConst::MaterialName::TPU)
+//    {
+//         resultList.removeOne(AkConst::NozzleSizeName::SIZE8);
+//    }
+//    else if(getMaterialName() == AkConst::MaterialName::PA_CF)
+//    {
+//         resultList.removeOne(AkConst::NozzleSizeName::SIZE2);
+//         resultList.removeOne(AkConst::NozzleSizeName::SIZE6);
+//         resultList.removeOne(AkConst::NozzleSizeName::SIZE8);
+//    }
+
+    if(AkConst::MachineName::M5C_SERIES.contains(getMachineName()))
     {
-         resultList << AkConst::NozzleSizeName::SIZE8;
+        resultList.removeOne(AkConst::NozzleSizeName::SIZE6);
+        resultList.removeOne(AkConst::NozzleSizeName::SIZE8);
     }
     return resultList;
 
@@ -1693,3 +2106,21 @@ void FdmRightParameterService::calcGlobalSupportTextCode()
         }
     }
 }
+
+#ifdef TOOL_SAVE_AS_PARAM_INI
+QString FdmRightParameterService::__ToolSaveAs_1()
+{
+    QString str, str1, str2 ,str3;
+    str1 = getMachineName().split(" ").last();
+    str2 = QString::number(int(10 * m_realTimeProfile->getSetting(AkConst::Category::EXTRUDER_SETTINGS, AkConst::SettingKey::MACHINE_NOZZLE_SIZE).toDouble() ));
+    str3 = getMaterialName();
+    str = QString("%1_%2_%3.ini").arg(str1).arg(str2).arg(str3);
+    AkUtil::TFunction(str);
+    return str;
+}
+
+QString FdmRightParameterService::__ToolSaveAs_2(QString str)
+{
+    return QDir(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)).absoluteFilePath("ini/"+str);
+}
+#endif

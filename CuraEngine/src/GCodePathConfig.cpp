@@ -39,8 +39,8 @@ void GCodePathConfig::smoothSpeed(GCodePathConfig::SpeedDerivatives first_layer_
 {
     double max_speed_layer = max_speed_layer_nr;
     speed_derivatives.speed = (speed_derivatives.speed * layer_nr) / max_speed_layer + (first_layer_config.speed * (max_speed_layer - layer_nr) / max_speed_layer);
-    speed_derivatives.acceleration = (speed_derivatives.acceleration * layer_nr) / max_speed_layer + (first_layer_config.acceleration * (max_speed_layer - layer_nr) / max_speed_layer);
-    speed_derivatives.jerk = (speed_derivatives.jerk * layer_nr) / max_speed_layer + (first_layer_config.jerk * (max_speed_layer - layer_nr) / max_speed_layer);
+    //speed_derivatives.acceleration = (speed_derivatives.acceleration * layer_nr) / max_speed_layer + (first_layer_config.acceleration * (max_speed_layer - layer_nr) / max_speed_layer);
+    //speed_derivatives.jerkXY = (speed_derivatives.jerkXY * layer_nr) / max_speed_layer + (first_layer_config.jerkXY * (max_speed_layer - layer_nr) / max_speed_layer);
 }
 
 double GCodePathConfig::getExtrusionMM3perMM() const
@@ -58,9 +58,14 @@ Acceleration GCodePathConfig::getAcceleration() const
     return speed_derivatives.acceleration;
 }
 
-Velocity GCodePathConfig::getJerk() const
+Velocity GCodePathConfig::getJerkXY() const
 {
-    return speed_derivatives.jerk;
+    return speed_derivatives.jerkXY;
+}
+
+Velocity GCodePathConfig::getJerkEE() const
+{
+    return speed_derivatives.jerkEE;
 }
 
 coord_t GCodePathConfig::getLineWidth() const

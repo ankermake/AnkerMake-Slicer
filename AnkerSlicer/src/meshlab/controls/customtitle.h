@@ -20,13 +20,13 @@ class customTitle : public QWidget
     Q_OBJECT
 
 public:
-    customTitle(QWidget *parent, QMenuBar * menuBar);
-    
+    customTitle(QWidget *parent, QMenuBar * menuBar,bool inGuidePage = false);
     ~customTitle();
     
     void saveRestoreInfo(const QPoint point, const QSize size);
     void getRestoreInfo(QPoint& point, QSize& size);
     void setMenuBar(QMenuBar *menuBar) { m_menuBar = menuBar; };
+    void setMaxScreen(bool maxScreen){m_maxScreen = maxScreen;};
     QMenu *addMenu(QString name) { return m_menuBar->addMenu(name);};
     void addAction(QAction *action) {
         m_menuBar->addAction(action);
@@ -70,7 +70,8 @@ private:
     int m_colorG;
     int m_colorB;
 
-    
+    bool m_inGuidePage;
+  
     QPoint m_restorePos;
     QSize m_restoreSize;
     

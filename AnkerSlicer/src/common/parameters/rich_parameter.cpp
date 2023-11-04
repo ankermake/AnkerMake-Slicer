@@ -109,6 +109,7 @@ void RichParameter::setName(const QString& newName)
 
 void RichParameter::setValue(const Value& ov)
 {
+    if(val->typeName() != ov.typeName()){ qDebug() << __FUNCTION__ << __LINE__ << val->typeName() << ov.typeName(); }
 	assert(val->typeName() == ov.typeName());
 	delete val;
 	val = ov.clone();

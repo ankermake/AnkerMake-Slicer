@@ -1,6 +1,7 @@
 #include "mainwidget.h"
 #include "common/GeoAndShow/CH3DPrintModel.h"
 #include "common/mlapplication.h"
+#include "../../common/controlInterface/messagetip.h"
 #include <QWindow>
 #include <QDesktopWidget>
 #include <QApplication>
@@ -47,7 +48,8 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
     splitter->addWidget(mdiarea);
     m_fdmWidget->setLayout(splitter);
     controlManager->setRightWidget(splitter);
-    m_tabWidget->addTab(m_fdmWidget,QIcon(":/images/icon/fdmSlicerTab.png"),tr("Slice"));
+    //m_tabWidget->addTab(m_fdmWidget,QIcon(":/images/icon/fdmSlicerTab.png"),tr("Slice(Beta)"));
+    m_tabWidget->addTab(m_fdmWidget,QIcon(":/images/icon/fdm-slice-tab-s.png"),QIcon(":/images/icon/fdm-slice-tab-n.png"),tr("Slice")+"(Beta)");
 
     controlManager->setGlareaWidget(this);
     controlManager->setMainWindow(this->parentWidget());
@@ -64,7 +66,7 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
         m_gcodeWidget = qobject_cast<QWidget *>(object);
         if(m_gcodeWidget != nullptr)
         {
-            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/previewTab.png"), tr("Preview"), 1);
+            m_tabWidget->addTab(m_gcodeWidget,QIcon(":/images/icon/fdm-preview-tab-s.png"), QIcon(":/images/icon/fdm-preview-tab-n.png"),tr("Preview"), 1);
             connect(m_tabWidget,SIGNAL(currentChanged(int)),m_gcodeWidget,SLOT(pauseGcodePlay(int)));
         }
     });
@@ -91,7 +93,9 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
         AkUtil::TDebug("network insert tab widget display: " + str);
         if(m_netWorkWidget != nullptr)
         {
-            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/deviceTab.png"), tr("Device"), 2);
+            m_tabWidget->addTab(m_netWorkWidget,QIcon(":/images/icon/fdm-device-tab-s.png"),QIcon(":/images/icon/fdm-device-tab-n.png"), tr("Device"), 2);
+            //QString surveyStr = QString("<a style='color: #FFFFFF; text-decoration: none' href = \"https://www.baidu.com/\" >") + tr("Customer Satisfaction Survey") + QString(">> </a>");
+            //m_tabWidget->addTab(new QWidget(this), QIcon(":/images/survey_info_icon.png"), surveyStr, 5);
         }
 
         //WId _wid = wid.toInt();
@@ -105,6 +109,21 @@ void FdmMainWidget::initWindow(ControlManager *controlManager)
 //            }
 //        }
     });
+
+
+#if 1
+    connect(m_messageProcessing,&MessageProcessing::networkSendLoginWidgetPtr,[=](QObject *object){
+        QWidget* loginWidget = qobject_cast<QWidget *>(object);
+        GeneralWidget *generalPage = getGeneralWidget();
+        if (generalPage)
+        {
+            generalPage -> setLoginWidgetPtr(loginWidget);
+        }
+    });
+#else
+    GeneralWidget *generalPage = getGeneralWidget();
+    connect(m_messageProcessing,&MessageProcessing::networkSendLoginWidgetPtr, generalPage, &GeneralWidget::setLoginWidgetPtr);
+#endif
 
     connect(m_messageProcessing,&MessageProcessing::swtichNetworkWidgetSignal, [=]{
         AkUtil::TFunction("");
@@ -457,6 +476,33 @@ void FdmMainWidget::insertRecent(const QStringList &fileList)
     if (fileList.isEmpty()) {
         return;
     }
+
+    for(const QString& fileName : fileList)
+    {     
+        if(!fileName.endsWith("stl") && !fileName.endsWith("obj") && !fileName.endsWith("akpro")){
+            continue;
+        }
+
+
+        if(fileName.endsWith("akpro"))
+        {
+            CHDocPtr docPtr = getDoc();
+            if(!docPtr || docPtr->m_printObjs.size()<1){
+                continue;
+            }
+        }
+
+        PluginMessageData data;
+        data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+        data.dest = AkConst::Plugin::FDM_SETTING;
+        data.msg = AkConst::Msg::LOAD_MODEL_FINISHED;
+        data.object = this;
+        m_messageProcessing->sendMsg2Manager(data);
+
+        break;
+    }
+
+
     m_settings.insertRecent(fileList);
     m_recentMenu->clear();
     createRecentProject(m_settings.readRecent(), m_recentMenu);
@@ -558,7 +604,7 @@ void FdmMainWidget::openRecent()
         emit fdmOpenRecent(QStringList() << data.toString());
     }
     else {
-        control::MessageDialog box(tr("Notice"), tr("The file can't be found. Please check."), MessageDialog::OK, this);
+        MessageDialog box(tr("Notice"), tr("The file can't be found. Please check."), MessageDialog::OK, this);
         box.exec();
     }
    // openFileList(QStringList() << data.toString());
@@ -670,6 +716,11 @@ void FdmMainWidget::loginWidgetDisplaySlot()
     AkUtil::TFunction("");
 
     qDebug() << "loginWidgetDisplaySlot.";
+    qDebug() << "widget visible: " << isVisible() << ", hidden: " << isHidden();
+    if(!isVisible())
+    {
+        return;
+    }
     m_messageProcessing->sendMsg2NetworkLogin();
 
 
@@ -892,7 +943,24 @@ void FdmMainWidget::tabCurrentPageChanged(int index)
         m_menuSetting->setEnabled(false);
         break;
     }
-   // qDebug() << " current ===" << m_tabWidget->currentIndex();
+
+    bool isSwitchToNetwork = index == NETWORKWIDGET ? true : false;
+    PluginMessageData Data;
+    Data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    Data.dest = AkConst::Plugin::FDM_NETWORK;
+    Data.msg = AkConst::Msg::TAB_SWITCH;
+    Data.map.insert(AkConst::Param::TAB_STITCH_TO_NETWORK, isSwitchToNetwork);
+    m_messageProcessing->sendMsg2Manager(Data);
+
+    PluginMessageData data;
+    data.from = AkConst::Plugin::AK_MAIN_WINDOW;
+    data.dest = AkConst::Plugin::FDM_SETTING;
+    data.msg = AkConst::Msg::TAB_WIDGET_CHANGED;
+    data.object = this;
+    data.map.insert(AkConst::Param::CURRENT_PAGE_INDEX, index);
+    m_messageProcessing->sendMsg2Manager(data);
+
+    // qDebug() << " current ===" << m_tabWidget->currentIndex();
 }
 void FdmMainWidget::visibleModelCountChanged(int count)
 {
@@ -930,17 +998,43 @@ void FdmMainWidget::currentPageChanged(int index)
     qDebug() << " current ===" << m_tabWidget->currentIndex();
 }
 
+void FdmMainWidget::onEntryMainWindow()
+{
+    AkUtil::TFunction("");
+    // show login window if offline
+    QTimer::singleShot(2 * 1000,[=](){
+        PluginMessageData mwData;
+        mwData.from = AkConst::Plugin::AK_MAIN_WINDOW;
+        mwData.dest = AkConst::Plugin::FDM_NETWORK;
+        mwData.msg = AkConst::Msg::ENTRY_ANKERMAKE_MAINWINDOW;
+        m_messageProcessing->sendMsg2Manager(mwData);
+    });
+
+
+    // start ota update autocheck
+    QTimer::singleShot(6 * 1000,[=](){
+        GeneralWidget* general = getGeneralWidget();
+        if(general)
+        {
+            general->autoUpdateChecker();
+        }
+    });
+}
+
+
 
 void FdmMainWidget::changeEvent(QEvent *e)
 {
     if (e->type() == QEvent::LanguageChange) {
         retranslateUi();
-        QVector<QString> TAB_TITLE = { tr("Slice"),
+        QVector<QString> TAB_TITLE = { tr("Slice") +"(Beta)",
                                      tr("Preview"),
                                      tr("Device")};
         for (int i = 0; i < m_tabWidget->titleLabels().size(); i++) {
             m_tabWidget->titleLabels()[i]->setText(TAB_TITLE[i]);
         }
+        m_tabWidget->updateTabMergein();
+
         if (m_logUpload) {
             m_logUpload->setText(tr("Log Upload"));
         }
@@ -967,6 +1061,11 @@ void FdmMainWidget::changeEvent(QEvent *e)
         }
     }
     QWidget::changeEvent(e);
+}
+
+GeneralWidget* FdmMainWidget::getGeneralWidget()
+{
+    return m_widget;
 }
 
 void FdmMainWidget::retranslateUi()

@@ -131,9 +131,9 @@ CHDoc::~CHDoc()
 //    return true;
 //}
 
-
-bool CHDoc::writeVisibleMeshesToStlFile(const QString& path, bool binary)
+bool CHDoc::writeVisibleMeshesToStlFile(const QString& path,int& visibleMeshCount, bool binary)
 {
+    visibleMeshCount = 0;
     if (m_printObjs.size() == 0)
     {
         return false;
@@ -157,7 +157,8 @@ bool CHDoc::writeVisibleMeshesToStlFile(const QString& path, bool binary)
         return false;
     }
 
-    
+    visibleMeshCount = visuableObjs.size();
+
     CHBaseAlg::instance()->writeMeshesToStlFile(meshes, path, binary);
 
     

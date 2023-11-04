@@ -8,11 +8,31 @@ updateMessageDialog::updateMessageDialog(const QString &title, const QString &de
     : QDialog(parent),
       m_isClosed(true)
 {
-    init();
+    init(true);
 //    setWindowFlags(Qt::FramelessWindowHint
 //                   | Qt::Tool
 //                   | Qt::WindowStaysOnTopHint);
-    
+//    activateWindow();
+//    setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
+
+    m_titleWidget->setTitle(title);
+    m_description->setText(description);
+    setButton(buttons);
+    m_warning->setVisible(false);
+    setOTAReleaseNoteVisible(false);
+   // setFixedSize(400,171);
+}
+
+updateMessageDialog::updateMessageDialog(const QString &title, const QString &description, const QString &DetailText, int buttons, QWidget *parent)
+    : QDialog(parent),
+      m_isClosed(true)
+{
+    bool showDetail = DetailText.isEmpty() ? false : true ;
+    init(showDetail);
+//    setWindowFlags(Qt::FramelessWindowHint
+//                   | Qt::Tool
+//                   | Qt::WindowStaysOnTopHint);
+    // 让窗口弹出在程序最前 add by add Aden
 //    activateWindow();
 //    setWindowState((windowState() & ~Qt::WindowMinimized) | Qt::WindowActive);
 
@@ -25,8 +45,10 @@ updateMessageDialog::updateMessageDialog(const QString &title, const QString &de
 }
 
 
-void updateMessageDialog::init()
+
+void updateMessageDialog::init(bool showDetail)
 {
+    this->setMinimumWidth(400);
     m_mainLayout = new QVBoxLayout(this);
     m_mainLayout->setSpacing(0);
     m_mainLayout->setContentsMargins(0,0,0,0);
@@ -48,8 +70,9 @@ void updateMessageDialog::init()
     m_description->setStyleSheet(" font: bold ;");
     layout->addWidget(m_description);
 
-
-    
+if (showDetail)
+{
+    // 显示what's new
     m_detailTitle = new QLabel(this);
     m_detailTitle->setWordWrap(true);
     m_detailTitle->setAlignment(Qt::AlignLeft);
@@ -79,7 +102,7 @@ void updateMessageDialog::init()
     m_releaseNote->verticalScrollBar()->setStyleSheet(ScrollBarVertical);
     m_releaseNote->setStyleSheet("QTextEdit {background-color:rgba(100,100,100,0); color:white; border:0px;}");
     layout->addWidget(m_releaseNote);
-
+}
     m_edit = new QLineEdit(this);
     m_edit->setMaximumHeight(40);
     m_edit->setObjectName("m_edit");

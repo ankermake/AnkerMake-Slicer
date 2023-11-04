@@ -250,7 +250,7 @@ namespace detail {
   		const Scalar 							&t0,
   		const Scalar 							&t1) {
 		// http://people.csail.mit.edu/amy/papers/box-jgt.pdf
-		
+		// "An Efficient and Robust Ray–Box Intersection Algorithm"
 		if (inv_dir.x() < 0)
 			std::swap(box.min().x(), box.max().x());
 		if (inv_dir.y() < 0)

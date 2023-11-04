@@ -263,7 +263,7 @@ namespace Slic3r {
                                 }
                                 else
                                 {
-									
+									//修复异常现象
                                     if (top.belows_support_areas.empty() && !bottom.belows_support_areas.empty())
                                         top.belows_support_areas = bottom.belows_support_areas;
                                     else if(!top.belows_support_areas.empty() && !bottom.belows_support_areas.empty())
@@ -401,7 +401,7 @@ namespace Slic3r {
             statuscb(0.3);
             std::cout << "step3" << std::endl;
 
-            
+            //处理被过滤的小面积
             float new_island_offset = config.head_diameter;
             ccr_par::for_each(size_t(1), layers.size(),
                 [&layers, &heights ,&config, throw_on_cancel](size_t layer_id)
@@ -556,7 +556,7 @@ namespace Slic3r {
             size_t layer_size = layers.size();
             int  layeroffset = 6;
             int times = layers.size() / layeroffset ;
-            
+            //累加计算
             std::cout << "step4" << std::endl;
 
 			if (type == 0)

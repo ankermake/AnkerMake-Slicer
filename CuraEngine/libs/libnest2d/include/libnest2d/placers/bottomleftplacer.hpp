@@ -278,7 +278,7 @@ protected:
 
     /**
      * Implementation of the left (and down) polygon as described by
-
+     * [López-Camacho et al. 2013]\
      * (http://www.cs.stir.ac.uk/~goc/papers/EffectiveHueristic2DAOR2013.pdf)
      * see algorithm 8 for details...
      */

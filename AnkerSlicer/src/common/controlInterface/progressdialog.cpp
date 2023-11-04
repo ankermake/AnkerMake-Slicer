@@ -9,6 +9,9 @@ ProgressDialog::ProgressDialog(QWidget *parent)
       m_alreadyClosed(false)
 {
     init();
+    m_timer = new QTimer(this);
+    connect(m_timer, &QTimer::timeout, this, &ProgressDialog::autoCloseDialog);
+    m_timer->start(30 * 1000);
 }
 
 void ProgressDialog::init()
@@ -57,8 +60,18 @@ void ProgressDialog::setValue(int value)
 {
     //qDebug() << "set value ";
     m_progressbar->setValue(value);
+    m_currentValue = value;
 //    QCoreApplication::processEvents();
     update();
+}
+
+void ProgressDialog::autoCloseDialog()
+{
+   if(m_lastValue == m_currentValue){
+       //close();
+       emit closeSignal(false);
+   }
+   m_lastValue = m_currentValue;
 }
 
 void ProgressDialog::setText(const QString &text)

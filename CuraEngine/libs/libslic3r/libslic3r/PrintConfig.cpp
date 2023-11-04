@@ -199,7 +199,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Other layers");
     def->tooltip = L("Bed temperature for layers after the first one. "
                    "Set this to zero to disable bed temperature control commands in the output.");
-    def->sidetext = L("°C");
+    def->sidetext = L("°C");
     def->full_label = L("Bed temperature");
     def->min = 0;
     def->max = 300;
@@ -249,7 +249,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Bridge");
     def->tooltip = L("This is the acceleration your printer will use for bridges. "
                    "Set zero to disable acceleration control for bridges.");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -259,8 +259,8 @@ void PrintConfigDef::init_fff_params()
     def->category = L("Infill");
     def->tooltip = L("Bridging angle override. If left to zero, the bridging angle will be calculated "
                    "automatically. Otherwise the provided angle will be used for all bridges. "
-                   "Use 180° for zero angle.");
-    def->sidetext = L("°");
+                   "Use 180° for zero angle.");
+    def->sidetext = L("°");
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.));
@@ -392,7 +392,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("This is the acceleration your printer will be reset to after "
                    "the role-specific acceleration values are used (perimeter/infill). "
                    "Set zero to prevent resetting acceleration at all.");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -660,7 +660,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Maximum volumetric speed allowed for this filament. Limits the maximum volumetric "
                    "speed of a print to the minimum of print and filament volumetric speed. "
                    "Set to zero for no limit.");
-    def->sidetext = L("mm³/s");
+    def->sidetext = L("mm³/s");
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats { 0. });
@@ -731,7 +731,7 @@ void PrintConfigDef::init_fff_params()
                      "the nozzle may not be known, and the filament pressure is likely not yet stable. "
                      "Before purging the print head into an infill or a sacrificial object, Slic3r will always prime "
                      "this amount of material into the wipe tower to produce successive infill or sacrificial object extrusions reliably.");
-    def->sidetext = L("mm³");
+    def->sidetext = L("mm³");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloats { 15.f });
@@ -780,7 +780,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Enter your filament density here. This is only for statistical information. "
                    "A decent way is to weigh a known length of filament and compute the ratio "
                    "of the length to volume. Better is to calculate the volume directly through displacement.");
-    def->sidetext = L("g/cm³");
+    def->sidetext = L("g/cm³");
     def->min = 0;
     def->set_default_value(new ConfigOptionFloats { 0. });
 
@@ -849,7 +849,7 @@ void PrintConfigDef::init_fff_params()
     def->tooltip = L("Default base angle for infill orientation. Cross-hatching will be applied to this. "
                    "Bridges will be infilled using the best direction Slic3r can detect, so this setting "
                    "does not affect them.");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->min = 0;
     def->max = 360;
     def->mode = comAdvanced;
@@ -937,7 +937,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("First layer");
     def->tooltip = L("This is the acceleration your printer will use for first layer. Set zero "
                    "to disable acceleration control for first layer.");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -947,7 +947,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("First layer bed temperature");
     def->tooltip = L("Heated build plate temperature for the first layer. Set this to zero to disable "
                    "bed temperature control commands in the output.");
-    def->sidetext = L("°C");
+    def->sidetext = L("°C");
     def->max = 0;
     def->max = 300;
     def->set_default_value(new ConfigOptionInts { 0 });
@@ -991,7 +991,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("First layer nozzle temperature");
     def->tooltip = L("Nozzle temperature for the first layer. If you want to control temperature manually "
                      "during print, set this to zero to disable temperature control commands in the output G-code.");
-    def->sidetext = L("°C");
+    def->sidetext = L("°C");
     def->min = 0;
     def->max = max_temp;
     def->set_default_value(new ConfigOptionInts { 200 });
@@ -1076,7 +1076,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Infill");
     def->tooltip = L("This is the acceleration your printer will use for infill. Set zero to disable "
                    "acceleration control for infill.");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -1357,7 +1357,7 @@ void PrintConfigDef::init_fff_params()
             (void)L("Maximum acceleration of the Y axis");
             (void)L("Maximum acceleration of the Z axis");
             (void)L("Maximum acceleration of the E axis");
-            def->sidetext = L("mm/s²");
+            def->sidetext = L("mm/s²");
             def->min = 0;
             def->mode = comAdvanced;
             def->set_default_value(new ConfigOptionFloats(axis.max_acceleration));
@@ -1406,7 +1406,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("Maximum acceleration when extruding");
     def->category = L("Machine limits");
     def->tooltip = L("Maximum acceleration when extruding (M204 S)");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats{ 1500., 1250. });
@@ -1416,7 +1416,7 @@ void PrintConfigDef::init_fff_params()
     def->full_label = L("Maximum acceleration when retracting");
     def->category = L("Machine limits");
     def->tooltip = L("Maximum acceleration when retracting (M204 T)");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->min = 0;
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloats{ 1500., 1250. });
@@ -1455,7 +1455,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Max volumetric speed");
     def->tooltip = L("This experimental setting is used to set the maximum volumetric speed your "
                    "extruder supports.");
-    def->sidetext = L("mm³/s");
+    def->sidetext = L("mm³/s");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -1464,10 +1464,10 @@ void PrintConfigDef::init_fff_params()
     def = this->add("max_volumetric_extrusion_rate_slope_positive", coFloat);
     def->label = L("Max volumetric slope positive");
     def->tooltip = L("This experimental setting is used to limit the speed of change in extrusion rate. "
-                   "A value of 1.8 mm³/s² ensures, that a change from the extrusion rate "
-                   "of 1.8 mm³/s (0.45mm extrusion width, 0.2mm extrusion height, feedrate 20 mm/s) "
-                   "to 5.4 mm³/s (feedrate 60 mm/s) will take at least 2 seconds.");
-    def->sidetext = L("mm³/s²");
+                   "A value of 1.8 mm³/s² ensures, that a change from the extrusion rate "
+                   "of 1.8 mm³/s (0.45mm extrusion width, 0.2mm extrusion height, feedrate 20 mm/s) "
+                   "to 5.4 mm³/s (feedrate 60 mm/s) will take at least 2 seconds.");
+    def->sidetext = L("mm³/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -1475,10 +1475,10 @@ void PrintConfigDef::init_fff_params()
     def = this->add("max_volumetric_extrusion_rate_slope_negative", coFloat);
     def->label = L("Max volumetric slope negative");
     def->tooltip = L("This experimental setting is used to limit the speed of change in extrusion rate. "
-                   "A value of 1.8 mm³/s² ensures, that a change from the extrusion rate "
-                   "of 1.8 mm³/s (0.45mm extrusion width, 0.2mm extrusion height, feedrate 20 mm/s) "
-                   "to 5.4 mm³/s (feedrate 60 mm/s) will take at least 2 seconds.");
-    def->sidetext = L("mm³/s²");
+                   "A value of 1.8 mm³/s² ensures, that a change from the extrusion rate "
+                   "of 1.8 mm³/s (0.45mm extrusion width, 0.2mm extrusion height, feedrate 20 mm/s) "
+                   "to 5.4 mm³/s (feedrate 60 mm/s) will take at least 2 seconds.");
+    def->sidetext = L("mm³/s²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
@@ -1611,7 +1611,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Perimeters");
     def->tooltip = L("This is the acceleration your printer will use for perimeters. "
                      "Set zero to disable acceleration control for perimeters.");
-    def->sidetext = L("mm/s²");
+    def->sidetext = L("mm/s²");
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(0));
 
@@ -1852,7 +1852,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("seam_preferred_direction", coFloat);
 //    def->gui_type = "slider";
     def->label = L("Direction");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->full_label = L("Preferred direction of the seam");
     def->tooltip = L("Seam preferred direction");
     def->min = 0;
@@ -1862,7 +1862,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("seam_preferred_direction_jitter", coFloat);
 //    def->gui_type = "slider";
     def->label = L("Jitter");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->full_label = L("Seam preferred direction jitter");
     def->tooltip = L("Preferred direction of the seam - jitter");
     def->min = 0;
@@ -1929,7 +1929,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Solid infill threshold area");
     def->category = L("Infill");
     def->tooltip = L("Force solid infill for regions having a smaller area than the specified threshold.");
-    def->sidetext = L("mm²");
+    def->sidetext = L("mm²");
     def->min = 0;
     def->mode = comExpert;
     def->set_default_value(new ConfigOptionFloat(70));
@@ -2005,7 +2005,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Temperature variation");
     def->tooltip = L("Temperature difference to be applied when an extruder is not active. "
                    "Enables a full-height \"sacrificial\" skirt on which the nozzles are periodically wiped.");
-    def->sidetext = "∆°C";
+    def->sidetext = "∆°C";
     def->min = -max_temp;
     def->max = max_temp;
     def->mode = comExpert;
@@ -2120,7 +2120,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Pattern angle");
     def->category = L("Support material");
     def->tooltip = L("Use this setting to rotate the support material pattern on the horizontal plane.");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->min = 0;
     def->max = 359;
     def->mode = comExpert;
@@ -2271,11 +2271,11 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Overhang threshold");
     def->category = L("Support material");
     def->tooltip = L("Support material will not be generated for overhangs whose slope angle "
-                   "(90° = vertical) is above the given threshold. In other words, this value "
+                   "(90° = vertical) is above the given threshold. In other words, this value "
                    "represent the most horizontal slope (measured from the horizontal plane) "
                    "that you can print without support material. Set to zero for automatic detection "
                    "(recommended).");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->min = 0;
     def->max = 90;
     def->mode = comAdvanced;
@@ -2293,7 +2293,7 @@ void PrintConfigDef::init_fff_params()
     def->label = L("Other layers");
     def->tooltip = L("Nozzle temperature for layers after the first one. Set this to zero to disable "
                      "temperature control commands in the output G-code.");
-    def->sidetext = L("°C");
+    def->sidetext = L("°C");
     def->full_label = L("Nozzle temperature");
     def->min = 0;
     def->max = max_temp;
@@ -2474,7 +2474,7 @@ void PrintConfigDef::init_fff_params()
     def = this->add("wipe_tower_rotation_angle", coFloat);
     def->label = L("Wipe tower rotation angle");
     def->tooltip = L("Wipe tower rotation angle with respect to x-axis.");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->mode = comAdvanced;
     def->set_default_value(new ConfigOptionFloat(0.));
 
@@ -2975,7 +2975,7 @@ void PrintConfigDef::init_sla_params()
     def->label = L("Critical angle");
     def->category = L("Supports");
     def->tooltip = L("The default angle for connecting support sticks and junctions.");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->min = 0;
     def->max = 90;
     def->mode = comExpert;
@@ -3096,7 +3096,7 @@ void PrintConfigDef::init_sla_params()
     def->category = L("Pad");
     def->tooltip = L("The slope of the pad wall relative to the bed plane. "
                      "90 degrees means straight walls.");
-    def->sidetext = L("°");
+    def->sidetext = L("°");
     def->min = 45;
     def->max = 90;
     def->mode = comAdvanced;

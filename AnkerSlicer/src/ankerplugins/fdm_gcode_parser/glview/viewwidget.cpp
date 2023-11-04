@@ -40,7 +40,10 @@ viewWidget::viewWidget(QWidget* parent, const SceneParam& param,bool pmode,QStri
             ui->openGLWidget->innerMode = true;
             connect(this,SIGNAL(checkoutPreviewEvent(bool)),m_rpc.data(),SLOT(checkoutPreviewEvent(bool)));
             connect(m_rpc.data(),SIGNAL(oStlNameChanged(QString)),this,SLOT(setOriginalStlName(QString)));
+            connect(m_rpc.data(),SIGNAL(oStlGcodePathChanged(QString)),this,SLOT(setOriginalGCodePath(QString)));
+            connect(this,SIGNAL(previewOpenFileEvent()),m_rpc.data(),SLOT(previewOpenFileEvent()));
             connect(m_rpc.data(),SIGNAL(isAiModeChanged(bool)),this,SLOT(setAimode(bool)));
+            connect(m_rpc.data(),SIGNAL(ankerMachineChanged(int)),this,SLOT(setCurAnkerMachine(int)));
             connect(this,SIGNAL(printGcode(const QString&)),m_rpc.data(),SLOT(sendGCodePrintSignal(const QString&)));
         }
     }else{
@@ -598,7 +601,8 @@ void viewWidget::initForm()
     QFrame* line_9;
     QFrame* line_10;
     QFrame* line_11; //zlap line
-    QVBoxLayout* verticalLayout;   
+    QFrame* line_12;
+    QVBoxLayout* verticalLayout;   //右侧widget 总布局
     QHBoxLayout* linetypeLabelLayout;
 
     QHBoxLayout* ConsumedLabelLayout;
@@ -613,6 +617,9 @@ void viewWidget::initForm()
     QHBoxLayout* timeLayout;
     QLabel* timePiclabel;
     QSpacerItem* horizontalSpacer_time11;
+
+
+    QSpacerItem* horizontalSpacer_time12;
 
     QVBoxLayout* lineTypeLayout;
 
@@ -2027,16 +2034,52 @@ void viewWidget::initForm()
     timeLayout->addWidget(timeValue);
     verticalLayout->addLayout(timeLayout);
 
+    line_12 = new QFrame(ui->widget);
+    line_12->setObjectName(QString::fromUtf8("line_12"));
+    sizePolicy3.setHeightForWidth(line_12->sizePolicy().hasHeightForWidth());
+    line_12->setSizePolicy(sizePolicy3);
+    line_12->setFrameShape(QFrame::HLine);
+    line_12->setFrameShadow(QFrame::Sunken);
+    verticalLayout->addWidget(line_12);
+    QHBoxLayout* isAicreatLayout;
+    isAicreatLayout = new QHBoxLayout();
+    isAicreatLayout->setSpacing(8);
+    isAicreatLayout->setObjectName(QString::fromUtf8("isAicreatLayout"));
+    isAicreatLayout->setContentsMargins(0, 0, 0, 0);
+    isAicreatPiclabel = new QLabel(ui->widget);
+    isAicreatPiclabel->setObjectName(QString::fromUtf8("isAicreatPiclabel"));
+    isAicreatPiclabel->setPixmap(QPixmap(":/pic/ui/fdm_ai_checkbox.png"));
+    sizePolicy1.setHeightForWidth(timePiclabel->sizePolicy().hasHeightForWidth());
+    isAicreatPiclabel->setSizePolicy(sizePolicy1);
+    isAicreatPiclabel->setMinimumSize(QSize(40, 40));
+    isAicreatPiclabel->setAlignment(Qt::AlignCenter);
+    isAicreatLayout->addWidget(isAicreatPiclabel);
+    isAiCreatlabel = new QLabel(ui->widget);
+    isAiCreatlabel->setObjectName(QString::fromUtf8("timelabel"));
+    isAiCreatlabel->setText(tr("AI Detect"));
+    isAiCreatlabel->setStyleSheet("font: normal bold 16px Microsoft YaHei");
+    sizePolicy2.setHeightForWidth(isAiCreatlabel->sizePolicy().hasHeightForWidth());
+    isAiCreatlabel->setSizePolicy(sizePolicy2);
+    isAiCreatlabel->setMinimumSize(QSize(80, 15));
+    isAicreatLayout->addWidget(isAiCreatlabel);
+    horizontalSpacer_time12 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+    isAicreatLayout->addItem(horizontalSpacer_time12);
+    isAicreatcheckBox = new SwitchButton(ui->widget);
+    isAicreatcheckBox->setObjectName(QString::fromUtf8("isAicreatcheckBox"));
+    isAicreatcheckBox->setMinimumSize(QSize(41, 20));
+    isAicreatcheckBox->setMaximumSize(QSize(41, 20));
+    isAicreatcheckBox->setCheckState(false);
+    isAicreatLayout->addWidget(isAicreatcheckBox);
+
+    verticalLayout->addLayout(isAicreatLayout);
+
+
     verticalLayout->addStretch();
 
     QHBoxLayout* ExportLayout;
-    QSpacerItem* horizontalSpacer_ExportLayout12;
-    //QPushButton* ExportButton;
-    QSpacerItem* horizontalSpacer_ExportLayout13;
     QHBoxLayout* ExitLayout;
-    QSpacerItem* horizontalSpacer_Exit14;
-    //QPushButton* ExitButton;
-    QSpacerItem* horizontalSpacer_Exit15;
+    QHBoxLayout* OpenFileLayout;
+
     ExportLayout = new QHBoxLayout();
     ExportLayout->setSpacing(0);
     ExportLayout->setContentsMargins(8,0,8,0);
@@ -2077,12 +2120,43 @@ void viewWidget::initForm()
         "}"));
     ExportLayout->addWidget(ExportButton);
     ExportButton->setEnabled(false);
-//    horizontalSpacer_ExportLayout13 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
-//    ExportLayout->addItem(horizontalSpacer_ExportLayout13);
-//    ExportLayout->setStretch(0, 1);
-//    ExportLayout->setStretch(1, 3);
-//    ExportLayout->setStretch(2, 1);
 
+
+    OpenFileLayout = new QHBoxLayout();
+    OpenFileLayout->setSpacing(0);
+    OpenFileLayout->setContentsMargins(8,0,8,0);
+    OpenFileLayout->setObjectName(QString::fromUtf8("OpenFileLayout"));
+    openFileButton = new QPushButton(ui->widget);
+    openFileButton->setFocusPolicy(Qt::NoFocus);
+    openFileButton->setObjectName(QString::fromUtf8("openFileButton"));
+    openFileButton->setText(tr("Open"));
+    openFileButton->setSizePolicy(bottomsizePolicy);
+    openFileButton->setFixedHeight(30);
+    openFileButton->setStyleSheet(QString::fromUtf8("QPushButton{\n"
+        "    color:#FFFFFF;\n"
+        "    border: 0px;\n"
+        "    font-size:16px;\n"
+        "    border-radius:5;\n"
+        "    background-color:#61D37D;\n"
+        "\n"
+        "}\n"
+        "QPushButton:disabled {\n"
+        "    color:#696969;\n"
+        "    background-color:#3A3B3F;\n"
+        "    border: 0px  solid #000000;\n"
+        "}\n"
+        "\n"
+        "QPushButton:hover {\n"
+        "    background-color:#71D78A;\n"
+        "}\n"
+        "\n"
+        "QPushButton:pressed {\n"
+        "    color:#FFFFFF;\n"
+        "    background-color:#61D37D;\n"
+        "}"));
+    OpenFileLayout->addWidget(openFileButton);
+    openFileButton->setEnabled(true);
+    openFileButton->hide();
 
     ExitLayout = new QHBoxLayout();
     ExitLayout->setSpacing(0);
@@ -2129,12 +2203,14 @@ void viewWidget::initForm()
 //    ExitLayout->setStretch(2, 1);
 
     verticalLayout->addLayout(ExportLayout);
+    verticalLayout->addLayout(OpenFileLayout);
     verticalLayout->addLayout(ExitLayout);
     /*replace  end  ********************************************/
 
     connect(this->verticalSlider, SIGNAL(valueChanged(int, int)), this, SLOT(verticalSliderValueChanged(int, int)));
     connect(this->horizontalSlider, SIGNAL(valueChanged(int, int)), this, SLOT(horizontalSliderValueChanged(int, int)));
     connect(ExportButton, SIGNAL(clicked()), this, SLOT(setExportPic()));
+    connect(openFileButton, SIGNAL(clicked()), this, SLOT(openFlie()));
     connect(ExitButton, SIGNAL(clicked()), this, SLOT(on_pushButton_quit_clicked()));
     connect(innerWallLabelC, SIGNAL(clicked()), this, SLOT(colorChanged()));
     connect(innerWallcheckBox, SIGNAL(stateChanged(bool)), this, SLOT(innerWallcheckButton()));
@@ -2154,7 +2230,7 @@ void viewWidget::initForm()
     connect(travelLabelC, SIGNAL(clicked()), this, SLOT(colorChanged()));
     connect(travelcheckBox, SIGNAL(stateChanged(bool)), this, SLOT(travelcheckButton()));
 
-    //connect(zlapLabelC, SIGNAL(clicked()), this, SLOT(colorChanged()));
+    connect(zlapLabelC, SIGNAL(clicked()), this, SLOT(colorChanged()));
     connect(zlapcheckBox, SIGNAL(stateChanged(bool)), this, SLOT(zlapcheckButton()));
 
     //connect(travelcheckBox_speed, SIGNAL(stateChanged(bool)), this, SLOT(travelcheckButton()));
@@ -2163,9 +2239,13 @@ void viewWidget::initForm()
 
     connect(unkonwnLabelC, SIGNAL(clicked()), this, SLOT(colorChanged()));
     connect(unkonwncheckBox, SIGNAL(stateChanged(bool)), this, SLOT(unkonwncheckButton()));
+    connect(isAicreatcheckBox, SIGNAL(stateChanged(bool)), this, SLOT(setAimode(bool)));
 
     connect(this->spinBox_2, SIGNAL(valueChanged(int)), this, SLOT(spinBoxUpValueChanged(int)));
     connect(this->spinBox, SIGNAL(valueChanged(int)), this, SLOT(spinBoxDownValueChanged(int)));
+
+
+    connect(this,SIGNAL(ShowFileComplete(bool)),this,SLOT(ShowFileCompleteChanged(bool)));
 
 #ifdef USE_EXTRA_UI
      connect(this->linetypeCombox, SIGNAL(currentIndexChanged(int)), this, SLOT(linetypeComboxChange(int)));
@@ -2237,10 +2317,8 @@ void viewWidget::msgFromFdmGcodePaser(QString cmd)
 //        qApp->quit();
 //    }
     if(this->innerMode){
-//        QThreadPool::globalInstance()->start([&](){
-//            reSetGcodePath(cmd.toStdString(),isAiMode,0);
-//        });
-        this->reSetGcodePath(cmd.toStdString(),this->isAiMode,0);
+        bool rpc_aimode = m_rpc.data()->property("isAiMode").toBool();
+        this->reSetGcodePath(cmd.toStdString(),rpc_aimode,0);
     }else{
         this->reSetGcodePath(cmd.toStdString(),false,0);
     }
@@ -2738,7 +2816,7 @@ void viewWidget::linetypeComboxChange(int changeValue)
 
     this->ui->openGLWidget->setColorType(GcodeViewer::colorType(changeValue));
     this->ui->openGLWidget->update();
-};
+}
 #endif
 
 void viewWidget::spinBoxUpValueChanged(int changeValue)
@@ -2772,6 +2850,11 @@ void viewWidget::colorChanged()
     {
        this->ui->openGLWidget->setTravelColor(0,passColor);
     }
+    if(sender()->objectName() == "zlapLabelC")
+    {
+        this->ui->openGLWidget->setZlapColor(passColor);
+    }
+
     for(auto &t : roleDict){
         if(t.second == sender()->objectName())
         {
@@ -2841,6 +2924,9 @@ void viewWidget::setExportPic()
     QString defaultName = dir + "/" + oStlName;
     QString savePath ;
 
+    //  It is an acode only if it can generate an image set add @2023-05-08 by ChunLian
+    bool isAiMode = this->isAiMode && this->ui->openGLWidget->isGcodeWithAI(); // Shadowing
+
     if(isAiMode){
         savePath = QFileDialog::getSaveFileName(NULL, "", defaultName, "*.acode");
     }else{
@@ -2854,23 +2940,7 @@ void viewWidget::setExportPic()
 
     QFileInfo saveinfo(savePath);
     lastExportPath = saveinfo.absolutePath();
-#if 0
-    {
-    AkUtil::TDebug("-------------IgnoreEvent start--------------");
-    IgnoreEvent ign(this);
-    QProgressDialog *p = new QProgressDialog();
-    p->setAttribute(Qt::WA_DeleteOnClose);
-    //connect( this,SIGNAL(startOffRender(const QString&,bool,bool)),ui->openGLWidget,SLOT(exportOffRender(const QString&,bool,bool)));
-    p->setWindowModality(Qt::ApplicationModal);
-    connect( ui->openGLWidget,SIGNAL(setValue(int)),p,SLOT(setValue(int)));
-    p->show();
-    ui->openGLWidget->off_render(savePath,isAiMode);
-    delete p;
-    p = nullptr;
-    AkUtil::TDebug("-------------IgnoreEvent end--------------");
-    }
-    ui->openGLWidget->update();
-#else
+
     mpDlg = new ProgressDialog(nullptr);//(QDialog*)this
     IgnoreEvent ign(ui->openGLWidget);
     //boolLock orL(offRenderLock);
@@ -2889,7 +2959,11 @@ void viewWidget::setExportPic()
                ui->openGLWidget->off_render(savePath,isAiMode);
             });
    mpDlg->exec();
-#endif
+}
+
+void viewWidget::openFlie()
+{
+  emit previewOpenFileEvent();
 }
 
 
@@ -2925,6 +2999,13 @@ void viewWidget::setOriginalStlName(const QString& oStlName)
     this->ui->openGLWidget->setOriginalStlName(oStlName);
 }
 
+void viewWidget::setOriginalGCodePath(const QString &oStlGcodePath)
+{
+    qDebug()<<"setOriginalGCodePath " << oStlGcodePath;
+    this->oStlGCodePath = oStlGcodePath;
+    this->ui->openGLWidget->setOriginalGcodePath(oStlGcodePath);
+}
+
 void viewWidget::setLoadingProgress()
 {
     timer_value += 895.2 * (1024 / 4.7) / f_size * 0.3;
@@ -2935,6 +3016,19 @@ void viewWidget::setLoadingProgress()
     }else{
         tp_timer->stop();
         timer_value = 0.0;
+    }
+}
+
+void viewWidget::ShowFileCompleteChanged(bool ShowFileComplete)
+{
+    if(!ShowFileComplete){
+        this->ExportButton->hide();
+        this->ExitButton->hide();
+        openFileButton->show();
+    }else{
+        this->ExportButton->show();
+        this->ExitButton->show();
+        openFileButton->hide();
     }
 }
 
@@ -3071,7 +3165,12 @@ void viewWidget::setDefaultScene()
 
 bool viewWidget::setToolPath(Anker::GCodeProcessor::Result&& gcode_result, std::string gcodePath,bool isAiMode, int gcode_size)
 {
-    this->isAiMode = isAiMode;
+    if(printMode){
+        this->isAiMode = isAiMode;
+    }
+    else{
+        this->setAimode(isAiMode);
+    }
     auto writableLocation = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
     QString dirPath = writableLocation + "/AICamera";
     QString timestamp = QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss_zzz");
@@ -3129,7 +3228,7 @@ void viewWidget::changeSlider()
         
         if(!printModeInit || !innerModeInit)
         {
-            control::MessageDialog a(tr("Warning"), tr("G-Code failed to open. Try again."), control::MessageDialog::BUTTONFLAG::OK);
+            control::MessageDialog a(tr("Warning"), tr("Open File Failed!"), control::MessageDialog::BUTTONFLAG::OK);
             QVariant gcodeComplete = false;
             m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
             a.exec();
@@ -3142,6 +3241,7 @@ void viewWidget::changeSlider()
         this->ExitButton->setEnabled(false);
         this->ExportButton->setEnabled(false);
         this->lastShowFileComplete = false;
+        emit ShowFileComplete(lastShowFileComplete);
         return;
     }else{
         this->verticalSlider->show();
@@ -3152,6 +3252,7 @@ void viewWidget::changeSlider()
         this->ExitButton->setEnabled(true);
         this->ExportButton->setEnabled(true);
         this->lastShowFileComplete = true;
+        emit ShowFileComplete(lastShowFileComplete);
         QVariant gcodeComplete = true;
         m_rpc.data()->setProperty("gcodeComplete",gcodeComplete);
     }
@@ -3238,6 +3339,10 @@ void viewWidget::changeEvent(QEvent * event)
     }
     if (ExitButton) {
         ExitButton->setText(tr("Print"));
+    }
+    if (openFileButton)
+    {
+        openFileButton->setText(tr("Open"));
     }
     setWindowTitle(tr("AnkerMake G-Code Preview"));
 #ifdef USE_EXTRA_UI
@@ -3356,6 +3461,9 @@ void viewWidget::changeEvent(QEvent * event)
     if (m_actiona_bottom) {
         m_actiona_bottom->setText(tr("Bottom View"));
     }
+    if (isAiCreatlabel) {
+        isAiCreatlabel->setText(tr("AI Detect"));
+    }
   }
   return QWidget::changeEvent(event);
 }
@@ -3368,12 +3476,16 @@ void viewWidget::resizeEvent(QResizeEvent* event)
 
 void viewWidget::on_pushButton_quit_clicked()
 {//change for print function  TODO: add show print widget
-
-    
+    qDebug() << "isAiMode"<<isAiMode;
+    qDebug() << "this curAnkerMachine "<<this->curAnkerMachine;
+    //设备选择窗口
     qint64 id = QDateTime::currentSecsSinceEpoch();
     
     //this->ui->openGLWidget->off_render_single();
     QString sendStr;
+
+    //  It is an acode only if it can generate an image set add @2023-05-08 by ChunLian
+    bool isAiMode = this->isAiMode && this->ui->openGLWidget->isGcodeWithAI(); // Shadowing
 
     if(!isAiMode)
     {
@@ -3382,7 +3494,7 @@ void viewWidget::on_pushButton_quit_clicked()
         sendStr = this->ui->openGLWidget->sendAcodeToPrintCtr();
         if(sendStr.size() <= 1)
         {
-            control::MessageDialog a(tr("Warning"),tr("No GCODE here!"), 0x00400000);
+            control::MessageDialog a(tr("Warning"),tr("File Transfer Failed!"), 0x00400000);
             a.exec();
             return ;
         }
@@ -3473,7 +3585,65 @@ void viewWidget::setPerformance(bool setValue)
 void viewWidget::setAimode(bool _isAimode)
 {
     AkUtil::TDebug("setAimode  : "+ QString::number(_isAimode));
+    if(curAnkerMachine == 1){
+        //M5C
+        this->isAiMode = false;
+        return;
+    }
+
+    if(printMode){
+        this->isAiMode = isAiMode;
+        return;
+    }
+
+    bool rpc_aimode = m_rpc.data()->property("isAiMode").toBool();
+    if(isAicreatcheckBox->checkState() != isAiMode){
+        //sync gui checkState with rpc_aimode
+        isAicreatcheckBox->setCheckState(isAiMode);
+    }
+
+    if(isAiMode != _isAimode){
+        //from setting change
+        isAiMode = _isAimode;
+        isAicreatcheckBox->setCheckState(_isAimode);
+    }
+
+
+
+    if( rpc_aimode == _isAimode)
+        return ;
     this->isAiMode = _isAimode;
+    QVariant t_aimode = QVariant::fromValue(_isAimode);
+    m_rpc.data()->setProperty("isAiMode",t_aimode);
+
+
+}
+
+void viewWidget::setCurAnkerMachine(int akMachine)
+{
+   this->curAnkerMachine = akMachine;
+   if(curAnkerMachine == 1){
+       //M5C  main need to close aimode toggle
+        setAimode(false);
+        aiButton->setVisible(false);
+        this->isAicreatcheckBox->setEnabled(false);
+        this->isAicreatcheckBox->setVisible(false);
+        this->isAicreatPiclabel->setVisible(false);
+        this->isAiCreatlabel->setVisible(false);
+   }
+
+   if(curAnkerMachine == 0){
+       bool rpc_aimode = m_rpc.data()->property("isAiMode").toBool();
+       setAimode(rpc_aimode);
+       aiButton->setVisible(true);
+       this->isAicreatcheckBox->setEnabled(true);
+       this->isAicreatcheckBox->setVisible(true);
+       this->isAicreatPiclabel->setVisible(true);
+       this->isAiCreatlabel->setVisible(true);
+   };
+
+    return;
+
 }
 
 void viewWidget::setLoggingStatus(bool status)

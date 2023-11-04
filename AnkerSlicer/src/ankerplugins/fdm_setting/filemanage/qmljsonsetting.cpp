@@ -266,7 +266,7 @@ void FdmQml_ItemBase::setFdmValueError(bool newFdmValueError){
  */
 bool FdmQml_ItemBase::fdmEnabled(){
     if(!__hasAttr.fdmEnabled){return true;}
-    QVariant var = getStoreProperty(fdmPrinterJsonEnble);
+    QVariant var = getStoreProperty(fdmPrinterJsonEnabled);
     bool res = var.type() == var.Bool ? var.toBool() : true;
     return res;
 }
@@ -274,7 +274,7 @@ bool FdmQml_ItemBase::fdmEnabled(){
 void FdmQml_ItemBase::setFdmEnabled(bool newFdmEnabled){
     if(!__hasAttr.fdmEnabled){__hasAttr.fdmEnabled = true;}// else
     //if (fdmEnabled() == newFdmEnabled)return;
-    setStoreProperty(fdmPrinterJsonEnble, newFdmEnabled);
+    setStoreProperty(fdmPrinterJsonEnabled, newFdmEnabled);
     emit fdmEnabledChanged();
 }
 

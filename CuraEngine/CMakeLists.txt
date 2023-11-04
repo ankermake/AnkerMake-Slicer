@@ -16,11 +16,18 @@ endif()
 
 option (ENABLE_VLD    "Enable VLD to check memory" OFF)
 option (ENABLE_OPENMP "Enable OPENMP multithreading acceleration" ON)
+option (TEST_CL "Static library test engine" OFF)
+
+if(TEST_CL AND WIN32)
+    add_definitions(-DANKER_DEBUG)
+endif()
 
 if(ENABLE_VLD)
     __enable_vld()
 endif ()
 if(ENABLE_OPENMP)
+set(OPENMP_ROOT $ENV{OPENMP_ROOT})
+message("OPENMP_ROOT:===${OPENMP_ROOT}====")
     __enable_openmp()
 endif ()
 
@@ -63,7 +70,6 @@ endif()
 __add_real_target(CuraEngine exe SOURCE main.cpp dbgcrash.cpp LIB ${LIBS} INC ${INCS} OPENMP)
 
 
-option (TEST_CL "Static library test engine" OFF)
 if(TEST_CL AND WIN32)
     include(TestLibCL)
     __test_lib_cl()

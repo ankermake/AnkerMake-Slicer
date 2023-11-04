@@ -178,10 +178,10 @@ Rectangle{
                 border.color: buttonHoveredTextColor
             }
             onClicked: {
-                if(defaultListview.currentIndex != -1) {
+                if(defaultListview.currentIndex !== -1) {
                     create(defaultModel[defaultListview.currentIndex])
                 }
-                else if(customListview.currentIndex != -1){
+                else if(customListview.currentIndex !== -1){
                     create(customModel[customListview.currentIndex])
                 }
             }

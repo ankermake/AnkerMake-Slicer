@@ -14,6 +14,7 @@ public:
 
     virtual void checkoutPreviewEvent(bool kk);
 
+    virtual void previewOpenFileEvent();
 
     //virtual void previewCloseSlot(int id);
 };

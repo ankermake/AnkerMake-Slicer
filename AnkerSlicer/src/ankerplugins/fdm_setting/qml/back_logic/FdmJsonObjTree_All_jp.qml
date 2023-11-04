@@ -12,6 +12,16 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                 fdmLabel: "言語"
                 fdmDescription: "言語切り替えスイッチ"
             }
+            FdmQml_Param{ id:param_print_mode; objectName: "param_print_mode"
+                fdmLabel: "印刷モード"
+                fdmDescription: "3つの印刷モード、通常の印刷、高速モード、ファインモード"
+                fdmOptions:{
+                    "normal": "ノーマルモード",
+                    "fast": "高速モード",
+                    "fine": "ファインモード"
+                }
+            }
+
             FdmQml_Param{ id:anker_param_ai_camera; objectName: "anker_param_ai_camera"
                 fdmLabel: "AnkerMake AIカメラ"
                 fdmDescription: "AnkerMakeの3Dプリンターで写真やタイムラプス動画を撮影"
@@ -261,6 +271,19 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmLabel: "オーバーハングスキンオーバーラップ"
                         fdmDescription: "ウォールとスキンの中心線（の端点）の重なり具合を調整します。わずかなオーバーラップで、ウォールがスキンにしっかりと接着されます。なお、スキンとウォールの線幅が等しい場合、ウォールの線幅の半分以上の値を設定すると、スキンの押し出しノズルの位置がウォールの中央を越えてしまうことがあるため、スキンがウォールを越えてしまうことがあります。"
                     }
+                }
+            }
+            FdmQml_Param{ id:index_of_role_order_in_part; objectName: "index_of_role_order_in_part"
+                fdmLabel: "順序（単連結領域）"
+                fdmDescription: "単一連結領域の[内側、外側、インフィル]の印刷順序"
+                fdmOptions:{
+                    "0" : "Order_Nothing"           ,
+                    "1" : "インフィル->外側->内側",
+                    "2" : "インフィル->内側->外側",
+                    "3" : "外側->内側->インフィル",
+                    "4" : "内側->外側->インフィル",
+                    "5" : "内側->インフィル->外側",
+                    "6" : "外側->インフィル->内側",
                 }
             }
             FdmQml_Param{ id:optimize_wall_0_printing_order; objectName: "optimize_wall_0_printing_order"
@@ -517,15 +540,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
             FdmQml_Param{ id:machine_extruder_count; objectName: "machine_extruder_count"
                 fdmLabel: "エクストルーダーの数"
                 fdmDescription: "エクストルーダーの数。エクストルーダーの単位は、フィーダー、ボーデンチューブ、およびノズルを組合せたもの。"
-                fdmDefaultValue: 1
-                fdmMinimumValue: 1
-                fdmMaximumValue: 1
-                fdmType: "int"
                 fdmOptions: machine_extruder_count.fdmMaximumValue <= 1 ? {1:1} : machine_extruder_count.fdmMaximumValue === 2 ? {1:1, 2:2} : {1:1, 2:2, 3:3}
-                fdmSettablePerMesh: false
-                fdmSettablePerExtruder: false
-                fdmSettablePerMeshgroup: false
-                fdmAffectedById: ""
             }
             FdmQml_Param{ id:extruders_enabled_count; objectName: "extruders_enabled_count"
                 fdmLabel: "有効なエクストルーダーの数"
@@ -1684,6 +1699,46 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                         fdmDescription: "スカートとブリムがプリントされる最大瞬時速度の変更。"
                     }
                 }
+                FdmQml_Param{ id:ak_VAJK_J_E_enabled; objectName: "ak_VAJK_J_E_enabled"
+                    fdmLabel: "ジャーク"
+                    fdmDescription: "ジャークは、瞬時に発生する可能性のある速度の最大変化(mm /秒)です。また、加速された(瞬間的ではない)動きとして行われる速度の最小変化と考えることもできます。"
+                    FdmQml_Param{ id:ak_J_E_print; objectName: "ak_J_E_print"
+                        fdmLabel: "ジャーク"
+                        fdmDescription: "ジャーク"
+                        FdmQml_Param{ id:ak_J_E_infill; objectName: "ak_J_E_infill"
+                            fdmLabel: "インフィル"
+                            fdmDescription: "インフィル　ジャーク"
+                        }
+                        FdmQml_Param{ id:ak_J_E_wall; objectName: "ak_J_E_wall"
+                            fdmLabel: "ウォール"
+                            fdmDescription: "ウォール　ジャーク"
+                            FdmQml_Param{ id:ak_J_E_wall_0; objectName: "ak_J_E_wall_0"
+                                fdmLabel: "外側ウォール"
+                                fdmDescription: "外側ウォール　ジャーク"
+                            }
+                            FdmQml_Param{ id:ak_J_E_wall_x; objectName: "ak_J_E_wall_x"
+                                fdmLabel: "内側ウォール"
+                                fdmDescription: "内側ウォール　ジャーク"
+                            }
+                        }
+                        FdmQml_Param{ id:ak_J_E_topbottom; objectName: "ak_J_E_topbottom"
+                            fdmLabel: "スキン"
+                            fdmDescription: "トップ＆ボトムスキン　ジャーク"
+                        }
+                        FdmQml_Param{ id:ak_J_E_support; objectName: "ak_J_E_support"
+                            fdmLabel: "サポート"
+                            fdmDescription: "サポート　ジャーク"
+                        }
+                        FdmQml_Param{ id:ak_J_E_skirt_brim; objectName: "ak_J_E_skirt_brim"
+                            fdmLabel: "スカート/ブリム"
+                            fdmDescription: "スカート/ブリム　ジャーク"
+                        }
+                        FdmQml_Param{ id:ak_J_E_layer_0; objectName: "ak_J_E_layer_0"
+                            fdmLabel: "初期レイヤー"
+                            fdmDescription: "初期レイヤー　ジャーク"
+                        }
+                    }
+                }
             }
         }
         FdmQml_Category{ id:travel; objectName: "travel"
@@ -2208,6 +2263,7 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     "skirt": "スカート",
                     "brim": "ブリム",
                     "raft": "ラフト",
+                    "autobrim": "オートブリム",
                     "none": "なし"
                 }
             }
@@ -2234,6 +2290,10 @@ FdmQml_Root{ id:fdmextruder_def_json; objectName: "qrc:/Settings/FdmJsonObjTree_
                     fdmLabel: "ブリムライン数"
                     fdmDescription: "ブリムに使用される線数。ブリムの線数は、ビルドプレートへの接着性を向上させるだけでなく、有効なプリント面積を減少させる。"
                 }
+            }
+            FdmQml_Param{ id:min_contact_area; objectName: "min_contact_area"
+                fdmLabel: "最小接触面積"
+                fdmDescription: "印刷領域と構築プラットフォームの接触面積がこの最小面積よりも小さい場合、印刷領域の周囲にブリムを追加することがトリガーされます。これにより、印刷物と構築プラットフォームの接触面積が増え、印刷の成功率が向上します。"
             }
             FdmQml_Param{ id:brim_gap; objectName: "brim_gap"
                 fdmLabel: "ブリム距離"

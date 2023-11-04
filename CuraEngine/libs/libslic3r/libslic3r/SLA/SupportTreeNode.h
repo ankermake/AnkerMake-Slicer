@@ -366,7 +366,7 @@ namespace Slic3r
             bool starts_from_head = true; // Could start from a junction as well
             long start_junction_id = ID_UNSET;
             bool bridgePillar = false;
-            int selfType = 0;
+            int selfType = 0;//0x01 表示小支撑，不可移动
             // How many bridges are connected to this pillar
             unsigned bridges = 0;
             //std::vector<long>  m_linkBridges;

@@ -30,6 +30,7 @@ public:
      */
     static void generate(SliceDataStorage& storage, Polygons first_layer_outline, const coord_t distance, size_t primary_line_count, const bool allow_helpers = true);
 
+    static void generateAutoBrim(SliceDataStorage& storage, Polygons first_layer_outline, const coord_t distance, size_t primary_line_count, const bool allow_helpers = true);
     /*!
      * \brief Get the reference outline of the first layer around which to
      * generate the first brim/skirt line.

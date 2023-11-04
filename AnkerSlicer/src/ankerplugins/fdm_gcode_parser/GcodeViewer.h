@@ -82,6 +82,10 @@ class IgnoreEvent :public QObject
 public:
     IgnoreEvent(QObject* obj)
     {
+        if(this->thread() != obj->thread()){
+            qDebug() << __FUNCTION__ << this->thread() << "!=" << obj->thread();
+            this->moveToThread(obj->thread());  //  fix @2023-05-08 by ChunLian
+        }
         m_obj = obj;
         m_obj->installEventFilter(this);
         //AkUtil::TDebug("-------------filtter install--------------");
@@ -141,6 +145,8 @@ public:
     void paintPointVbo(QOpenGLShaderProgram& shaderProgram, CHPointShowObjPtr point, RenderPointSpherePtr rps, QMatrix4x4& pvMatrix);
     void setRoleColor(unsigned int index,std::array<float, 3> setColor);
     void setTravelColor(unsigned int index,std::array<float, 3> setColor);
+    void setZlapColor(std::array<float, 3> setColor);
+    bool isGcodeWithAI();
     //void showProgressDlg();
 
 public slots:
@@ -182,6 +188,7 @@ private:
     std::vector<Color> Extrusion_Role_Colors;
     static const std::vector<Color> Range_Colors;
     std::vector<Color> Travel_Colors;
+    Color Zlap_Colors;
     static const std::vector<Color> Options_Colors;
     static const Color              Wipe_Color;
     enum class EOptionsColors : unsigned char
@@ -801,6 +808,7 @@ private:
     bool matchGcodeName();
     static GLModelInitializationData stilized_arrow(int resolution, float tip_radius, float tip_height, float stem_radius, float stem_height);
     bool isTRender = false;
+    QString originalGcodePath;
     QString originalStlName;
     QString originalGcodeName;
     QString akpicSave;
@@ -823,6 +831,7 @@ public:
     void set_toolpath_move_type_visible(EMoveType type, bool visible);
     void refresh_render_paths(bool keep_sequential_current_first, bool keep_sequential_current_last);
     bool setGcodePath(const std::string& gcodePath);
+    void setOriginalGcodePath(const QString& gcodePath);
     void setOriginalStlName(const QString& oStlName);
     void setOriginalGcodeName(const QString& oGcodeName);
     std::string getGcodePath();
@@ -834,6 +843,7 @@ public:
     void set_save_pic(bool is_save);
     void off_render(QString savePath,bool isAiMode = true);
     void off_render_single(const QImage&);
+    void off_render_single_org(const QImage&);
     QImage render_singe_iamge();
     void set_look_at(std::array<float, 3> position, std::array<float, 3> lookat, std::array<float, 3> lookup,bool isaiview = true);
 

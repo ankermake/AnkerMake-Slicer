@@ -7,6 +7,12 @@ set(LIBS clipper)
 
 set(DEFS _CRT_SECURE_NO_WARNINGS NOMINMAX)
 
+if(${AKSS_CURA_ENGINE} MATCHES "cloud")
+	add_definitions(-fPIC)
+	message("CLOUD_SLICER")
+endif()
+
+
 __add_real_target(_CuraEngine lib SOURCE ${SRC} ${CURA_SRC}
 								 LIB ${LIBS}
 								 INC ${INCS}

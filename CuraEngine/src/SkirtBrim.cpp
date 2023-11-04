@@ -9,6 +9,7 @@
 #include "support.h"
 #include "settings/types/Ratio.h"
 #include "utils/logoutput.h"
+#include "utils/SVG.h"
 
 namespace cura 
 {
@@ -234,6 +235,149 @@ void SkirtBrim::generate(SliceDataStorage& storage, Polygons first_layer_outline
     }
 }
 
+//auto brim
+void SkirtBrim::generateAutoBrim(SliceDataStorage& storage, Polygons first_layer_outline, const coord_t start_distance, size_t primary_line_count, const bool allow_helpers /*= true*/)
+{
+    const bool is_skirt = start_distance > 0;
+    Scene& scene = Application::getInstance().current_slice->scene;
+    const size_t adhesion_extruder_nr = scene.current_mesh_group->settings.get<ExtruderTrain&>("adhesion_extruder_nr").extruder_nr;
+    const Settings& adhesion_settings = scene.extruders[adhesion_extruder_nr].settings;
+    const coord_t primary_extruder_skirt_brim_line_width = adhesion_settings.get<coord_t>("skirt_brim_line_width") * adhesion_settings.get<Ratio>("initial_layer_line_width_factor");
+    const coord_t primary_extruder_minimal_length = adhesion_settings.get<coord_t>("skirt_brim_minimal_length");
+    //mm^2 1000*1000,get<coord_t>has * 1000 ,so result*1000
+    const coord_t min_contact_area = adhesion_settings.get<coord_t>("min_contact_area")*1000;
+    Polygons polygon_need_add_brims;
+    Polygons polygon_need_not_add_brims;
+    auto polyParts = first_layer_outline.splitIntoParts();
+    for (size_t i = 0; i < polyParts.size(); i++)
+    {
+        //SVGHelper::writePolygons(polyParts[i]);
+        auto polyArea = polyParts[i].area();
+        if (polyArea > min_contact_area) //3.1415926 * 2800 * 2800
+        {
+            polygon_need_not_add_brims.add(polyParts[i]);
+            continue;
+        }
+        polygon_need_add_brims.add(polyParts[i]);
+    }
+
+    if (polygon_need_add_brims.size() == 0)
+    {
+        return;
+    }
+
+
+    Polygons& skirt_brim_primary_extruder = storage.skirt_brim[adhesion_extruder_nr];
+
+    const bool has_ooze_shield = allow_helpers && storage.oozeShield.size() > 0 && storage.oozeShield[0].size() > 0;
+    const bool has_draft_shield = allow_helpers && storage.draft_protection_shield.size() > 0;
+
+    coord_t gap;
+    if (is_skirt && (has_ooze_shield || has_draft_shield))
+    { // make sure we don't generate skirt through draft / ooze shield
+        polygon_need_add_brims = polygon_need_add_brims.offset(start_distance - primary_extruder_skirt_brim_line_width / 2, ClipperLib::jtRound).unionPolygons(storage.draft_protection_shield);
+        if (has_ooze_shield)
+        {
+            polygon_need_add_brims = polygon_need_add_brims.unionPolygons(storage.oozeShield[0]);
+        }
+        polygon_need_add_brims = polygon_need_add_brims.approxConvexHull();
+        gap = primary_extruder_skirt_brim_line_width / 2;
+    }
+    else
+    {
+        gap = start_distance;
+    }
+
+    coord_t offset_distance = generatePrimarySkirtBrimLines(gap, primary_line_count, primary_extruder_minimal_length, polygon_need_add_brims, skirt_brim_primary_extruder);
+
+    // Skirt needs to be 'locked' first, otherwise the optimizer can change to order, which can cause undesirable outcomes w.r.t combo w. support-brim or prime-tower brim.
+    // If this method is called multiple times, the max order shouldn't reset to 0, so the maximum is taken.
+    storage.skirt_brim_max_locked_part_order[adhesion_extruder_nr] = std::max(is_skirt ? primary_line_count : 0, storage.skirt_brim_max_locked_part_order[adhesion_extruder_nr]);
+
+    // handle support-brim
+    const ExtruderTrain& support_infill_extruder = scene.current_mesh_group->settings.get<ExtruderTrain&>("support_infill_extruder_nr");
+    if (allow_helpers && support_infill_extruder.settings.get<bool>("support_brim_enable"))
+    {
+        const bool merge_with_model_skirtbrim = !is_skirt;
+        generateSupportBrim(storage, merge_with_model_skirtbrim);
+    }
+
+    // generate brim for ooze shield and draft shield
+    if (!is_skirt && (has_ooze_shield || has_draft_shield))
+    {
+        // generate areas where to make extra brim for the shields
+        // avoid gap in the middle
+        //    V
+        //  +---+     +----+
+        //  |+-+|     |+--+|
+        //  || ||     ||[]|| > expand to fit an extra brim line
+        //  |+-+|     |+--+|
+        //  +---+     +----+ 
+        const coord_t primary_skirt_brim_width = (primary_line_count + primary_line_count % 2) * primary_extruder_skirt_brim_line_width; // always use an even number, because we will fil the area from both sides
+
+        Polygons shield_brim;
+        if (has_ooze_shield)
+        {
+            shield_brim = storage.oozeShield[0].difference(storage.oozeShield[0].offset(-primary_skirt_brim_width - primary_extruder_skirt_brim_line_width));
+        }
+        if (has_draft_shield)
+        {
+            shield_brim = shield_brim.unionPolygons(storage.draft_protection_shield.difference(storage.draft_protection_shield.offset(-primary_skirt_brim_width - primary_extruder_skirt_brim_line_width)));
+        }
+        const Polygons outer_primary_brim = polygon_need_add_brims.offset(offset_distance, ClipperLib::jtRound);
+        shield_brim = shield_brim.difference(outer_primary_brim.offset(primary_extruder_skirt_brim_line_width));
+
+        // generate brim within shield_brim
+        skirt_brim_primary_extruder.add(shield_brim);
+        while (shield_brim.size() > 0)
+        {
+            shield_brim = shield_brim.offset(-primary_extruder_skirt_brim_line_width);
+            skirt_brim_primary_extruder.add(shield_brim);
+        }
+
+        // update parameters to generate secondary skirt around
+        polygon_need_add_brims = outer_primary_brim;
+        if (has_draft_shield)
+        {
+            polygon_need_add_brims = polygon_need_add_brims.unionPolygons(storage.draft_protection_shield);
+        }
+        if (has_ooze_shield)
+        {
+            polygon_need_add_brims = polygon_need_add_brims.unionPolygons(storage.oozeShield[0]);
+        }
+
+        offset_distance = 0;
+    }
+
+    if (polygon_need_add_brims.polygonLength() > 0)
+    {
+        //SVGHelper::writePolygons(skirt_brim_primary_extruder);
+        skirt_brim_primary_extruder = skirt_brim_primary_extruder.difference(polygon_need_not_add_brims);
+       
+        // process other extruders' brim/skirt (as one brim line around the old brim)
+        int last_width = primary_extruder_skirt_brim_line_width;
+        std::vector<bool> extruder_is_used = storage.getExtrudersUsed();
+        for (size_t extruder_nr = 0; extruder_nr < Application::getInstance().current_slice->scene.extruders.size(); extruder_nr++)
+        {
+            if (extruder_nr == adhesion_extruder_nr || !extruder_is_used[extruder_nr])
+            {
+                continue;
+            }
+            const ExtruderTrain& train = Application::getInstance().current_slice->scene.extruders[extruder_nr];
+            const coord_t width = train.settings.get<coord_t>("skirt_brim_line_width") * train.settings.get<Ratio>("initial_layer_line_width_factor");
+            const coord_t minimal_length = train.settings.get<coord_t>("skirt_brim_minimal_length");
+            offset_distance += last_width / 2 + width / 2;
+            last_width = width;
+            while (storage.skirt_brim[extruder_nr].polygonLength() < minimal_length)
+            {
+                storage.skirt_brim[extruder_nr].add(polygon_need_add_brims.offset(offset_distance, ClipperLib::jtRound));
+                offset_distance += width;
+            }
+        }
+        //SVGHelper::writePolygons(storage.skirt_brim[0]);
+        //SVGHelper::appendPolygons(first_layer_outline);
+    }
+}
 void SkirtBrim::generateSupportBrim(SliceDataStorage& storage, const bool merge_with_model_skirtbrim)
 {
     constexpr coord_t brim_area_minimum_hole_size_multiplier = 100;

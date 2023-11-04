@@ -1,6 +1,7 @@
 #ifndef PRINT_FEATURE
 #define PRINT_FEATURE
 
+#include <map>
 namespace cura
 {
 
@@ -23,7 +24,27 @@ enum class PrintFeatureType: unsigned char
                               // be used to create an array or so
 };
 
-
+static std::map<PrintFeatureType, const char *> PrintFeatureTypeMap(){
+    static std::map<PrintFeatureType, const char *> map;
+    if(map.size() == 0){
+        map = {
+            {PrintFeatureType::NoneType               , " --> [NoneType            ]"},
+            {PrintFeatureType::OuterWall              , " --> [OuterWall           ]"},
+            {PrintFeatureType::InnerWall              , " --> [InnerWall           ]"},
+            {PrintFeatureType::Skin                   , " --> [Skin                ]"},
+            {PrintFeatureType::Support                , " --> [Support             ]"},
+            {PrintFeatureType::SkirtBrim              , " --> [SkirtBrim           ]"},
+            {PrintFeatureType::Infill                 , " --> [Infill              ]"},
+            {PrintFeatureType::SupportInfill          , " --> [SupportInfill       ]"},
+            {PrintFeatureType::MoveCombing            , " --> [MoveCombing         ]"},
+            {PrintFeatureType::MoveRetraction         , " --> [MoveRetraction      ]"},
+            {PrintFeatureType::SupportInterface       , " --> [SupportInterface    ]"},
+            {PrintFeatureType::PrimeTower             , " --> [PrimeTower          ]"},
+            {PrintFeatureType::NumPrintFeatureTypes   , " --> [NumPrintFeatureTypes]"}
+        };
+    }
+    return map;
+}
 
 
 } // namespace cura

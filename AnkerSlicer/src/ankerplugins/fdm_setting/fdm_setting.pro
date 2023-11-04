@@ -6,6 +6,7 @@ CONFIG += c++17
 TARGET = fdm_setting
 
 HEADERS += \
+    PrintModeToolTip.h \
     fdm_setting.h \
     fdmparamsettingswidget.h \
     fdmsettingstreemodel.h \
@@ -46,6 +47,7 @@ HEADERS += \
     tooltip.h
 
 SOURCES += \
+    PrintModeToolTip.cpp \
     fdm_setting.cpp \
     fdmparamsettingswidget.cpp \
     fdmsettingstreemodel.cpp \

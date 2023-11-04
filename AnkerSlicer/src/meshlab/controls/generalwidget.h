@@ -43,6 +43,7 @@ public:
     virtual void save();;
     void forcedUpdateApp();
     void manualUpdate();
+    void autoUpdateChecker();
 protected:
     void changeEvent(QEvent *e);
 private:
@@ -55,6 +56,8 @@ signals:
 public slots:
     void receiveMsgFromNetwork(PluginMessageData metadata);
     void doPluginUnloaded();
+    void updateAiCheckbox(bool statu);
+    void setLoginWidgetPtr(QObject *object);
 
 private slots:
     void checkButtonClicked();
@@ -64,8 +67,10 @@ private:
      QStringList m_languageList ;
 
      void update_app(const QString&);
+     void updateCheckText();
      QPushButton *m_checkButton;
      QLabel *m_checkText;
+     QString m_updateText = "";
      QString m_filePath;
      QString m_releaseNote;
      QComboBox *m_languageCombox;
@@ -81,6 +86,8 @@ private:
      updateMessageDialog* m_downLoadNewverDlg = nullptr;
      QLabel *m_versionLabel = nullptr;
      bool m_formGeneral = false;
+
+     QWidget *m_loginWidget = nullptr;
 };
 
 

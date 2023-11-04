@@ -29,8 +29,8 @@
 
 #include <QString>
 #include <QVariantMap>
-#ifndef MESHLAB_VERSION
-#error "MESHLAB_VERSION needs to be defined!"
+#ifndef ANKER_MAKE_VERSION
+#error "ANKER_MAKE_VERSION needs to be defined!"
 #endif
 #ifndef MESHLAB_SCALAR
 #error "MESHLAB_SCALAR needs to be defined!"
@@ -58,9 +58,15 @@ COMMONLIB_EXPORT PluginManager& pluginManagerInstance();
 // keep these functions inlined please
 // each plugin that uses them need to have their own definition
 // plugins cannot link them!!
-inline std::string meshlabVersion() 
+
+inline std::string meshlabVersion()
 {
-	return std::string(meshlab_xstr(MESHLAB_VERSION));
+    return std::string(meshlab_xstr(ANKER_MAKE_VERSION));
+}
+
+inline std::string AnkerMakeVersion()
+{
+    return std::string(meshlab_xstr(ANKER_MAKE_VERSION));
 }
 
 inline bool builtWithDoublePrecision()

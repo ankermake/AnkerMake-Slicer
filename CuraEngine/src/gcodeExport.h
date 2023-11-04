@@ -511,7 +511,7 @@ public:
      * Write the command for setting the jerk to a specific value
      */
     void writeJerk(const Velocity& jerk);
-    void writeJerkXYZE(char axis, const Velocity &x);  
+    virtual void writeJerkXYZE(char axis, const Velocity &x) = 0;  // add @2022-06-16 by CL XYZE Jerk
 
     /*!
      * Set member variables using the settings in \p settings.
@@ -586,6 +586,8 @@ public:
 public:  //  override GCodeExportBase
     void preSetup(const size_t start_extruder);
     void writeCodeStored(const char *str,int pos, int reserve) override;
+    // add @2022-06-16 by CL  
+    void writeJerkXYZE(char axis, const Velocity &jerk) override;
 
     void writeLayerCountComment(const size_t layer_count);
     void writeLayerComment(const LayerIndex layer_nr);
@@ -616,7 +618,9 @@ public:
     inline double   getE_block()      {return gcode.current_e_value;}
     inline double   getV_block()      {return getF_block();}
     inline double & getA_block()      {return akAcceleration;}      // ak
-    inline double   getJ_block()      {return gcode.current_jerk;}
+    inline double   getJ_XY_block()   {return gcode.current_jerk;}
+    inline double & getJ_ZZ_block()   {return akJZZ;}
+    inline double & getJ_EE_block()   {return akJEE;}
     inline double & getK_block()      {return akK;}                 // ak
 
     inline int    & getL_Index()      {return akLayerIndex;}        // ak
@@ -638,6 +642,8 @@ private:
     int              akLayerCount{0};
     double           akAcceleration{0}; // Acceleration
     double           akK{0.0};
+    double           akJZZ{0.0};
+    double           akJEE{0.0};
 
     static int64_t   G1XYE_Count;
 };
